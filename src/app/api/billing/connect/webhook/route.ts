@@ -1,7 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 import { billing } from "@/lib/adapters/billing";
-import { processConnectEvent } from "@/features/billing/connect-webhooks";
+import {
+  processConnectEvent,
+  processConnectPaymentEvent,
+} from "@/features/billing/connect-webhooks";
 import { requestLogger } from "@/lib/logger";
 
 /**
@@ -43,7 +46,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ received: true, status: "ignored" });
   }
 
-  const processed = await processConnectEvent(result.event);
+  // Discriminate on event type to call the right handler.
+  // ConnectPaymentEvent (checkout.session.completed) has different fields
+  // than ConnectAccountEvent (account.updated / account.application.deauthorized).
+  const processed =
+    result.event.type === "checkout.session.completed"
+      ? await processConnectPaymentEvent(result.event)
+      : await processConnectEvent(result.event);
 
   return NextResponse.json({ received: true, status: processed.status });
 }

@@ -6,7 +6,7 @@ import { useCallback, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import type { ConnectAccountStatus } from "@/lib/adapters/billing";
-import { SUPPORTED_CONNECT_COUNTRIES } from "@/features/billing/connect-data";
+import { SUPPORTED_CONNECT_COUNTRIES } from "@/features/billing/connect-countries";
 
 /**
  * Styled native select matching the create-org-form pattern.

@@ -52,4 +52,8 @@ export const noneBillingAdapter: BillingAdapter = {
   async createAccountOnboardingLink(): Promise<BillingRedirectResult> {
     return { ok: false, code: "NOT_CONFIGURED" };
   },
+
+  async createConnectCheckoutSession(): Promise<BillingRedirectResult> {
+    return { ok: false, code: "NOT_CONFIGURED" };
+  },
 };

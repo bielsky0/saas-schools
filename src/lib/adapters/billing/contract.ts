@@ -161,20 +161,51 @@ export type ConnectAccountStatus =
 
 export type ConnectEventType =
   | "account.updated"
-  | "account.application.deauthorized";
+  | "account.application.deauthorized"
+  | "checkout.session.completed";
 
-export interface ConnectEvent {
+/** Fields common to every Connect webhook event. */
+interface ConnectEventBase {
+  /** Which adapter produced this. */
   provider: string;
+  /** The provider's event id — the idempotency key. */
   id: string;
+  /** When the provider created the event. */
   occurredAt: Date;
-  /** The Connect account id (acct_xxx). */
+  /** The Connect account id (acct_xxx) the event is about. */
   accountId: string;
-  type: ConnectEventType;
-  /** Fields relevant to account.updated. */
+}
+
+/**
+ * An account-level event — status sync from Stripe Connect.
+ */
+export interface ConnectAccountEvent extends ConnectEventBase {
+  type: "account.updated" | "account.application.deauthorized";
   status: ConnectAccountStatus;
   chargesEnabled: boolean;
   payoutsEnabled: boolean;
 }
+
+/**
+ * A payment event on a Connected Account — checkout completed by a customer.
+ * Arrives via the Connect webhook because the session was created as a direct
+ * charge on the connected account (stripeAccount header), not on the platform.
+ */
+export interface ConnectPaymentEvent extends ConnectEventBase {
+  type: "checkout.session.completed";
+  /** The Stripe Checkout Session id (cs_xxx). */
+  sessionId: string;
+  /** The payment status from the session: "paid" | "unpaid". */
+  paymentStatus: string;
+  /** Total amount in minor units. */
+  amount: number;
+  /** ISO 4217 currency code, lowercase (e.g. "pln"). */
+  currency: string;
+  /** Custom metadata written at session creation — contains bookingId, organizationId. */
+  metadata: Record<string, string>;
+}
+
+export type ConnectEvent = ConnectAccountEvent | ConnectPaymentEvent;
 
 export interface CreateConnectAccountInput {
   /** ISO 3166-1 alpha-2 country code. Must be in Stripe's supported list. */
@@ -189,6 +220,27 @@ export interface CreateAccountOnboardingLinkInput {
   accountId: string;
   returnUrl: string;
   refreshUrl: string;
+}
+
+// ── Faza 11 — Online single-class checkout (EPIK 5) ─────────────────────
+
+/**
+ * Input for creating a Stripe Checkout Session on a Connected Account
+ * (direct charge via stripeAccount header).
+ */
+export interface ConnectCheckoutInput {
+  /** The org's Stripe Connect account id (acct_xxx). */
+  accountId: string;
+  /** Amount in minor units — from booking.priceSnapshot.amount. */
+  amount: number;
+  /** ISO 4217 currency, lowercase — from booking.priceSnapshot.currency. */
+  currency: string;
+  /** The booking id — stored in session metadata for webhook correlation. */
+  bookingId: string;
+  /** The organization id — also in metadata for tenant resolution. */
+  organizationId: string;
+  successUrl: string;
+  cancelUrl: string;
 }
 
 export type VerifyConnectWebhookResult =
@@ -267,5 +319,20 @@ export interface BillingAdapter {
    */
   createAccountOnboardingLink(
     input: CreateAccountOnboardingLinkInput,
+  ): Promise<BillingRedirectResult>;
+
+  // ── Faza 11 — Online single-class checkout (EPIK 5) ─────────────────
+
+  /**
+   * Create a Checkout Session on a Connected Account (direct charge).
+   *
+   * Stripe is told to create the session ON the connected account (via the
+   * `stripeAccount` per-request header), so the payment flows through the
+   * academy's own Stripe account, not the platform's. The resulting webhook
+   * event (`checkout.session.completed`) arrives on the Connect webhook
+   * endpoint, not the platform billing one.
+   */
+  createConnectCheckoutSession(
+    input: ConnectCheckoutInput,
   ): Promise<BillingRedirectResult>;
 }

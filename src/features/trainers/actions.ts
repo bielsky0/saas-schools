@@ -47,11 +47,11 @@ export async function deactivateTrainerAction(
     );
 
     revalidatePath(`/dashboard/trainers`);
-    return { success: t("trainerDeactivated", { defaultValue: "Trainer deactivated." }) };
+    return { success: t("trainerDeactivated" as Parameters<typeof t>[0], { defaultValue: "Trainer deactivated." }) };
   } catch (e) {
     if (e instanceof TrainerNotFoundError) return { error: t("errors.generic") };
     if (e instanceof TrainerHasFutureSessionsError) {
-      return { error: t("errors.trainerHasFutureSessions", { defaultValue: "Trainer has future sessions." }) };
+      return { error: t("errors.trainerHasFutureSessions" as Parameters<typeof t>[0], { defaultValue: "Trainer has future sessions." }) };
     }
     throw e;
   }

@@ -41,4 +41,4 @@ export type {
   JobWriter,
   JobsAdapter,
 } from "./contract";
-export { isDeduped } from "./contract";
+export const isDeduped = (dedupeKey: string) => jobs.isDeduped(dedupeKey);

@@ -937,7 +937,8 @@
     },
     "done": {
       "booked": "Booking created.",
-      "bookedOffline": "Pay on site before the class."
+      "bookedOffline": "Pay on site before the class.",
+      "redirecting": "Redirecting to payment gateway…"
     },
     "errors": {
       "verifyFirst": "Confirm your email address with a code first.",

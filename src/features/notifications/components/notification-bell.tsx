@@ -76,7 +76,7 @@ export function NotificationBell() {
 
   function labelFor(item: Item, field: "title" | "body"): string {
     if (!isNotificationType(item.type)) return "";
-    return t(`types.${item.type}.${field}`, item.params);
+    return t(`types.${item.type}.${field}` as Parameters<typeof t>[0], item.params);
   }
 
   async function open(item: Item) {

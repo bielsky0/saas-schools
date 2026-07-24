@@ -36,7 +36,7 @@ export function NotificationPreferencesForm({
           <PreferenceRow
             key={type}
             type={type}
-            label={t(`preferences.types.${type}`)}
+            label={t(`preferences.types.${type}` as Parameters<typeof t>[0])}
             locked={!isSuppressibleType(type)}
             defaultChecked={!disabledByType[type]}
           />

@@ -6,8 +6,11 @@ import { db } from "@/lib/db";
 import { withTenant } from "@/lib/db/tenant";
 import { membership, organization, user } from "@/lib/db/schema";
 import { env } from "@/lib/env/server";
+import { createLogger } from "@/lib/logger";
 import { resolveUniqueSlug } from "@/features/organizations/slug";
 import { isSlugTaken } from "@/features/organizations/data";
+
+const log = createLogger("dev:seed-org");
 
 /**
  * Test-only organization seeder (spec 14.1). Creates an org owned by an existing
@@ -103,28 +106,34 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   // as in that action: the GUC must be set when the transaction opens.
   const organizationId = randomUUID();
 
-  await withTenant(organizationId, async (tx) => {
-    await tx.insert(organization).values({
-      id: organizationId,
-      name,
-      slug,
-      subdomain,
-      timezone: body.timezone ?? SEED_TIMEZONE,
-      currency: body.currency ?? SEED_CURRENCY,
-      createdByUserId: ownerId,
-    });
-    await tx
-      .insert(membership)
-      .values({ organizationId, userId: ownerId, role: "owner", status: "active" });
-    for (const m of members) {
-      const uid = idByEmail.get(m.email.toLowerCase());
-      if (!uid) continue;
+  try {
+    await withTenant(organizationId, async (tx) => {
+      await tx.insert(organization).values({
+        id: organizationId,
+        name,
+        slug,
+        subdomain,
+        timezone: body.timezone ?? SEED_TIMEZONE,
+        currency: body.currency ?? SEED_CURRENCY,
+        createdByUserId: ownerId,
+      });
       await tx
         .insert(membership)
-        .values({ organizationId, userId: uid, role: m.role, status: "active" })
-        .onConflictDoNothing();
-    }
-  });
+        .values({ organizationId, userId: ownerId, role: "owner", status: "active" });
+      for (const m of members) {
+        const uid = idByEmail.get(m.email.toLowerCase());
+        if (!uid) continue;
+        await tx
+          .insert(membership)
+          .values({ organizationId, userId: uid, role: m.role, status: "active" })
+          .onConflictDoNothing();
+      }
+    });
+  } catch (err) {
+    const cause = err instanceof Error && 'cause' in err ? String((err as any).cause) : 'none';
+    log.error("seed-org failed", { error: String(err), cause });
+    return NextResponse.json({ error: String(err), cause }, { status: 500 });
+  }
 
   return NextResponse.json({ ok: true, slug, subdomain, orgId: organizationId });
 }

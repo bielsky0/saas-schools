@@ -2,7 +2,7 @@ import { and, count, countDistinct, eq, gte, isNull } from "drizzle-orm";
 
 import { db } from "@/lib/db";
 import { enqueueEmail } from "@/features/emails/send";
-import { env } from "@/lib/env/server";
+import { site } from "@/lib/site";
 import {
   organizationLimitOverride,
   planFeatureFlag,
@@ -257,7 +257,7 @@ async function enqueueApproachingNotification(
     max_sessions_per_month: "sesje w miesiącu",
   };
 
-  const billingUrl = `${env.NEXT_PUBLIC_APP_URL}/dashboard/billing`;
+  const billingUrl = `${site.url}/dashboard/billing`;
 
   for (const admin of admins) {
     await enqueueEmail(
@@ -323,7 +323,7 @@ export async function enqueueLimitReachedNotification(
     max_sessions_per_month: "sesje w miesiącu",
   };
 
-  const billingUrl = `${env.NEXT_PUBLIC_APP_URL}/dashboard/billing`;
+  const billingUrl = `${site.url}/dashboard/billing`;
 
   for (const admin of admins) {
     await enqueueEmail(

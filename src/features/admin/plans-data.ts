@@ -169,6 +169,8 @@ export async function createPlanAction(
       })
       .returning({ id: plan.id });
 
+    if (!row) throw new Error("Failed to create plan — no row returned");
+
     await recordAudit(tx, {
       action: "plan.create",
       actor: { actorType: "SuperAdmin", actorId: ctx.actorId, actorEmail: ctx.actorEmail },

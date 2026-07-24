@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import Link from "next/link";
 
+import type { FormState } from "@/lib/validation";
 import { cn } from "@/lib/utils";
 import { Plus, Edit, Trash2 } from "lucide-react";
 
@@ -157,7 +158,7 @@ export default function AdminPlansClient({ initialPlans, initialOverrides }: Adm
 }
 
 function PlanRow({ plan }: { plan: PlanData }) {
-  const [deleteState, deleteAction] = useActionState(deletePlanAction, { error: null, success: null });
+  const [deleteState, deleteAction] = useActionState(deletePlanAction, {} as FormState);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
@@ -194,7 +195,7 @@ function PlanRow({ plan }: { plan: PlanData }) {
           </Link>
           <button
             onClick={handleDelete}
-            disabled={isDeleting || deleteState.error}
+            disabled={isDeleting || !!deleteState.error}
             className="text-muted-foreground hover:text-destructive disabled:opacity-50"
           >
             <Trash2 className="h-4 w-4" />
@@ -359,7 +360,7 @@ function PlanCreateDialog() {
     setError(null);
     setSuccess(null);
     const fd = new FormData(e.currentTarget);
-    const result = await createPlanAction({ error: null, success: null }, fd);
+    const result = await createPlanAction({} as FormState, fd);
     if (result.error) setError(result.error);
     if (result.success) {
       setSuccess(result.success);
@@ -444,7 +445,7 @@ function OverrideCreateDialog() {
     setError(null);
     setSuccess(null);
     const fd = new FormData(e.currentTarget);
-    const result = await upsertOrgOverrideAction({ error: null, success: null }, fd);
+    const result = await upsertOrgOverrideAction({} as FormState, fd);
     if (result.error) setError(result.error);
     if (result.success) {
       setSuccess(result.success);
@@ -509,7 +510,7 @@ function OverrideCreateDialog() {
 }
 
 function PlanLimitDeleteButton({ planId, limitKey }: { planId: string; limitKey: string }) {
-  const [state, action] = useActionState(deletePlanLimitAction, { error: null, success: null });
+  const [state, action] = useActionState(deletePlanLimitAction, {} as FormState);
 
   const handleClick = async () => {
     if (!confirm(`Delete limit "${limitKey}" for this plan?`)) return;
@@ -522,7 +523,7 @@ function PlanLimitDeleteButton({ planId, limitKey }: { planId: string; limitKey:
   return (
     <button
       onClick={handleClick}
-      disabled={state.error || state.success}
+      disabled={!!state.error || !!state.success}
       className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded p-1 disabled:opacity-50"
     >
       <Trash2 className="h-4 w-4" />
@@ -531,7 +532,7 @@ function PlanLimitDeleteButton({ planId, limitKey }: { planId: string; limitKey:
 }
 
 function PlanFeatureDeleteButton({ planId, featureKey }: { planId: string; featureKey: string }) {
-  const [state, action] = useActionState(deletePlanFeatureAction, { error: null, success: null });
+  const [state, action] = useActionState(deletePlanFeatureAction, {} as FormState);
 
   const handleClick = async () => {
     if (!confirm(`Delete feature flag "${featureKey}" for this plan?`)) return;
@@ -544,7 +545,7 @@ function PlanFeatureDeleteButton({ planId, featureKey }: { planId: string; featu
   return (
     <button
       onClick={handleClick}
-      disabled={state.error || state.success}
+      disabled={!!state.error || !!state.success}
       className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded p-1 disabled:opacity-50"
     >
       <Trash2 className="h-4 w-4" />
@@ -561,7 +562,7 @@ function OverrideDeleteButton({ orgId, limitKey }: { orgId: string; limitKey: st
     const fd = new FormData();
     fd.append("organizationId", orgId);
     fd.append("limitKey", limitKey);
-    await deleteOrgOverrideAction({ error: null, success: null }, fd);
+    await deleteOrgOverrideAction({} as FormState, fd);
     setDeleting(false);
   };
 

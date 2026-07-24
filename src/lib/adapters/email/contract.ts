@@ -88,6 +88,18 @@ export interface TemplateProps {
     creditInfo?: string;
   };
   /**
+   * Session cancelled by admin — sent to every parent whose booking was affected
+   * (langlion US-19.2/AC3, Faza 7).
+   */
+  "session-cancelled": {
+    orgName: string;
+    athleteName: string;
+    groupTypeName: string;
+    sessionDate: string;
+    sessionTime: string;
+    creditInfo?: string;
+  };
+  /**
    * F9 / EPIK 29 — Plan limit approaching (80% threshold, email-only).
    * Not suppressible in-app (not in notification_preference) — always delivered via email.
    */

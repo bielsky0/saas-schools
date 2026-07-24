@@ -93,7 +93,7 @@ export async function massMoveBookings(
   }
 
   // LOCK ORDER: lock sessions in ascending id order to prevent deadlock.
-  const [firstId, secondId] = [input.sourceSessionId, input.targetSessionId].sort();
+  const [firstId, secondId] = [input.sourceSessionId, input.targetSessionId].sort() as [string, string];
 
   const [firstSession] = await tx
     .select()

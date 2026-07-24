@@ -105,7 +105,7 @@ function planBullets(
   // Translation keys use dots: "pricing.features.audit.export"
   for (const [featureKey, enabled] of Object.entries(features)) {
     if (enabled) {
-      bullets.push(t(`pricing.features.${featureKey}`));
+      bullets.push(t(`pricing.features.${featureKey}` as Parameters<typeof t>[0]));
     }
   }
   return bullets;
@@ -248,15 +248,15 @@ export default async function Home() {
                       <Badge className="normal-case">{t("pricing.popular")}</Badge>
                     ) : null}
                   </div>
-                  <p className="text-muted-foreground text-sm">{t(`pricing.${plan.code}.desc`)}</p>
+                  <p className="text-muted-foreground text-sm">{t(`pricing.${plan.code}.desc` as Parameters<typeof t>[0])}</p>
                   <div className="mt-2 flex items-baseline gap-1">
                     <span className="text-3xl font-semibold">
-                      {format.number(plan.amount / 100, {
+                      {format.number((plan.amount ?? 0) / 100, {
                         style: "currency",
-                        currency: plan.currency.toUpperCase(),
+                        currency: (plan.currency ?? "USD").toUpperCase(),
                         // Whole-unit prices render as "$29", not "$29.00"; a plan
                         // priced at 29.50 still shows its cents.
-                        maximumFractionDigits: plan.amount % 100 === 0 ? 0 : 2,
+                        maximumFractionDigits: (plan.amount ?? 0) % 100 === 0 ? 0 : 2,
                       })}
                     </span>
                     {/* Free plans have no billing period to name. */}
@@ -280,7 +280,7 @@ export default async function Home() {
                     variant={plan.featured ? "default" : "outline"}
                     className="w-full"
                   >
-                    <Link href="/signup">{t(`pricing.${plan.code}.cta`)}</Link>
+                    <Link href="/signup">{t(`pricing.${plan.code}.cta` as Parameters<typeof t>[0])}</Link>
                   </Button>
                 </CardContent>
               </Card>

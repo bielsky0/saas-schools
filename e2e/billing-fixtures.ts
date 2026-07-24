@@ -205,3 +205,45 @@ export function connectAccountDeauthorizedEvent(
     },
   };
 }
+
+// ── Faza 11 — checkout.session.completed (EPIK 5) ─────────────────────
+
+/**
+ * Minimal `checkout.session.completed` payload for a Connect direct-charge
+ * session. The `account` field is what distinguishes Connect events from
+ * platform events — without it Stripe would not know which connected account
+ * the event is about.
+ */
+export function connectCheckoutCompletedEvent(
+  opts: ConnectEventBase & {
+    sessionId: string;
+    bookingId: string;
+    organizationId: string;
+    paymentStatus?: string;
+    amount?: number;
+    currency?: string;
+  },
+) {
+  const created = opts.createdAt ?? Math.floor(Date.now() / 1000);
+  return {
+    id: opts.eventId,
+    object: "event",
+    created,
+    type: "checkout.session.completed",
+    // Direct charge events carry the connected account id here.
+    account: opts.accountId ?? E2E_CONNECT_ACCOUNT_ID,
+    data: {
+      object: {
+        id: opts.sessionId,
+        object: "checkout.session",
+        payment_status: opts.paymentStatus ?? "paid",
+        amount_total: opts.amount ?? 5000,
+        currency: opts.currency ?? "pln",
+        metadata: {
+          bookingId: opts.bookingId,
+          organizationId: opts.organizationId,
+        },
+      },
+    },
+  };
+}

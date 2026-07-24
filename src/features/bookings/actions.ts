@@ -8,6 +8,8 @@ import { resolveClientSession } from "@/features/client-auth/session";
 import { requireServedOrganization } from "@/features/organizations/served-org";
 import { withTenant } from "@/lib/db/tenant";
 import type { FormState } from "@/lib/validation";
+import { assertConnectActive } from "@/features/billing/checkout";
+import { startConnectCheckout } from "@/features/billing/connect-checkout";
 import {
   createBooking,
   ForeignAthleteError,
@@ -33,7 +35,12 @@ import { createBookingSchema } from "./schema";
  * the target renders without the locale prefix or `x-org-subdomain` (F4.6); the
  * flow advances client-side on the returned `bookingId` instead.
  */
-export type CreateBookingState = FormState & { bookingId?: string; paymentStatus?: string };
+export type CreateBookingState = FormState & {
+  bookingId?: string;
+  paymentStatus?: string;
+  /** Stripe Checkout URL — set when online payment is needed. The UI redirects to it. */
+  checkoutUrl?: string;
+};
 
 export async function createBookingAction(
   _prev: CreateBookingState,
@@ -88,17 +95,48 @@ export async function createBookingAction(
         sessionId: parsed.data.sessionId,
         paymentMethod: parsed.data.paymentMethod,
         participant: parsed.data.participant,
-        // F5: no Stripe Connect yet, so online is never actually available. F10/F11
-        // replaces this literal with `org.stripeConnectChargesEnabled` (§2.25).
-        onlineAvailable: false,
+        // F11: online availability is determined by the org's Connect status.
+        onlineAvailable: org.stripeConnectChargesEnabled ?? false,
       });
     });
 
+    // ── Online payment: redirect to Stripe Checkout ─────────────────────
+    // Called AFTER the booking transaction commits, never inside it — holding
+    // a pooled connection across the Stripe HTTP round-trip is the deadlock
+    // pattern documented in checkout.ts.
+    let checkoutUrl: string | undefined;
+    if (result.paymentStatus === "payment_pending") {
+      // Gate: org must have an active Connect account (§2.25).
+      await assertConnectActive(org.id);
+
+      if (!org.stripeConnectAccountId) {
+        throw new Error("org has no Connect account but payment_pending was created");
+      }
+
+      const checkout = await startConnectCheckout(
+        org.id,
+        org.subdomain,
+        result.bookingId,
+        result.priceSnapshot.amount,
+        result.priceSnapshot.currency,
+        org.stripeConnectAccountId,
+      );
+
+      if (checkout.ok) {
+        checkoutUrl = checkout.url;
+      } else {
+        // Booking was created but Stripe Checkout failed. The booking remains
+        // payment_pending — the parent can retry later or contact support.
+        // No throw: the booking still exists, we just report the error.
+      }
+    }
+
     revalidatePath(`/zapisy/${parsed.data.groupTypeSlug}`);
     return {
-      success: t("done.booked"),
+      success: checkoutUrl ? undefined : t("done.booked"),
       bookingId: result.bookingId,
       paymentStatus: result.paymentStatus,
+      checkoutUrl,
     };
   } catch (error) {
     return { error: messageFor(error, t) };

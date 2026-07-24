@@ -10,6 +10,7 @@ import type {
   BillingSubscriptionStatus,
   CheckoutSessionInput,
   ConnectAccountStatus,
+  ConnectCheckoutInput,
   ConnectEvent,
   CreateAccountOnboardingLinkInput,
   CreateConnectAccountInput,
@@ -190,7 +191,8 @@ function parseEvent(event: Stripe.Event): BillingEvent | null {
 
 /**
  * Parse a Connect event into a neutral ConnectEvent.
- * Handles account.updated and account.application.deauthorized.
+ * Handles account.updated, account.application.deauthorized, and
+ * checkout.session.completed (F11 / EPIK 5 — direct charge).
  */
 function parseConnectEvent(event: Stripe.Event): ConnectEvent | null {
   const base = { provider: PROVIDER, id: event.id, occurredAt: new Date(event.created * 1000) };
@@ -239,6 +241,35 @@ function parseConnectEvent(event: Stripe.Event): ConnectEvent | null {
         status: "not_connected",
         chargesEnabled: false,
         payoutsEnabled: false,
+      };
+    }
+
+    case "checkout.session.completed": {
+      const session = z
+        .object({
+          id: z.string(),
+          payment_status: z.string(),
+          amount_total: z.number().int().nonnegative(),
+          currency: z.string(),
+          metadata: z.record(z.string(), z.string()),
+        })
+        .parse(event.data.object);
+
+      // `event.account` is populated by Stripe for Connect webhook events.
+      // We assert it rather than skipping the event silently: a missing account
+      // on a Connect webhook is a configuration error that should be visible.
+      const accountId = event.account;
+      if (!accountId) return null;
+
+      return {
+        ...base,
+        accountId,
+        type: "checkout.session.completed" as const,
+        sessionId: session.id,
+        paymentStatus: session.payment_status,
+        amount: session.amount_total,
+        currency: session.currency,
+        metadata: session.metadata,
       };
     }
 
@@ -399,6 +430,50 @@ export function createStripeBillingAdapter(): BillingAdapter {
         return { ok: true, url: link.url };
       } catch (err) {
         return providerError("createAccountOnboardingLink", err);
+      }
+    },
+
+    // ── Faza 11 — Online single-class checkout (EPIK 5) ─────────────────
+
+    async createConnectCheckoutSession(
+      input: ConnectCheckoutInput,
+    ): Promise<BillingRedirectResult> {
+      try {
+        const session = await stripe.checkout.sessions.create(
+          {
+            mode: "payment",
+            line_items: [
+              {
+                price_data: {
+                  currency: input.currency,
+                  product_data: { name: "Zajęcia" },
+                  unit_amount: input.amount,
+                },
+                quantity: 1,
+              },
+            ],
+            metadata: {
+              bookingId: input.bookingId,
+              organizationId: input.organizationId,
+            },
+            success_url: input.successUrl,
+            cancel_url: input.cancelUrl,
+          },
+          // Direct charge: create the session ON the connected account.
+          // Without this header Stripe would create it on the platform, the
+          // event would arrive on the platform webhook, and the Connect
+          // webhook route would never see it.
+          { stripeAccount: input.accountId },
+        );
+        if (!session.url) {
+          return providerError(
+            "createConnectCheckoutSession",
+            new Error("session has no url"),
+          );
+        }
+        return { ok: true, url: session.url };
+      } catch (err) {
+        return providerError("createConnectCheckoutSession", err);
       }
     },
   };

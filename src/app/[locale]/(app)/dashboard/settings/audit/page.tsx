@@ -62,7 +62,7 @@ export default async function OrgAuditPage({
   // rather than throwing a missing-key error and 500ing a compliance view. Same
   // pattern as `roleLabel` in members/page.tsx.
   const actionLabel = (action: string) =>
-    (AUDIT_ACTIONS as readonly string[]).includes(action) ? ta(action as AuditAction) : action;
+    (AUDIT_ACTIONS as readonly string[]).includes(action) ? ta(action as Parameters<typeof ta>[0]) : action;
 
   const pageHref = (next: number) => {
     const params = new URLSearchParams();
@@ -138,7 +138,7 @@ export default async function OrgAuditPage({
                 <TableCell>
                   <span className="font-medium">{row.actorEmail}</span>
                   <div className="text-muted-foreground text-xs">
-                    {t(`actorTypes.${row.actorType}`)}
+                    {t(`actorTypes.${row.actorType}` as Parameters<typeof t>[0])}
                     {typeof row.metadata?.onBehalfOf === "string"
                       ? ` — ${t("onBehalfOf", { email: row.metadata.onBehalfOf })}`
                       : null}

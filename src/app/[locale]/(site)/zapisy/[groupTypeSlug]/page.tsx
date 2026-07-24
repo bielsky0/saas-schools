@@ -54,14 +54,13 @@ export default async function EnrollmentPage({
   const principal = await resolveClientSession(org.id);
   const recognized = principal?.isVerified ? principal : null;
 
-  // F5: Stripe Connect is F10, online checkout F11 — no organisation can take a
-  // card yet, so online is never actually available. F10/F11 swaps this literal.
+  // F11: online availability depends on the org's Stripe Connect status (§2.25).
   const paymentView = paymentOptionsFor(
     {
       paymentPolicy: groupType.paymentPolicy,
       allowedPurchaseModes: groupType.allowedPurchaseModes,
     },
-    { onlineAvailable: false },
+    { onlineAvailable: org.stripeConnectChargesEnabled ?? false },
   );
 
   // The month the calendar shows. Package-only / none-available offers render no

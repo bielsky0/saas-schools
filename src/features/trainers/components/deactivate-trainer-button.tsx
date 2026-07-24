@@ -21,14 +21,14 @@ export function DeactivateTrainerButton({
       <ConfirmDialog
         trigger={
           <Button variant="destructive" size="sm" disabled={hasFutureSessions}>
-            {t("deactivate", { defaultValue: "Deactivate" })}
+            {t("deactivate" as Parameters<typeof t>[0], { defaultValue: "Deactivate" })}
           </Button>
         }
-        title={t("deactivate", { defaultValue: "Deactivate trainer" })}
+        title={t("deactivate" as Parameters<typeof t>[0], { defaultValue: "Deactivate trainer" })}
         description={
-          <p>{hasFutureSessions ? t("trainerHasFutureSessions", { defaultValue: "Trainer has future sessions — resolve them first." }) : t("deactivateConfirm", { defaultValue: "Are you sure? The trainer will lose access to the academy panel." })}</p>
+          <p>{hasFutureSessions ? t("trainerHasFutureSessions" as Parameters<typeof t>[0], { defaultValue: "Trainer has future sessions — resolve them first." }) : t("deactivateConfirm" as Parameters<typeof t>[0], { defaultValue: "Are you sure? The trainer will lose access to the academy panel." })}</p>
         }
-        confirmLabel={pending ? t("deactivating", { defaultValue: "Deactivating…" }) : t("deactivate", { defaultValue: "Deactivate" })}
+        confirmLabel={pending ? t("deactivating" as Parameters<typeof t>[0], { defaultValue: "Deactivating…" }) : t("deactivate" as Parameters<typeof t>[0], { defaultValue: "Deactivate" })}
         confirmForm="deactivate-trainer-form"
         confirmVariant="destructive"
         disabled={pending || hasFutureSessions}

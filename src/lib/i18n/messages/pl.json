@@ -937,7 +937,8 @@
     },
     "done": {
       "booked": "Rezerwacja utworzona.",
-      "bookedOffline": "Zapłać na miejscu przed zajęciami."
+      "bookedOffline": "Zapłać na miejscu przed zajęciami.",
+      "redirecting": "Przekierowujemy do bramki płatności…"
     },
     "errors": {
       "verifyFirst": "Najpierw potwierdź swój adres e-mail kodem.",

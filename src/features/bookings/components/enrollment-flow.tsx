@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 
 import {
   Alert,
@@ -97,7 +97,25 @@ function Bookable({
   const daySlots =
     grid.find((d) => d.dayKey === selectedDay)?.slots.filter((s) => s.bookable) ?? [];
 
+  // Redirect to Stripe Checkout when online payment is needed.
+  useEffect(() => {
+    if (state.checkoutUrl) {
+      window.location.href = state.checkoutUrl;
+    }
+  }, [state.checkoutUrl]);
+
   if (state.bookingId) {
+    // Online payment: redirect is about to happen (or already happened).
+    // If there's a checkoutUrl, the redirect effect fires above — show a
+    // transitional message. If there's no checkoutUrl, the Stripe session
+    // creation failed; the booking is pending and needs manual attention.
+    if (state.checkoutUrl) {
+      return (
+        <Notice>
+          {t("done.redirecting")}
+        </Notice>
+      );
+    }
     return (
       <Notice>
         {t("done.booked")} {t("done.bookedOffline")}
