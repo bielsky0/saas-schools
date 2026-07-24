@@ -1,6 +1,7 @@
 import { foreignKey, index, integer, pgTable, text, timestamp, unique } from "drizzle-orm/pg-core";
 
 import { athlete } from "./athletes";
+import { user } from "./auth";
 import { client } from "./clients";
 import { clientSubscription } from "./client-subscriptions";
 import { organization } from "./organizations";
@@ -47,6 +48,20 @@ export const creditPurchase = pgTable(
       .notNull(),
     /** The Stripe Checkout Session id for online purchases. */
     stripeSessionId: text("stripe_session_id"),
+    /** The Stripe PaymentIntent id (pi_xxx). Set at refund initiation time for online/webhook matching. */
+    stripePaymentIntentId: text("stripe_payment_intent_id"),
+    /** Amount paid in minor units — used in the refund formula ((unused / purchased) × price_paid). */
+    pricePaid: integer("price_paid").notNull(),
+    /** Moment the admin clicked "initiate refund". */
+    refundInitiatedAt: timestamp("refund_initiated_at"),
+    /** Which refund variant was selected at initiation time. */
+    refundVariant: text("refund_variant").$type<"partial" | "full_reversal">(),
+    /** Moment the refund was confirmed (webhook for online, admin click for cash). */
+    refundedAt: timestamp("refunded_at"),
+    /** Calculated refund amount in minor units. */
+    refundAmount: integer("refund_amount"),
+    /** Who confirmed the cash refund. Null for online (webhook-driven). */
+    refundConfirmedByUserId: text("refund_confirmed_by_user_id"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (t) => [
@@ -70,6 +85,11 @@ export const creditPurchase = pgTable(
       columns: [t.clientSubscriptionId],
       foreignColumns: [clientSubscription.id],
       name: "credit_purchase_client_subscription_fk",
+    }).onDelete("set null"),
+    foreignKey({
+      columns: [t.refundConfirmedByUserId],
+      foreignColumns: [user.id],
+      name: "credit_purchase_refund_confirmed_by_fk",
     }).onDelete("set null"),
     index("credit_purchase_org_idx").on(t.organizationId),
     index("credit_purchase_client_idx").on(t.clientId),

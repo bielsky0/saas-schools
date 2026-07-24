@@ -35,6 +35,11 @@ export interface ConfirmCashPurchaseInput {
   athleteId?: string | null;
   /** IANA zone from `organization.timezone` — never the server's (US-1.2/AC3). */
   timeZone: string;
+  /**
+   * Amount paid in minor units. Used in the refund formula
+   * ((unused / purchased) × price_paid). Defaults to productTemplate.price.
+   */
+  pricePaid?: number;
   actor: AuditActor;
   now?: Date;
 }
@@ -77,6 +82,7 @@ export async function confirmCashPurchase(
   const [tmpl] = await tx
     .select({
       id: productTemplate.id,
+      price: productTemplate.price,
       creditTypeId: productTemplate.creditTypeId,
       creditQuantity: productTemplate.creditQuantity,
       isActive: productTemplate.isActive,
@@ -170,6 +176,7 @@ export async function confirmCashPurchase(
       productTemplateId: tmpl.id,
       athleteId: input.athleteId ?? null,
       quantity: tmpl.creditQuantity,
+      pricePaid: input.pricePaid ?? tmpl.price,
       paymentMethod: "cash",
     })
     .returning({ id: creditPurchase.id });

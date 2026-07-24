@@ -109,7 +109,11 @@ export type Permission =
   /** Zatwierdzanie wniosków o zmianę grupy (Owner, Admin, Sekretariat). */
   | "group_swap.approve"
   /** Reasygnacja kredytu między dziećmi tego samego rodzica (Owner, Admin, Sekretariat). */
-  | "credits.reassign_athlete";
+  | "credits.reassign_athlete"
+  // ── Faza 16 — Zwroty fiducjarne (EPIK 18) ────────────────────────────
+  //
+  /** Initiate and confirm refunds (Owner, Admin, Sekretariat). */
+  | "refunds.issue";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -153,6 +157,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "credits.purchase_cash",
     "group_swap.approve",
     "credits.reassign_athlete",
+    "refunds.issue",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -189,6 +194,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "credits.purchase_cash",
     "group_swap.approve",
     "credits.reassign_athlete",
+    "refunds.issue",
   ],
   /**
    * The three langlion staff roles (§2.10).
@@ -224,6 +230,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
       "bookings.cancel_reschedule",
       "group_swap.approve",
       "credits.reassign_athlete",
+      "refunds.issue",
     ],
   reception: [
     "organization.leave",

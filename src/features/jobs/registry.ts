@@ -8,6 +8,7 @@ import { rateLimitPruneHandler } from "@/features/rate-limit/handler";
 import { sessionsGenerateHandler } from "@/features/schedule/generate";
 import { storagePurgeHandler } from "@/features/storage/purge";
 import { groupChangesExpireHandler } from "@/features/bookings/change-group-expire";
+import { refundsRecoverHandler } from "@/features/credits/refund-recover";
 import { jobPruneHandler } from "./handler";
 
 /**
@@ -35,4 +36,5 @@ export const registry: JobRegistry = {
   "sessions.generate": sessionsGenerateHandler,
   "credits.expire": creditsExpireHandler,
   "group_changes.expire": groupChangesExpireHandler,
+  "refunds.recover": refundsRecoverHandler,
 };

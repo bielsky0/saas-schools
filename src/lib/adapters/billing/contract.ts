@@ -109,6 +109,7 @@ export type VerifyWebhookResult =
  * adapter logs the underlying cause; the caller gets a 502 and a generic message.
  */
 export type BillingOperationErrorCode = "NOT_CONFIGURED" | "PROVIDER_ERROR";
+export type BillingResolutionErrorCode = BillingOperationErrorCode | "NOT_FOUND";
 
 /**
  * Checkout and portal both answer the same question — "where do I send the
@@ -169,7 +170,8 @@ export type ConnectEventType =
   | "checkout.session.completed"
   | "invoice.paid"
   | "invoice.payment_failed"
-  | "customer.subscription.deleted";
+  | "customer.subscription.deleted"
+  | "charge.refunded";
 
 /** Fields common to every Connect webhook event. */
 interface ConnectEventBase {
@@ -240,7 +242,33 @@ export interface ConnectSubscriptionEvent extends ConnectEventBase {
   currency?: string;
 }
 
-export type ConnectEvent = ConnectAccountEvent | ConnectPaymentEvent | ConnectSubscriptionEvent;
+/**
+ * A charge refund event on a Connected Account (Faza 16).
+ *
+ * Arrives via the Connect webhook when a refund is issued on a charge belonging
+ * to a Connected Account. The metadata originates from the PaymentIntent's
+ * metadata, which mirrors the checkout session's metadata where we stored
+ * `creditPurchaseId` at refund initiation time.
+ */
+export interface ConnectRefundEvent extends ConnectEventBase {
+  type: "charge.refunded";
+  /** The Stripe charge id (ch_xxx). */
+  chargeId: string;
+  /** The Stripe PaymentIntent id (pi_xxx). */
+  paymentIntentId: string;
+  /** The amount refunded in minor units. */
+  amount: number;
+  /** The Stripe refund id (re_xxx). */
+  refundId: string;
+  /** Metadata from the PaymentIntent — contains creditPurchaseId and organizationId. */
+  metadata: Record<string, string>;
+}
+
+export type ConnectEvent =
+  | ConnectAccountEvent
+  | ConnectPaymentEvent
+  | ConnectSubscriptionEvent
+  | ConnectRefundEvent;
 
 export interface CreateConnectAccountInput {
   /** ISO 3166-1 alpha-2 country code. Must be in Stripe's supported list. */
@@ -474,4 +502,41 @@ export interface BillingAdapter {
    * to manage their payment method and cancel their subscription.
    */
   createConnectPortalSession(input: PortalSessionInput): Promise<BillingRedirectResult>;
+
+  // ── Faza 16 — Zwroty fiducjarne (EPIK 18) ─────────────────────────────
+
+  /**
+   * Issue a refund on a Connected Account charge.
+   *
+   * Calls Stripe Refund API with the payment intent that was charged on the
+   * connected account. The call is made with an idempotency key derived from
+   * `creditPurchaseId` to guarantee safety against retries.
+   */
+  createConnectRefund(
+    input: ConnectRefundInput,
+  ): Promise<{ ok: true; refundId: string } | { ok: false; code: BillingOperationErrorCode }>;
+
+  /**
+   * Resolve the Stripe PaymentIntent id from a Checkout Session.
+   *
+   * Needed at refund initiation time for online_one_time purchases where
+   * only the session id is stored on `creditPurchase.stripeSessionId`.
+   */
+  resolveConnectPaymentIntentId(
+    sessionId: string,
+    accountId: string,
+  ): Promise<{ ok: true; paymentIntentId: string } | { ok: false; code: BillingResolutionErrorCode }>;
+}
+
+export interface ConnectRefundInput {
+  /** The org's Stripe Connect account id (acct_xxx). */
+  accountId: string;
+  /** The Stripe PaymentIntent id (pi_xxx) of the original charge. */
+  paymentIntentId: string;
+  /** Amount to refund in minor units. */
+  amount: number;
+  /** Idempotency key — use creditPurchaseId to prevent double refund on retry. */
+  idempotencyKey: string;
+  /** Metadata to forward to the refund object for webhook correlation. */
+  metadata: { creditPurchaseId: string; organizationId: string };
 }

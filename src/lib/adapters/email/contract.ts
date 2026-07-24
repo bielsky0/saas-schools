@@ -55,7 +55,9 @@ export type TemplateName =
   | "group-change-cancelled"
   | "group-change-completed"
   // Faza 15 — Credit transfer (US-7.5)
-  | "credit-transfer-completed";
+  | "credit-transfer-completed"
+  // Faza 16 — Zwroty fiducjarne (EPIK 18)
+  | "refund-confirmed";
 // `magic-link` lands with spec 2.2, which is not implemented yet.
 
 /**
@@ -186,6 +188,11 @@ export interface TemplateProps {
   "credit-transfer-completed": {
     sourceAthleteName: string;
     targetAthleteName: string;
+  };
+  // Faza 16 — Zwroty fiducjarne (EPIK 18)
+  "refund-confirmed": {
+    refundAmount: string;
+    refundVariant: string;
   };
 }
 

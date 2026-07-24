@@ -70,4 +70,14 @@ export const noneBillingAdapter: BillingAdapter = {
   async createConnectPortalSession(): Promise<BillingRedirectResult> {
     return { ok: false, code: "NOT_CONFIGURED" };
   },
+
+  // ── Faza 16 — Zwroty fiducjarne (EPIK 18) ─────────────────────────────
+
+  async createConnectRefund(): Promise<{ ok: false; code: "NOT_CONFIGURED" }> {
+    return { ok: false, code: "NOT_CONFIGURED" };
+  },
+
+  async resolveConnectPaymentIntentId(): Promise<{ ok: false; code: "NOT_CONFIGURED" }> {
+    return { ok: false, code: "NOT_CONFIGURED" };
+  },
 };

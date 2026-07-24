@@ -6,13 +6,16 @@ import { createLogger } from "@/lib/logger";
 import type {
   BillingAdapter,
   BillingEvent,
+  BillingOperationErrorCode,
   BillingRedirectResult,
+  BillingResolutionErrorCode,
   BillingSubscriptionStatus,
   CheckoutSessionInput,
   ConnectAccountStatus,
   ConnectCheckoutInput,
   ConnectEvent,
   ConnectPackageCheckoutInput,
+  ConnectRefundInput,
   ConnectStripeCustomerInput,
   CreateAccountOnboardingLinkInput,
   CreateConnectAccountInput,
@@ -105,6 +108,8 @@ const chargeObject = z.object({
   customer: idRef.nullish(),
   currency: z.string(),
   amount_refunded: z.number().int(),
+  payment_intent: z.string().nullable(),
+  metadata: z.record(z.string(), z.string()).nullable(),
 });
 
 /**
@@ -310,6 +315,26 @@ function parseConnectEvent(event: Stripe.Event): ConnectEvent | null {
         type: "customer.subscription.deleted",
         stripeSubscriptionId: sub.id,
         stripeCustomerId: sub.customer,
+      };
+    }
+
+    // ── Faza 16 — Zwroty fiducjarne (EPIK 18) ──────────────────────────
+    case "charge.refunded": {
+      const charge = chargeObject.parse(event.data.object);
+      const accountId = event.account;
+      if (!accountId) return null;
+      // Without payment_intent we cannot correlate to a credit_purchase.
+      if (!charge.payment_intent) return null;
+
+      return {
+        ...base,
+        accountId,
+        type: "charge.refunded",
+        chargeId: charge.id,
+        paymentIntentId: charge.payment_intent,
+        amount: charge.amount_refunded,
+        refundId: `ref_${charge.id}`, // placeholder — Stripe sends no refund id in charge.refunded
+        metadata: charge.metadata ?? {},
       };
     }
 
@@ -611,6 +636,48 @@ export function createStripeBillingAdapter(): BillingAdapter {
         return { ok: true, url: session.url };
       } catch (err) {
         return providerError("createConnectPortalSession", err);
+      }
+    },
+
+    // ── Faza 16 — Zwroty fiducjarne (EPIK 18) ─────────────────────────────
+
+    async createConnectRefund(
+      input: ConnectRefundInput,
+    ): Promise<{ ok: true; refundId: string } | { ok: false; code: BillingOperationErrorCode }> {
+      try {
+        const refund = await stripe.refunds.create(
+          {
+            payment_intent: input.paymentIntentId,
+            amount: input.amount,
+            metadata: input.metadata,
+          },
+          {
+            stripeAccount: input.accountId,
+            idempotencyKey: `refund:${input.idempotencyKey}`,
+          },
+        );
+        return { ok: true, refundId: refund.id };
+      } catch (err) {
+        return providerError("createConnectRefund", err);
+      }
+    },
+
+    async resolveConnectPaymentIntentId(
+      sessionId: string,
+      accountId: string,
+    ): Promise<{ ok: true; paymentIntentId: string } | { ok: false; code: BillingResolutionErrorCode }> {
+      try {
+        const session = await stripe.checkout.sessions.retrieve(
+          sessionId,
+          {},
+          { stripeAccount: accountId },
+        );
+        if (!session.payment_intent) {
+          return { ok: false, code: "NOT_FOUND" };
+        }
+        return { ok: true, paymentIntentId: session.payment_intent as string };
+      } catch (err) {
+        return providerError("resolveConnectPaymentIntentId", err);
       }
     },
   };

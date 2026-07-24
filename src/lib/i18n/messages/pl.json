@@ -136,6 +136,14 @@
       "heading": "Odwołano zajęcia",
       "body": "Zajęcia {groupTypeName} ({sessionDate} {sessionTime}) dla {athleteName} zostały odwołane przez administrację.",
       "creditInfo": "Przyznano 1 korepetycję do wykorzystania na inne zajęcia tego samego typu."
+    },
+    "refund-confirmed": {
+      "subject": "Zwrot potwierdzony",
+      "preview": "Zwrot środków został przetworzony.",
+      "heading": "Zwrot potwierdzony",
+      "body": "Zwrot w kwocie {refundAmount} został przetworzony ({variant}).",
+      "partial": "zwrot częściowy",
+      "fullReversal": "zwrot pełny z cofnięciem"
     }
   },
   "auth": {
@@ -1108,7 +1116,9 @@
       "cashConfirmed": "Pakiet sprzedany. Wydano {credits} kredytów, rozliczono {settled} rezerwacji, zapisano na {filled} sesji.",
       "productTemplateNotFound": "Ten pakiet nie należy do tej akademii.",
       "productTemplateNotActive": "Ten pakiet nie jest już dostępny.",
-      "policyViolation": "Ten pakiet nie jest dostępny w ramach aktualnej polityki tego typu grupy."
+      "policyViolation": "Ten pakiet nie jest dostępny w ramach aktualnej polityki tego typu grupy.",
+      "refundInitiated": "Zwrot zainicjowany ({variant}). Środki zostaną zwrócone po potwierdzeniu przez operatora płatności.",
+      "refundFailed": "Zwrot nieudany: {error}. Kredyty zostały przywrócone."
     }
   },
   "staffPanel": {

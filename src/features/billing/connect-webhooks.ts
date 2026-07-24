@@ -3,12 +3,19 @@ import { and, eq } from "drizzle-orm";
 import type {
   ConnectAccountEvent,
   ConnectPaymentEvent,
+  ConnectRefundEvent,
   ConnectSubscriptionEvent,
 } from "@/lib/adapters/billing";
 import { billing } from "@/lib/adapters/billing";
 import { booking, classSession, creditType, groupChangeRequest, organization, webhookEvent } from "@/lib/db/schema";
 import { athlete, client } from "@/lib/db/schema";
-import { clientStripeCustomer, clientSubscription, creditPurchase, productTemplate } from "@/lib/db/schema";
+import {
+  clientStripeCustomer,
+  clientSubscription,
+  credit,
+  creditPurchase,
+  productTemplate,
+} from "@/lib/db/schema";
 import { db } from "@/lib/db";
 import { withSystemBypass } from "@/lib/db/system";
 import type { TenantDb } from "@/lib/db/tenant";
@@ -564,6 +571,7 @@ async function processPackagePurchase(
           productTemplateId,
           athleteId: null,
           quantity,
+          pricePaid: event.amount,
           paymentMethod: "online_one_time",
           stripeSessionId: event.sessionId,
         })
@@ -936,6 +944,7 @@ async function processSubscriptionInvoice(
           productTemplateId: templateId!,
           athleteId: null,
           quantity,
+          pricePaid: event.amount ?? 0,
           paymentMethod: "subscription",
           clientSubscriptionId: existingSub?.id ?? null,
         })
@@ -1159,6 +1168,173 @@ async function processSubscriptionDeleted(
       }
 
       return { status: "processed" as const };
+    },
+  );
+}
+
+// ── Faza 16 — Zwroty fiducjarne (EPIK 18) ─────────────────────────────────
+
+/**
+ * Process a Connect charge.refunded event — the confirmation that Stripe
+ * actually refunded the money.
+ *
+ * The webhook is the SOURCE OF TRUTH for online refunds (US-18.2/AC1). Until
+ * this event arrives, the refund is in-flight and credits stay pending_refund.
+ *
+ * MATCHING: The charge carries `payment_intent` which we stored as
+ * `creditPurchase.stripePaymentIntentId` at refund initiation time.
+ */
+export async function processConnectRefundEvent(
+  event: ConnectRefundEvent,
+): Promise<ConnectProcessResult> {
+  const org = await findOrgByConnectAccountId(event.accountId);
+  if (!org) {
+    log.warn("ignoring charge.refunded for unknown account", {
+      event: event.id,
+      account: event.accountId,
+    });
+    return { status: "unknown_account" };
+  }
+
+  const { recordAudit, SYSTEM_ACTOR } = await import("@/features/admin/audit");
+  const { cancelFutureBookingsForRefund } = await import("@/features/credits/refund-cancel");
+
+  return withSystemBypass(
+    "charge.refunded webhook — no user session, RLS does not apply",
+    async (tx) => {
+      // 1. Idempotency marker.
+      const [marker] = await tx
+        .insert(webhookEvent)
+        .values({
+          provider: event.provider,
+          providerEventId: event.id,
+          type: event.type,
+          organizationId: org.id,
+          occurredAt: event.occurredAt,
+        })
+        .onConflictDoNothing({
+          target: [webhookEvent.provider, webhookEvent.providerEventId],
+        })
+        .returning({ id: webhookEvent.id });
+
+      if (!marker) {
+        log.info("duplicate charge.refunded event", { event: event.id });
+        return { status: "duplicate" };
+      }
+
+      // 2. Find the credit_purchase by payment_intent_id.
+      const [cp] = await tx
+        .select({
+          id: creditPurchase.id,
+          refundVariant: creditPurchase.refundVariant,
+          refundAmount: creditPurchase.refundAmount,
+        })
+        .from(creditPurchase)
+        .where(
+          and(
+            eq(creditPurchase.stripePaymentIntentId, event.paymentIntentId),
+            eq(creditPurchase.organizationId, org.id),
+          ),
+        )
+        .limit(1)
+        .for("update");
+
+      if (!cp || !cp.refundVariant) {
+        log.warn("charge.refunded for unknown or uninitiated purchase", {
+          event: event.id,
+          paymentIntentId: event.paymentIntentId,
+        });
+        return { status: "unknown_account" };
+      }
+
+      // 3. Transition pending_refund → refunded.
+      const updated = await tx
+        .update(credit)
+        .set({ status: "refunded" })
+        .where(
+          and(
+            eq(credit.creditPurchaseId, cp.id),
+            eq(credit.status, "pending_refund"),
+          ),
+        );
+
+      // 4. If full reversal: cancel future bookings from used credits.
+      if (cp.refundVariant === "full_reversal") {
+        await cancelFutureBookingsForRefund(tx, {
+          organizationId: org.id,
+          creditPurchaseId: cp.id,
+          actor: SYSTEM_ACTOR,
+        });
+      }
+
+      // 5. Mark the purchase as refunded.
+      await tx
+        .update(creditPurchase)
+        .set({
+          refundedAt: new Date(),
+          refundAmount: event.amount,
+        })
+        .where(eq(creditPurchase.id, cp.id));
+
+      // 6. Audit.
+      await recordAudit(tx, {
+        action: "credit.refund_webhook",
+        actor: SYSTEM_ACTOR,
+        organizationId: org.id,
+        targetType: "credit_purchase",
+        targetId: cp.id,
+        targetLabel: cp.id,
+        metadata: {
+          stripeEventId: event.id,
+          refundAmount: event.amount,
+          refundVariant: cp.refundVariant,
+          updateCount: "batch", // Drizzle returns no rowCount
+        },
+      });
+
+      // 7. Notify the client. Bail if we cannot resolve the client (should not happen).
+      const [purchase] = await tx
+        .select({ clientId: creditPurchase.clientId })
+        .from(creditPurchase)
+        .where(eq(creditPurchase.id, cp.id))
+        .limit(1);
+
+      if (purchase) {
+        const [clientRow] = await tx
+          .select({ email: client.email })
+          .from(client)
+          .where(eq(client.id, purchase.clientId))
+          .limit(1);
+
+        if (clientRow) {
+          const { emitDomainNotification } = await import("@/features/notifications/emit");
+          await emitDomainNotification(tx, {
+            eventType: "refund-confirmed",
+            organizationId: org.id,
+            accountId: null,
+            recipients: [{
+              kind: "client" as const,
+              clientId: purchase.clientId,
+              email: clientRow.email,
+              locale: "pl",
+            }],
+            params: {
+              refundAmount: String(event.amount),
+              refundVariant: cp.refundVariant,
+            },
+            dedupeBasis: `refund:${cp.id}`,
+          });
+        }
+      }
+
+      log.info("charge.refunded processed", {
+        event: event.id,
+        purchaseId: cp.id,
+        amount: event.amount,
+        variant: cp.refundVariant,
+      });
+
+      return { status: "processed" };
     },
   );
 }

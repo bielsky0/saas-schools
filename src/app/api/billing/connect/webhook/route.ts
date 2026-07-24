@@ -4,6 +4,7 @@ import { billing, type ConnectAccountEvent } from "@/lib/adapters/billing";
 import {
   processConnectEvent,
   processConnectPaymentEvent,
+  processConnectRefundEvent,
   processConnectSubscriptionEvent,
 } from "@/features/billing/connect-webhooks";
 import { requestLogger } from "@/lib/logger";
@@ -22,6 +23,7 @@ import { requestLogger } from "@/lib/logger";
  *   - invoice.paid → subscription renewal credits (F12d)
  *   - invoice.payment_failed → subscription past_due (F12d)
  *   - customer.subscription.deleted → subscription canceled (F12d)
+ *   - charge.refunded → refund confirmation, credits pending_refund→refunded (F16)
  *
  * The route is exempted from session checks by the same proxy rule as
  * the platform billing webhook (/api/billing/webhook prefix).
@@ -72,6 +74,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     event.type === "customer.subscription.deleted"
   ) {
     processed = await processConnectSubscriptionEvent(event);
+  } else if (event.type === "charge.refunded") {
+    processed = await processConnectRefundEvent(event);
   } else {
     processed = await processConnectEvent(event as ConnectAccountEvent);
   }

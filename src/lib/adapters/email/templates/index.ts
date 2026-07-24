@@ -21,6 +21,7 @@ import { PlanLimitApproaching, planLimitApproachingSubject } from "./plan-limit-
 import { PlanLimitReached, planLimitReachedSubject } from "./plan-limit-reached";
 import { SubscriptionPaymentFailed, subscriptionPaymentFailedSubject } from "./subscription-payment-failed";
 import { GroupChangeNotification, groupChangeSubject, CreditTransferNotification, creditTransferSubject } from "./group-change";
+import { RefundConfirmed, refundConfirmedSubject } from "./refund-confirmed";
 
 /**
  * Template registry (spec 10.2 — component templates, HTML + plain-text).
@@ -103,6 +104,11 @@ const templates: { [N in TemplateName]: TemplateDef<N> } = {
   "credit-transfer-completed": {
     subject: creditTransferSubject,
     component: CreditTransferNotification,
+  },
+  // Faza 16 — Zwroty fiducjarne (EPIK 18)
+  "refund-confirmed": {
+    subject: refundConfirmedSubject,
+    component: RefundConfirmed,
   },
 };
 

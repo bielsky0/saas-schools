@@ -63,7 +63,8 @@ export type JobName =
   | "ratelimit.prune"
   | "sessions.generate"
   | "credits.expire"
-  | "group_changes.expire";
+  | "group_changes.expire"
+  | "refunds.recover";
 
 /**
  * `email.send`'s `template` is `string`, not the email adapter's `TemplateName`:
@@ -180,6 +181,13 @@ export interface JobPayloads {
    * works under a system bypass and handles all tenants.
    */
   "group_changes.expire": Record<string, never>;
+  /**
+   * Stuck refund recovery sweep (Faza 16) — cron-shaped.
+   * Checks for online credit_purchases where refund_initiated_at is set but
+   * refunded_at is still null for >30 min, and retries the Stripe Refund API call.
+   * Idempotency key on the Stripe call guarantees safety against double refund.
+   */
+  "refunds.recover": Record<string, never>;
 }
 
 export interface EnqueueOptions {

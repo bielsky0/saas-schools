@@ -136,6 +136,14 @@
       "heading": "Session cancelled",
       "body": "The session {groupTypeName} ({sessionDate} {sessionTime}) for {athleteName} has been cancelled by the administration.",
       "creditInfo": "1 make-up credit has been issued for another session of the same type."
+    },
+    "refund-confirmed": {
+      "subject": "Refund confirmed",
+      "preview": "A refund has been processed.",
+      "heading": "Refund confirmed",
+      "body": "A refund of {refundAmount} has been processed ({variant}).",
+      "partial": "partial refund",
+      "fullReversal": "full refund with reversal"
     }
   },
   "auth": {
@@ -1108,7 +1116,9 @@
       "cashConfirmed": "Package sold. {credits} credits issued, {settled} bookings settled, {filled} sessions booked.",
       "productTemplateNotFound": "That package does not belong to this academy.",
       "productTemplateNotActive": "That package is no longer available.",
-      "policyViolation": "This package is not available for this group type's current policy."
+      "policyViolation": "This package is not available for this group type's current policy.",
+      "refundInitiated": "Refund initiated ({variant}). Funds will be returned after payment gateway confirmation.",
+      "refundFailed": "Refund failed: {error}. Credits have been restored."
     }
   },
   "staffPanel": {

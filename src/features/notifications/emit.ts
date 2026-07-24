@@ -81,6 +81,8 @@ const EMAIL_TEMPLATE_MAP: Record<string, TemplateName> = {
   "group-change-completed": "group-change-completed",
   // ── Faza 15 — Credit transfer ───────────────────────────────────────
   "credit-transfer-completed": "credit-transfer-completed",
+  // ── Faza 16 — Zwroty fiducjarne (EPIK 18) ──────────────────────────
+  "refund-confirmed": "refund-confirmed",
 };
 
 const EVENT_TYPES_WITH_EMAIL = new Set(Object.keys(EMAIL_TEMPLATE_MAP));

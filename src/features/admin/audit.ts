@@ -203,6 +203,8 @@ export const AUDIT_ACTIONS = [
   // Oba logują informację o przyznanym kredycie w metadata.
   "booking.cancel",
   "booking.cancel_admin",
+  // Faza 16 — full reversal refund: cancels future bookings without issuing compensation credits.
+  "booking.cancel_for_refund",
   // Faza 15 — Group swap (EPIK 11) + credit transfer (US-7.5)
   "group_change.submit",
   "group_change.approve",
@@ -255,6 +257,18 @@ export const AUDIT_ACTIONS = [
   // person's say-so — same reasoning as `credit.grant`. The credit rows carry
   // the ledger detail; this row answers "who sold which package to whom, when".
   "credit.purchase_cash",
+  // Faza 16 — Zwroty fiducjarne (EPIK 18)
+  //
+  // `credit.refund_initiate` — admin initiates a refund (selects variant, credits go pending_refund).
+  // `credit.refund_confirmed` — cash refund confirmed by admin click.
+  // `credit.refund_webhook` — online refund confirmed by Stripe charge.refunded webhook.
+  // `credit.refund_failed` — Stripe Refund API rejected the refund.
+  // `credit.refund_recovery_failed` — cron recovery for stuck refund could not proceed.
+  "credit.refund_initiate",
+  "credit.refund_confirmed",
+  "credit.refund_webhook",
+  "credit.refund_failed",
+  "credit.refund_recovery_failed",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];

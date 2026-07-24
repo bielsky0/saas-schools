@@ -94,6 +94,15 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
    * The sweep only settles status and frees the seat on the target session.
    */
   await jobs.enqueue(db, "group_changes.expire", {}, { dedupeKey: `group_changes.expire:${today}` });
+  /*
+   * Stuck refund recovery (Faza 16). Hourly, not daily — a stuck refund is a
+   * money issue that should resolve within the hour, not the next day. Uses
+   * thisHour to match the same dedupe cadence as ratelimit.prune.
+   *
+   * The 30-minute cutoff inside the handler ensures we only retry refunds that
+   * are genuinely stuck, not ones still in-flight.
+   */
+  await jobs.enqueue(db, "refunds.recover", {}, { dedupeKey: `refunds.recover:${thisHour}` });
 
   const result = await jobs.drain(registry, { budgetMs: BATCH_BUDGET_MS });
   const stats = await jobStats();

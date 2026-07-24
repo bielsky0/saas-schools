@@ -78,6 +78,9 @@ export const TEMPLATE_CATEGORY: Record<TemplateName, EmailCategory> = {
   // Faza 15 — Credit transfer. Transactional: klient musi wiedzieć o zakończeniu
   // przeniesienia kredytu między dziećmi.
   "credit-transfer-completed": "transactional",
+  // Faza 16 — Zwroty fiducjarne. Transactional: klient musi wiedzieć o zwrocie,
+  // zwłaszcza gdy pieniądze wracają na konto. Unsuppressible per spec (seed).
+  "refund-confirmed": "transactional",
 };
 
 export function categoryFor(template: TemplateName): EmailCategory {

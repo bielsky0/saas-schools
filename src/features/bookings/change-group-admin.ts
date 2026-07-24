@@ -1,4 +1,5 @@
-import { alias, and, eq } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
+import { and, eq } from "drizzle-orm";
 
 import type { AuditActor } from "@/features/admin/audit";
 import { recordAudit } from "@/features/admin/audit";

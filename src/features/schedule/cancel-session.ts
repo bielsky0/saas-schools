@@ -1,4 +1,4 @@
-import { and, eq, inArray, ne } from "drizzle-orm";
+import { and, asc, eq, inArray, ne } from "drizzle-orm";
 
 import type { AuditActor } from "@/features/admin/audit";
 import { recordAudit } from "@/features/admin/audit";
@@ -85,6 +85,10 @@ export async function cancelClassSession(
 
   if (!sessionRow) throw new SessionNotFoundError();
 
+  // ORDER BY booking.id per deadlock-prevention convention (refund-cancel.ts).
+  // Both cancel-session and cancelFutureBookingsForRefund lock booking +
+  // groupChangeRequest from different entry points; sorting by booking.id makes
+  // the row-level lock acquisition order deterministic regardless of entry point.
   const activeBookings = await tx
     .select({ id: booking.id, athleteId: booking.athleteId, paymentStatus: booking.paymentStatus })
     .from(booking)
@@ -95,6 +99,7 @@ export async function cancelClassSession(
         ne(booking.paymentStatus, "cancelled"),
       ),
     )
+    .orderBy(asc(booking.id))
     .for("update");
 
   const confirmedIds: string[] = [];
