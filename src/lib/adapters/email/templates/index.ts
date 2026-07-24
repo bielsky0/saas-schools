@@ -20,6 +20,7 @@ import { Welcome, welcomeSubject } from "./welcome";
 import { PlanLimitApproaching, planLimitApproachingSubject } from "./plan-limit-approaching";
 import { PlanLimitReached, planLimitReachedSubject } from "./plan-limit-reached";
 import { SubscriptionPaymentFailed, subscriptionPaymentFailedSubject } from "./subscription-payment-failed";
+import { GroupChangeNotification, groupChangeSubject, CreditTransferNotification, creditTransferSubject } from "./group-change";
 
 /**
  * Template registry (spec 10.2 — component templates, HTML + plain-text).
@@ -72,6 +73,36 @@ const templates: { [N in TemplateName]: TemplateDef<N> } = {
   "subscription-payment-failed": {
     subject: subscriptionPaymentFailedSubject,
     component: SubscriptionPaymentFailed,
+  },
+  // Faza 15 — Group swap (EPIK 11)
+  "group-change-approved": {
+    subject: groupChangeSubject,
+    component: GroupChangeNotification,
+  },
+  "group-change-rejected": {
+    subject: groupChangeSubject,
+    component: GroupChangeNotification,
+  },
+  "group-change-pending-payment": {
+    subject: groupChangeSubject,
+    component: GroupChangeNotification,
+  },
+  "group-change-expired": {
+    subject: groupChangeSubject,
+    component: GroupChangeNotification,
+  },
+  "group-change-cancelled": {
+    subject: groupChangeSubject,
+    component: GroupChangeNotification,
+  },
+  "group-change-completed": {
+    subject: groupChangeSubject,
+    component: GroupChangeNotification,
+  },
+  // Faza 15 — Credit transfer (US-7.5)
+  "credit-transfer-completed": {
+    subject: creditTransferSubject,
+    component: CreditTransferNotification,
   },
 };
 

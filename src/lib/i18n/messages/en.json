@@ -53,6 +53,8 @@
       "cta": "Update payment method",
       "note": "We'll retry automatically over the next few days. If the payment keeps failing, your subscription may be cancelled."
     },
+    "groupChangeSubject": "Group change for {athleteName}: {sourceGroupName} → {targetGroupName}",
+    "creditTransferSubject": "Credit transferred: {sourceAthleteName} → {targetAthleteName}",
     "subscription-payment-failed": {
       "subject": "Your subscription payment failed",
       "preview": "Your subscription payment to {orgName} could not be processed.",

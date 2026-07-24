@@ -67,6 +67,17 @@ export const TEMPLATE_CATEGORY: Record<TemplateName, EmailCategory> = {
   "plan_limit_approaching": "transactional",
   "plan_limit_reached": "transactional",
   "subscription-payment-failed": "transactional",
+  // Faza 15 — Group swap notifications. Transactional: klient musi wiedzieć
+  // o zmianie/zatwierdzeniu/odrzuceniu wniosku o zmianę grupy.
+  "group-change-approved": "transactional",
+  "group-change-rejected": "transactional",
+  "group-change-pending-payment": "transactional",
+  "group-change-expired": "transactional",
+  "group-change-cancelled": "transactional",
+  "group-change-completed": "transactional",
+  // Faza 15 — Credit transfer. Transactional: klient musi wiedzieć o zakończeniu
+  // przeniesienia kredytu między dziećmi.
+  "credit-transfer-completed": "transactional",
 };
 
 export function categoryFor(template: TemplateName): EmailCategory {

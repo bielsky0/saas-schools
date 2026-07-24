@@ -1,10 +1,10 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 
 import type { AuditActor } from "@/features/admin/audit";
 import { recordAudit } from "@/features/admin/audit";
 import { issueCredits } from "@/features/credits/issue";
 import { emitDomainNotification } from "@/features/notifications/emit";
-import { athlete, booking, classSession, client, groupType } from "@/lib/db/schema";
+import { athlete, booking, classSession, client, groupChangeRequest, groupType } from "@/lib/db/schema";
 import type { TenantDb } from "@/lib/db/tenant";
 import { getBookingWithSession, getClientIdForBooking } from "./data";
 import { getCreditTypeForGroupType } from "@/features/credits/data";
@@ -112,6 +112,22 @@ export async function cancelBooking(
     .limit(1)
     .for("update");
   if (!bookingRow) throw new BookingNotFoundError();
+
+  // Mutual exclusion with group change request (Faza 15, US-11.8).
+  const [activeRequest] = await tx
+    .select({ id: groupChangeRequest.id })
+    .from(groupChangeRequest)
+    .where(
+      and(
+        eq(groupChangeRequest.sourceBookingId, input.bookingId),
+        inArray(groupChangeRequest.status, ["submitted", "admin_approved", "awaiting_payment"]),
+      ),
+    )
+    .limit(1);
+
+  if (activeRequest) {
+    throw new CancellationBlockedByChangeRequestError();
+  }
 
   if (!input.bypass24h) {
     const hoursUntil = (row.sessionStartTime.getTime() - now.getTime()) / 3_600_000;

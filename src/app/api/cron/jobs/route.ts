@@ -86,6 +86,14 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
    * is not a correctness problem for it.
    */
   await jobs.enqueue(db, "credits.expire", {}, { dedupeKey: `credits.expire:${today}` });
+  /*
+   * Group change request expiry (Faza 15, US-11.4). Daily.
+   *
+   * Same rationale as credits.expire: a missed run is tolerable because the
+   * `expires_at` field is also checked by the API when processing payments.
+   * The sweep only settles status and frees the seat on the target session.
+   */
+  await jobs.enqueue(db, "group_changes.expire", {}, { dedupeKey: `group_changes.expire:${today}` });
 
   const result = await jobs.drain(registry, { budgetMs: BATCH_BUDGET_MS });
   const stats = await jobStats();

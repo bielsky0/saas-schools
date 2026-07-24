@@ -203,6 +203,7 @@ const eslintConfig = defineConfig([
       "src/features/billing/cross-tenant.ts",
       "src/features/billing/connect-webhooks.ts",
       "src/features/credits/expire.ts",
+      "src/features/bookings/change-group-expire.ts",
     ],
     rules: {
       "no-restricted-imports": [

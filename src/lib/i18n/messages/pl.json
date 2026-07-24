@@ -53,6 +53,8 @@
       "cta": "Zaktualizuj metodę płatności",
       "note": "Spróbujemy ponownie w ciągu najbliższych dni. Jeśli płatność nadal nie będzie przechodzić, subskrypcja może zostać anulowana."
     },
+    "groupChangeSubject": "Zmiana grupy dla {athleteName}: {sourceGroupName} → {targetGroupName}",
+    "creditTransferSubject": "Kredyt przeniesiony: {sourceAthleteName} → {targetAthleteName}",
     "subscription-payment-failed": {
       "subject": "Płatność subskrypcji nie powiodła się",
       "preview": "Nie udało się przetworzyć płatności subskrypcji dla {orgName}.",

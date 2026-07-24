@@ -72,6 +72,15 @@ const EMAIL_TEMPLATE_MAP: Record<string, TemplateName> = {
   invitation: "invitation",
   "client-otp": "client-otp",
   "password-reset": "password-reset",
+  // ── Faza 15 — Group swap ────────────────────────────────────────────
+  "group-change-approved": "group-change-approved",
+  "group-change-rejected": "group-change-rejected",
+  "group-change-pending-payment": "group-change-pending-payment",
+  "group-change-expired": "group-change-expired",
+  "group-change-cancelled": "group-change-cancelled",
+  "group-change-completed": "group-change-completed",
+  // ── Faza 15 — Credit transfer ───────────────────────────────────────
+  "credit-transfer-completed": "credit-transfer-completed",
 };
 
 const EVENT_TYPES_WITH_EMAIL = new Set(Object.keys(EMAIL_TEMPLATE_MAP));

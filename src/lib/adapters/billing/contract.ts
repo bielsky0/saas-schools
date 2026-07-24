@@ -270,12 +270,15 @@ export interface ConnectCheckoutInput {
   amount: number;
   /** ISO 4217 currency, lowercase — from booking.priceSnapshot.currency. */
   currency: string;
-  /** The booking id — stored in session metadata for webhook correlation. */
+  /**
+   * The booking id — stored in session metadata for webhook correlation.
+   * For group_change_payment, this holds the groupChangeRequestId instead.
+   */
   bookingId: string;
   /** The organization id — also in metadata for tenant resolution. */
   organizationId: string;
-  /** Which kind of purchase this is — routes the webhook handler (F12). */
-  purchaseKind: "booking_payment";
+  /** Which kind of purchase this is — routes the webhook handler (F12, F15). */
+  purchaseKind: PurchaseKind;
   successUrl: string;
   cancelUrl: string;
 }
@@ -299,7 +302,7 @@ export type VerifyConnectWebhookResult =
  * Routing by this field, not by presence/absence of bookingId — the latter is
  * fragile and breaks the moment a new flow omits it.
  */
-export type PurchaseKind = "booking_payment" | "package_purchase" | "subscription_initial";
+export type PurchaseKind = "booking_payment" | "package_purchase" | "subscription_initial" | "group_change_payment";
 
 /**
  * Input for creating a Checkout Session on a Connected Account for a package

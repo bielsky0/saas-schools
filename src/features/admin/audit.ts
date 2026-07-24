@@ -203,6 +203,15 @@ export const AUDIT_ACTIONS = [
   // Oba logują informację o przyznanym kredycie w metadata.
   "booking.cancel",
   "booking.cancel_admin",
+  // Faza 15 — Group swap (EPIK 11) + credit transfer (US-7.5)
+  "group_change.submit",
+  "group_change.approve",
+  "group_change.reject",
+  "group_change.admin_cancel",
+  "group_change.client_cancel",
+  "group_change.expire",
+  "group_change.complete",
+  "credit.reassign",
   // `class_session.cancel` — admin odwołuje całą sesję (US-19.2).
   // Loguje liczbę anulowanych bookingów i przyznanych kredytów.
   "class_session.cancel",
@@ -288,7 +297,9 @@ export type AuditTargetType =
   // F12 / EPIK 9/10 — Pakiety
   //
   /** The purchase journal entry — target of `credit.purchase_cash` (F12b). */
-  | "credit_purchase";
+  | "credit_purchase"
+  | "group_change_request"
+  | "credit";
 
 /**
  * WHO acted, as a kind — §6.4's actor model. A different question from WHICH

@@ -103,7 +103,13 @@ export type Permission =
   //
   /** Confirm a cash package purchase at the desk (US-10.x). Reception sells
    * packages against cash; credits are issued and auto-filled in one transaction. */
-  | "credits.purchase_cash";
+  | "credits.purchase_cash"
+  // ── Faza 15 — Group swap + credit transfer (EPIK 11, US-7.5) ────────
+  //
+  /** Zatwierdzanie wniosków o zmianę grupy (Owner, Admin, Sekretariat). */
+  | "group_swap.approve"
+  /** Reasygnacja kredytu między dziećmi tego samego rodzica (Owner, Admin, Sekretariat). */
+  | "credits.reassign_athlete";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -145,6 +151,8 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "grades.enter",
     "trainers.offboard",
     "credits.purchase_cash",
+    "group_swap.approve",
+    "credits.reassign_athlete",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -179,6 +187,8 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "grades.enter",
     "trainers.offboard",
     "credits.purchase_cash",
+    "group_swap.approve",
+    "credits.reassign_athlete",
   ],
   /**
    * The three langlion staff roles (§2.10).
@@ -202,12 +212,19 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     * (either may cancel individual bookings or full sessions on behalf of the academy);
     * NOT to trainer — cancellation is not the same as marking own-session attendance.
     *
-    * Faza 12 grants: `credits.purchase_cash` to reception (reception sells packages
-    * against cash at the desk).
-    *
-    * Still to land: `group_swap.approve` and `credits.reassign_athlete` (secretariat) in F15.
-   */
-  secretariat: ["organization.leave", "storage.upload", "bookings.cancel_reschedule"],
+     * Faza 12 grants: `credits.purchase_cash` to reception (reception sells packages
+     * against cash at the desk).
+     *
+     * Faza 15 grants: `group_swap.approve` and `credits.reassign_athlete` to
+     * secretariat (alongside owner + admin).
+     */
+    secretariat: [
+      "organization.leave",
+      "storage.upload",
+      "bookings.cancel_reschedule",
+      "group_swap.approve",
+      "credits.reassign_athlete",
+    ],
   reception: [
     "organization.leave",
     "storage.upload",

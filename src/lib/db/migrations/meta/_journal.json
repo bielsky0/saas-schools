@@ -225,6 +225,13 @@
       "when": 1784922324716,
       "tag": "0032_stale_cobalt_man",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1784927247540,
+      "tag": "0032_sleepy_storm",
+      "breakpoints": true
     }
   ]
 }

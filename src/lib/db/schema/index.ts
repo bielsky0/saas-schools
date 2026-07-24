@@ -132,3 +132,4 @@ export * from "./credits";
 export * from "./grade-fields";
 export * from "./grades";
 export * from "./progress-notes";
+export * from "./group-change-requests";

@@ -46,7 +46,16 @@ export type TemplateName =
   // "payment-failed" (platform plan billing): this one targets the parent
   // (client), not the academy admin. `portalUrl` is optional — absent when
   // the academy has not configured a Stripe Customer Portal.
-  | "subscription-payment-failed";
+  | "subscription-payment-failed"
+  // Faza 15 — Group swap (EPIK 11)
+  | "group-change-approved"
+  | "group-change-rejected"
+  | "group-change-pending-payment"
+  | "group-change-expired"
+  | "group-change-cancelled"
+  | "group-change-completed"
+  // Faza 15 — Credit transfer (US-7.5)
+  | "credit-transfer-completed";
 // `magic-link` lands with spec 2.2, which is not implemented yet.
 
 /**
@@ -137,6 +146,46 @@ export interface TemplateProps {
   "subscription-payment-failed": {
     orgName: string;
     portalUrl?: string;
+  };
+  // Faza 15 — Group swap (EPIK 11)
+  "group-change-approved": {
+    athleteName: string;
+    sourceGroupName: string;
+    targetGroupName: string;
+  };
+  "group-change-rejected": {
+    athleteName: string;
+    sourceGroupName: string;
+    targetGroupName: string;
+    reason: string;
+  };
+  "group-change-pending-payment": {
+    athleteName: string;
+    sourceGroupName: string;
+    targetGroupName: string;
+    amount: string;
+    expiresAt: string;
+  };
+  "group-change-expired": {
+    athleteName: string;
+    sourceGroupName: string;
+    targetGroupName: string;
+  };
+  "group-change-cancelled": {
+    athleteName: string;
+    sourceGroupName: string;
+    targetGroupName: string;
+    reason?: string;
+  };
+  "group-change-completed": {
+    athleteName: string;
+    sourceGroupName: string;
+    targetGroupName: string;
+  };
+  // Faza 15 — Credit transfer (US-7.5)
+  "credit-transfer-completed": {
+    sourceAthleteName: string;
+    targetAthleteName: string;
   };
 }
 

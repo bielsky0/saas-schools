@@ -6,7 +6,7 @@ import { getClientIdForBooking } from "@/features/bookings/data";
 import { getCreditTypeForGroupType } from "@/features/credits/data";
 import { issueCredits } from "@/features/credits/issue";
 import { emitDomainNotification } from "@/features/notifications/emit";
-import { athlete, booking, classSession, client, groupType } from "@/lib/db/schema";
+import { athlete, booking, classSession, client, groupChangeRequest, groupType } from "@/lib/db/schema";
 import type { TenantDb } from "@/lib/db/tenant";
 import { db } from "@/lib/db";
 
@@ -133,6 +133,73 @@ export async function cancelClassSession(
       .where(inArray(booking.id, allIds));
   }
 
+  // ── Faza 15 — Cascade group change requests ────────────────────────────
+  // Cancel requests where the target session is the one being cancelled.
+  const targetRequests = await tx
+    .select({ id: groupChangeRequest.id, resultingBookingId: groupChangeRequest.resultingBookingId })
+    .from(groupChangeRequest)
+    .where(
+      and(
+        eq(groupChangeRequest.targetSessionId, input.sessionId),
+        inArray(groupChangeRequest.status, ["awaiting_payment"]),
+      ),
+    )
+    .for("update");
+
+  for (const gcr of targetRequests) {
+    if (gcr.resultingBookingId) {
+      await tx
+        .update(booking)
+        .set({ paymentStatus: "cancelled", updatedAt: now })
+        .where(eq(booking.id, gcr.resultingBookingId));
+    }
+  }
+
+  if (targetRequests.length > 0) {
+    await tx
+      .update(groupChangeRequest)
+      .set({ status: "cancelled_by_admin", updatedAt: now })
+      .where(
+        inArray(
+          groupChangeRequest.id,
+          targetRequests.map((r) => r.id),
+        ),
+      );
+  }
+
+  // Cancel requests where the SOURCE booking is among the cancelled ones.
+  const sourceRequests = await tx
+    .select({ id: groupChangeRequest.id, resultingBookingId: groupChangeRequest.resultingBookingId })
+    .from(groupChangeRequest)
+    .where(
+      and(
+        inArray(groupChangeRequest.sourceBookingId, allIds),
+        inArray(groupChangeRequest.status, ["submitted", "admin_approved", "awaiting_payment"]),
+      ),
+    )
+    .for("update");
+
+  for (const gcr of sourceRequests) {
+    if (gcr.resultingBookingId) {
+      await tx
+        .update(booking)
+        .set({ paymentStatus: "cancelled", updatedAt: now })
+        .where(eq(booking.id, gcr.resultingBookingId));
+    }
+  }
+
+  if (sourceRequests.length > 0) {
+    await tx
+      .update(groupChangeRequest)
+      .set({ status: "cancelled_by_admin", updatedAt: now })
+      .where(
+        inArray(
+          groupChangeRequest.id,
+          sourceRequests.map((r) => r.id),
+        ),
+      );
+  }
+
   await tx
     .update(classSession)
     .set({ status: "cancelled" })
@@ -148,6 +215,7 @@ export async function cancelClassSession(
     metadata: {
       affectedBookingCount: allIds.length,
       creditsIssued,
+      groupChangeRequestsCancelled: targetRequests.length + sourceRequests.length,
     },
   });
 

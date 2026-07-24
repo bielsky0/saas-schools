@@ -1,6 +1,6 @@
 {
-  "id": "744a5d73-ee07-4c9a-bcba-b1d5d40a0e6b",
-  "prevId": "40d83625-c183-4dea-b1e5-6521e8871c10",
+  "id": "3693df69-7d52-4dcf-b185-c7564e6398bb",
+  "prevId": "744a5d73-ee07-4c9a-bcba-b1d5d40a0e6b",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -2663,7 +2663,7 @@
           "name": "userId",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "organizationId": {
           "name": "organizationId",
@@ -6347,6 +6347,301 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.group_change_request": {
+      "name": "group_change_request",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "organizationId": {
+          "name": "organizationId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "clientId": {
+          "name": "clientId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sourceBookingId": {
+          "name": "sourceBookingId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "targetSessionId": {
+          "name": "targetSessionId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'submitted'"
+        },
+        "priceDifference": {
+          "name": "priceDifference",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "resultingBookingId": {
+          "name": "resultingBookingId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stripePaymentIntentId": {
+          "name": "stripePaymentIntentId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expiresAt": {
+          "name": "expiresAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "submittedAt": {
+          "name": "submittedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "reviewedByUserId": {
+          "name": "reviewedByUserId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reviewedAt": {
+          "name": "reviewedAt",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rejectionReason": {
+          "name": "rejectionReason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cancelledByUserId": {
+          "name": "cancelledByUserId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cancellationReason": {
+          "name": "cancellationReason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "group_change_request_org_idx": {
+          "name": "group_change_request_org_idx",
+          "columns": [
+            {
+              "expression": "organizationId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "group_change_request_source_booking_idx": {
+          "name": "group_change_request_source_booking_idx",
+          "columns": [
+            {
+              "expression": "sourceBookingId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "group_change_request_target_session_idx": {
+          "name": "group_change_request_target_session_idx",
+          "columns": [
+            {
+              "expression": "targetSessionId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "group_change_request_status_idx": {
+          "name": "group_change_request_status_idx",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "group_change_request_organizationId_organization_id_fk": {
+          "name": "group_change_request_organizationId_organization_id_fk",
+          "tableFrom": "group_change_request",
+          "tableTo": "organization",
+          "columnsFrom": [
+            "organizationId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "group_change_request_client_fk": {
+          "name": "group_change_request_client_fk",
+          "tableFrom": "group_change_request",
+          "tableTo": "client",
+          "columnsFrom": [
+            "clientId",
+            "organizationId"
+          ],
+          "columnsTo": [
+            "id",
+            "organizationId"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "group_change_request_source_booking_fk": {
+          "name": "group_change_request_source_booking_fk",
+          "tableFrom": "group_change_request",
+          "tableTo": "booking",
+          "columnsFrom": [
+            "sourceBookingId",
+            "organizationId"
+          ],
+          "columnsTo": [
+            "id",
+            "organizationId"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "group_change_request_target_session_fk": {
+          "name": "group_change_request_target_session_fk",
+          "tableFrom": "group_change_request",
+          "tableTo": "class_session",
+          "columnsFrom": [
+            "targetSessionId",
+            "organizationId"
+          ],
+          "columnsTo": [
+            "id",
+            "organizationId"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "group_change_request_resulting_booking_fk": {
+          "name": "group_change_request_resulting_booking_fk",
+          "tableFrom": "group_change_request",
+          "tableTo": "booking",
+          "columnsFrom": [
+            "resultingBookingId",
+            "organizationId"
+          ],
+          "columnsTo": [
+            "id",
+            "organizationId"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "group_change_request_reviewed_by_fk": {
+          "name": "group_change_request_reviewed_by_fk",
+          "tableFrom": "group_change_request",
+          "tableTo": "user",
+          "columnsFrom": [
+            "reviewedByUserId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "group_change_request_cancelled_by_fk": {
+          "name": "group_change_request_cancelled_by_fk",
+          "tableFrom": "group_change_request",
+          "tableTo": "user",
+          "columnsFrom": [
+            "cancelledByUserId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "group_change_request_id_org_uq": {
+          "name": "group_change_request_id_org_uq",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "organizationId"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

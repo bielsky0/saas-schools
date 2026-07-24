@@ -7,6 +7,7 @@ import { onboardingStepHandler } from "@/features/onboarding/handler";
 import { rateLimitPruneHandler } from "@/features/rate-limit/handler";
 import { sessionsGenerateHandler } from "@/features/schedule/generate";
 import { storagePurgeHandler } from "@/features/storage/purge";
+import { groupChangesExpireHandler } from "@/features/bookings/change-group-expire";
 import { jobPruneHandler } from "./handler";
 
 /**
@@ -33,4 +34,5 @@ export const registry: JobRegistry = {
   "ratelimit.prune": rateLimitPruneHandler,
   "sessions.generate": sessionsGenerateHandler,
   "credits.expire": creditsExpireHandler,
+  "group_changes.expire": groupChangesExpireHandler,
 };

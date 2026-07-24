@@ -62,7 +62,8 @@ export type JobName =
   | "storage.purge"
   | "ratelimit.prune"
   | "sessions.generate"
-  | "credits.expire";
+  | "credits.expire"
+  | "group_changes.expire";
 
 /**
  * `email.send`'s `template` is `string`, not the email adapter's `TemplateName`:
@@ -173,6 +174,12 @@ export interface JobPayloads {
    * system bypass and then re-enters each row's own tenant context to write.
    */
   "credits.expire": Record<string, never>;
+  /**
+   * Group change request expiry sweep (Faza 15, US-11.4) — cron-shaped.
+   * CARRIES NO `organizationId`: same rationale as credits.expire — the handler
+   * works under a system bypass and handles all tenants.
+   */
+  "group_changes.expire": Record<string, never>;
 }
 
 export interface EnqueueOptions {

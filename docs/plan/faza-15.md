@@ -1,6 +1,6 @@
 ### Faza 15 — Zmiana Grupy (swap) + przeniesienie kredytu między dziećmi
 
-**Status:** nierozpoczęta
+**Status:** ✅ completed (2026-07-24)
 **Cel:** Proces B — wniosek, decyzja admina, świadoma dopłata/zwrot, finalizacja webhookiem.
 **Pokrywa:** EPIK 11; §2.7; §7.1a (przeniesienie kredytu — US-7.5); spec §5 pkt 13.
 **Zależności:** F7 (wzajemne wykluczenie z odwołaniem), F11 (PaymentIntent dopłaty), F14 (powiadomienia), F16 dla `price_difference < 0` — zwrot można w tej fazie oznaczyć jako zależny od F16 albo zrealizować wspólny mechanizm zwrotu tu i reużyć w F16 (decyzja na starcie fazy).

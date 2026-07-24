@@ -6,7 +6,7 @@ import type {
   ConnectSubscriptionEvent,
 } from "@/lib/adapters/billing";
 import { billing } from "@/lib/adapters/billing";
-import { booking, classSession, creditType, organization, webhookEvent } from "@/lib/db/schema";
+import { booking, classSession, creditType, groupChangeRequest, organization, webhookEvent } from "@/lib/db/schema";
 import { athlete, client } from "@/lib/db/schema";
 import { clientStripeCustomer, clientSubscription, creditPurchase, productTemplate } from "@/lib/db/schema";
 import { db } from "@/lib/db";
@@ -124,6 +124,8 @@ export async function processConnectPaymentEvent(
       return processPackagePurchase(event);
     case "subscription_initial":
       return processSubscriptionInitial(event);
+    case "group_change_payment":
+      return processGroupChangePayment(event);
     default:
       log.warn("ignoring Connect payment event with unknown purchaseKind", {
         event: event.id,
@@ -316,6 +318,143 @@ async function processBookingPayment(
       });
 
       return { status: "processed" };
+    },
+  );
+}
+
+/**
+ * Process a group change payment (Faza 15, purchaseKind = "group_change_payment").
+ *
+ * When the client pays the price_difference (> 0), the change request transitions
+ * from `awaiting_payment` to `completed`. The resulting booking is confirmed.
+ * The source booking remains cancelled (already done at approve time).
+ *
+ * Idempotent via webhook_event marker + status check.
+ */
+async function processGroupChangePayment(
+  event: ConnectPaymentEvent,
+): Promise<ConnectProcessResult> {
+  const orgId = event.metadata.organizationId;
+  const requestId = event.metadata.bookingId; // bookingId field holds groupChangeRequestId
+  if (!orgId || !requestId) {
+    log.warn("ignoring group_change_payment event without org/request metadata", {
+      event: event.id,
+    });
+    return { status: "unknown_account" };
+  }
+
+  return withSystemBypass(
+    "group_change_payment webhook — no user session, RLS does not apply",
+    async (tx) => {
+      const [marker] = await tx
+        .insert(webhookEvent)
+        .values({
+          provider: event.provider,
+          providerEventId: event.id,
+          type: event.type,
+          organizationId: orgId,
+          occurredAt: event.occurredAt,
+        })
+        .onConflictDoNothing({
+          target: [webhookEvent.provider, webhookEvent.providerEventId],
+        })
+        .returning({ id: webhookEvent.id });
+
+      if (!marker) {
+        log.info("duplicate group_change_payment event", { event: event.id });
+        return { status: "duplicate" as const };
+      }
+
+      const [gcr] = await tx
+        .select({
+          id: groupChangeRequest.id,
+          status: groupChangeRequest.status,
+          resultingBookingId: groupChangeRequest.resultingBookingId,
+        })
+        .from(groupChangeRequest)
+        .where(
+          and(
+            eq(groupChangeRequest.id, requestId),
+            eq(groupChangeRequest.organizationId, orgId),
+          ),
+        )
+        .limit(1);
+
+      if (!gcr) {
+        log.error("group_change_payment references unknown request", {
+          event: event.id,
+          requestId,
+        });
+        return { status: "unknown_account" };
+      }
+
+      if (gcr.status !== "awaiting_payment") {
+        log.info("group change request not awaiting payment", {
+          event: event.id,
+          requestId,
+          status: gcr.status,
+        });
+        return { status: "processed" };
+      }
+
+      if (event.paymentStatus !== "paid") {
+        log.info("group_change_payment event not yet paid", {
+          event: event.id,
+          paymentStatus: event.paymentStatus,
+        });
+        return { status: "processed" };
+      }
+
+      // Confirm the resulting booking.
+      if (gcr.resultingBookingId) {
+        await tx
+          .update(booking)
+          .set({ paymentStatus: "confirmed", updatedAt: new Date() })
+          .where(
+            and(
+              eq(booking.id, gcr.resultingBookingId),
+              eq(booking.organizationId, orgId),
+            ),
+          );
+      }
+
+      // Update request to completed.
+      await tx
+        .update(groupChangeRequest)
+        .set({
+          status: "completed",
+          stripePaymentIntentId: event.sessionId,
+          updatedAt: new Date(),
+        })
+        .where(
+          and(
+            eq(groupChangeRequest.id, requestId),
+            eq(groupChangeRequest.organizationId, orgId),
+          ),
+        );
+
+      // Audit the webhook finalization.
+      const { recordAudit, SYSTEM_ACTOR } = await import("@/features/admin/audit");
+      await recordAudit(tx, {
+        action: "group_change.complete",
+        actor: SYSTEM_ACTOR,
+        organizationId: orgId,
+        targetType: "group_change_request",
+        targetId: requestId,
+        targetLabel: requestId,
+        metadata: {
+          stripeEventId: event.id,
+          resultingBookingId: gcr.resultingBookingId,
+        },
+      });
+
+      log.info("group_change_payment completed", {
+        event: event.id,
+        requestId,
+        resultingBookingId: gcr.resultingBookingId,
+      });
+
+      return { status: "processed" as const };
     },
   );
 }

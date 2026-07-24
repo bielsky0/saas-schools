@@ -45,6 +45,40 @@ export async function startConnectCheckout(
 
 /**
  * Create a Checkout Session on the org's Stripe Connect account for a
+ * group change price difference payment (Faza 15, EPIK 11).
+ *
+ * Creates a PaymentIntent for `price_difference > 0` (surcharge).
+ * The webhook handler (`processGroupChangePayment`) swaps the booking
+ * when the payment succeeds.
+ */
+export async function startConnectGroupChangeCheckout(
+  orgId: string,
+  subdomain: string | null,
+  groupChangeRequestId: string,
+  amount: number,
+  currency: string,
+  connectAccountId: string,
+): Promise<BillingRedirectResult> {
+  const successUrl = await tenantUrl(
+    subdomain ?? "",
+    "/moje-zajecia?status=group_change_paid",
+  );
+  const cancelUrl = await tenantUrl(subdomain ?? "", "/moje-zajecia");
+
+  return billing.createConnectCheckoutSession({
+    accountId: connectAccountId,
+    amount,
+    currency: currency.toLowerCase(),
+    bookingId: groupChangeRequestId,
+    organizationId: orgId,
+    purchaseKind: "group_change_payment",
+    successUrl,
+    cancelUrl,
+  });
+}
+
+/**
+ * Create a Checkout Session on the org's Stripe Connect account for a
  * one-time package purchase (F12c / EPIK 9).
  *
  * Called BEFORE the purchase record exists — the webhook handler creates
