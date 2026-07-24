@@ -588,6 +588,58 @@
       "subscription-confirmed": {
         "title": "Subscription active",
         "body": "The {planName} plan is now active for {orgName}."
+      },
+      "plan_limit_approaching": {
+        "title": "Plan limit approaching",
+        "body": "{orgName} has used {percentage}% of the {limitLabel} limit ({usage}/{limit})."
+      },
+      "plan_limit_reached": {
+        "title": "Plan limit reached",
+        "body": "{orgName} has reached the {limitLabel} limit ({usage}/{limit})."
+      },
+      "grade-recorded": {
+        "title": "New grade",
+        "body": "Your child {athleteName} received a grade in {fieldName} at {orgName}."
+      },
+      "progress-note-added": {
+        "title": "Progress note",
+        "body": "A progress note was added for your child {athleteName} at {orgName}."
+      },
+      "booking-cancelled": {
+        "title": "Booking cancelled",
+        "body": "The booking for {athleteName} ({groupTypeName}, {sessionDate} at {sessionTime}) has been cancelled."
+      },
+      "session-cancelled": {
+        "title": "Session cancelled",
+        "body": "The session on {sessionDate} at {sessionTime} has been cancelled by the academy."
+      },
+      "subscription-payment-failed": {
+        "title": "Payment failed",
+        "body": "We couldn't process your subscription payment for {orgName}."
+      },
+      "stripe_connect_requires_attention": {
+        "title": "Stripe account requires attention",
+        "body": "Your Stripe account for {orgName} needs attention."
+      },
+      "client-otp": {
+        "title": "Your login code",
+        "body": "Use the code sent to your email to log in to {orgName}."
+      },
+      "refund-confirmed": {
+        "title": "Refund confirmed",
+        "body": "A refund of has been processed."
+      },
+      "credit-expiring-soon": {
+        "title": "Credits expiring",
+        "body": "Some of your credits will expire soon."
+      },
+      "group-change-approved": {
+        "title": "Group change approved",
+        "body": "The group change request has been approved."
+      },
+      "client-password-changed": {
+        "title": "Password changed",
+        "body": "Your password has been changed."
       }
     },
     "preferences": {
@@ -598,7 +650,19 @@
         "verify-email": "Email verification reminders",
         "invitation": "Team invitations",
         "payment-failed": "Failed payments",
-        "subscription-confirmed": "Subscription confirmations"
+        "subscription-confirmed": "Subscription confirmations",
+        "plan_limit_approaching": "Plan limit warnings",
+        "plan_limit_reached": "Plan limit reached alerts",
+        "grade-recorded": "New grades",
+        "progress-note-added": "Progress notes",
+        "booking-cancelled": "Booking cancellations",
+        "session-cancelled": "Session cancellations",
+        "subscription-payment-failed": "Subscription payment failures",
+        "stripe_connect_requires_attention": "Stripe account alerts",
+        "refund-confirmed": "Refund confirmations",
+        "credit-expiring-soon": "Credit expiry warnings",
+        "group-change-approved": "Group change approvals",
+        "client-password-changed": "Password change alerts"
       },
       "locked": "Always on",
       "save": "Save",

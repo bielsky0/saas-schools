@@ -3,24 +3,12 @@ import { and, eq } from "drizzle-orm";
 import type { AuditActor } from "@/features/admin/audit";
 import { recordAudit } from "@/features/admin/audit";
 import { issueCredits } from "@/features/credits/issue";
-import { booking } from "@/lib/db/schema";
+import { emitDomainNotification } from "@/features/notifications/emit";
+import { athlete, booking, classSession, client, groupType } from "@/lib/db/schema";
 import type { TenantDb } from "@/lib/db/tenant";
 import { getBookingWithSession, getClientIdForBooking } from "./data";
 import { getCreditTypeForGroupType } from "@/features/credits/data";
-
-/**
- * Booking cancellation (langlion EPIK 12, Faza 7).
- *
- * Single function for BOTH client self-service (24h rule) AND staff/admin paths
- * (bypass24h). The caller decides based on who is acting:
- *
- *   - Client self-service (US-12.1): `bypass24h: false` → 24h check enforced.
- *   - Staff with `bookings.cancel_reschedule` (US-12.2): `bypass24h: true` → any
- *     confirmed booking gets a cancellation credit regardless of time.
- *
- * LOCK ORDER: class_session zawsze przed booking, żeby uniknąć deadlocku
- * z cancelClassSession(). Nie zmieniać kolejności bez aktualizacji obu ścieżek.
- */
+import { db } from "@/lib/db";
 
 export class BookingNotFoundError extends Error {
   constructor() {
@@ -53,13 +41,9 @@ export class CancellationBlockedByChangeRequestError extends Error {
 export interface CancelBookingInput {
   organizationId: string;
   bookingId: string;
-  /** IANA zone for credit validity calculation (e.g. "Europe/Warsaw"). */
   timeZone: string;
-  /** The staff audit actor. For client self-service, pass `clientActor()`. */
   actor: AuditActor;
-  /** True to skip the 24h check — staff/admin path (US-12.2). */
   bypass24h?: boolean;
-  /** Injectable for tests. */
   now?: Date;
 }
 
@@ -70,20 +54,55 @@ export interface CancelBookingResult {
   creditId?: string;
 }
 
+interface NotificationData {
+  athleteName: string;
+  groupTypeName: string;
+  clientEmail: string;
+  clientId: string;
+  sessionDate: Date;
+}
+
+async function loadNotificationData(
+  organizationId: string,
+  bookingId: string,
+): Promise<NotificationData | null> {
+  const [row] = await db
+    .select({
+      athleteName: athlete.name,
+      groupTypeName: groupType.name,
+      clientEmail: client.email,
+      clientId: client.id,
+      sessionDate: classSession.startTime,
+    })
+    .from(booking)
+    .innerJoin(athlete, and(eq(athlete.id, booking.athleteId), eq(athlete.organizationId, organizationId)))
+    .innerJoin(client, and(eq(client.id, athlete.parentClientId), eq(client.organizationId, organizationId)))
+    .innerJoin(classSession, and(eq(classSession.id, booking.sessionId), eq(classSession.organizationId, organizationId)))
+    .innerJoin(groupType, and(eq(groupType.id, classSession.groupTypeId), eq(groupType.organizationId, organizationId)))
+    .where(and(eq(booking.id, bookingId), eq(booking.organizationId, organizationId)))
+    .limit(1);
+
+  return row ?? null;
+}
+
+function formatSessionDate(date: Date, timeZone: string): { sessionDate: string; sessionTime: string } {
+  const dateStr = date.toLocaleDateString("pl", { timeZone, dateStyle: "medium" });
+  const timeStr = date.toLocaleTimeString("pl", { timeZone, timeStyle: "short" });
+  return { sessionDate: dateStr, sessionTime: timeStr };
+}
+
 export async function cancelBooking(
   tx: TenantDb,
   input: CancelBookingInput,
 ): Promise<CancelBookingResult> {
   const now = input.now ?? new Date();
 
-  // 1. Lock class_session FIRST, then booking — enforces LOCK ORDER invariant.
   const row = await getBookingWithSession(tx, input.organizationId, input.bookingId, {
     lockSession: true,
   });
   if (!row) throw new BookingNotFoundError();
   if (row.paymentStatus === "cancelled") throw new BookingAlreadyCancelledError();
 
-  // 2. Lock the booking row itself (FOR UPDATE on the specific row).
   const [bookingRow] = await tx
     .select({ id: booking.id, paymentStatus: booking.paymentStatus })
     .from(booking)
@@ -94,7 +113,6 @@ export async function cancelBooking(
     .for("update");
   if (!bookingRow) throw new BookingNotFoundError();
 
-  // 3. 24h rule (US-12.1/AC1) — skip if bypass24h (US-12.2).
   if (!input.bypass24h) {
     const hoursUntil = (row.sessionStartTime.getTime() - now.getTime()) / 3_600_000;
     if (hoursUntil < 24) {
@@ -102,13 +120,6 @@ export async function cancelBooking(
     }
   }
 
-  // 4. US-12.3: check for active group change request (deferred to F15).
-  // TODO(F15): replace stub with real hasActiveGroupChangeRequest() check.
-  // if (await hasActiveGroupChangeRequest(tx, input.organizationId, input.bookingId)) {
-  //   throw new CancellationBlockedByChangeRequestError();
-  // }
-
-  // 5. Determine credit issuance.
   let creditIssued = false;
   let creditId: string | undefined;
 
@@ -133,15 +144,12 @@ export async function cancelBooking(
       }
     }
   }
-  // `booked_offline` / `payment_pending` → no credit (US-12.1/AC3, US-12.2/AC2).
 
-  // 6. Update booking to cancelled.
   await tx
     .update(booking)
     .set({ paymentStatus: "cancelled", updatedAt: now })
     .where(eq(booking.id, input.bookingId));
 
-  // 7. Audit.
   const action = input.bypass24h ? "booking.cancel_admin" : "booking.cancel";
   await recordAudit(tx, {
     action,
@@ -158,6 +166,31 @@ export async function cancelBooking(
       creditId: creditId ?? null,
     },
   });
+
+  // Notification — enqueued INSIDE the transaction (outbox), but data loaded
+  // via `db` to keep FOR UPDATE windows minimal.
+  const notifData = await loadNotificationData(input.organizationId, input.bookingId);
+  if (notifData) {
+    const { sessionDate, sessionTime } = formatSessionDate(notifData.sessionDate, input.timeZone);
+    await emitDomainNotification(tx, {
+      eventType: "booking-cancelled",
+      organizationId: input.organizationId,
+      accountId: null,
+      recipients: [{
+        kind: "client",
+        clientId: notifData.clientId,
+        email: notifData.clientEmail,
+        locale: "pl",
+      }],
+      params: {
+        athleteName: notifData.athleteName,
+        groupTypeName: notifData.groupTypeName,
+        sessionDate,
+        sessionTime,
+      },
+      dedupeBasis: `booking-cancel:${input.bookingId}`,
+    });
+  }
 
   return {
     sessionId: row.sessionId,

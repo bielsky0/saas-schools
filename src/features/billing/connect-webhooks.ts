@@ -17,7 +17,7 @@ import { createLogger } from "@/lib/logger";
 import { issueCredits } from "@/features/credits/issue";
 import { spendCredit } from "@/features/credits/consume";
 import { autoFillCredits } from "@/features/billing/auto-fill";
-import { enqueueEmail } from "@/features/emails/send";
+import { emitDomainNotification } from "@/features/notifications/emit";
 import { updateConnectStatus } from "./connect-data";
 
 const log = createLogger("billing:connect:webhook");
@@ -926,6 +926,8 @@ async function processSubscriptionFailed(
         status: "processed" as const,
         clientEmail: parent?.email ?? null,
         clientName: parent?.name ?? null,
+        clientId: sub.clientId,
+        organizationId: sub.organizationId,
         orgName: orgRow?.name ?? "",
         portalConfigured: orgRow?.portalConfigured ?? false,
         stripeCustomerId,
@@ -935,7 +937,7 @@ async function processSubscriptionFailed(
     },
   ).then(async (result) => {
     if (result.status !== "processed") return result as ConnectProcessResult;
-    if (!result.clientEmail) return { status: "processed" } as ConnectProcessResult;
+    if (!result.clientEmail || !result.clientId) return { status: "processed" } as ConnectProcessResult;
 
     const portalUrl = result.portalConfigured
       ? await billing.createConnectPortalSession({
@@ -944,20 +946,24 @@ async function processSubscriptionFailed(
         }).then((r) => (r.ok ? r.url : ""))
       : "";
 
-    await enqueueEmail(
-      db,
-      "subscription-payment-failed",
-      {
+    await emitDomainNotification(db, {
+      eventType: "subscription-payment-failed",
+      organizationId: result.organizationId,
+      accountId: null,
+      recipients: [{
+        kind: "client",
+        clientId: result.clientId,
+        email: result.clientEmail,
+        name: result.clientName || undefined,
+        locale: "pl",
+      }],
+      params: {
         orgName: result.orgName,
         ...(portalUrl ? { portalUrl } : {}),
       },
-      {
-        to: result.clientEmail,
-        ...(result.clientName ? { name: result.clientName } : {}),
-        locale: "pl",
-      },
-      { dedupeKey: `email:subscription-payment-failed:${result.eventId}:${result.clientEmail.toLowerCase()}` },
-    );
+      link: portalUrl || undefined,
+      dedupeBasis: `subscription-payment-failed:${result.eventId}`,
+    });
 
     return { status: "processed" } as ConnectProcessResult;
   });

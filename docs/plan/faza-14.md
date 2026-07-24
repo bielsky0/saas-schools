@@ -1,6 +1,6 @@
 ### Faza 14 — ⚠️ Notification Center domenowy (EPIK 26; odejście #1)
 
-**Status:** nierozpoczęta
+**Status:** ✅ zakończona (2026-07-24)
 **Cel:** dedykowana encja powiadomień langlion (odbiorcy: klienci + personel) z katalogiem zdarzeń edytowalnym bez deploya; retrofit wszystkich wcześniejszych zdarzeń e-mail-only.
 **Pokrywa:** EPIK 26; §2.16; spec §5 pkt 12.
 **Zależności:** F3 (klienci), F5–F12 (zdarzenia istnieją).

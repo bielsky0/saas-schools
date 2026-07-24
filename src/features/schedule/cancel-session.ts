@@ -5,19 +5,10 @@ import { recordAudit } from "@/features/admin/audit";
 import { getClientIdForBooking } from "@/features/bookings/data";
 import { getCreditTypeForGroupType } from "@/features/credits/data";
 import { issueCredits } from "@/features/credits/issue";
-import { booking, classSession } from "@/lib/db/schema";
+import { emitDomainNotification } from "@/features/notifications/emit";
+import { athlete, booking, classSession, client, groupType } from "@/lib/db/schema";
 import type { TenantDb } from "@/lib/db/tenant";
-
-/**
- * Admin session cancellation (langlion US-19.2, Faza 7).
- *
- * Cancels the entire session and ALL its active bookings in one transaction.
- * Confirmed bookings receive an `admin_session_cancellation` credit.
- * Booked_offline / payment_pending bookings are cancelled without credit.
- * All affected clients receive email notifications (enqueued inside the tx).
- *
- * LOCK ORDER: class_session → booking. Patrz komentarz w cancelBooking().
- */
+import { db } from "@/lib/db";
 
 export class SessionNotFoundError extends Error {
   constructor() {
@@ -36,10 +27,8 @@ export class SessionAlreadyCancelledError extends Error {
 export interface CancelSessionInput {
   organizationId: string;
   sessionId: string;
-  /** IANA zone for credit validity calculation. */
   timeZone: string;
   actor: AuditActor;
-  /** Injectable for tests. */
   now?: Date;
 }
 
@@ -48,15 +37,45 @@ export interface CancelSessionResult {
   creditsIssued: number;
 }
 
+interface BookingNotificationData {
+  bookingId: string;
+  athleteName: string;
+  groupTypeName: string;
+  clientEmail: string;
+  clientId: string;
+  sessionDate: Date;
+}
+
+async function loadBookingsNotificationData(
+  organizationId: string,
+  bookingIds: string[],
+): Promise<BookingNotificationData[]> {
+  if (bookingIds.length === 0) return [];
+  return db
+    .select({
+      bookingId: booking.id,
+      athleteName: athlete.name,
+      groupTypeName: groupType.name,
+      clientEmail: client.email,
+      clientId: client.id,
+      sessionDate: classSession.startTime,
+    })
+    .from(booking)
+    .innerJoin(athlete, and(eq(athlete.id, booking.athleteId), eq(athlete.organizationId, organizationId)))
+    .innerJoin(client, and(eq(client.id, athlete.parentClientId), eq(client.organizationId, organizationId)))
+    .innerJoin(classSession, and(eq(classSession.id, booking.sessionId), eq(classSession.organizationId, organizationId)))
+    .innerJoin(groupType, and(eq(groupType.id, classSession.groupTypeId), eq(groupType.organizationId, organizationId)))
+    .where(and(inArray(booking.id, bookingIds), eq(booking.organizationId, organizationId)));
+}
+
 export async function cancelClassSession(
   tx: TenantDb,
   input: CancelSessionInput,
 ): Promise<CancelSessionResult> {
   const now = input.now ?? new Date();
 
-  // 1. Lock class_session FIRST — LOCK ORDER invariant.
   const [sessionRow] = await tx
-    .select({ id: classSession.id, groupTypeId: classSession.groupTypeId })
+    .select({ id: classSession.id, groupTypeId: classSession.groupTypeId, startTime: classSession.startTime })
     .from(classSession)
     .where(
       and(eq(classSession.id, input.sessionId), eq(classSession.organizationId, input.organizationId)),
@@ -65,9 +84,7 @@ export async function cancelClassSession(
     .for("update");
 
   if (!sessionRow) throw new SessionNotFoundError();
-  if (sessionRow.id !== input.sessionId) throw new SessionNotFoundError();
 
-  // 2. Get all active (non-cancelled) bookings for this session, locked.
   const activeBookings = await tx
     .select({ id: booking.id, athleteId: booking.athleteId, paymentStatus: booking.paymentStatus })
     .from(booking)
@@ -80,7 +97,6 @@ export async function cancelClassSession(
     )
     .for("update");
 
-  // 3. Determine credits for confirmed bookings.
   const confirmedIds: string[] = [];
   const allIds: string[] = [];
   let creditsIssued = 0;
@@ -108,10 +124,8 @@ export async function cancelClassSession(
         confirmedIds.push(bk.id);
       }
     }
-    // booked_offline / payment_pending → no credit (US-19.2/AC2)
   }
 
-  // 4. Cancel all active bookings.
   if (allIds.length > 0) {
     await tx
       .update(booking)
@@ -119,13 +133,11 @@ export async function cancelClassSession(
       .where(inArray(booking.id, allIds));
   }
 
-  // 5. Cancel the session itself.
   await tx
     .update(classSession)
     .set({ status: "cancelled" })
     .where(and(eq(classSession.id, input.sessionId), eq(classSession.organizationId, input.organizationId)));
 
-  // 6. Audit.
   await recordAudit(tx, {
     action: "class_session.cancel",
     actor: input.actor,
@@ -138,6 +150,33 @@ export async function cancelClassSession(
       creditsIssued,
     },
   });
+
+  // Notifications — via db outside the tx for data, enqueued inside for atomicity.
+  if (allIds.length > 0) {
+    const notifications = await loadBookingsNotificationData(input.organizationId, allIds);
+    for (const n of notifications) {
+      const dateStr = n.sessionDate.toLocaleDateString("pl", { timeZone: input.timeZone, dateStyle: "medium" });
+      const timeStr = n.sessionDate.toLocaleTimeString("pl", { timeZone: input.timeZone, timeStyle: "short" });
+      await emitDomainNotification(tx, {
+        eventType: "session-cancelled",
+        organizationId: input.organizationId,
+        accountId: null,
+        recipients: [{
+          kind: "client",
+          clientId: n.clientId,
+          email: n.clientEmail,
+          locale: "pl",
+        }],
+        params: {
+          athleteName: n.athleteName,
+          groupTypeName: n.groupTypeName,
+          sessionDate: dateStr,
+          sessionTime: timeStr,
+        },
+        dedupeBasis: `session-cancel:${input.sessionId}:${n.bookingId}`,
+      });
+    }
+  }
 
   return {
     cancelledBookingIds: allIds,

@@ -117,12 +117,17 @@ export interface JobPayloads {
    * payload is jsonb and the handler re-validates it with zod.
    */
   "notification.create": {
-    userId: string;
+    userId?: string;
     organizationId: string | null;
     accountId: string | null;
     type: string;
     params: Record<string, string | number>;
     link?: string;
+    /** F14 — polymorphic recipient. Absent = staff, recipientId = userId. */
+    recipientType?: "staff" | "client";
+    recipientId?: string;
+    eventType?: string;
+    channelSent?: string[];
   };
   /**
    * A discriminated union rather than one bag of optionals: `amount` is

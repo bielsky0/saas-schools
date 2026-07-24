@@ -39,25 +39,29 @@ function ownerColumns(owner: NotificationOwner): { organizationId?: string; acco
 }
 
 export type NewNotification = {
-  userId: string;
+  userId?: string;
   owner: NotificationOwner;
-  type: NotificationType;
+  type: string;
   params: Record<string, string | number>;
   link?: string;
+  /** F14 — polymorphic recipient metadata. */
+  recipientType?: "staff" | "client";
+  recipientId?: string;
+  eventType?: string;
+  channelSent?: string[];
 };
 
-/**
- * Insert a notification row. Takes a `writer` so a caller inside a transaction
- * can keep it atomic with a business write, exactly like `enqueueEmail` — though
- * the handler that normally calls this runs standalone with `db`.
- */
 export async function createNotification(writer: JobWriter, input: NewNotification): Promise<void> {
   await writer.insert(notification).values({
-    userId: input.userId,
+    ...(input.userId ? { userId: input.userId } : {}),
     ...ownerColumns(input.owner),
     type: input.type,
     params: input.params,
     ...(input.link ? { link: input.link } : {}),
+    ...(input.recipientType ? { recipientType: input.recipientType } : {}),
+    ...(input.recipientId ? { recipientId: input.recipientId } : {}),
+    ...(input.eventType ? { eventType: input.eventType } : {}),
+    ...(input.channelSent ? { channelSent: input.channelSent } : {}),
   });
 }
 
@@ -148,14 +152,29 @@ export async function markAllRead(
  * without a query: no preference row can ever silence it, by construction.
  * Absence of a row means the default, which is enabled.
  */
-export async function isInAppSuppressed(userId: string, type: NotificationType): Promise<boolean> {
+export async function isInAppSuppressed(userId: string, type: string): Promise<boolean> {
   if (!isSuppressibleType(type)) return false;
-  const [row] = await db
+  // Check new-style preference (recipient_type + event_type)
+  const [newRow] = await db
+    .select({ inAppEnabled: notificationPreference.inAppEnabled })
+    .from(notificationPreference)
+    .where(
+      and(
+        eq(notificationPreference.recipientType, "staff"),
+        eq(notificationPreference.recipientId, userId),
+        eq(notificationPreference.eventType, type),
+      ),
+    )
+    .limit(1);
+  if (newRow) return !newRow.inAppEnabled;
+
+  // Fallback to old-style preference (userId + type) for backward compat
+  const [oldRow] = await db
     .select({ inAppEnabled: notificationPreference.inAppEnabled })
     .from(notificationPreference)
     .where(and(eq(notificationPreference.userId, userId), eq(notificationPreference.type, type)))
     .limit(1);
-  return row ? !row.inAppEnabled : false;
+  return oldRow ? !oldRow.inAppEnabled : false;
 }
 
 export type PreferenceRow = { type: string; inAppEnabled: boolean };
@@ -171,6 +190,138 @@ export async function listPreferences(userId: string): Promise<PreferenceRow[]> 
     .where(eq(notificationPreference.userId, userId));
 }
 
+/** F14 — client notification rows (recipient_type = 'client'). */
+export async function listClientNotifications(
+  tx: TenantDb,
+  organizationId: string,
+  clientId: string,
+  limit = 20,
+): Promise<NotificationRow[]> {
+  const rows = await tx
+    .select({
+      id: notification.id,
+      type: notification.type,
+      params: notification.params,
+      link: notification.link,
+      readAt: notification.readAt,
+      createdAt: notification.createdAt,
+    })
+    .from(notification)
+    .where(
+      and(
+        eq(notification.organizationId, organizationId),
+        eq(notification.recipientType, "client"),
+        eq(notification.recipientId, clientId),
+      ),
+    )
+    .orderBy(desc(notification.createdAt))
+    .limit(limit);
+  return rows;
+}
+
+export async function countClientUnread(
+  tx: TenantDb,
+  organizationId: string,
+  clientId: string,
+): Promise<number> {
+  const [row] = await tx
+    .select({ n: count() })
+    .from(notification)
+    .where(
+      and(
+        eq(notification.organizationId, organizationId),
+        eq(notification.recipientType, "client"),
+        eq(notification.recipientId, clientId),
+        isNull(notification.readAt),
+      ),
+    );
+  return row?.n ?? 0;
+}
+
+export async function markClientRead(
+  tx: TenantDb,
+  organizationId: string,
+  clientId: string,
+  id: string,
+): Promise<boolean> {
+  const rows = await tx
+    .update(notification)
+    .set({ readAt: new Date() })
+    .where(
+      and(
+        eq(notification.id, id),
+        eq(notification.organizationId, organizationId),
+        eq(notification.recipientType, "client"),
+        eq(notification.recipientId, clientId),
+        isNull(notification.readAt),
+      ),
+    )
+    .returning({ id: notification.id });
+  return rows.length > 0;
+}
+
+export async function markAllClientRead(
+  tx: TenantDb,
+  organizationId: string,
+  clientId: string,
+): Promise<void> {
+  await tx
+    .update(notification)
+    .set({ readAt: new Date() })
+    .where(
+      and(
+        eq(notification.organizationId, organizationId),
+        eq(notification.recipientType, "client"),
+        eq(notification.recipientId, clientId),
+        isNull(notification.readAt),
+      ),
+    );
+}
+
+/** F14 — client notification preferences. */
+export async function listClientPreferences(
+  clientId: string,
+  organizationId: string,
+): Promise<{ type: string; inAppEnabled: boolean }[]> {
+  const rows = await db
+    .select({
+      type: notificationPreference.eventType,
+      inAppEnabled: notificationPreference.inAppEnabled,
+    })
+    .from(notificationPreference)
+    .where(
+      and(
+        eq(notificationPreference.recipientType, "client"),
+        eq(notificationPreference.recipientId, clientId),
+      ),
+    );
+  return rows.filter((r): r is { type: string; inAppEnabled: boolean } => r.type !== null);
+}
+
+export async function setClientPreference(
+  organizationId: string,
+  clientId: string,
+  eventType: string,
+  inAppEnabled: boolean,
+  emailEnabled: boolean,
+): Promise<void> {
+  await db
+    .insert(notificationPreference)
+    .values({
+      userId: "",
+      type: eventType,
+      recipientType: "client",
+      recipientId: clientId,
+      eventType,
+      inAppEnabled,
+      emailEnabled,
+    })
+    .onConflictDoUpdate({
+      target: [notificationPreference.recipientType, notificationPreference.recipientId, notificationPreference.eventType],
+      set: { inAppEnabled, emailEnabled, updatedAt: new Date() },
+    });
+}
+
 /** Upsert one preference (unique on user+type), stamping `updatedAt`. */
 export async function setPreference(
   userId: string,
@@ -179,9 +330,16 @@ export async function setPreference(
 ): Promise<void> {
   await db
     .insert(notificationPreference)
-    .values({ userId, type, inAppEnabled })
+    .values({
+      userId,
+      type,
+      inAppEnabled,
+      recipientType: "staff",
+      recipientId: userId,
+      eventType: type,
+    })
     .onConflictDoUpdate({
       target: [notificationPreference.userId, notificationPreference.type],
-      set: { inAppEnabled, updatedAt: new Date() },
+      set: { inAppEnabled, updatedAt: new Date(), recipientType: "staff", recipientId: userId, eventType: type },
     });
 }

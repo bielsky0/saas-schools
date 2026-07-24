@@ -1,6 +1,6 @@
 import { createHash, randomInt } from "node:crypto";
 
-import { enqueueEmail } from "@/features/emails/send";
+import { emitDomainNotification } from "@/features/notifications/emit";
 import type { Locale } from "@/lib/i18n/config";
 import { createLogger } from "@/lib/logger";
 import { withTenant } from "@/lib/db/tenant";
@@ -114,19 +114,23 @@ export async function issueOtp(input: {
       expiresAt,
     });
 
-    await enqueueEmail(
-      tx,
-      "client-otp",
-      {
+    await emitDomainNotification(tx, {
+      eventType: "client-otp",
+      organizationId: input.organizationId,
+      accountId: null,
+      recipients: [{
+        kind: "client",
+        clientId: parent.id,
+        email: input.email,
+        locale: input.locale,
+      }],
+      params: {
         code,
         orgName: input.organizationName,
         expiresInMinutes: Math.round(OTP_TTL_MS / 60_000),
       },
-      { to: input.email, locale: input.locale },
-      // Keyed on the OTP row, which is new on every issue — so a resend is a
-      // genuinely different message rather than one the queue swallows.
-      { dedupeKey: `client-otp:${otp.id}` },
-    );
+      dedupeBasis: `client-otp:${otp.id}`,
+    });
   });
 
   return { status: "sent" };

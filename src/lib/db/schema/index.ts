@@ -107,6 +107,7 @@ export * from "./audit-logs";
 export * from "./jobs";
 export * from "./email-suppressions";
 export * from "./files";
+export * from "./notification-event-types";
 export * from "./notifications";
 export * from "./notification-preferences";
 export * from "./rate-limits";

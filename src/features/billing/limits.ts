@@ -1,7 +1,7 @@
 import { and, count, countDistinct, eq, gte, isNull } from "drizzle-orm";
 
 import { db } from "@/lib/db";
-import { enqueueEmail } from "@/features/emails/send";
+import { emitDomainNotification } from "@/features/notifications/emit";
 import { site } from "@/lib/site";
 import {
   organizationLimitOverride,
@@ -238,7 +238,7 @@ async function enqueueApproachingNotification(
   // Find admin users in the organization to notify
   const { membership, user } = await import("@/lib/db/schema");
   const admins = await db
-    .select({ email: user.email, name: user.name })
+    .select({ id: user.id, email: user.email, name: user.name, locale: user.locale })
     .from(membership)
     .innerJoin(user, eq(membership.userId, user.id))
     .where(
@@ -259,23 +259,21 @@ async function enqueueApproachingNotification(
 
   const billingUrl = `${site.url}/dashboard/billing`;
 
-  for (const admin of admins) {
-    await enqueueEmail(
-      db,
-      "plan_limit_approaching",
-      {
-        orgName: org.name,
-        limitKey,
-        limitLabel: limitLabels[limitKey],
-        usage,
-        limit,
-        percentage,
-        upgradeUrl: billingUrl,
-      },
-      { to: admin.email, name: admin.name || undefined, locale: "pl" },
-      { dedupeKey },
-    );
-  }
+  await emitDomainNotification(db, {
+    eventType: "plan_limit_approaching",
+    organizationId,
+    accountId: null,
+    recipients: admins.map(a => ({
+      kind: "staff" as const,
+      userId: a.id,
+      email: a.email,
+      name: a.name || undefined,
+      locale: a.locale || "pl",
+    })),
+    params: { orgName: org.name, limitKey, limitLabel: limitLabels[limitKey], usage, limit, percentage, upgradeUrl: billingUrl },
+    link: billingUrl,
+    dedupeBasis: `plan_limit_approaching:${organizationId}:${limitKey}:${bucket}`,
+  });
 }
 
 /**
@@ -304,7 +302,7 @@ export async function enqueueLimitReachedNotification(
 
   const { membership, user } = await import("@/lib/db/schema");
   const admins = await db
-    .select({ email: user.email, name: user.name })
+    .select({ id: user.id, email: user.email, name: user.name, locale: user.locale })
     .from(membership)
     .innerJoin(user, eq(membership.userId, user.id))
     .where(
@@ -325,22 +323,21 @@ export async function enqueueLimitReachedNotification(
 
   const billingUrl = `${site.url}/dashboard/billing`;
 
-  for (const admin of admins) {
-    await enqueueEmail(
-      db,
-      "plan_limit_reached",
-      {
-        orgName: org.name,
-        limitKey,
-        limitLabel: limitLabels[limitKey],
-        usage,
-        limit,
-        upgradeUrl: billingUrl,
-      },
-      { to: admin.email, name: admin.name || undefined, locale: "pl" },
-      { dedupeKey },
-    );
-  }
+  await emitDomainNotification(db, {
+    eventType: "plan_limit_reached",
+    organizationId,
+    accountId: null,
+    recipients: admins.map(a => ({
+      kind: "staff" as const,
+      userId: a.id,
+      email: a.email,
+      name: a.name || undefined,
+      locale: a.locale || "pl",
+    })),
+    params: { orgName: org.name, limitKey, limitLabel: limitLabels[limitKey], usage, limit, upgradeUrl: billingUrl },
+    link: billingUrl,
+    dedupeBasis: `plan_limit_reached:${organizationId}:${limitKey}`,
+  });
 }
 
 /**

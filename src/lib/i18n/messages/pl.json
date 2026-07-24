@@ -588,6 +588,58 @@
       "subscription-confirmed": {
         "title": "Subskrypcja aktywna",
         "body": "Plan {planName} jest już aktywny dla {orgName}."
+      },
+      "plan_limit_approaching": {
+        "title": "Limit planu zbliża się",
+        "body": "{orgName} wykorzystał {percentage}% limitu {limitLabel} ({usage}/{limit})."
+      },
+      "plan_limit_reached": {
+        "title": "Limit planu osiągnięty",
+        "body": "{orgName} osiągnął limit {limitLabel} ({usage}/{limit})."
+      },
+      "grade-recorded": {
+        "title": "Nowa ocena",
+        "body": "Twoje dziecko {athleteName} otrzymało ocenę z {fieldName} w {orgName}."
+      },
+      "progress-note-added": {
+        "title": "Notatka o postępie",
+        "body": "Dodano notatkę o postępie dla {athleteName} w {orgName}."
+      },
+      "booking-cancelled": {
+        "title": "Rezerwacja anulowana",
+        "body": "Rezerwacja dla {athleteName} ({groupTypeName}, {sessionDate} o {sessionTime}) została anulowana."
+      },
+      "session-cancelled": {
+        "title": "Sesja anulowana",
+        "body": "Sesja w dniu {sessionDate} o {sessionTime} została anulowana przez akademię."
+      },
+      "subscription-payment-failed": {
+        "title": "Nieudana płatność",
+        "body": "Nie udało się przetworzyć płatności subskrypcyjnej dla {orgName}."
+      },
+      "stripe_connect_requires_attention": {
+        "title": "Konto Stripe wymaga uwagi",
+        "body": "Twoje konto Stripe dla {orgName} wymaga uwagi."
+      },
+      "client-otp": {
+        "title": "Twój kod logowania",
+        "body": "Użyj kodu wysłanego na e-mail, aby zalogować się do {orgName}."
+      },
+      "refund-confirmed": {
+        "title": "Zwrot potwierdzony",
+        "body": "Zwrot środków został przetworzony."
+      },
+      "credit-expiring-soon": {
+        "title": "Kredyty wygasają",
+        "body": "Niektóre z Twoich kredytów wkrótce wygasną."
+      },
+      "group-change-approved": {
+        "title": "Zmiana grupy zatwierdzona",
+        "body": "Prośba o zmianę grupy została zatwierdzona."
+      },
+      "client-password-changed": {
+        "title": "Hasło zmienione",
+        "body": "Twoje hasło zostało zmienione."
       }
     },
     "preferences": {
@@ -598,7 +650,19 @@
         "verify-email": "Przypomnienia o weryfikacji e-mail",
         "invitation": "Zaproszenia do zespołu",
         "payment-failed": "Nieudane płatności",
-        "subscription-confirmed": "Potwierdzenia subskrypcji"
+        "subscription-confirmed": "Potwierdzenia subskrypcji",
+        "plan_limit_approaching": "Ostrzeżenia o limitach planu",
+        "plan_limit_reached": "Alerty o osiągnięciu limitu",
+        "grade-recorded": "Nowe oceny",
+        "progress-note-added": "Notatki o postępie",
+        "booking-cancelled": "Anulowania rezerwacji",
+        "session-cancelled": "Anulowania sesji",
+        "subscription-payment-failed": "Nieudane płatności subskrypcji",
+        "stripe_connect_requires_attention": "Alerty konta Stripe",
+        "refund-confirmed": "Potwierdzenia zwrotów",
+        "credit-expiring-soon": "Ostrzeżenia o wygasających kredytach",
+        "group-change-approved": "Zatwierdzenia zmiany grupy",
+        "client-password-changed": "Alerty o zmianie hasła"
       },
       "locked": "Zawsze włączone",
       "save": "Zapisz",

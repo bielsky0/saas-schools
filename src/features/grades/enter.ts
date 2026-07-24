@@ -1,7 +1,7 @@
 import { and, eq } from "drizzle-orm";
 
 import { recordAudit, type AuditActor } from "@/features/admin/audit";
-import { enqueueEmail } from "@/features/emails/send";
+import { emitDomainNotification } from "@/features/notifications/emit";
 import type { Locale } from "@/lib/i18n";
 import { athlete, booking, classSession, client, grade, progressNote } from "@/lib/db/schema";
 import type { Role } from "@/features/rbac";
@@ -31,6 +31,7 @@ export class ForeignSessionError extends Error {}
 interface ParticipantContext {
   athleteName: string;
   clientEmail: string;
+  clientId: string;
   sessionId: string;
 }
 
@@ -68,13 +69,13 @@ async function loadBookingAndAssertOwnership(
   }
 
   const [parent] = await tx
-    .select({ email: client.email })
+    .select({ email: client.email, id: client.id })
     .from(client)
     .where(and(eq(client.id, row.parentClientId), eq(client.organizationId, organizationId)))
     .limit(1);
   if (!parent) throw new BookingNotFoundError(bookingId);
 
-  return { athleteName: row.athleteName, clientEmail: parent.email, sessionId: row.sessionId };
+  return { athleteName: row.athleteName, clientEmail: parent.email, clientId: parent.id, sessionId: row.sessionId };
 }
 
 export interface EnterGradeInput {
@@ -151,16 +152,19 @@ export async function enterGrade(
     },
   });
 
-  await enqueueEmail(
-    tx,
-    "grade-recorded",
-    { orgName: input.organizationName, athleteName: participant.athleteName, fieldName: field.name },
-    { to: participant.clientEmail, locale: input.locale },
-    // Keyed on booking+field+value so a genuine re-entry (a different value) is a
-    // new message, matching `enterGrade`'s own "overwrite" semantics rather than
-    // the queue swallowing a correction as a duplicate of the first entry.
-    { dedupeKey: `grade-recorded:${input.bookingId}:${input.gradeFieldId}:${input.value}` },
-  );
+  await emitDomainNotification(tx, {
+    eventType: "grade-recorded",
+    organizationId: input.organizationId,
+    accountId: null,
+    recipients: [{
+      kind: "client",
+      clientId: participant.clientId,
+      email: participant.clientEmail,
+      locale: input.locale,
+    }],
+    params: { orgName: input.organizationName, athleteName: participant.athleteName, fieldName: field.name },
+    dedupeBasis: `grade-recorded:${input.bookingId}:${input.gradeFieldId}:${input.value}`,
+  });
 
   return { previousValue, sessionId: participant.sessionId };
 }
@@ -208,13 +212,19 @@ export async function addProgressNote(
     metadata: { bookingId: input.bookingId },
   });
 
-  await enqueueEmail(
-    tx,
-    "progress-note-added",
-    { orgName: input.organizationName, athleteName: participant.athleteName },
-    { to: participant.clientEmail, locale: input.locale },
-    { dedupeKey: `progress-note-added:${row.id}` },
-  );
+  await emitDomainNotification(tx, {
+    eventType: "progress-note-added",
+    organizationId: input.organizationId,
+    accountId: null,
+    recipients: [{
+      kind: "client",
+      clientId: participant.clientId,
+      email: participant.clientEmail,
+      locale: input.locale,
+    }],
+    params: { orgName: input.organizationName, athleteName: participant.athleteName },
+    dedupeBasis: `progress-note-added:${row.id}`,
+  });
 
   return { id: row.id, sessionId: participant.sessionId };
 }

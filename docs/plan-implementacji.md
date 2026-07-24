@@ -32,7 +32,7 @@ Ten plik jest nadal **jedynym trwałym źródłem prawdy o planie i postępie** 
 | Faza 11 — Płatność online za pojedyncze zajęcia (EPIK 5)                         | [docs/plan/faza-11.md](plan/faza-11.md)                                       |
 | Faza 12 — Pakiety i subskrypcje (EPIK 9, 10, 23, 25)                             | [docs/plan/faza-12.md](plan/faza-12.md)                                       |
 | Faza 13 — Portfel klienta UI (§7.12)                                             | [docs/plan/faza-13.md](plan/faza-13.md)                                       | ✅ zakończona (2026-07-24) |
-| Faza 14 — ⚠️ Notification Center domenowy (EPIK 26; odejście #1)                 | [docs/plan/faza-14.md](plan/faza-14.md)                                       |
+| Faza 14 — ⚠️ Notification Center domenowy (EPIK 26; odejście #1)                 | [docs/plan/faza-14.md](plan/faza-14.md)                                       | ✅ zakończona (2026-07-24) |
 | Faza 15 — Zmiana Grupy (swap) + przeniesienie kredytu między dziećmi             | [docs/plan/faza-15.md](plan/faza-15.md)                                       |
 | Faza 16 — Zwroty fiducjarne (EPIK 18)                                            | [docs/plan/faza-16.md](plan/faza-16.md)                                       |
 | Faza 17 — Regulaminy i akceptacje (EPIK 28)                                      | [docs/plan/faza-17.md](plan/faza-17.md)                                       |
