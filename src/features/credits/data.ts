@@ -1,4 +1,4 @@
-import { and, asc, count, eq, gt, isNull } from "drizzle-orm";
+import { and, asc, count, eq, getTableColumns, gt, isNull } from "drizzle-orm";
 
 import { credit, creditType } from "@/lib/db/schema";
 import type { TenantDb } from "@/lib/db/tenant";
@@ -62,8 +62,12 @@ export async function listAvailableCredits(
   now: Date = new Date(),
 ) {
   return tx
-    .select()
+    .select({ ...getTableColumns(credit), creditTypeName: creditType.name })
     .from(credit)
+    .innerJoin(
+      creditType,
+      and(eq(credit.creditTypeId, creditType.id), eq(creditType.organizationId, organizationId)),
+    )
     .where(
       and(
         eq(credit.organizationId, organizationId),

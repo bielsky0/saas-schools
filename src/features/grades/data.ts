@@ -1,6 +1,6 @@
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 
-import { grade, gradeField, progressNote } from "@/lib/db/schema";
+import { athlete, booking, grade, gradeField, progressNote } from "@/lib/db/schema";
 import type { TenantDb } from "@/lib/db/tenant";
 
 /**
@@ -96,4 +96,91 @@ export async function listProgressNotesForBooking(
     .select()
     .from(progressNote)
     .where(and(eq(progressNote.organizationId, organizationId), eq(progressNote.bookingId, bookingId)));
+}
+
+/**
+ * Every grade entered for any child of one parent (US-35.6, F13).
+ *
+ * ⚠️ `clientId` MUST come from `resolveClientSession()` (server-side session
+ * cookie), never from a query param or request body — this is how the scope
+ * is enforced. The join through `booking → athlete.parentClientId` ensures
+ * a parent sees only their own children's grades.
+ */
+export async function listGradesForClient(
+  tx: TenantDb,
+  organizationId: string,
+  clientId: string,
+) {
+  return tx
+    .select({
+      id: grade.id,
+      fieldName: gradeField.name,
+      fieldType: gradeField.fieldType,
+      value: grade.value,
+      athleteName: athlete.name,
+      athleteId: athlete.id,
+      bookingId: grade.bookingId,
+      createdAt: grade.createdAt,
+    })
+    .from(grade)
+    .innerJoin(
+      booking,
+      and(eq(grade.bookingId, booking.id), eq(grade.organizationId, booking.organizationId)),
+    )
+    .innerJoin(
+      athlete,
+      and(eq(booking.athleteId, athlete.id), eq(athlete.organizationId, booking.organizationId)),
+    )
+    .innerJoin(
+      gradeField,
+      and(eq(grade.gradeFieldId, gradeField.id), eq(gradeField.organizationId, grade.organizationId)),
+    )
+    .where(
+      and(
+        eq(grade.organizationId, organizationId),
+        eq(athlete.parentClientId, clientId),
+      ),
+    )
+    .orderBy(desc(grade.createdAt));
+}
+
+/**
+ * Every progress note for any child of one parent (US-35.6, F13).
+ *
+ * Same security rule as `listGradesForClient`: `clientId` from the session,
+ * never from user-supplied input.
+ */
+export async function listProgressNotesForClient(
+  tx: TenantDb,
+  organizationId: string,
+  clientId: string,
+) {
+  return tx
+    .select({
+      id: progressNote.id,
+      content: progressNote.content,
+      athleteName: athlete.name,
+      athleteId: athlete.id,
+      bookingId: progressNote.bookingId,
+      createdAt: progressNote.createdAt,
+    })
+    .from(progressNote)
+    .innerJoin(
+      booking,
+      and(
+        eq(progressNote.bookingId, booking.id),
+        eq(progressNote.organizationId, booking.organizationId),
+      ),
+    )
+    .innerJoin(
+      athlete,
+      and(eq(booking.athleteId, athlete.id), eq(athlete.organizationId, booking.organizationId)),
+    )
+    .where(
+      and(
+        eq(progressNote.organizationId, organizationId),
+        eq(athlete.parentClientId, clientId),
+      ),
+    )
+    .orderBy(desc(progressNote.createdAt));
 }

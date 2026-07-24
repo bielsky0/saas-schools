@@ -1,6 +1,6 @@
 ### Faza 13 — Portfel klienta UI (§7.12)
 
-**Status:** nierozpoczęta
+**Status:** ✅ zakończona (2026-07-24)
 **Cel:** klient widzi kredyty tylko wtedy, gdy ma z czego korzystać.
 **Pokrywa:** US-7.6, **US-35.6 (v16, retrofit widoczności e-dziennika)**; spec §5 pkt 11.
 **Zależności:** F12 (wszystkie źródła kredytów istnieją), **F6 (dane e-dziennika: `grade`/`progress_note` istnieją)**.

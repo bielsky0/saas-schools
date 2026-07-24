@@ -972,6 +972,19 @@
       "status": "Status",
       "actions": "Akcje"
     },
+    "walletTitle": "Portfel kredytów",
+    "walletEmpty": "Brak kredytów w portfelu.",
+    "gradesTitle": "Oceny i postępy",
+    "gradesEmpty": "Brak ocen i notatek.",
+    "source": {
+      "cancellation": "Odwołanie zajęć",
+      "manual_admin_grant": "Przyznane ręcznie",
+      "subscription_purchase": "Zakup subskrypcji",
+      "admin_session_cancellation": "Anulowanie administracyjne",
+      "package_cash": "Pakiet (gotówka)",
+      "package_online": "Pakiet (online)",
+      "subscription_renewal": "Odnowienie subskrypcji"
+    },
     "makeupBooked": "Odrabianie zapisane — wykorzystano kredyt.",
     "extraBooked": "Dodatkowe zajęcia zapisane."
   },

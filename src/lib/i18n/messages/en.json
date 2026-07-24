@@ -972,6 +972,19 @@
       "status": "Status",
       "actions": "Actions"
     },
+    "walletTitle": "Credit wallet",
+    "walletEmpty": "No credits in wallet.",
+    "gradesTitle": "Grades & progress",
+    "gradesEmpty": "No grades or progress notes yet.",
+    "source": {
+      "cancellation": "Cancellation",
+      "manual_admin_grant": "Manual grant",
+      "subscription_purchase": "Subscription purchase",
+      "admin_session_cancellation": "Admin cancellation",
+      "package_cash": "Package (cash)",
+      "package_online": "Package (online)",
+      "subscription_renewal": "Subscription renewal"
+    },
     "makeupBooked": "Make-up session booked using credit.",
     "extraBooked": "Extra session booked."
   },
