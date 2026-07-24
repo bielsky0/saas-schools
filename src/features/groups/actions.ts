@@ -1,6 +1,6 @@
 "use server";
 
-import { and, eq, gte, isNull } from "drizzle-orm";
+import { and, eq, gte, isNull, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 
@@ -9,7 +9,7 @@ import { enqueueJob } from "@/features/jobs";
 import { requireOrgPermission } from "@/features/organizations/context";
 import { generateSessionsForRecurrence } from "@/features/schedule/generate";
 import { generateOccurrences } from "@/features/schedule/recurrence";
-import { classSession, groupType, groupTypeRecurrence, location } from "@/lib/db/schema";
+import { classSession, creditType, groupType, groupTypeRecurrence, location, productTemplate } from "@/lib/db/schema";
 import { withTenant, type TenantDb } from "@/lib/db/tenant";
 import {
   SQLSTATE_EXCLUSION_VIOLATION,
@@ -181,8 +181,9 @@ export async function updateGroupTypeAction(
   const actor = await resolveActor(ctx.session);
 
   let found = false;
+  let warning: string | undefined;
   try {
-    found = await withTenant(ctx.org.id, async (tx) => {
+    const updateResult = await withTenant(ctx.org.id, async (tx) => {
       const [before] = await tx
         .select()
         .from(groupType)
@@ -194,7 +195,7 @@ export async function updateGroupTypeAction(
           ),
         )
         .limit(1);
-      if (!before) return false;
+      if (!before) return { kind: "not-found" as const };
 
       if (
         parsed.data.defaultLocationId &&
@@ -224,17 +225,46 @@ export async function updateGroupTypeAction(
         price: parsed.data.price,
         isNewClientOnly: parsed.data.isNewClientOnly,
         defaultLocationId: parsed.data.defaultLocationId ?? null,
+        allowedPurchaseModes: parsed.data.allowedPurchaseModes,
+        allowedBillingTypes: parsed.data.allowedBillingTypes ?? null,
       };
 
       await tx
         .update(groupType)
-        .set({
-          ...after,
-          allowedPurchaseModes: parsed.data.allowedPurchaseModes,
-          allowedBillingTypes: parsed.data.allowedBillingTypes ?? null,
-          updatedAt: new Date(),
-        })
+        .set({ ...after, updatedAt: new Date() })
         .where(and(eq(groupType.id, groupTypeId), eq(groupType.organizationId, ctx.org.id)));
+
+      // US-23.4 AC2 (F12e): ostrzeżenie gdy `package` włączone, brak aktywnego template.
+      let pkgWarning: string | undefined;
+      if (parsed.data.allowedPurchaseModes.includes("package")) {
+        const [ct] = await tx
+          .select({ id: creditType.id })
+          .from(creditType)
+          .where(
+            and(
+              eq(creditType.groupTypeId, groupTypeId),
+              eq(creditType.organizationId, ctx.org.id),
+              isNull(creditType.deletedAt),
+            ),
+          )
+          .limit(1);
+        if (ct) {
+          const [row] = await tx
+            .select({ count: sql<number>`count(*)::int` })
+            .from(productTemplate)
+            .where(
+              and(
+                eq(productTemplate.creditTypeId, ct.id),
+                eq(productTemplate.organizationId, ctx.org.id),
+                eq(productTemplate.isActive, true),
+              ),
+            )
+            .limit(1);
+          if ((row?.count ?? 0) === 0) {
+            pkgWarning = t("noActivePackagesWarning");
+          }
+        }
+      }
 
       await recordAudit(tx, {
         actor,
@@ -253,11 +283,15 @@ export async function updateGroupTypeAction(
             "price",
             "isNewClientOnly",
             "defaultLocationId",
+            "allowedPurchaseModes",
+            "allowedBillingTypes",
           ]),
         }),
       });
-      return true;
+      return { kind: "found" as const, warning: pkgWarning };
     });
+    found = updateResult.kind === "found";
+    warning = updateResult.kind === "found" ? updateResult.warning : undefined;
   } catch (error) {
     if (error instanceof UnknownLocationError) return { error: t("errors.locationNotFound") };
     if (sqlStateOf(error) === SQLSTATE_UNIQUE_VIOLATION) return { error: t("errors.slugTaken") };
@@ -268,7 +302,10 @@ export async function updateGroupTypeAction(
 
   revalidatePath(`/dashboard/group-types`);
   revalidatePath(`/dashboard/group-types/${groupTypeId}`);
-  return { success: t("updated") };
+
+  const parts = [t("updated")];
+  if (warning) parts.push(warning);
+  return { success: parts.join(" ") };
 }
 
 // --- Recurrence (pattern) ----------------------------------------------------

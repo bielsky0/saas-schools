@@ -53,6 +53,15 @@
       "cta": "Zaktualizuj metodę płatności",
       "note": "Spróbujemy ponownie w ciągu najbliższych dni. Jeśli płatność nadal nie będzie przechodzić, subskrypcja może zostać anulowana."
     },
+    "subscription-payment-failed": {
+      "subject": "Płatność subskrypcji nie powiodła się",
+      "preview": "Nie udało się przetworzyć płatności subskrypcji dla {orgName}.",
+      "heading": "Płatność nie powiodła się",
+      "body": "Nie udało się przetworzyć płatności subskrypcyjnej dla <b>{orgName}</b>. Zwykle oznacza to, że karta wygasła lub została odrzucona.",
+      "action": "Zaktualizuj metodę płatności, aby zachować aktywną subskrypcję.",
+      "cta": "Zaktualizuj metodę płatności",
+      "noPortal": "Skontaktuj się bezpośrednio z akademią, aby zaktualizować metodę płatności. Spróbujemy ponownie automatycznie w ciągu najbliższych dni."
+    },
     "subscription-confirmed": {
       "subject": "Twoja subskrypcja jest aktywna",
       "preview": "Plan {planName} jest już aktywny dla {orgName}.",
@@ -468,7 +477,8 @@
       "locations": "Lokalizacje",
       "groupTypes": "Typy grup",
       "schedule": "Grafik",
-      "credits": "Kredyty"
+      "credits": "Kredyty",
+      "purchases": "Sprzedaj pakiety"
     },
     "settings": {
       "heading": "Ustawienia",
@@ -677,6 +687,7 @@
     "empty": "Brak typów grup. Utwórz pierwszy poniżej.",
     "created": "Typ grupy utworzony.",
     "updated": "Typ grupy zaktualizowany.",
+    "noActivePackagesWarning": "Uwaga: brak aktywnych pakietów dla tego typu grupy. Klienci nie będą mogli kupić pakietów.",
     "manage": "Zarządzaj",
     "backToList": "Wszystkie typy grup",
     "form": {
@@ -927,7 +938,8 @@
       "onSite": "Płacę na miejscu",
       "online": "Płacę online",
       "onlineUnavailable": "Płatności online chwilowo niedostępne.",
-      "packagesOnly": "Brak dostępnych pakietów — skontaktuj się z akademią.",
+      "packagesOnly": "Ta oferta dostępna jest wyłącznie w formie pakietu.",
+      "noPackagesAvailable": "Brak dostępnych pakietów — skontaktuj się z akademią.",
       "noneAvailable": "Zapisy online chwilowo niedostępne — skontaktuj się z akademią."
     },
     "confirm": {
@@ -1003,7 +1015,22 @@
       "validUntil": "Ważny do",
       "reason": "Powód"
     },
-    "deactivated": "Typ kredytu dezaktywowany"
+    "deactivated": "Typ kredytu dezaktywowany",
+    "purchase": {
+      "title": "Sprzedaj pakiety",
+      "subtitle": "Sprzedaj pakiet kredytów za gotówkę w recepcji. Kredyty są wydawane i automatycznie przypisywane do nadchodzących zajęć.",
+      "productTemplate": "Pakiet",
+      "client": "Klient",
+      "athlete": "Uczestnik",
+      "athleteHint": "Pozostaw puste, aby każde dziecko tego klienta mogło wykorzystać kredyty.",
+      "familyWallet": "Portfel rodzinny (dowolne dziecko)",
+      "submit": "Sprzedaj pakiet",
+      "submitting": "Sprzedawanie…",
+      "cashConfirmed": "Pakiet sprzedany. Wydano {credits} kredytów, rozliczono {settled} rezerwacji, zapisano na {filled} sesji.",
+      "productTemplateNotFound": "Ten pakiet nie należy do tej akademii.",
+      "productTemplateNotActive": "Ten pakiet nie jest już dostępny.",
+      "policyViolation": "Ten pakiet nie jest dostępny w ramach aktualnej polityki tego typu grupy."
+    }
   },
   "staffPanel": {
     "title": "Sesje",

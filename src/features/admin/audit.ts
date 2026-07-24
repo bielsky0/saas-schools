@@ -240,6 +240,12 @@ export const AUDIT_ACTIONS = [
   "organization_limit_override.create",
   "organization_limit_override.update",
   "organization_limit_override.delete",
+  // F12 / EPIK 9/10 — Pakiety: zakup gotówkowy
+  //
+  // Logged because a cash purchase at the desk is a money-bearing act on one
+  // person's say-so — same reasoning as `credit.grant`. The credit rows carry
+  // the ledger detail; this row answers "who sold which package to whom, when".
+  "credit.purchase_cash",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -278,7 +284,11 @@ export type AuditTargetType =
   | "plan"
   | "plan_limit_definition"
   | "plan_feature_flag"
-  | "organization_limit_override";
+  | "organization_limit_override"
+  // F12 / EPIK 9/10 — Pakiety
+  //
+  /** The purchase journal entry — target of `credit.purchase_cash` (F12b). */
+  | "credit_purchase";
 
 /**
  * WHO acted, as a kind — §6.4's actor model. A different question from WHICH

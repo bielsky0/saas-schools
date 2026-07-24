@@ -56,4 +56,18 @@ export const noneBillingAdapter: BillingAdapter = {
   async createConnectCheckoutSession(): Promise<BillingRedirectResult> {
     return { ok: false, code: "NOT_CONFIGURED" };
   },
+
+  // ── Faza 12 — Pakiety i subskrypcje (EPIK 9/10/23/25) ─────────────────
+
+  async createConnectPackageCheckoutSession(): Promise<BillingRedirectResult> {
+    return { ok: false, code: "NOT_CONFIGURED" };
+  },
+
+  async createConnectStripeCustomer(): Promise<CreateCustomerResult> {
+    return { ok: false, code: "NOT_CONFIGURED" };
+  },
+
+  async createConnectPortalSession(): Promise<BillingRedirectResult> {
+    return { ok: false, code: "NOT_CONFIGURED" };
+  },
 };

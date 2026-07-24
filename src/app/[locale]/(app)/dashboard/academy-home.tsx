@@ -59,6 +59,11 @@ export default async function AcademyHome() {
             <Link href="/dashboard/credits">{t("credits")}</Link>
           </Button>
         ) : null}
+        {hasPermission(role, "credits.purchase_cash") ? (
+          <Button asChild variant="outline" size="sm">
+            <Link href="/dashboard/purchases">{t("purchases")}</Link>
+          </Button>
+        ) : null}
         {hasPermission(role, "locations.manage") ? (
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard/locations">{t("locations")}</Link>

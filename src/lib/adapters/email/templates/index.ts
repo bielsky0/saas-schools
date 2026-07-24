@@ -19,6 +19,7 @@ import { VerifyEmail, verifyEmailSubject } from "./verify-email";
 import { Welcome, welcomeSubject } from "./welcome";
 import { PlanLimitApproaching, planLimitApproachingSubject } from "./plan-limit-approaching";
 import { PlanLimitReached, planLimitReachedSubject } from "./plan-limit-reached";
+import { SubscriptionPaymentFailed, subscriptionPaymentFailedSubject } from "./subscription-payment-failed";
 
 /**
  * Template registry (spec 10.2 — component templates, HTML + plain-text).
@@ -68,6 +69,10 @@ const templates: { [N in TemplateName]: TemplateDef<N> } = {
   "session-cancelled": { subject: sessionCancelledSubject, component: SessionCancelled },
   "plan_limit_approaching": { subject: planLimitApproachingSubject, component: PlanLimitApproaching },
   "plan_limit_reached": { subject: planLimitReachedSubject, component: PlanLimitReached },
+  "subscription-payment-failed": {
+    subject: subscriptionPaymentFailedSubject,
+    component: SubscriptionPaymentFailed,
+  },
 };
 
 /**

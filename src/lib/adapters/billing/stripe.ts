@@ -12,6 +12,8 @@ import type {
   ConnectAccountStatus,
   ConnectCheckoutInput,
   ConnectEvent,
+  ConnectPackageCheckoutInput,
+  ConnectStripeCustomerInput,
   CreateAccountOnboardingLinkInput,
   CreateConnectAccountInput,
   CreateConnectAccountResult,
@@ -191,8 +193,9 @@ function parseEvent(event: Stripe.Event): BillingEvent | null {
 
 /**
  * Parse a Connect event into a neutral ConnectEvent.
- * Handles account.updated, account.application.deauthorized, and
- * checkout.session.completed (F11 / EPIK 5 — direct charge).
+ * Handles account.updated, account.application.deauthorized,
+ * checkout.session.completed (F11/F12c/F12d), and subscription lifecycle
+ * events: invoice.paid, invoice.payment_failed, customer.subscription.deleted (F12d).
  */
 function parseConnectEvent(event: Stripe.Event): ConnectEvent | null {
   const base = { provider: PROVIDER, id: event.id, occurredAt: new Date(event.created * 1000) };
@@ -252,12 +255,10 @@ function parseConnectEvent(event: Stripe.Event): ConnectEvent | null {
           amount_total: z.number().int().nonnegative(),
           currency: z.string(),
           metadata: z.record(z.string(), z.string()),
+          subscription: idRef.optional(),
         })
         .parse(event.data.object);
 
-      // `event.account` is populated by Stripe for Connect webhook events.
-      // We assert it rather than skipping the event silently: a missing account
-      // on a Connect webhook is a configuration error that should be visible.
       const accountId = event.account;
       if (!accountId) return null;
 
@@ -270,6 +271,45 @@ function parseConnectEvent(event: Stripe.Event): ConnectEvent | null {
         amount: session.amount_total,
         currency: session.currency,
         metadata: session.metadata,
+        subscriptionId: session.subscription,
+      };
+    }
+
+    case "invoice.paid":
+    case "invoice.payment_failed": {
+      const invoice = invoiceObject.parse(event.data.object);
+      const accountId = event.account;
+      if (!accountId) return null;
+
+      // invoice.parent.subscription_details.subscription is the link to the
+      // subscription that generated this invoice. When null, this is a
+      // non-subscription invoice (e.g. one-time payment) — not our concern.
+      const subscriptionId = invoice.parent?.subscription_details?.subscription;
+      if (!subscriptionId) return null;
+
+      return {
+        ...base,
+        accountId,
+        type: event.type as "invoice.paid" | "invoice.payment_failed",
+        stripeSubscriptionId: subscriptionId,
+        stripeCustomerId: invoice.customer,
+        invoiceId: invoice.id,
+        amount: event.type === "invoice.paid" ? invoice.amount_paid : invoice.amount_due,
+        currency: invoice.currency,
+      };
+    }
+
+    case "customer.subscription.deleted": {
+      const sub = subscriptionObject.parse(event.data.object);
+      const accountId = event.account;
+      if (!accountId) return null;
+
+      return {
+        ...base,
+        accountId,
+        type: "customer.subscription.deleted",
+        stripeSubscriptionId: sub.id,
+        stripeCustomerId: sub.customer,
       };
     }
 
@@ -455,6 +495,7 @@ export function createStripeBillingAdapter(): BillingAdapter {
             metadata: {
               bookingId: input.bookingId,
               organizationId: input.organizationId,
+              purchaseKind: input.purchaseKind,
             },
             success_url: input.successUrl,
             cancel_url: input.cancelUrl,
@@ -474,6 +515,102 @@ export function createStripeBillingAdapter(): BillingAdapter {
         return { ok: true, url: session.url };
       } catch (err) {
         return providerError("createConnectCheckoutSession", err);
+      }
+    },
+
+    // ── Faza 12 — Pakiety i subskrypcje (EPIK 9/10/23/25) ─────────────
+
+    async createConnectPackageCheckoutSession(
+      input: ConnectPackageCheckoutInput,
+    ): Promise<BillingRedirectResult> {
+      try {
+        const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
+        const productName = `Pakiet ${input.quantity} zajęć`;
+
+        if (input.stripePriceId && input.mode === "subscription") {
+          // Subscription with a pre-created Stripe Price.
+          lineItems.push({
+            price: input.stripePriceId,
+            quantity: 1,
+          });
+        } else {
+          // One-time payment OR ad-hoc price_data per Rozstrzygnięcie #20.
+          lineItems.push({
+            price_data: {
+              currency: input.currency,
+              product_data: { name: productName },
+              unit_amount: input.amount,
+              ...(input.mode === "subscription" && input.interval
+                ? { recurring: { interval: input.interval, interval_count: input.intervalCount ?? 1 } }
+                : {}),
+            },
+            quantity: 1,
+          });
+        }
+
+        const session = await stripe.checkout.sessions.create(
+          {
+            mode: input.mode,
+            ...(input.customer ? { customer: input.customer } : {}),
+            line_items: lineItems,
+            metadata: {
+              organizationId: input.organizationId,
+              clientId: input.clientId,
+              creditTypeId: input.creditTypeId,
+              productTemplateId: input.productTemplateId,
+              quantity: String(input.quantity),
+              purchaseKind: input.purchaseKind,
+            },
+            success_url: input.successUrl,
+            cancel_url: input.cancelUrl,
+          },
+          { stripeAccount: input.accountId },
+        );
+
+        if (!session.url) {
+          return providerError(
+            "createConnectPackageCheckoutSession",
+            new Error("session has no url"),
+          );
+        }
+        return { ok: true, url: session.url };
+      } catch (err) {
+        return providerError("createConnectPackageCheckoutSession", err);
+      }
+    },
+
+    async createConnectStripeCustomer(
+      input: ConnectStripeCustomerInput,
+    ): Promise<CreateCustomerResult> {
+      try {
+        const customer = await stripe.customers.create(
+          {
+            email: input.email,
+            name: input.name,
+            metadata: input.metadata,
+          },
+          { stripeAccount: input.accountId },
+        );
+        return { ok: true, providerCustomerId: customer.id };
+      } catch (err) {
+        return providerError("createConnectStripeCustomer", err);
+      }
+    },
+
+    async createConnectPortalSession(
+      input: PortalSessionInput,
+    ): Promise<BillingRedirectResult> {
+      try {
+        const session = await stripe.billingPortal.sessions.create(
+          {
+            customer: input.providerCustomerId,
+            return_url: input.returnUrl,
+          },
+          input.accountId ? { stripeAccount: input.accountId } : {},
+        );
+        return { ok: true, url: session.url };
+      } catch (err) {
+        return providerError("createConnectPortalSession", err);
       }
     },
   };

@@ -32,6 +32,9 @@ export const creditSource = z.enum([
   "subscription_purchase",
   "admin_session_cancellation",
   "online_payment",
+  "package_cash",
+  "package_online",
+  "subscription_renewal",
 ]);
 
 /**

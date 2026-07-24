@@ -242,6 +242,7 @@ export function connectCheckoutCompletedEvent(
         metadata: {
           bookingId: opts.bookingId,
           organizationId: opts.organizationId,
+          purchaseKind: "booking_payment",
         },
       },
     },

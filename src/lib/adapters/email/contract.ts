@@ -41,7 +41,12 @@ export type TemplateName =
   | "session-cancelled"
   // F9 / EPIK 29 — Plan limits (email-only, not suppressible in-app).
   | "plan_limit_approaching"
-  | "plan_limit_reached";
+  | "plan_limit_reached"
+  // F12d — Client subscription payment failure notification. Differs from
+  // "payment-failed" (platform plan billing): this one targets the parent
+  // (client), not the academy admin. `portalUrl` is optional — absent when
+  // the academy has not configured a Stripe Customer Portal.
+  | "subscription-payment-failed";
 // `magic-link` lands with spec 2.2, which is not implemented yet.
 
 /**
@@ -123,6 +128,15 @@ export interface TemplateProps {
     usage: number;
     limit: number;
     upgradeUrl: string;
+  };
+  /**
+   * F12d — Client subscription payment failure.
+   * `portalUrl` is present only when the academy has the Stripe Customer Portal
+   * configured. When absent, the template shows a "contact the academy" fallback.
+   */
+  "subscription-payment-failed": {
+    orgName: string;
+    portalUrl?: string;
   };
 }
 

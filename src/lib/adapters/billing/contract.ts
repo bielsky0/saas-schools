@@ -147,6 +147,10 @@ export interface CheckoutSessionInput {
 export interface PortalSessionInput {
   providerCustomerId: string;
   returnUrl: string;
+  /** The Stripe Connect account id. Required when creating a Customer Portal
+   *  session on a Connected Account (stripeAccount header), omitted for the
+   *  platform's own portal. */
+  accountId?: string;
 }
 
 // ── Faza 10 — Stripe Connect (EPIK 30) ───────────────────────────────────
@@ -162,7 +166,10 @@ export type ConnectAccountStatus =
 export type ConnectEventType =
   | "account.updated"
   | "account.application.deauthorized"
-  | "checkout.session.completed";
+  | "checkout.session.completed"
+  | "invoice.paid"
+  | "invoice.payment_failed"
+  | "customer.subscription.deleted";
 
 /** Fields common to every Connect webhook event. */
 interface ConnectEventBase {
@@ -203,9 +210,37 @@ export interface ConnectPaymentEvent extends ConnectEventBase {
   currency: string;
   /** Custom metadata written at session creation — contains bookingId, organizationId. */
   metadata: Record<string, string>;
+  /** The Stripe subscription id (sub_xxx). Set when checkout mode is "subscription"
+   *  (purchaseKind = "subscription_initial"). The webhook handler uses this to
+   *  upsert `client_subscription` by `stripeSubscriptionId`. */
+  subscriptionId?: string;
 }
 
-export type ConnectEvent = ConnectAccountEvent | ConnectPaymentEvent;
+/**
+ * A subscription lifecycle event on a Connected Account (F12d).
+ *
+ * Stripe delivers these to the Connect webhook endpoint when the event relates
+ * to a Connected Account. The three event types map to three lifecycle state
+ * transitions: invoice.paid → credits issued, invoice.payment_failed → past_due,
+ * customer.subscription.deleted → canceled.
+ */
+export interface ConnectSubscriptionEvent extends ConnectEventBase {
+  type: "invoice.paid" | "invoice.payment_failed" | "customer.subscription.deleted";
+  /** The Stripe subscription id (sub_xxx) — the idempotency key for the
+   *  find-or-create in `client_subscription`. */
+  stripeSubscriptionId: string;
+  /** The Stripe customer id (cus_xxx) on the Connected Account. Used to resolve
+   *  the client via `client_stripe_customer`. */
+  stripeCustomerId: string;
+  /** The Stripe invoice id. Only set for invoice.* events. */
+  invoiceId?: string;
+  /** Invoice amount in minor units. Only set for invoice.* events. */
+  amount?: number;
+  /** ISO 4217 currency code. Only set for invoice.* events. */
+  currency?: string;
+}
+
+export type ConnectEvent = ConnectAccountEvent | ConnectPaymentEvent | ConnectSubscriptionEvent;
 
 export interface CreateConnectAccountInput {
   /** ISO 3166-1 alpha-2 country code. Must be in Stripe's supported list. */
@@ -239,6 +274,8 @@ export interface ConnectCheckoutInput {
   bookingId: string;
   /** The organization id — also in metadata for tenant resolution. */
   organizationId: string;
+  /** Which kind of purchase this is — routes the webhook handler (F12). */
+  purchaseKind: "booking_payment";
   successUrl: string;
   cancelUrl: string;
 }
@@ -247,6 +284,80 @@ export type VerifyConnectWebhookResult =
   | { ok: true; status: "handled"; event: ConnectEvent }
   | { ok: true; status: "ignored"; eventId: string; eventType: string }
   | { ok: false; code: BillingWebhookErrorCode };
+
+// ── Faza 12 — Pakiety i subskrypcje (EPIK 9/10/23/25) ──────────────────
+
+/**
+ * Discriminator written into Checkout Session metadata so the Connect webhook
+ * handler can route checkout.session.completed to the correct processor.
+ *
+ * Three sources produce the same event type on the same webhook endpoint:
+ *   - F11 single-booking payment
+ *   - F12c one-time package purchase
+ *   - F12d subscription initial checkout
+ *
+ * Routing by this field, not by presence/absence of bookingId — the latter is
+ * fragile and breaks the moment a new flow omits it.
+ */
+export type PurchaseKind = "booking_payment" | "package_purchase" | "subscription_initial";
+
+/**
+ * Input for creating a Checkout Session on a Connected Account for a package
+ * purchase (one-time or subscription, F12c/d).
+ *
+ * Different from ConnectCheckoutInput in two ways:
+ *   1. No bookingId — the booking doesn't exist yet; credits are issued
+ *      post-payment and then auto-filled.
+ *   2. clientId + creditTypeId — needed to resolve the template and to
+ *      find/create the Stripe customer on the Connected Account.
+ */
+export interface ConnectPackageCheckoutInput {
+  /** The org's Stripe Connect account id (acct_xxx). */
+  accountId: string;
+  /** Amount in minor units. */
+  amount: number;
+  /** ISO 4217 currency, lowercase. */
+  currency: string;
+  /** The client (parent) making the purchase. */
+  clientId: string;
+  /** The credit type (resolves to group_type via 1:1). */
+  creditTypeId: string;
+  /** How many credits in this package. */
+  quantity: number;
+  /** One-time payment or subscription. */
+  mode: "payment" | "subscription";
+  /** The product template being purchased. */
+  productTemplateId: string;
+  /** The organization id — stored in metadata for tenant resolution. */
+  organizationId: string;
+  /** Which kind of purchase this is — routes the webhook handler. */
+  purchaseKind: PurchaseKind;
+  /** Stripe Price id OR ad-hoc price_data. At least one must be set.
+   *  Rozstrzygnięcie #20: price_data support is mandatory from the start,
+   *  not deferred to F21. */
+  stripePriceId: string | null;
+  /** Interval for subscription mode. */
+  interval: "month" | "year" | null;
+  /** Interval count for subscription mode. */
+  intervalCount: number | null;
+  /** The Stripe customer id on the Connected Account. Passed as `customer` on the
+   *  session so subsequent invoices link to the same customer. Required for
+   *  subscription mode to avoid duplicate customers on Connect. */
+  customer?: string;
+  successUrl: string;
+  cancelUrl: string;
+}
+
+/** Input for creating a Stripe customer on the Connected Account per client. */
+export interface ConnectStripeCustomerInput {
+  accountId: string;
+  /** The client's email. */
+  email: string;
+  /** The client's name for the Stripe record. */
+  name: string;
+  /** Tenant identity — never read back as authorization input. */
+  metadata: Record<string, string>;
+}
 
 export interface BillingAdapter {
   /**
@@ -335,4 +446,29 @@ export interface BillingAdapter {
   createConnectCheckoutSession(
     input: ConnectCheckoutInput,
   ): Promise<BillingRedirectResult>;
+
+  // ── Faza 12 — Pakiety i subskrypcje (EPIK 9/10/23/25) ─────────────────
+
+  /**
+   * Create a Checkout Session on a Connected Account for a package purchase
+   * (one-time or subscription). Supports both stripePriceId and ad-hoc
+   * price_data per Rozstrzygnięcie #20.
+   */
+  createConnectPackageCheckoutSession(
+    input: ConnectPackageCheckoutInput,
+  ): Promise<BillingRedirectResult>;
+
+  /**
+   * Create a Stripe customer on the Connected Account for a client.
+   * One customer per client–academy pair, tracked in `client_stripe_customer`.
+   */
+  createConnectStripeCustomer(
+    input: ConnectStripeCustomerInput,
+  ): Promise<CreateCustomerResult>;
+
+  /**
+   * Create a Customer Portal session on the Connected Account for a client
+   * to manage their payment method and cancel their subscription.
+   */
+  createConnectPortalSession(input: PortalSessionInput): Promise<BillingRedirectResult>;
 }

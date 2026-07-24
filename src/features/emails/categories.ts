@@ -66,6 +66,7 @@ export const TEMPLATE_CATEGORY: Record<TemplateName, EmailCategory> = {
   // F9 / EPIK 29 — plan limit notifications (email-only, transactional).
   "plan_limit_approaching": "transactional",
   "plan_limit_reached": "transactional",
+  "subscription-payment-failed": "transactional",
 };
 
 export function categoryFor(template: TemplateName): EmailCategory {

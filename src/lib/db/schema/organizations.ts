@@ -95,6 +95,14 @@ export const organization = pgTable(
     /** The platform's Stripe customer id for this organization (plan billing). */
     platformStripeCustomerId: text("platform_stripe_customer_id"),
 
+    // ── Faza 12 — Pakiety i subskrypcje ─────────────────────────────────
+    //
+    /** Whether the Customer Portal is configured on the academy's Stripe
+     *  Dashboard. False by default — set to true after verifying the portal
+     *  configuration exists. Prevents 500 at runtime when redirecting a
+     *  client to the portal after invoice.payment_failed. */
+    portalConfigured: boolean("portal_configured").notNull().default(false),
+
     createdAt: timestamp("createdAt").notNull().defaultNow(),
     updatedAt: timestamp("updatedAt").notNull().defaultNow(),
     deletedAt: timestamp("deletedAt"),

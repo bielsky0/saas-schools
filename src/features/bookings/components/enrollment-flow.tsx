@@ -60,10 +60,13 @@ export function EnrollmentFlow(props: EnrollmentFlowProps) {
       minor / 100,
     );
 
-  // Offers that cannot be booked in F5 render their message and stop — no calendar,
-  // no submit (US-4.4/AC4, decision F).
+  // Offers that cannot be booked render their message and stop — no calendar,
+  // no submit (US-4.4/AC4, decision F; US-23.4/AC1, F12e).
   if (props.paymentView.kind === "packages_only") {
     return <Notice>{t("payment.packagesOnly")}</Notice>;
+  }
+  if (props.paymentView.kind === "no_packages_available") {
+    return <Notice>{t("payment.noPackagesAvailable")}</Notice>;
   }
   if (props.paymentView.kind === "none_available") {
     return <Notice>{t("payment.noneAvailable")}</Notice>;

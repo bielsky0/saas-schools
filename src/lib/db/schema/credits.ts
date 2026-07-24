@@ -3,6 +3,7 @@ import { foreignKey, index, pgTable, text, timestamp, unique } from "drizzle-orm
 import { athlete } from "./athletes";
 import { booking } from "./bookings";
 import { client } from "./clients";
+import { creditPurchase } from "./credit-purchases";
 import { creditType } from "./credit-types";
 import { organization } from "./organizations";
 import { user } from "./auth";
@@ -38,10 +39,8 @@ import { user } from "./auth";
  * against a UTC clock and expire credits up to a day early or late depending on
  * the tenant. Silently, because an early expiry looks exactly like a correct one.
  *
- * `creditPurchaseId` carries no foreign key: `credit_purchase` arrives in F12.
- * The column is here now so that adding the purchase path is a migration on ONE
- * table rather than two, and nothing writes it until then — the same shape, and
- * the same promise, as `booking.consumedCreditId` was in F0.
+ * `creditPurchaseId` links back to the purchase that issued this credit. Since
+ * F12, this is a real FK to `credit_purchase`.
  *
  * Unions are stored as `text` per repo convention (no `pgEnum`), validated in
  * `features/credits/schema.ts`.
@@ -74,6 +73,9 @@ export const credit = pgTable(
         | "subscription_purchase"
         | "admin_session_cancellation"
         | "online_payment"
+        | "package_cash"
+        | "package_online"
+        | "subscription_renewal"
       >()
       .notNull(),
     /** Set when `source` is a cancellation of either kind — the booking compensated for. */
@@ -81,7 +83,7 @@ export const credit = pgTable(
     /** Both required when `source = manual_admin_grant` (US-7.3/AC1), enforced in the zod layer. */
     grantedByUserId: text("grantedByUserId").references(() => user.id, { onDelete: "set null" }),
     reason: text("reason"),
-    /** No FK until F12 brings `credit_purchase` — see header. */
+    /** FK to the purchase that issued this credit (F12). */
     creditPurchaseId: text("creditPurchaseId"),
     /** The booking this credit was spent on. Written in the same transaction as `status = used`. */
     usedInBookingId: text("usedInBookingId"),
@@ -129,6 +131,11 @@ export const credit = pgTable(
       t.status,
       t.validUntil,
     ),
+    foreignKey({
+      columns: [t.creditPurchaseId],
+      foreignColumns: [creditPurchase.id],
+      name: "credit_credit_purchase_fk",
+    }).onDelete("set null"),
     /** The expiry sweep's access path: every academy at once, ordered by nothing else. */
     index("credit_expiry_idx").on(t.status, t.validUntil),
   ],

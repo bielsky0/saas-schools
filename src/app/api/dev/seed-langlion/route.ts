@@ -7,11 +7,13 @@ import {
   booking,
   classSession,
   client,
+  creditPurchase,
   creditType,
   gradeField,
   groupType,
   groupTypeRecurrence,
   location,
+  productTemplate,
 } from "@/lib/db/schema";
 import { env } from "@/lib/env/server";
 import { constraintOf, sqlStateOf } from "../sql-error";
@@ -97,6 +99,17 @@ type Body = {
     sessionId?: string | null;
     name?: string;
     fieldType?: "numeric" | "scale" | "text";
+  };
+  /** F12 — seed a product template for package purchase tests. */
+  productTemplate?: {
+    name?: string;
+    price?: number;
+    creditQuantity?: number;
+    billingType?: "one_time" | "recurring";
+    isActive?: boolean;
+    /** F12d — required when billingType is "recurring". */
+    interval?: "month" | "year";
+    intervalCount?: number;
   };
 };
 
@@ -264,6 +277,25 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         creditTypeId = row!.id;
       }
 
+      let productTemplateId: string | null = null;
+      if (body.productTemplate && creditTypeId) {
+        const [row] = await tx
+          .insert(productTemplate)
+          .values({
+            organizationId: orgId,
+            creditTypeId,
+            name: body.productTemplate.name ?? "E2E package",
+            price: body.productTemplate.price ?? 10000,
+            creditQuantity: body.productTemplate.creditQuantity ?? 4,
+            billingType: body.productTemplate.billingType ?? "one_time",
+            isActive: body.productTemplate.isActive ?? true,
+            interval: body.productTemplate.interval ?? null,
+            intervalCount: body.productTemplate.intervalCount ?? null,
+          })
+          .returning({ id: productTemplate.id });
+        productTemplateId = row!.id;
+      }
+
       let gradeFieldId: string | null = null;
       if (body.gradeField) {
         const [row] = await tx
@@ -289,6 +321,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         bookingIds,
         creditTypeId,
         gradeFieldId,
+        productTemplateId,
       };
     });
 

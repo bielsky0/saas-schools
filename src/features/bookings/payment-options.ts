@@ -34,24 +34,33 @@ export type PaymentMethodView =
   | { method: "online"; enabled: false; reason: "online_unavailable" };
 
 export type PaymentOptionsView =
-  /** Only sold as a package; F5 has no package checkout, so there is nothing to book. */
+  /** Only sold as a package, and packages exist to buy. */
   | { kind: "packages_only" }
+  /** Only sold as a package, but no active templates exist (US-23.4/AC1, F12e). */
+  | { kind: "no_packages_available" }
   /** The policy allows only online, and online cannot be taken right now. */
   | { kind: "none_available" }
   | { kind: "options"; methods: PaymentMethodView[] };
 
 export function paymentOptionsFor(
   offer: OfferPaymentInput,
-  context: { onlineAvailable: boolean },
+  context: { onlineAvailable: boolean; hasActivePackages?: boolean },
 ): PaymentOptionsView {
   /*
    * Checked FIRST, and the order matters. An offer sold only as a package has no
    * single-class price to charge by any method, so asking "which methods?" is the
    * wrong question — answering it would render a payment picker for a purchase the
-   * parent cannot make (US-4.4/AC4). Packages arrive in F12; until then this is an
-   * honest dead end with the copy US-23.4/AC1 already specifies.
+   * parent cannot make (US-4.4/AC4).
+   *
+   * US-23.4/AC1 (F12e): when the group type is package-only but no active
+   * product_template exists, return no_packages_available instead — the parent
+   * must contact the academy. When hasActivePackages is undefined (caller did not
+   * provide the info), assume packages exist for backward compatibility.
    */
   if (!offer.allowedPurchaseModes.includes("single_class")) {
+    if (context.hasActivePackages === false) {
+      return { kind: "no_packages_available" };
+    }
     return { kind: "packages_only" };
   }
 

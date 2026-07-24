@@ -98,7 +98,12 @@ export type Permission =
   | "sessions.mass_move_bookings"
   /** Dezaktywacja Definicji (group_type) — blokowana przy aktywnych zależnościach
    * (§2.11, US-21.6). Owner+Admin. */
-  | "group_types.deactivate";
+  | "group_types.deactivate"
+  // ── Faza 12 — Pakiety i subskrypcje (§2.13, EPIK 9/10) ──
+  //
+  /** Confirm a cash package purchase at the desk (US-10.x). Reception sells
+   * packages against cash; credits are issued and auto-filled in one transaction. */
+  | "credits.purchase_cash";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -139,6 +144,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "grade_fields.manage",
     "grades.enter",
     "trainers.offboard",
+    "credits.purchase_cash",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -172,6 +178,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "grade_fields.manage",
     "grades.enter",
     "trainers.offboard",
+    "credits.purchase_cash",
   ],
   /**
    * The three langlion staff roles (§2.10).
@@ -191,12 +198,14 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
    * `grade_fields.manage` to trainer only (defining the e-dziennik's fields is
    * the same authority as entering values into them).
    *
-   * Faza 7 grants (this phase): `bookings.cancel_reschedule` to secretariat + reception
-   * (either may cancel individual bookings or full sessions on behalf of the academy);
-   * NOT to trainer — cancellation is not the same as marking own-session attendance.
-   *
-   * Still to land: `credits.purchase_cash` (reception) in F12; `group_swap.approve`
-   * and `credits.reassign_athlete` (secretariat) in F15.
+    * Faza 7 grants (this phase): `bookings.cancel_reschedule` to secretariat + reception
+    * (either may cancel individual bookings or full sessions on behalf of the academy);
+    * NOT to trainer — cancellation is not the same as marking own-session attendance.
+    *
+    * Faza 12 grants: `credits.purchase_cash` to reception (reception sells packages
+    * against cash at the desk).
+    *
+    * Still to land: `group_swap.approve` and `credits.reassign_athlete` (secretariat) in F15.
    */
   secretariat: ["organization.leave", "storage.upload", "bookings.cancel_reschedule"],
   reception: [
@@ -204,6 +213,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "storage.upload",
     "credits.confirm_on_site",
     "bookings.cancel_reschedule",
+    "credits.purchase_cash",
   ],
   trainer: [
     "organization.leave",

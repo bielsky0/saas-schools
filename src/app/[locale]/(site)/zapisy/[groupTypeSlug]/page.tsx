@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { and, eq, isNull, sql } from "drizzle-orm";
 
 import { buildMonthGrid, defaultMonth } from "@/features/bookings/calendar";
 import { listSessionAvailability } from "@/features/bookings/data";
@@ -9,6 +10,7 @@ import { resolveClientSession } from "@/features/client-auth/session";
 import { listAthletes } from "@/features/clients/data";
 import { getGroupTypeBySlug } from "@/features/groups/data";
 import { requireServedOrganization } from "@/features/organizations/served-org";
+import { creditType, productTemplate } from "@/lib/db/schema";
 import { withTenant } from "@/lib/db/tenant";
 import { monthRangeInZone, shiftMonth } from "@/lib/datetime";
 
@@ -48,19 +50,55 @@ export default async function EnrollmentPage({
 
   const t = await getTranslations("enrollment");
 
-  const groupType = await withTenant(org.id, (tx) => getGroupTypeBySlug(tx, org.id, groupTypeSlug));
+  const { groupType, hasActivePackages } = await withTenant(org.id, async (tx) => {
+    const gt = await getGroupTypeBySlug(tx, org.id, groupTypeSlug);
+    let hasPkgs = true;
+
+    if (gt) {
+      const [ct] = await tx
+        .select({ id: creditType.id })
+        .from(creditType)
+        .where(
+          and(
+            eq(creditType.groupTypeId, gt.id),
+            eq(creditType.organizationId, org.id),
+            isNull(creditType.deletedAt),
+          ),
+        )
+        .limit(1);
+
+      if (ct) {
+        const [row] = await tx
+          .select({ count: sql<number>`count(*)::int` })
+          .from(productTemplate)
+          .where(
+            and(
+              eq(productTemplate.creditTypeId, ct.id),
+              eq(productTemplate.organizationId, org.id),
+              eq(productTemplate.isActive, true),
+            ),
+          )
+          .limit(1);
+        hasPkgs = (row?.count ?? 0) > 0;
+      }
+    }
+
+    return { groupType: gt ?? null, hasActivePackages: hasPkgs } as const;
+  });
   if (!groupType) notFound();
 
   const principal = await resolveClientSession(org.id);
   const recognized = principal?.isVerified ? principal : null;
 
   // F11: online availability depends on the org's Stripe Connect status (§2.25).
+  // F12e: hasActivePackages tells paymentOptionsFor whether any active
+  // product_templates exist — drives no_packages_available vs packages_only.
   const paymentView = paymentOptionsFor(
     {
       paymentPolicy: groupType.paymentPolicy,
       allowedPurchaseModes: groupType.allowedPurchaseModes,
     },
-    { onlineAvailable: org.stripeConnectChargesEnabled ?? false },
+    { onlineAvailable: org.stripeConnectChargesEnabled ?? false, hasActivePackages },
   );
 
   // The month the calendar shows. Package-only / none-available offers render no

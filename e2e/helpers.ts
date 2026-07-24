@@ -513,6 +513,7 @@ export type SeedLanglionResult = {
   bookingIds?: string[];
   creditTypeId?: string | null;
   gradeFieldId?: string | null;
+  productTemplateId?: string | null;
 };
 
 /**

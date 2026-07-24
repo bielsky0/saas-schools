@@ -53,6 +53,15 @@
       "cta": "Update payment method",
       "note": "We'll retry automatically over the next few days. If the payment keeps failing, your subscription may be cancelled."
     },
+    "subscription-payment-failed": {
+      "subject": "Your subscription payment failed",
+      "preview": "Your subscription payment to {orgName} could not be processed.",
+      "heading": "Payment failed",
+      "body": "Your subscription payment to <b>{orgName}</b> could not be processed. This usually means the card expired or was declined.",
+      "action": "Update your payment method to keep your subscription active.",
+      "cta": "Update payment method",
+      "noPortal": "Please contact the academy directly to update your payment method. We'll retry automatically over the next few days."
+    },
     "subscription-confirmed": {
       "subject": "Your subscription is active",
       "preview": "The {planName} plan is now active for {orgName}.",
@@ -468,7 +477,8 @@
       "locations": "Locations",
       "groupTypes": "Group types",
       "schedule": "Schedule",
-      "credits": "Credits"
+      "credits": "Credits",
+      "purchases": "Sell packages"
     },
     "settings": {
       "heading": "Settings",
@@ -677,6 +687,7 @@
     "empty": "No group types yet. Create the first one below.",
     "created": "Group type created.",
     "updated": "Group type updated.",
+    "noActivePackagesWarning": "Warning: there are no active packages for this group type. Clients will not be able to purchase packages.",
     "manage": "Manage",
     "backToList": "All group types",
     "form": {
@@ -927,7 +938,8 @@
       "onSite": "Pay on site",
       "online": "Pay online",
       "onlineUnavailable": "Online payments are temporarily unavailable.",
-      "packagesOnly": "No packages available — please contact the academy.",
+      "packagesOnly": "This offer is only available as a package purchase.",
+      "noPackagesAvailable": "No packages are currently available — please contact the academy.",
       "noneAvailable": "Online enrolment is temporarily unavailable — please contact the academy."
     },
     "confirm": {
@@ -1003,7 +1015,22 @@
       "validUntil": "Valid until",
       "reason": "Reason"
     },
-    "deactivated": "Credit type deactivated"
+    "deactivated": "Credit type deactivated",
+    "purchase": {
+      "title": "Sell packages",
+      "subtitle": "Sell a credit package against cash at the desk. Credits are issued and auto-filled onto upcoming sessions.",
+      "productTemplate": "Package",
+      "client": "Client",
+      "athlete": "Participant",
+      "athleteHint": "Leave empty to let any of this client's children use the credits.",
+      "familyWallet": "Family wallet (any child)",
+      "submit": "Sell package",
+      "submitting": "Selling…",
+      "cashConfirmed": "Package sold. {credits} credits issued, {settled} bookings settled, {filled} sessions booked.",
+      "productTemplateNotFound": "That package does not belong to this academy.",
+      "productTemplateNotActive": "That package is no longer available.",
+      "policyViolation": "This package is not available for this group type's current policy."
+    }
   },
   "staffPanel": {
     "title": "Sessions",
