@@ -1,6 +1,6 @@
 ### Faza 17 — Regulaminy i akceptacje (EPIK 28)
 
-**Status:** nierozpoczęta
+**Status:** ✅ zakończona (2026-07-25)
 **Cel:** wersjonowane regulaminy per typ grupy z zamrożoną akceptacją.
 **Pokrywa:** EPIK 28; §2.18; spec §5 pkt 15. **Uwaga:** jeśli którakolwiek akademia wymaga regulaminu prawnie przed startem publicznych zapisów, tę fazę należy wciągnąć przed produkcyjne uruchomienie F5.
 **Zależności:** F5 (formularz zapisu); istniejący storage (boilerplate §21) — plik PDF przez `file_id`.

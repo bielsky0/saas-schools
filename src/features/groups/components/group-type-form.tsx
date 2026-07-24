@@ -33,6 +33,7 @@ export type GroupTypeDefaults = {
   price: number;
   isNewClientOnly: boolean;
   defaultLocationId: string | null;
+  policyDocumentId: string | null;
   allowedPurchaseModes: string[];
   allowedBillingTypes: string[] | null;
 };
@@ -58,9 +59,11 @@ export type GroupTypeDefaults = {
  */
 export function GroupTypeForm({
   locations,
+  policyDocuments,
   defaults,
 }: {
   locations: { id: string; name: string }[];
+  policyDocuments?: { id: string; name: string; version: number }[];
   defaults?: GroupTypeDefaults;
 }) {
   const t = useTranslations("groups");
@@ -213,6 +216,24 @@ export function GroupTypeForm({
         />
         {t("form.isNewClientOnly")}
       </label>
+
+      {policyDocuments ? (
+        <FormField label={t("form.policyDocument")} htmlFor="gt-policy">
+          <Select name="policyDocumentId" defaultValue={defaults?.policyDocumentId ?? ""}>
+            <SelectTrigger id="gt-policy" aria-label={t("form.policyDocument")}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">{t("form.noPolicy")}</SelectItem>
+              {policyDocuments.map((row) => (
+                <SelectItem key={row.id} value={row.id}>
+                  {row.name} (v{row.version})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </FormField>
+      ) : null}
 
       <div className="flex items-center gap-3">
         <Button type="submit" disabled={pending}>

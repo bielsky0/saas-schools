@@ -488,7 +488,8 @@
       "groupTypes": "Group types",
       "schedule": "Schedule",
       "credits": "Credits",
-      "purchases": "Sell packages"
+      "purchases": "Sell packages",
+      "policies": "Policies"
     },
     "settings": {
       "heading": "Settings",
@@ -779,6 +780,8 @@
       "isNewClientOnly": "Prioritise new clients",
       "defaultLocation": "Default location",
       "noLocation": "No default",
+      "policyDocument": "Policy document",
+      "noPolicy": "No policy",
       "allowedPurchaseModes": "Purchase modes",
       "allowedBillingTypes": "Billing types for packages",
       "submit": "Create group type",
@@ -1212,6 +1215,36 @@
       "minMaxOrder": "The maximum must be at least the minimum.",
       "valueRequired": "Enter a value.",
       "contentRequired": "Write a note."
+    }
+  },
+  "policies": {
+    "title": "Policies",
+    "subtitle": "Manage terms & conditions for your offers.",
+    "empty": "No policy documents yet.",
+    "createTitle": "New policy document",
+    "name": "Name",
+    "version": "Version",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "file": "File",
+    "document": "Document",
+    "actions": "Actions",
+    "created": "Policy document created.",
+    "uploadVersion": "Upload new version",
+    "uploadingVersion": "Uploading…",
+    "versionUploaded": "New version published.",
+    "selectPolicy": "Policy document (optional)",
+    "noPolicy": "No policy",
+    "viewAcceptanceHistory": "View acceptance history",
+    "acceptanceHistory": {
+      "title": "Acceptance history",
+      "subtitle": "Who accepted which version and when.",
+      "client": "Client",
+      "version": "Version",
+      "acceptedAt": "Accepted at",
+      "ip": "IP address",
+      "empty": "No acceptances yet."
     }
   }
 }

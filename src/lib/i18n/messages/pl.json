@@ -488,7 +488,8 @@
       "groupTypes": "Typy grup",
       "schedule": "Grafik",
       "credits": "Kredyty",
-      "purchases": "Sprzedaj pakiety"
+      "purchases": "Sprzedaż pakietów",
+      "policies": "Regulaminy"
     },
     "settings": {
       "heading": "Ustawienia",
@@ -779,6 +780,8 @@
       "isNewClientOnly": "Priorytet dla nowych klientów",
       "defaultLocation": "Domyślna lokalizacja",
       "noLocation": "Brak domyślnej",
+      "policyDocument": "Regulamin",
+      "noPolicy": "Brak regulaminu",
       "allowedPurchaseModes": "Tryby zakupu",
       "allowedBillingTypes": "Rozliczenie pakietów",
       "submit": "Utwórz typ grupy",
@@ -1212,6 +1215,36 @@
       "minMaxOrder": "Maksimum musi być nie mniejsze niż minimum.",
       "valueRequired": "Wpisz wartość.",
       "contentRequired": "Napisz notatkę."
+    }
+  },
+  "policies": {
+    "title": "Regulaminy",
+    "subtitle": "Zarządzaj regulaminami dla swoich ofert.",
+    "empty": "Brak dokumentów regulaminu.",
+    "createTitle": "Nowy regulamin",
+    "name": "Nazwa",
+    "version": "Wersja",
+    "status": "Status",
+    "active": "Aktywny",
+    "inactive": "Nieaktywny",
+    "file": "Plik",
+    "document": "Dokument",
+    "actions": "Akcje",
+    "created": "Regulamin utworzony.",
+    "uploadVersion": "Dodaj nową wersję",
+    "uploadingVersion": "Dodawanie…",
+    "versionUploaded": "Nowa wersja opublikowana.",
+    "selectPolicy": "Regulamin (opcjonalnie)",
+    "noPolicy": "Brak regulaminu",
+    "viewAcceptanceHistory": "Historia akceptacji",
+    "acceptanceHistory": {
+      "title": "Historia akceptacji",
+      "subtitle": "Kto zaakceptował którą wersję i kiedy.",
+      "client": "Klient",
+      "version": "Wersja",
+      "acceptedAt": "Zaakceptowano",
+      "ip": "Adres IP",
+      "empty": "Brak akceptacji."
     }
   }
 }

@@ -20,6 +20,7 @@ import { requireOrgPermission } from "@/features/organizations/context";
 import { getGroupType, listRecurrencesWithDetails } from "@/features/groups/data";
 import { listLocations } from "@/features/locations/data";
 import { listMembers } from "@/features/organizations/data";
+import { listPolicyDocuments } from "@/features/policies/data";
 import { GroupTypeForm } from "@/features/groups/components/group-type-form";
 import { RecurrenceForm } from "@/features/groups/components/recurrence-form";
 import { withTenant } from "@/lib/db/tenant";
@@ -56,6 +57,7 @@ export default async function GroupTypeDetailPage({
       recurrences: await listRecurrencesWithDetails(tx, org.id, groupTypeId),
       locations: await listLocations(tx, org.id),
       members: await listMembers(tx, org.id),
+      policyDocuments: await listPolicyDocuments(tx, org.id),
     };
   });
 
@@ -95,6 +97,7 @@ export default async function GroupTypeDetailPage({
         <CardContent>
           <GroupTypeForm
             locations={data.locations}
+            policyDocuments={data.policyDocuments}
             defaults={{
               id: data.groupType.id,
               name: data.groupType.name,
@@ -105,6 +108,7 @@ export default async function GroupTypeDetailPage({
               price: data.groupType.price,
               isNewClientOnly: data.groupType.isNewClientOnly,
               defaultLocationId: data.groupType.defaultLocationId,
+              policyDocumentId: data.groupType.policyDocumentId,
               allowedPurchaseModes: data.groupType.allowedPurchaseModes,
               allowedBillingTypes: data.groupType.allowedBillingTypes,
             }}

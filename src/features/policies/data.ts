@@ -1,6 +1,6 @@
 import { and, desc, eq, isNull } from "drizzle-orm";
 
-import { groupType, policyAcceptance, policyDocument } from "@/lib/db/schema";
+import { client, groupType, policyAcceptance, policyDocument } from "@/lib/db/schema";
 import type { TenantDb } from "@/lib/db/tenant";
 
 export async function createPolicyDocument(
@@ -139,5 +139,29 @@ export async function listPolicyAcceptances(
     })
     .from(policyAcceptance)
     .where(and(...conditions))
+    .orderBy(desc(policyAcceptance.acceptedAt));
+}
+
+export async function listPolicyAcceptancesWithNames(
+  tx: TenantDb,
+  organizationId: string,
+) {
+  return tx
+    .select({
+      id: policyAcceptance.id,
+      clientId: policyAcceptance.clientId,
+      clientName: client.name,
+      clientEmail: client.email,
+      groupTypeId: policyAcceptance.groupTypeId,
+      groupTypeName: groupType.name,
+      policyDocumentId: policyAcceptance.policyDocumentId,
+      policyDocumentVersion: policyAcceptance.policyDocumentVersion,
+      acceptedAt: policyAcceptance.acceptedAt,
+      ipAddress: policyAcceptance.ipAddress,
+    })
+    .from(policyAcceptance)
+    .innerJoin(client, and(eq(client.id, policyAcceptance.clientId), eq(client.organizationId, organizationId)))
+    .innerJoin(groupType, and(eq(groupType.id, policyAcceptance.groupTypeId), eq(groupType.organizationId, organizationId)))
+    .where(eq(policyAcceptance.organizationId, organizationId))
     .orderBy(desc(policyAcceptance.acceptedAt));
 }

@@ -522,6 +522,7 @@ function ConfirmStep({
               })}
             </span>
           </label>
+          <ViewDocumentLink fileId={policyDocument.fileId} />
           <input type="hidden" name="acceptedPolicyVersion" value={policyDocument.version} />
         </fieldset>
       ) : null}
@@ -544,4 +545,32 @@ function Notice({ children }: { children: React.ReactNode }) {
 
 function FieldError({ children }: { children: React.ReactNode }) {
   return <p className="text-destructive text-sm">{children}</p>;
+}
+
+function ViewDocumentLink({ fileId }: { fileId: string }) {
+  const t = useTranslations("enrollment");
+  const [busy, setBusy] = useState(false);
+
+  async function open() {
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/policies/file/${fileId}`);
+      if (!res.ok) return;
+      const { url } = (await res.json()) as { url: string };
+      window.open(url, "_blank", "noopener,noreferrer");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      disabled={busy}
+      onClick={open}
+      className="text-primary text-sm underline underline-offset-2 disabled:opacity-50"
+    >
+      {t("policy.viewDocument")}
+    </button>
+  );
 }

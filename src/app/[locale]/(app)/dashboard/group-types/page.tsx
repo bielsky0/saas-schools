@@ -18,6 +18,7 @@ import { Link } from "@/lib/i18n/navigation";
 import { requireOrgPermission } from "@/features/organizations/context";
 import { listGroupTypes } from "@/features/groups/data";
 import { listLocations } from "@/features/locations/data";
+import { listPolicyDocuments } from "@/features/policies/data";
 import { GroupTypeForm } from "@/features/groups/components/group-type-form";
 import { withTenant } from "@/lib/db/tenant";
 
@@ -33,9 +34,10 @@ export default async function GroupTypesPage() {
   const { org } = await requireOrgPermission("group_types.manage");
   const t = await getTranslations("groups");
 
-  const { groupTypes, locations } = await withTenant(org.id, async (tx) => ({
+  const { groupTypes, locations, policyDocuments } = await withTenant(org.id, async (tx) => ({
     groupTypes: await listGroupTypes(tx, org.id),
     locations: await listLocations(tx, org.id),
+    policyDocuments: await listPolicyDocuments(tx, org.id),
   }));
 
   return (
@@ -96,7 +98,7 @@ export default async function GroupTypesPage() {
           <CardTitle className="text-sm">{t("form.createTitle")}</CardTitle>
         </CardHeader>
         <CardContent>
-          <GroupTypeForm locations={locations} />
+          <GroupTypeForm locations={locations} policyDocuments={policyDocuments} />
         </CardContent>
       </Card>
     </div>
