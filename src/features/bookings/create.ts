@@ -1,8 +1,9 @@
 import { and, eq } from "drizzle-orm";
 
 import { clientActor, recordAudit } from "@/features/admin/audit";
-import { getOwnedAthlete, insertAthlete } from "@/features/clients/data";
 import { checkLimit } from "@/features/billing/limits";
+import { getOwnedAthlete, insertAthlete } from "@/features/clients/data";
+import { getActivePolicyForGroupType, insertPolicyAcceptance } from "@/features/policies/data";
 import { booking, classSession } from "@/lib/db/schema";
 import type { TenantDb } from "@/lib/db/tenant";
 import { isMethodAcceptable } from "./payment-options";
@@ -48,6 +49,10 @@ export class PaymentMethodUnavailableError extends Error {}
 export class ForeignAthleteError extends Error {}
 /** The session is at capacity — NOT a constraint violation (see header). */
 export class SessionFullError extends Error {}
+/** F17: The policy document version the client accepted is no longer current (R3). */
+export class PolicyVersionChangedError extends Error {}
+/** F17: The client did not accept the current policy document (R3). */
+export class PolicyNotAcceptedError extends Error {}
 
 export interface CreateBookingInput {
   organizationId: string;
@@ -69,6 +74,13 @@ export interface CreateBookingInput {
     { kind: "existing"; athleteId: string } | { kind: "new"; name: string; age?: number };
   /** F5: Stripe is not built, so on-site only. F10/F11 pass the real Connect status. */
   onlineAvailable: boolean;
+  /**
+   * F17 — policy document currently assigned to this group type.
+   * When present, the client must have accepted the current version.
+   */
+  policyDocument?: { id: string; version: number } | null;
+  /** F17 — the version the client accepted (re-validated server-side, R3). */
+  acceptedPolicyVersion?: number;
   now?: Date;
   /**
    * TEST-ONLY. Invoked once the session row lock is held, before the capacity
@@ -135,6 +147,24 @@ export async function createBooking(
   );
   if (!acceptable) throw new PaymentMethodUnavailableError(input.paymentMethod);
 
+  // 3.5 F17, R3 — re-validate policy document version server-side.
+  if (input.policyDocument) {
+    const current = await getActivePolicyForGroupType(tx, input.organizationId, input.groupType.id);
+    if (
+      !current ||
+      current.id !== input.policyDocument.id ||
+      current.version !== input.policyDocument.version
+    ) {
+      throw new PolicyVersionChangedError();
+    }
+    if (
+      !input.acceptedPolicyVersion ||
+      input.acceptedPolicyVersion !== current.version
+    ) {
+      throw new PolicyNotAcceptedError();
+    }
+  }
+
   // 4. Resolve the athlete. Existing → must be THIS parent's child (the only guard
   //    against booking a stranger's child). New → created in this transaction.
   let athleteId: string;
@@ -184,7 +214,18 @@ export async function createBooking(
     .returning({ id: booking.id });
   if (!row) throw new Error("createBooking: insert returned no row");
 
-  // 7. Audit, same transaction. The actor is the parent; its id cannot go in
+  // 7. F17 — freeze acceptance when a policy is assigned to this group type.
+  if (input.policyDocument && input.acceptedPolicyVersion) {
+    await insertPolicyAcceptance(tx, {
+      organizationId: input.organizationId,
+      clientId: input.client.id,
+      groupTypeId: input.groupType.id,
+      policyDocumentId: input.policyDocument.id,
+      policyDocumentVersion: input.policyDocument.version,
+    });
+  }
+
+  // 8. Audit, same transaction. The actor is the parent; its id cannot go in
   //    actorUserId (FK to user), so it rides in metadata — see clientActor.
   await recordAudit(tx, {
     action: "booking.create",

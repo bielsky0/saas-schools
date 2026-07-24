@@ -27,6 +27,14 @@ type Recognized = {
   athletes: { id: string; name: string }[];
 };
 
+export interface PolicyDocumentProp {
+  id: string;
+  name: string;
+  version: number;
+  fileId: string;
+  requireReacceptance: boolean;
+}
+
 export interface EnrollmentFlowProps {
   groupTypeSlug: string;
   groupTypeName: string;
@@ -39,6 +47,7 @@ export interface EnrollmentFlowProps {
   nextMonth: string;
   grid: CalendarDay[];
   recognized: Recognized | null;
+  policyDocument: PolicyDocumentProp | null;
 }
 
 const initial: CreateBookingState = {};
@@ -85,6 +94,7 @@ function Bookable({
   nextMonth,
   grid,
   recognized,
+  policyDocument,
   money,
 }: EnrollmentFlowProps & { money: (minor: number) => string }) {
   const t = useTranslations("enrollment");
@@ -176,6 +186,7 @@ function Bookable({
                 methods={methods}
                 recognizedAthletes={recognized?.athletes ?? []}
                 error={state.error}
+                policyDocument={policyDocument}
               />
             )}
             <Button variant="ghost" type="button" onClick={() => setSlot(null)}>
@@ -394,6 +405,7 @@ function ConfirmStep({
   methods,
   recognizedAthletes,
   error,
+  policyDocument,
 }: {
   formAction: (formData: FormData) => void;
   pending: boolean;
@@ -402,6 +414,7 @@ function ConfirmStep({
   methods: { method: "online" | "on_site"; enabled: boolean }[];
   recognizedAthletes: { id: string; name: string }[];
   error?: string;
+  policyDocument: PolicyDocumentProp | null;
 }) {
   const t = useTranslations("enrollment");
   const hasExisting = recognizedAthletes.length > 0;
@@ -488,6 +501,30 @@ function ConfirmStep({
           </label>
         ))}
       </fieldset>
+
+      {policyDocument ? (
+        <fieldset className="space-y-2">
+          <legend className="font-medium">{t("policy.heading")}</legend>
+          {policyDocument.requireReacceptance ? (
+            <p className="text-muted-foreground text-sm">{t("policy.updatedInfo")}</p>
+          ) : null}
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              name="acceptedPolicy"
+              value={String(policyDocument.version)}
+              required
+            />
+            <span>
+              {t("policy.acceptLabel", {
+                name: policyDocument.name,
+                version: policyDocument.version,
+              })}
+            </span>
+          </label>
+          <input type="hidden" name="acceptedPolicyVersion" value={policyDocument.version} />
+        </fieldset>
+      ) : null}
 
       {error ? <FieldError>{error}</FieldError> : null}
       <Button type="submit" disabled={pending}>

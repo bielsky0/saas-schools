@@ -9,10 +9,12 @@ import {
   client,
   creditPurchase,
   creditType,
+  file,
   gradeField,
   groupType,
   groupTypeRecurrence,
   location,
+  policyDocument,
   productTemplate,
 } from "@/lib/db/schema";
 import { env } from "@/lib/env/server";
@@ -110,6 +112,11 @@ type Body = {
     /** F12d — required when billingType is "recurring". */
     interval?: "month" | "year";
     intervalCount?: number;
+  };
+  /** F17 — seed a policy document and optionally assign it to a group type. */
+  policyDocument?: {
+    name?: string;
+    assignToGroupTypeId?: string;
   };
 };
 
@@ -296,6 +303,45 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         productTemplateId = row!.id;
       }
 
+      let policyDocumentId: string | null = null;
+      if (body.policyDocument) {
+        const targetGroupTypeId = body.policyDocument.assignToGroupTypeId ?? groupTypeId;
+        if (targetGroupTypeId) {
+          const [fileRow] = await tx
+            .insert(file)
+            .values({
+              organizationId: orgId,
+              key: `test/policies/${crypto.randomUUID()}/regulamin.pdf`,
+              originalName: "regulamin.pdf",
+              contentType: "application/pdf",
+              size: 1000,
+              visibility: "private",
+              status: "ready",
+            })
+            .returning({ id: file.id });
+          const [pdRow] = await tx
+            .insert(policyDocument)
+            .values({
+              organizationId: orgId,
+              name: body.policyDocument.name ?? "Test Regulamin",
+              file_id: fileRow!.id,
+              version: 1,
+            })
+            .returning({ id: policyDocument.id });
+          policyDocumentId = pdRow!.id;
+
+          await tx
+            .update(groupType)
+            .set({ policyDocumentId })
+            .where(
+              and(
+                eq(groupType.id, targetGroupTypeId),
+                eq(groupType.organizationId, orgId),
+              ),
+            );
+        }
+      }
+
       let gradeFieldId: string | null = null;
       if (body.gradeField) {
         const [row] = await tx
@@ -322,6 +368,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         creditTypeId,
         gradeFieldId,
         productTemplateId,
+        policyDocumentId,
       };
     });
 

@@ -1016,6 +1016,13 @@
       "noPackagesAvailable": "No packages are currently available — please contact the academy.",
       "noneAvailable": "Online enrolment is temporarily unavailable — please contact the academy."
     },
+    "policy": {
+      "heading": "Terms & Conditions",
+      "acceptLabel": "I accept the \"{name}\" (version {version})",
+      "mustAccept": "You must accept the terms to continue",
+      "updatedInfo": "The terms have been updated — please accept the new version.",
+      "viewDocument": "View terms"
+    },
     "confirm": {
       "heading": "Summary",
       "submit": "Enrol",
@@ -1035,6 +1042,8 @@
       "foreignAthlete": "That child does not belong to your account.",
       "unknownSession": "That offer or slot could not be found.",
       "noCredits": "No credits available — contact the reception.",
+      "policyVersionChanged": "The policy was updated while you were filling the form. Refresh the page.",
+      "policyNotAccepted": "You must accept the policy to proceed.",
       "generic": "Something went wrong. Please try again."
     },
     "myBookings": "My bookings",

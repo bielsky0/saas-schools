@@ -65,6 +65,7 @@ export function createGroupTypeSchema(t: ValidationTranslator) {
       price: z.coerce.number().int().nonnegative(t("priceInvalid")),
       isNewClientOnly: z.boolean().default(false),
       defaultLocationId: z.string().min(1).optional(),
+      policyDocumentId: z.string().optional(),
       allowedPurchaseModes: z.array(purchaseMode).min(1, t("purchaseModesRequired")),
       allowedBillingTypes: z.array(billingType).optional(),
     })

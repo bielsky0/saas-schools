@@ -3,8 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 
-import { getGroupTypeBySlug } from "@/features/groups/data";
 import { resolveClientSession } from "@/features/client-auth/session";
+import { getGroupTypeBySlug } from "@/features/groups/data";
+import { getActivePolicyForGroupType } from "@/features/policies/data";
 import { requireServedOrganization } from "@/features/organizations/served-org";
 import { withTenant } from "@/lib/db/tenant";
 import type { FormState } from "@/lib/validation";
@@ -14,6 +15,8 @@ import {
   createBooking,
   ForeignAthleteError,
   PaymentMethodUnavailableError,
+  PolicyNotAcceptedError,
+  PolicyVersionChangedError,
   SessionCancelledError,
   SessionFullError,
   SessionPastError,
@@ -72,6 +75,7 @@ export async function createBookingAction(
     sessionId: str(formData.get("sessionId")),
     paymentMethod: str(formData.get("paymentMethod")),
     participant: rawParticipant,
+    acceptedPolicyVersion: str(formData.get("acceptedPolicyVersion")) || undefined,
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? t("errors.generic") };
@@ -79,16 +83,21 @@ export async function createBookingAction(
 
   try {
     const result = await withTenant(org.id, async (tx) => {
-      const groupType = await getGroupTypeBySlug(tx, org.id, parsed.data.groupTypeSlug);
-      if (!groupType) throw new UnknownSessionError(parsed.data.groupTypeSlug);
+      const gt = await getGroupTypeBySlug(tx, org.id, parsed.data.groupTypeSlug);
+      if (!gt) throw new UnknownSessionError(parsed.data.groupTypeSlug);
+
+      const policyDoc = gt.policyDocumentId
+        ? await getActivePolicyForGroupType(tx, org.id, gt.id)
+        : null;
+      const acceptedPolicyVersion = parsed.data.acceptedPolicyVersion;
 
       return createBooking(tx, {
         organizationId: org.id,
         groupType: {
-          id: groupType.id,
-          price: groupType.price,
-          paymentPolicy: groupType.paymentPolicy,
-          allowedPurchaseModes: groupType.allowedPurchaseModes,
+          id: gt.id,
+          price: gt.price,
+          paymentPolicy: gt.paymentPolicy,
+          allowedPurchaseModes: gt.allowedPurchaseModes,
         },
         currency: org.currency,
         client: { id: principal.clientId, email: principal.email },
@@ -97,6 +106,8 @@ export async function createBookingAction(
         participant: parsed.data.participant,
         // F11: online availability is determined by the org's Connect status.
         onlineAvailable: org.stripeConnectChargesEnabled ?? false,
+        policyDocument: policyDoc,
+        acceptedPolicyVersion,
       });
     });
 
@@ -150,6 +161,8 @@ function messageFor(error: unknown, t: Awaited<ReturnType<typeof getTranslations
   if (error instanceof PaymentMethodUnavailableError) return t("errors.paymentMethodUnavailable");
   if (error instanceof ForeignAthleteError) return t("errors.foreignAthlete");
   if (error instanceof UnknownSessionError) return t("errors.unknownSession");
+  if (error instanceof PolicyVersionChangedError) return t("errors.policyVersionChanged");
+  if (error instanceof PolicyNotAcceptedError) return t("errors.policyNotAccepted");
   throw error;
 }
 

@@ -11,6 +11,7 @@ import {
 
 import { location } from "./locations";
 import { organization } from "./organizations";
+import { policyDocument } from "./policy-documents";
 
 /**
  * Group type — the DEFINITION half of langlion's first governing principle
@@ -35,8 +36,8 @@ import { organization } from "./organizations";
  *   purchase modes "single_class" | "package"
  *   billing types  "one_time" | "recurring"
  *
- * `policyDocumentId` (§2.18) is deliberately absent — it arrives with F17,
- * together with the table it points at.
+ * `policyDocumentId` (§2.18, F17) — optional FK to policy_document. Nullable:
+ * no policy document means the acceptance step is skipped during enrollment.
  */
 export const groupType = pgTable(
   "group_type",
@@ -80,6 +81,13 @@ export const groupType = pgTable(
       .notNull(),
     /** Required once "package" is allowed (US-23.2/AC1). */
     allowedBillingTypes: text("allowedBillingTypes").array().$type<("one_time" | "recurring")[]>(),
+    /**
+     * Current policy document assigned to this offer (F17, §2.18). Nullable:
+     * no policy means the acceptance step is skipped during enrollment.
+     * Editable separately from the atomic version-upload flow; see
+     * `features/policies/actions.ts:uploadNewPolicyVersion`.
+     */
+    policyDocumentId: text("policyDocumentId"),
     createdAt: timestamp("createdAt").notNull().defaultNow(),
     updatedAt: timestamp("updatedAt").notNull().defaultNow(),
     deletedAt: timestamp("deletedAt"),
@@ -92,6 +100,11 @@ export const groupType = pgTable(
       columns: [t.defaultLocationId, t.organizationId],
       foreignColumns: [location.id, location.organizationId],
       name: "group_type_default_location_fk",
+    }).onDelete("set null"),
+    foreignKey({
+      columns: [t.policyDocumentId, t.organizationId],
+      foreignColumns: [policyDocument.id, policyDocument.organizationId],
+      name: "group_type_policy_document_fk",
     }).onDelete("set null"),
     index("group_type_org_idx").on(t.organizationId),
   ],

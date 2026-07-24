@@ -92,6 +92,7 @@ export async function createGroupTypeAction(
     price: str(formData.get("price")),
     isNewClientOnly: formData.get("isNewClientOnly") === "on",
     defaultLocationId: str(formData.get("defaultLocationId")) || undefined,
+    policyDocumentId: str(formData.get("policyDocumentId")) || undefined,
     allowedPurchaseModes: strList(formData, "allowedPurchaseModes"),
     allowedBillingTypes: strList(formData, "allowedBillingTypes"),
   });
@@ -122,6 +123,7 @@ export async function createGroupTypeAction(
           price: parsed.data.price,
           isNewClientOnly: parsed.data.isNewClientOnly,
           defaultLocationId: parsed.data.defaultLocationId ?? null,
+          policyDocumentId: parsed.data.policyDocumentId ?? null,
           allowedPurchaseModes: parsed.data.allowedPurchaseModes,
           allowedBillingTypes: parsed.data.allowedBillingTypes ?? null,
         })
@@ -171,6 +173,7 @@ export async function updateGroupTypeAction(
     price: str(formData.get("price")),
     isNewClientOnly: formData.get("isNewClientOnly") === "on",
     defaultLocationId: str(formData.get("defaultLocationId")) || undefined,
+    policyDocumentId: str(formData.get("policyDocumentId")) || undefined,
     allowedPurchaseModes: strList(formData, "allowedPurchaseModes"),
     allowedBillingTypes: strList(formData, "allowedBillingTypes"),
   });
@@ -225,6 +228,7 @@ export async function updateGroupTypeAction(
         price: parsed.data.price,
         isNewClientOnly: parsed.data.isNewClientOnly,
         defaultLocationId: parsed.data.defaultLocationId ?? null,
+        policyDocumentId: parsed.data.policyDocumentId ?? null,
         allowedPurchaseModes: parsed.data.allowedPurchaseModes,
         allowedBillingTypes: parsed.data.allowedBillingTypes ?? null,
       };
@@ -274,7 +278,7 @@ export async function updateGroupTypeAction(
         targetId: groupTypeId,
         targetLabel: after.name,
         metadata: withImpersonation(ctx.session, {
-          changes: changed(before, after, [
+          changes:           changed(before, after, [
             "name",
             "slug",
             "description",
@@ -283,6 +287,7 @@ export async function updateGroupTypeAction(
             "price",
             "isNewClientOnly",
             "defaultLocationId",
+            "policyDocumentId",
             "allowedPurchaseModes",
             "allowedBillingTypes",
           ]),

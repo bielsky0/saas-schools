@@ -131,5 +131,6 @@ export * from "./credit-purchases";
 export * from "./credits";
 export * from "./grade-fields";
 export * from "./grades";
+export * from "./policy-documents";
 export * from "./progress-notes";
 export * from "./group-change-requests";

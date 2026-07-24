@@ -5,6 +5,8 @@ import {
   createBooking,
   ForeignAthleteError,
   PaymentMethodUnavailableError,
+  PolicyNotAcceptedError,
+  PolicyVersionChangedError,
   SessionCancelledError,
   SessionFullError,
   SessionPastError,
@@ -47,6 +49,9 @@ type Body = {
   onlineAvailable?: boolean;
   /** Fixture-only: hold the session lock open after acquiring it, to widen the race. */
   holdMs?: number;
+  /** F17 — policy document id and version the client accepted. */
+  policyDocumentId?: string;
+  policyDocumentVersion?: number;
 };
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
@@ -118,6 +123,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         const client = await getClient(tx, organizationId, body.clientId!);
         if (!client) throw new Error(`client ${body.clientId} not found`);
 
+        const policyDocument = body.policyDocumentId
+          ? { id: body.policyDocumentId, version: body.policyDocumentVersion ?? 1 }
+          : undefined;
+
         return createBooking(tx, {
           organizationId,
           groupType: {
@@ -132,6 +141,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           paymentMethod: body.paymentMethod ?? "on_site",
           participant: { kind: "existing", athleteId: body.athleteId! },
           onlineAvailable: body.onlineAvailable ?? false,
+          policyDocument,
+          acceptedPolicyVersion: body.policyDocumentVersion,
           onLocked: body.holdMs
             ? () => new Promise((resolve) => setTimeout(resolve, body.holdMs))
             : undefined,
@@ -162,5 +173,7 @@ function reasonFor(error: unknown): string | null {
   if (error instanceof SessionPastError) return "session_past";
   if (error instanceof PaymentMethodUnavailableError) return "payment_method_unavailable";
   if (error instanceof ForeignAthleteError) return "foreign_athlete";
+  if (error instanceof PolicyVersionChangedError) return "policy_version_changed";
+  if (error instanceof PolicyNotAcceptedError) return "policy_not_accepted";
   return null;
 }

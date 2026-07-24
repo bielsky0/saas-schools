@@ -1016,6 +1016,13 @@
       "noPackagesAvailable": "Brak dostępnych pakietów — skontaktuj się z akademią.",
       "noneAvailable": "Zapisy online chwilowo niedostępne — skontaktuj się z akademią."
     },
+    "policy": {
+      "heading": "Regulamin",
+      "acceptLabel": "Akceptuję regulamin \"{name}\" (wersja {version})",
+      "mustAccept": "Musisz zaakceptować regulamin, aby kontynuować",
+      "updatedInfo": "Regulamin został zaktualizowany — zaakceptuj nową wersję.",
+      "viewDocument": "Zobacz regulamin"
+    },
     "confirm": {
       "heading": "Podsumowanie",
       "submit": "Zapisz",
@@ -1035,6 +1042,8 @@
       "foreignAthlete": "To dziecko nie należy do Twojego konta.",
       "unknownSession": "Nie znaleziono tej oferty lub terminu.",
       "noCredits": "Brak dostępnych kredytów — skontaktuj się z recepcją.",
+      "policyVersionChanged": "Regulamin został zmieniony w trakcie wypełniania formularza. Odśwież stronę.",
+      "policyNotAccepted": "Wymagana jest akceptacja regulaminu.",
       "generic": "Coś poszło nie tak. Spróbuj ponownie."
     },
     "myBookings": "Moje zajęcia",

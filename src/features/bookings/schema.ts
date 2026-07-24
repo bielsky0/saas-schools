@@ -63,6 +63,12 @@ export function createBookingSchema(t: ValidationTranslator) {
         age: z.coerce.number().int().min(1).max(120).optional(),
       }),
     ]),
+    /**
+     * F17 — accepted policy document version (optional, present when the group
+     * type has a policy document assigned). Server-side re-validated against
+     * the current active document for this group type (R3).
+     */
+    acceptedPolicyVersion: z.coerce.number().int().optional(),
   });
 }
 

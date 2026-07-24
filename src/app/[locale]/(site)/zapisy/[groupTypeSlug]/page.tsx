@@ -9,6 +9,7 @@ import { EnrollmentFlow } from "@/features/bookings/components/enrollment-flow";
 import { resolveClientSession } from "@/features/client-auth/session";
 import { listAthletes } from "@/features/clients/data";
 import { getGroupTypeBySlug } from "@/features/groups/data";
+import { getActivePolicyForGroupType, getLatestAcceptanceForClientGroupType } from "@/features/policies/data";
 import { requireServedOrganization } from "@/features/organizations/served-org";
 import { creditType, productTemplate } from "@/lib/db/schema";
 import { withTenant } from "@/lib/db/tenant";
@@ -135,6 +136,18 @@ export default async function EnrollmentPage({
   const grid =
     paymentView.kind === "options" ? buildMonthGrid(month, availability, org.timezone) : [];
 
+  const policyDocument = groupType.policyDocumentId
+    ? await withTenant(org.id, (tx) =>
+        getActivePolicyForGroupType(tx, org.id, groupType.id),
+      )
+    : null;
+
+  const latestAcceptance = recognized && policyDocument
+    ? await withTenant(org.id, (tx) =>
+        getLatestAcceptanceForClientGroupType(tx, org.id, recognized.clientId, groupType.id),
+      )
+    : null;
+
   return (
     <main>
       <h1 className="text-2xl font-semibold">{t("title", { name: groupType.name })}</h1>
@@ -161,6 +174,18 @@ export default async function EnrollmentPage({
                 email: recognized.email,
                 name: recognized.name,
                 athletes: athletes.map((a) => ({ id: a.id, name: a.name })),
+              }
+            : null
+        }
+        policyDocument={
+          policyDocument
+            ? {
+                id: policyDocument.id,
+                name: policyDocument.name,
+                version: policyDocument.version,
+                fileId: policyDocument.file_id,
+                requireReacceptance: latestAcceptance !== null &&
+                  policyDocument.version > latestAcceptance.policyDocumentVersion,
               }
             : null
         }

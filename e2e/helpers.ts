@@ -514,6 +514,7 @@ export type SeedLanglionResult = {
   creditTypeId?: string | null;
   gradeFieldId?: string | null;
   productTemplateId?: string | null;
+  policyDocumentId?: string | null;
 };
 
 /**
