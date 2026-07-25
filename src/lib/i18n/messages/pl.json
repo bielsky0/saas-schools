@@ -489,7 +489,8 @@
       "schedule": "Grafik",
       "credits": "Kredyty",
       "purchases": "Sprzedaż pakietów",
-      "policies": "Regulaminy"
+      "policies": "Regulaminy",
+      "trainers": "Trenerzy"
     },
     "settings": {
       "heading": "Ustawienia",
@@ -541,6 +542,36 @@
       "page": "Strona {page}",
       "previous": "Poprzednia",
       "next": "Następna"
+    },
+    "trainers": {
+      "heading": "Trenerzy",
+      "empty": "Brak trenerów. Zaproś kogoś z rolą trenera.",
+      "colName": "Imię i nazwisko",
+      "colEmail": "E-mail",
+      "colActions": "Akcje",
+      "availabilityTitle": "Dyspozycyjność — {name}",
+      "availabilityEmpty": "Brak okien dyspozycyjności. Bez nich system domyślnie przyjmuje godziny 08:00–20:00.",
+      "colDay": "Dzień",
+      "colHours": "Godziny",
+      "colLocation": "Lokalizacja",
+      "colActive": "Aktywne",
+      "formTitle": "Dodaj okno dyspozycyjności",
+      "formEditTitle": "Edytuj okno dyspozycyjności",
+      "dayOfWeek": "Dzień tygodnia",
+      "startTime": "Początek",
+      "endTime": "Koniec",
+      "location": "Lokalizacja",
+      "noLocation": "Brak lokalizacji",
+      "active": "Aktywne",
+      "submit": "Dodaj okno",
+      "submitting": "Zapisywanie…",
+      "save": "Zapisz",
+      "saving": "Zapisywanie…",
+      "delete": "Usuń",
+      "deleting": "Usuwanie…",
+      "back": "Powrót do trenerów",
+      "overlapError": "To okno nachodzi na istniejące.",
+      "timeOrderError": "Godzina początkowa musi być przed końcową."
     }
   },
   "storage": {
@@ -1147,6 +1178,8 @@
     },
     "cashConfirmed": "Płatność gotówką potwierdzona.",
     "attendanceMarked": "Obecność zaktualizowana.",
+    "availabilityCreated": "Okno dyspozycyjności utworzone.",
+    "availabilityUpdated": "Okno dyspozycyjności zaktualizowane.",
     "cancelBooking": "Anuluj rezerwację",
     "cancelling": "Anulowanie…",
     "bookingCancelled": "Rezerwacja anulowana.",

@@ -113,7 +113,11 @@ export type Permission =
   // ── Faza 16 — Zwroty fiducjarne (EPIK 18) ────────────────────────────
   //
   /** Initiate and confirm refunds (Owner, Admin, Sekretariat). */
-  | "refunds.issue";
+  | "refunds.issue"
+  // ── Faza 17.5 — Dyspozycyjność trenerów (EPIK 34) ────────────────────
+  //
+  /** Manage trainer availability windows (owner, admin, or trainer own only). */
+  | "trainer_availability.manage";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -158,6 +162,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "group_swap.approve",
     "credits.reassign_athlete",
     "refunds.issue",
+    "trainer_availability.manage",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -195,6 +200,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "group_swap.approve",
     "credits.reassign_athlete",
     "refunds.issue",
+    "trainer_availability.manage",
   ],
   /**
    * The three langlion staff roles (§2.10).
@@ -246,6 +252,10 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "bookings.mark_attendance",
     "grade_fields.manage",
     "grades.enter",
+    // trainer_availability.manage is scoped to OWN windows only at the
+    // action call site (compare trainerId to caller.userId). This map
+    // cannot express "own" — see comment at bookings.mark_attendance.
+    "trainer_availability.manage",
   ],
   // Members may upload content, but not delete other people's files.
   //

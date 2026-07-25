@@ -253,6 +253,20 @@
       "when": 1785100000100,
       "tag": "0035_rls_policy_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1785200000000,
+      "tag": "0036_faza17_5_trainer_availability",
+      "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1785200000100,
+      "tag": "0037_rls_trainer_availability",
+      "breakpoints": true
     }
   ]
 }

@@ -88,6 +88,23 @@ export const groupType = pgTable(
      * `features/policies/actions.ts:uploadNewPolicyVersion`.
      */
     policyDocumentId: text("policyDocumentId"),
+    /**
+     * Default duration (minutes) and capacity for this group type (F17.5, EPIK 34).
+     *
+     * Used by the slot-availability layer (`computeAvailabilitySlots`) when
+     * slicing trainer windows into bookable slots. Nullable — existing group
+     * types keep NULL. The calling code falls back to `FALLBACK_DURATION_MINUTES`
+     * (currently 60) when no value is set.
+     *
+     * These are defaults, not overrides: a specific `class_session`'s actual
+     * duration and capacity are set when the session is created.
+     *
+     * TODO(F18/Slot-First): Slot-First engine consumes `defaultDurationMinutes`
+     * and `defaultCapacity` as the session's initial values at creation time
+     * (US-34.4).
+     */
+    defaultDurationMinutes: integer("defaultDurationMinutes"),
+    defaultCapacity: integer("defaultCapacity"),
     createdAt: timestamp("createdAt").notNull().defaultNow(),
     updatedAt: timestamp("updatedAt").notNull().defaultNow(),
     deletedAt: timestamp("deletedAt"),

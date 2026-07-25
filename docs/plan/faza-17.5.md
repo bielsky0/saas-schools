@@ -1,6 +1,6 @@
 ### Faza 17.5 — Dyspozycyjność trenerów (EPIK 34, v16)
 
-**Status:** nierozpoczęta
+**Status:** ✅ zakończona (2026-07-25)
 **Cel:** model dostępności trenera jako warstwa podpowiedzi slotów dla silników AF/SF; realne sloty w Slot-First zamiast zgadywania; §5.1 pozostaje jedyną ochroną przed kolizją.
 **Pokrywa:** EPIK 34; §2.32; Constraint 11; spec §5 pkt „15a".
 **Zależności:** F0 (tabele/RLS/`withTenant`), F2 (`group_type` — kolumny `default_*`), F5 (ścieżka rezerwacji). **F18 jest rewidowana tak, by od tej fazy zależeć** (silniki wpinają się w dostępność).

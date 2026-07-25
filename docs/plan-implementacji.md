@@ -36,7 +36,7 @@ Ten plik jest nadal **jedynym trwałym źródłem prawdy o planie i postępie** 
 | Faza 15 — Zmiana Grupy (swap) + przeniesienie kredytu między dziećmi             | [docs/plan/faza-15.md](plan/faza-15.md)                                       | ✅ zakończona (2026-07-24) |
 | Faza 16 — Zwroty fiducjarne (EPIK 18)                                            | [docs/plan/faza-16.md](plan/faza-16.md)                                       | ✅ zakończona (2026-07-25) |
 | Faza 17 — Regulaminy i akceptacje (EPIK 28)                                      | [docs/plan/faza-17.md](plan/faza-17.md)                                       | ✅ zakończona (2026-07-25) |
-| Faza 17.5 — Dyspozycyjność trenerów (EPIK 34, v16)                               | [docs/plan/faza-17.5.md](plan/faza-17.5.md)                                   |
+| Faza 17.5 — Dyspozycyjność trenerów (EPIK 34, v16)                               | [docs/plan/faza-17.5.md](plan/faza-17.5.md)                                   | ✅ zakończona (2026-07-25) |
 | Faza 18 — Silniki Availability-First i Slot-First + Force Override               | [docs/plan/faza-18.md](plan/faza-18.md)                                       |
 | Faza 19 — Warunkowe UI formularza + fakturowanie ręczne                          | [docs/plan/faza-19.md](plan/faza-19.md)                                       |
 | Faza 20 — Wynagrodzenia trenerów, wyłącznie informacyjne (EPIK 32, v15)          | [docs/plan/faza-20.md](plan/faza-20.md)                                       |

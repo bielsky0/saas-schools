@@ -134,3 +134,4 @@ export * from "./grades";
 export * from "./policy-documents";
 export * from "./progress-notes";
 export * from "./group-change-requests";
+export * from "./trainer-availability";

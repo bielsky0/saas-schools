@@ -489,7 +489,8 @@
       "schedule": "Schedule",
       "credits": "Credits",
       "purchases": "Sell packages",
-      "policies": "Policies"
+      "policies": "Policies",
+      "trainers": "Trainers"
     },
     "settings": {
       "heading": "Settings",
@@ -541,6 +542,36 @@
       "page": "Page {page}",
       "previous": "Previous",
       "next": "Next"
+    },
+    "trainers": {
+      "heading": "Trainers",
+      "empty": "No trainers yet. Invite someone with the trainer role.",
+      "colName": "Name",
+      "colEmail": "Email",
+      "colActions": "Actions",
+      "availabilityTitle": "Availability for {name}",
+      "availabilityEmpty": "No availability windows set. Without any windows, the system falls back to default hours (08:00–20:00).",
+      "colDay": "Day",
+      "colHours": "Hours",
+      "colLocation": "Location",
+      "colActive": "Active",
+      "formTitle": "Add availability window",
+      "formEditTitle": "Edit availability window",
+      "dayOfWeek": "Day of week",
+      "startTime": "Start",
+      "endTime": "End",
+      "location": "Location",
+      "noLocation": "No location",
+      "active": "Active",
+      "submit": "Add window",
+      "submitting": "Saving…",
+      "save": "Save",
+      "saving": "Saving…",
+      "delete": "Delete",
+      "deleting": "Deleting…",
+      "back": "Back to trainers",
+      "overlapError": "This window overlaps an existing one.",
+      "timeOrderError": "Start time must be before end time."
     }
   },
   "storage": {
@@ -1147,6 +1178,8 @@
     },
     "cashConfirmed": "Cash payment confirmed.",
     "attendanceMarked": "Attendance updated.",
+    "availabilityCreated": "Availability window created.",
+    "availabilityUpdated": "Availability window updated.",
     "cancelBooking": "Cancel booking",
     "cancelling": "Cancelling…",
     "bookingCancelled": "Booking cancelled.",
