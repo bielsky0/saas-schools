@@ -6,7 +6,6 @@ import {
   signedRequest,
   uniqueId,
   E2E_CONNECT_WEBHOOK_SECRET,
-  E2E_CONNECT_ACCOUNT_ID,
 } from "./billing-fixtures";
 import { registerViaApi, seedOrg, uniqueEmail } from "./helpers";
 
@@ -15,9 +14,9 @@ import { registerViaApi, seedOrg, uniqueEmail } from "./helpers";
  * signature verification is a local HMAC, so no Stripe account is involved.
  */
 
-type Fixture = { orgSlug: string };
+type Fixture = { orgSlug: string; accountId: string };
 
-/** An org with a Connect account seeded. */
+/** An org with a unique Connect account seeded. */
 async function seedConnectOrg(request: APIRequestContext): Promise<Fixture> {
   const ownerEmail = uniqueEmail("connect-owner");
   await registerViaApi(request, ownerEmail);
@@ -27,12 +26,12 @@ async function seedConnectOrg(request: APIRequestContext): Promise<Fixture> {
     slug: uniqueId("connect-co"),
   });
 
-  // Seed the Connect account id as if /authorize had run.
+  const accountId = uniqueId("acct");
   const res = await request.post("/api/dev/seed-connect-account", {
-    data: { orgSlug, accountId: E2E_CONNECT_ACCOUNT_ID },
+    data: { orgSlug, accountId },
   });
   expect(res.ok(), `seed-connect-account failed: ${await res.text()}`).toBe(true);
-  return { orgSlug };
+  return { orgSlug, accountId };
 }
 
 /**
@@ -44,8 +43,9 @@ function signedConnectRequest(event: unknown) {
 
 test.describe("Connect webhook — account.updated", () => {
   test("transitions to active when charges and payouts are enabled", async ({ request }) => {
-    await seedConnectOrg(request);
+    const { accountId } = await seedConnectOrg(request);
     const event = connectAccountUpdatedEvent({
+      accountId,
       eventId: uniqueId("evt"),
       detailsSubmitted: true,
       chargesEnabled: true,
@@ -63,8 +63,9 @@ test.describe("Connect webhook — account.updated", () => {
   });
 
   test("transitions to onboarding_incomplete when details are not submitted", async ({ request }) => {
-    await seedConnectOrg(request);
+    const { accountId } = await seedConnectOrg(request);
     const event = connectAccountUpdatedEvent({
+      accountId,
       eventId: uniqueId("evt"),
       detailsSubmitted: false,
       chargesEnabled: false,
@@ -80,8 +81,9 @@ test.describe("Connect webhook — account.updated", () => {
   });
 
   test("transitions to restricted when charges are disabled", async ({ request }) => {
-    await seedConnectOrg(request);
+    const { accountId } = await seedConnectOrg(request);
     const event = connectAccountUpdatedEvent({
+      accountId,
       eventId: uniqueId("evt"),
       detailsSubmitted: true,
       chargesEnabled: false,
@@ -97,8 +99,9 @@ test.describe("Connect webhook — account.updated", () => {
   });
 
   test("transitions to disabled when Stripe disables the account", async ({ request }) => {
-    await seedConnectOrg(request);
+    const { accountId } = await seedConnectOrg(request);
     const event = connectAccountUpdatedEvent({
+      accountId,
       eventId: uniqueId("evt"),
       detailsSubmitted: true,
       chargesEnabled: false,
@@ -117,8 +120,9 @@ test.describe("Connect webhook — account.updated", () => {
 
 test.describe("Connect webhook — account.application.deauthorized", () => {
   test("resets status to not_connected", async ({ request }) => {
-    await seedConnectOrg(request);
+    const { accountId } = await seedConnectOrg(request);
     const event = connectAccountDeauthorizedEvent({
+      accountId,
       eventId: uniqueId("evt"),
     });
 
@@ -135,8 +139,9 @@ test.describe("Connect webhook — account.application.deauthorized", () => {
 
 test.describe("Connect webhook — signature verification", () => {
   test("rejects a body signed with the wrong secret", async ({ request }) => {
-    await seedConnectOrg(request);
+    const { accountId } = await seedConnectOrg(request);
     const event = connectAccountUpdatedEvent({
+      accountId,
       eventId: uniqueId("evt"),
     });
 

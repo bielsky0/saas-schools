@@ -115,6 +115,7 @@ function isPublicApiPath(pathname: string): boolean {
   // (spec 5.4), verified in the route. Payment providers do not follow
   // redirects, so guarding this would look like a permanent delivery failure.
   if (pathname.startsWith("/api/billing/webhook")) return true;
+  if (pathname.startsWith("/api/billing/connect/webhook")) return true;
   // Job drain (spec 12). Authenticated by the CRON_SECRET bearer token, not a
   // session — the caller is a scheduler, not a person. Worse than the webhook
   // case above: cron pingers DO follow redirects, so guarding this would answer

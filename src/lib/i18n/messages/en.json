@@ -426,17 +426,21 @@
       "popular": "Popular",
       "perMonth": "/mo",
       "perYear": "/yr",
-      "free": {
+      "trial": {
         "desc": "For trying things out.",
         "cta": "Get started"
+      },
+      "basic": {
+        "desc": "For small teams getting started.",
+        "cta": "Start with Basic"
       },
       "pro": {
         "desc": "For growing teams.",
         "cta": "Start with Pro"
       },
-      "business": {
+      "enterprise": {
         "desc": "For scale and compliance.",
-        "cta": "Choose Business"
+        "cta": "Contact sales"
       },
       "limits": {
         "members": "{count, plural, one {# member} other {# members}}",
@@ -447,6 +451,10 @@
         "storageUnlimited": "Unlimited storage"
       },
       "features": {
+        "subscriptions_enabled": "Subscription billing",
+        "multi_location": "Multiple locations",
+        "policy_documents": "Policy documents",
+        "invoice_tracking": "Invoice tracking",
         "audit": {
           "export": "Audit log export"
         },

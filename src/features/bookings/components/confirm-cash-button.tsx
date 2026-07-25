@@ -25,6 +25,7 @@ export function ConfirmCashButton({ bookingId }: { bookingId: string }) {
         {t("actions.confirmCash")}
       </Button>
       {state.error ? <FormMessage>{state.error}</FormMessage> : null}
+      {state.success ? <FormMessage variant="success">{state.success}</FormMessage> : null}
     </form>
   );
 }

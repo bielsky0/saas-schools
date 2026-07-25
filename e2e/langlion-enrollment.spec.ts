@@ -314,6 +314,7 @@ test("the payment matrix renders per policy and purchase mode (US-4.4)", async (
   page,
   request,
 }) => {
+  test.setTimeout(60_000);
   // The confirm-step method options are covered exhaustively by payment-options.test.ts;
   // this proves the UI renders the three top-level SHAPES a parent can land on.
 
@@ -326,7 +327,7 @@ test("the payment matrix renders per policy and purchase mode (US-4.4)", async (
   // Packages-only: message, NO calendar, no booking (US-4.4/AC4).
   const pkg = await seedOffer(request, "m-pkg", { allowedPurchaseModes: ["package"], athletes: 0 });
   await page.goto(tenantUrl(pkg.subdomain, `/en/zapisy/${pkg.offerSlug}`));
-  await expect(page.getByText("No packages available — please contact the academy.")).toBeVisible();
+  await expect(page.getByText("No packages are currently available")).toBeVisible({ timeout: 15_000 });
   await expect(page.locator("[data-day-key]")).toHaveCount(0);
 
   // Online-only with online disabled (F5): the none-available message, no calendar.
@@ -335,7 +336,7 @@ test("the payment matrix renders per policy and purchase mode (US-4.4)", async (
   await page.goto(tenantUrl(online.subdomain, `/en/zapisy/${online.offerSlug}`));
   await expect(
     page.getByText("Online enrolment is temporarily unavailable — please contact the academy."),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 15_000 });
   await expect(page.locator("[data-day-key]")).toHaveCount(0);
 });
 

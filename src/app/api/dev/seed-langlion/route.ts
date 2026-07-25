@@ -355,7 +355,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             organizationId: orgId,
             name: body.gradeField.name ?? "E2E field",
             fieldType: body.gradeField.fieldType ?? "text",
-            groupTypeId: body.gradeField.groupTypeId ?? null,
+            // Auto-populate groupTypeId from the just-created group type when
+            // no explicit scope is given, so the grade_field_owner_ck constraint
+            // (exactly one of groupTypeId / sessionId) is satisfied.
+            groupTypeId: body.gradeField.groupTypeId ?? groupTypeId,
             sessionId: body.gradeField.sessionId ?? null,
           })
           .returning({ id: gradeField.id });

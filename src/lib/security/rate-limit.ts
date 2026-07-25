@@ -122,6 +122,7 @@ export function tierFor(pathname: string, method: string, isServerAction: boolea
    * protection for paid operations is §22.4's budget limits, not this mechanism.
    */
   if (pathname.startsWith("/api/billing/webhook")) return "exempt";
+  if (pathname.startsWith("/api/billing/connect/webhook")) return "exempt";
 
   /*
    * Better Auth's HTTP surface is SPLIT, never blanket-limited. A flat §2.1 rule

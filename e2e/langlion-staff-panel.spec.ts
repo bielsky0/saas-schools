@@ -69,35 +69,15 @@ test("reception confirms a cash payment — status flips and a credit is issued+
     client: { email: uniqueEmail("cash-parent"), isVerified: true },
     athletes: [{ name: "Cash Kid" }],
     creditType: { name: "Cash offer credits" },
+    bookings: [{ sessionIndex: 0, athleteIndex: 0, paymentStatus: "booked_offline" }],
   });
   expect(seed.ok, `seed failed: ${seed.message ?? seed.sqlState}`).toBe(true);
-
-  const withBooking = await seedLanglion(request, {
-    organizationId: orgId,
-    groupTypeId: seed.groupTypeId!,
-    sessions: [{ startsAt: slot.startsAt, endsAt: slot.endsAt, capacity: 8 }],
-  });
-  // Re-seeding `sessions` on an existing groupTypeId would create a second
-  // session; instead attach the booking to the ALREADY-SEEDED session by reusing
-  // its id directly, so both requests below (booking + page) refer to one row.
-  void withBooking;
-
-  const booked = await seedLanglion(request, {
-    organizationId: orgId,
-    bookings: [{ sessionIndex: 0, athleteIndex: 0, paymentStatus: "booked_offline" }],
-    // Reuse: pass the same session/athlete by re-declaring them is unnecessary —
-    // `bookings` indexes into THIS call's own `sessions`/`athletes`, so the
-    // booking must be created in the SAME call that names the session/athlete.
-  });
-  void booked;
 
   await loginToAcademy(page, subdomain, receptionEmail, "Password123");
   await page.goto(tenantUrl(subdomain, `/en/dashboard/sessions/${seed.sessionIds![0]}`));
 
-  // The booking was seeded as `booked_offline` in the same call as the session —
-  // see the corrected seeding below this test's first draft.
   await page.getByRole("button", { name: "Confirm cash" }).click();
-  await expect(page.getByText("Cash payment confirmed.")).toBeVisible();
+  await expect(page.getByRole("status").filter({ hasText: "Cash payment confirmed." })).toBeVisible();
 
   const state = await bookingState(request, orgId, seed.sessionIds![0]!);
   expect(state.bookings[0]!.paymentStatus).toBe("confirmed");
@@ -197,7 +177,7 @@ test("a trainer marks attendance on their own session, but a foreign session ref
   // Own session: mark present succeeds.
   await page.goto(tenantUrl(subdomain, `/en/dashboard/sessions/${seedA.sessionIds![0]}`));
   await page.getByRole("button", { name: "Mark present" }).click();
-  await expect(page.getByText("Attendance updated.")).toBeVisible();
+  await expect(page.getByRole("status").filter({ hasText: "Attendance updated." })).toBeVisible();
   const ownState = await bookingState(request, orgId, seedA.sessionIds![0]!);
   expect(ownState.bookings[0]!.attendanceStatus).toBe("present");
 
@@ -349,12 +329,12 @@ test("attendance — present, absent, and unmarked are all distinguishable; paym
   // Mark first athlete as present
   const presentRow = page.locator("tr").filter({ hasText: "Kid Present" });
   await presentRow.getByRole("button", { name: "Mark present" }).click();
-  await expect(page.getByText("Attendance updated.")).toBeVisible();
+  await expect(page.getByRole("status").filter({ hasText: "Attendance updated." })).toBeVisible();
 
   // Mark second athlete as absent
   const absentRow = page.locator("tr").filter({ hasText: "Kid Absent" });
   await absentRow.getByRole("button", { name: "Mark absent" }).click();
-  await expect(page.getByText("Attendance updated.")).toBeVisible();
+  await expect(page.getByRole("status").filter({ hasText: "Attendance updated." })).toBeVisible();
 
   // Verify three attendance badges are present (exact match avoids athlete names)
   await expect(page.getByText("Present", { exact: true })).toBeVisible();
@@ -486,8 +466,8 @@ test("e-dziennik — trainer cannot enter grades or progress notes on a foreign 
   await page.goto(tenantUrl(subdomain, `/en/dashboard/sessions/${seedB.sessionIds![0]}`));
 
   // Try to enter a grade on a foreign session
-  await page.getByLabel("Value").fill("1.0");
-  await page.getByRole("button", { name: "Save" }).click();
+  await page.getByLabel("Value").first().fill("1.0");
+  await page.getByRole("button", { name: "Save" }).first().click();
   await expect(page.getByText("You may only do this for your own sessions.")).toBeVisible();
 
   // Try to add a progress note on a foreign session

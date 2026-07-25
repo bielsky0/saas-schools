@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { processConnectSubscriptionEvent } from "@/features/billing/connect-webhooks";
 import type { ConnectSubscriptionEvent } from "@/lib/adapters/billing";
 import { env } from "@/lib/env/server";
+import { requestLogger } from "@/lib/logger";
 
 /**
  * Test-only webhook simulator for subscription invoice.paid events (F12d).
@@ -47,7 +48,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     currency: body.currency ?? "pln",
   };
 
-  const result = await processConnectSubscriptionEvent(event);
+  let result: { status: string };
+  try {
+    result = await processConnectSubscriptionEvent(event);
+  } catch (error) {
+    const err = error as Error & { cause?: unknown; severity?: string; code?: string; detail?: string };
+    (await requestLogger("billing:connect:webhook")).error("dev subscription-invoice handler crashed", {
+      error: err.message,
+      code: err.code,
+      detail: err.detail,
+      cause: err.cause,
+    });
+    return NextResponse.json({ ok: false, error: "Internal error" }, { status: 500 });
+  }
 
   return NextResponse.json({
     ok: true,

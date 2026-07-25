@@ -66,18 +66,23 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   //   processConnectEvent.
   const event = result.event;
   let processed: { status: string };
-  if (event.type === "checkout.session.completed") {
-    processed = await processConnectPaymentEvent(event);
-  } else if (
-    event.type === "invoice.paid" ||
-    event.type === "invoice.payment_failed" ||
-    event.type === "customer.subscription.deleted"
-  ) {
-    processed = await processConnectSubscriptionEvent(event);
-  } else if (event.type === "charge.refunded") {
-    processed = await processConnectRefundEvent(event);
-  } else {
-    processed = await processConnectEvent(event as ConnectAccountEvent);
+  try {
+    if (event.type === "checkout.session.completed") {
+      processed = await processConnectPaymentEvent(event);
+    } else if (
+      event.type === "invoice.paid" ||
+      event.type === "invoice.payment_failed" ||
+      event.type === "customer.subscription.deleted"
+    ) {
+      processed = await processConnectSubscriptionEvent(event);
+    } else if (event.type === "charge.refunded") {
+      processed = await processConnectRefundEvent(event);
+    } else {
+      processed = await processConnectEvent(event as ConnectAccountEvent);
+    }
+  } catch (error) {
+    (await requestLogger("billing:connect:webhook")).error("unhandled error processing event", { error });
+    return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 
   return NextResponse.json({ received: true, status: processed.status });

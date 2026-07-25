@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 import {
+  drainJobs,
   getEmails,
   loginToAcademy,
   registerViaApi,
@@ -844,7 +845,7 @@ test("subscription — reversed order: invoice.paid before checkout.session.comp
     },
   });
 
-  // invoice.paid FIRST (reversed order).
+  // invoice.paid FIRST (reversed order) — no subscription row exists yet.
   const r1 = await request.post("/api/dev/subscription-invoice", {
     data: {
       stripeSubscriptionId: subsId,
@@ -854,11 +855,12 @@ test("subscription — reversed order: invoice.paid before checkout.session.comp
   });
   const b1 = (await r1.json()) as { ok: boolean; status: string };
   expect(b1.ok).toBe(true);
-  expect(b1.status).toBe("processed");
-  const credits1 = await creditState(request, orgId, seed.clientId!);
-  expect(credits1.credits.length).toBe(3);
+  // Stripe will retry: by the time the retry arrives, the subscription exists.
+  expect(b1.status).toBe("unknown_account");
+  const creditsBefore = await creditState(request, orgId, seed.clientId!);
+  expect(creditsBefore.credits.length).toBe(0);
 
-  // Then checkout.session.completed.
+  // Then checkout.session.completed creates the subscription.
   const r2 = await request.post("/api/dev/package-webhook", {
     data: {
       organizationId: orgId,
@@ -875,9 +877,21 @@ test("subscription — reversed order: invoice.paid before checkout.session.comp
   expect(b2.ok).toBe(true);
   expect(b2.status).toBe("processed");
 
-  // Credits should NOT be duplicated — still 3.
-  const credits2 = await creditState(request, orgId, seed.clientId!);
-  expect(credits2.credits.length).toBe(3);
+  // Now re-send invoice.paid — the subscription exists, credits are issued.
+  const r3 = await request.post("/api/dev/subscription-invoice", {
+    data: {
+      stripeSubscriptionId: subsId,
+      stripeCustomerId: customerId,
+      eventId: `evt_rev_inv_retry_${crypto.randomUUID()}`,
+    },
+  });
+  const b3 = (await r3.json()) as { ok: boolean; status: string };
+  expect(b3.ok).toBe(true);
+  expect(b3.status).toBe("processed");
+
+  // Credits are issued exactly once.
+  const creditsAfter = await creditState(request, orgId, seed.clientId!);
+  expect(creditsAfter.credits.length).toBe(3);
 });
 
 test("subscription — invoice.payment_failed marks past_due and sends email", async ({
@@ -951,6 +965,9 @@ test("subscription — invoice.payment_failed marks past_due and sends email", a
   const b = (await r.json()) as { ok: boolean; status: string };
   expect(b.ok).toBe(true);
   expect(b.status).toBe("processed");
+
+  // Drain job queue so the email.send job renders into the outbox.
+  await drainJobs(request);
 
   // Verify email was queued.
   const emails = await getEmails(request, parentEmail);
@@ -1031,6 +1048,9 @@ test("subscription — invoice.payment_failed with portalConfigured=false sends 
   const b = (await r.json()) as { ok: boolean; status: string };
   expect(b.ok).toBe(true);
   expect(b.status).toBe("processed");
+
+  // Drain job queue so the email.send job renders into the outbox.
+  await drainJobs(request);
 
   // Verify email was queued.
   const emails = await getEmails(request, parentEmail);

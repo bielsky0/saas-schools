@@ -34,6 +34,7 @@ function MarkButton({
         {label}
       </Button>
       {state.error ? <FormMessage>{state.error}</FormMessage> : null}
+      {state.success ? <FormMessage variant="success">{state.success}</FormMessage> : null}
     </form>
   );
 }

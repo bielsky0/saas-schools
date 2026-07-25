@@ -95,11 +95,13 @@ async function loginAndLand(page: Page, subdomain: string, email: string) {
  * generation — the one that extends a season — silently vanish.
  */
 async function settleJobs(request: APIRequestContext) {
-  let idleStreak = 0;
-  for (let attempt = 0; attempt < 20 && idleStreak < 2; attempt += 1) {
+  // Clear any stale jobs from parallel workers before looking for ours.
+  const pre = await drainJobs(request);
+  let idleStreak = pre.claimed === 0 ? 1 : 0;
+  for (let attempt = 0; attempt < 30 && idleStreak < 2; attempt += 1) {
     const result = await drainJobs(request);
     idleStreak = result.claimed === 0 ? idleStreak + 1 : 0;
-    if (idleStreak < 2) await new Promise((resolve) => setTimeout(resolve, 150));
+    if (idleStreak < 2) await new Promise((resolve) => setTimeout(resolve, 500));
   }
 }
 
@@ -173,6 +175,9 @@ async function addPattern(
   }
   await form.getByLabel("Number of sessions").fill(String(options.occurrences));
   await form.getByRole("button", { name: "Add pattern" }).click();
+  // The server action enqueues the job inside its transaction; wait briefly
+  // for the response so settleJobs doesn't drain before the job exists.
+  await page.waitForTimeout(2000);
 }
 
 test.describe("EPIK 2 — group type definition", () => {

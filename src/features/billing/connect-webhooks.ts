@@ -821,13 +821,26 @@ async function processSubscriptionInvoice(
   const step1Result = await withSystemBypass(
     "subscription invoice webhook — no user session, RLS does not apply",
     async (tx) => {
+      // Resolve client BEFORE the webhook_event marker so we can record the
+      // real orgId (the fake UUID broke the FK constraint). If the client is
+      // unknown, do NOT write a marker — a retry/resend should still work.
+      const resolved = await resolveClientFromStripeCustomer(tx, stripeCustomerId);
+      if (!resolved) {
+        log.error("invoice.paid: cannot resolve client from stripeCustomerId", {
+          event: event.id,
+          stripeCustomerId,
+        });
+        return { status: "unknown_account" as const };
+      }
+      const { clientId, clientEmail, orgId } = resolved;
+
       const [marker] = await tx
         .insert(webhookEvent)
         .values({
           provider: event.provider,
           providerEventId: event.id,
           type: event.type,
-          organizationId: "00000000-0000-0000-0000-000000000000",
+          organizationId: orgId,
           occurredAt: event.occurredAt,
         })
         .onConflictDoNothing({
@@ -840,51 +853,33 @@ async function processSubscriptionInvoice(
         return { status: "duplicate" as const };
       }
 
-      // Resolve client from the Stripe customer on the Connected Account.
-      const resolved = await resolveClientFromStripeCustomer(tx, stripeCustomerId);
-      if (!resolved) {
-        log.error("invoice.paid: cannot resolve client from stripeCustomerId", {
-          event: event.id,
-          stripeCustomerId,
-        });
-        return { status: "unknown_account" as const };
-      }
-      const { clientId, clientEmail, orgId } = resolved;
-
       // Find-or-create client_subscription. invoice.paid may arrive before
       // checkout.session.completed, in which case there is no row yet.
-      const [existingSub] = await tx
+      let [existingSub] = await tx
         .select({
           id: clientSubscription.id,
           productTemplateId: clientSubscription.productTemplateId,
           clientId: clientSubscription.clientId,
+          subOrgId: clientSubscription.organizationId,
         })
         .from(clientSubscription)
         .where(eq(clientSubscription.stripeSubscriptionId, stripeSubscriptionId))
         .limit(1);
 
       if (!existingSub) {
-        // Fallback: create a placeholder row. We know the client but not
-        // the template — that gets filled in when processSubscriptionInitial
-        // runs (or a later webhook).
-        log.warn("invoice.paid before checkout.session.completed — creating placeholder", {
+        // Invoice.paid arrived before checkout.session.completed — this is a
+        // delivery ordering race. The placeholder approach (inserting a row
+        // with a fake UUID) is not viable because the FK constraint on
+        // client_subscription_product_template_fk requires a real
+        // product_template row. Return unknown_account so Stripe retries; by
+        // the time the retry arrives, processSubscriptionInitial should have
+        // created the real subscription row.
+        log.warn("invoice.paid before checkout.session.completed — cannot resolve product template yet", {
           event: event.id,
           stripeSubscriptionId,
           clientId,
         });
-        await tx
-          .insert(clientSubscription)
-          .values({
-            organizationId: orgId,
-            clientId,
-            productTemplateId: "00000000-0000-0000-0000-000000000000",
-            stripeSubscriptionId,
-            status: "active",
-          })
-          .onConflictDoUpdate({
-            target: [clientSubscription.stripeSubscriptionId],
-            set: { status: "active", updatedAt: new Date() },
-          });
+        return { status: "unknown_account" as const };
       } else {
         // Update status to active (may have been past_due).
         await tx
@@ -896,6 +891,10 @@ async function processSubscriptionInvoice(
       // Resolve product template — prefers the existing row, falls back to
       // any active recurring template in the org.
       const templateId = existingSub?.productTemplateId;
+      // Use the subscription's own organizationId when available (it is the
+      // authoritative source); fall back to the client_stripe_customer orgId
+      // for the placeholder-only path.
+      const templateOrgId = existingSub?.subOrgId ?? orgId;
       let creditTypeId: string | null = null;
       let quantity: number = 1;
 
@@ -909,7 +908,7 @@ async function processSubscriptionInvoice(
           .where(
             and(
               eq(productTemplate.id, templateId),
-              eq(productTemplate.organizationId, orgId),
+              eq(productTemplate.organizationId, templateOrgId),
             ),
           )
           .limit(1);
@@ -920,9 +919,36 @@ async function processSubscriptionInvoice(
       }
 
       if (!creditTypeId) {
+        // Diagnose: try looking up the template without the orgId filter.
+        let withoutOrg: unknown = null;
+        if (templateId && templateId !== "00000000-0000-0000-0000-000000000000") {
+          const [row] = await tx
+            .select({ id: productTemplate.id, organizationId: productTemplate.organizationId, name: productTemplate.name })
+            .from(productTemplate)
+            .where(eq(productTemplate.id, templateId))
+            .limit(1);
+          withoutOrg = row ?? null;
+        }
+        // Also directly query the csc row to confirm its orgId.
+        let cscOrgId: string | null = null;
+        {
+          const [row] = await tx
+            .select({ orgId: clientStripeCustomer.organizationId })
+            .from(clientStripeCustomer)
+            .where(eq(clientStripeCustomer.stripeCustomerId, stripeCustomerId))
+            .limit(1);
+          if (row) cscOrgId = row.orgId;
+        }
         log.error("invoice.paid: cannot resolve credit type from template", {
           event: event.id,
           templateId,
+          orgIdFromCsc: orgId,
+          cscOrgIdDirect: cscOrgId,
+          subOrgId: existingSub?.subOrgId ?? null,
+          templateOrgIdUsed: templateOrgId,
+          foundWithoutOrgFilter: !!withoutOrg,
+          actualTemplateOrgId: withoutOrg ? (withoutOrg as { organizationId: string }).organizationId : null,
+          templateName: withoutOrg ? (withoutOrg as { name: string }).name : null,
         });
         return { status: "unknown_account" as const };
       }
@@ -939,8 +965,8 @@ async function processSubscriptionInvoice(
       const [purchase] = await tx
         .insert(creditPurchase)
         .values({
-          organizationId: orgId,
-          clientId,
+          organizationId: templateOrgId,
+          clientId: existingSub?.clientId ?? clientId,
           productTemplateId: templateId!,
           athleteId: null,
           quantity,
@@ -955,8 +981,8 @@ async function processSubscriptionInvoice(
 
       // Issue credits with source "subscription_renewal".
       const issued = await issueCredits(tx, {
-        organizationId: orgId,
-        clientId,
+        organizationId: templateOrgId,
+        clientId: existingSub?.clientId ?? clientId,
         creditTypeId,
         athleteId: null,
         quantity,
@@ -974,9 +1000,9 @@ async function processSubscriptionInvoice(
 
       return {
         status: "processed" as const,
-        organizationId: orgId,
+        organizationId: templateOrgId,
         autoFillParams: {
-          clientId,
+          clientId: existingSub?.clientId ?? clientId,
           clientEmail,
           creditTypeId,
           currency: event.currency ?? "pln",
@@ -1015,25 +1041,7 @@ async function processSubscriptionFailed(
   return withSystemBypass(
     "subscription failed webhook — no user session, RLS does not apply",
     async (tx) => {
-      const [marker] = await tx
-        .insert(webhookEvent)
-        .values({
-          provider: event.provider,
-          providerEventId: event.id,
-          type: event.type,
-          organizationId: "00000000-0000-0000-0000-000000000000",
-          occurredAt: event.occurredAt,
-        })
-        .onConflictDoNothing({
-          target: [webhookEvent.provider, webhookEvent.providerEventId],
-        })
-        .returning({ id: webhookEvent.id });
-
-      if (!marker) {
-        log.info("duplicate subscription failed event", { event: event.id });
-        return { status: "duplicate" as const };
-      }
-
+      // Resolve the subscription first so we can record the real orgId.
       const [sub] = await tx
         .update(clientSubscription)
         .set({ status: "past_due", updatedAt: new Date() })
@@ -1045,6 +1053,25 @@ async function processSubscriptionFailed(
           stripeSubscriptionId,
         });
         return { status: "unknown_account" };
+      }
+
+      const [marker] = await tx
+        .insert(webhookEvent)
+        .values({
+          provider: event.provider,
+          providerEventId: event.id,
+          type: event.type,
+          organizationId: sub.organizationId,
+          occurredAt: event.occurredAt,
+        })
+        .onConflictDoNothing({
+          target: [webhookEvent.provider, webhookEvent.providerEventId],
+        })
+        .returning({ id: webhookEvent.id });
+
+      if (!marker) {
+        log.info("duplicate subscription failed event", { event: event.id });
+        return { status: "duplicate" as const };
       }
 
       // Resolve org's portalConfigured flag.
@@ -1130,13 +1157,29 @@ async function processSubscriptionDeleted(
   return withSystemBypass(
     "subscription deleted webhook — no user session, RLS does not apply",
     async (tx) => {
+      // Resolve the subscription first so we can record the real orgId.
+      const [sub] = await tx
+        .select({ id: clientSubscription.id, organizationId: clientSubscription.organizationId })
+        .from(clientSubscription)
+        .where(eq(clientSubscription.stripeSubscriptionId, stripeSubscriptionId))
+        .limit(1);
+
+      if (!sub) {
+        log.warn("customer.subscription.deleted for unknown subscription", {
+          event: event.id,
+          stripeSubscriptionId,
+        });
+        // No marker written — a retry/resend should still attempt processing.
+        return { status: "unknown_account" };
+      }
+
       const [marker] = await tx
         .insert(webhookEvent)
         .values({
           provider: event.provider,
           providerEventId: event.id,
           type: event.type,
-          organizationId: "00000000-0000-0000-0000-000000000000",
+          organizationId: sub.organizationId,
           occurredAt: event.occurredAt,
         })
         .onConflictDoNothing({
@@ -1149,23 +1192,15 @@ async function processSubscriptionDeleted(
         return { status: "duplicate" as const };
       }
 
-      const [updated] = await tx
+      await tx
         .update(clientSubscription)
         .set({ status: "canceled", updatedAt: new Date() })
-        .where(eq(clientSubscription.stripeSubscriptionId, stripeSubscriptionId))
-        .returning({ id: clientSubscription.id });
+        .where(eq(clientSubscription.stripeSubscriptionId, stripeSubscriptionId));
 
-      if (!updated) {
-        log.warn("customer.subscription.deleted for unknown subscription", {
-          event: event.id,
-          stripeSubscriptionId,
-        });
-      } else {
-        log.info("subscription deleted: marked canceled", {
-          event: event.id,
-          stripeSubscriptionId,
-        });
-      }
+      log.info("subscription deleted: marked canceled", {
+        event: event.id,
+        stripeSubscriptionId,
+      });
 
       return { status: "processed" as const };
     },

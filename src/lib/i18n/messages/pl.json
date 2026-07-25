@@ -426,17 +426,21 @@
       "popular": "Popularny",
       "perMonth": "/mies.",
       "perYear": "/rok",
-      "free": {
+      "trial": {
         "desc": "Do wypróbowania.",
         "cta": "Rozpocznij"
+      },
+      "basic": {
+        "desc": "Dla małych zespołów na start.",
+        "cta": "Wybierz Basic"
       },
       "pro": {
         "desc": "Dla rosnących zespołów.",
         "cta": "Wybierz Pro"
       },
-      "business": {
+      "enterprise": {
         "desc": "Dla skali i zgodności.",
-        "cta": "Wybierz Business"
+        "cta": "Kontakt z działem sprzedaży"
       },
       "limits": {
         "members": "{count, plural, one {# członek} few {# członków} many {# członków} other {# członka}}",
@@ -447,6 +451,10 @@
         "storageUnlimited": "Bez limitu miejsca"
       },
       "features": {
+        "subscriptions_enabled": "Płatności subskrypcyjne",
+        "multi_location": "Wiele lokalizacji",
+        "policy_documents": "Dokumenty polityki",
+        "invoice_tracking": "Śledzenie faktur",
         "audit": {
           "export": "Eksport dziennika audytu"
         },
