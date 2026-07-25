@@ -1070,9 +1070,14 @@
       "onSite": "Płacę na miejscu",
       "online": "Płacę online",
       "onlineUnavailable": "Płatności online chwilowo niedostępne.",
+      "packages": "Dostępne pakiety",
       "packagesOnly": "Ta oferta dostępna jest wyłącznie w formie pakietu.",
       "noPackagesAvailable": "Brak dostępnych pakietów — skontaktuj się z akademią.",
-      "noneAvailable": "Zapisy online chwilowo niedostępne — skontaktuj się z akademią."
+      "noneAvailable": "Zapisy online chwilowo niedostępne — skontaktuj się z akademią.",
+      "creditsCount": "{count} kredytów",
+      "oneTime": "Jednorazowy",
+      "recurring": "Subskrypcja",
+      "buyPackage": "Kup pakiet"
     },
     "policy": {
       "heading": "Regulamin",
@@ -1186,6 +1191,22 @@
       "policyViolation": "Ten pakiet nie jest dostępny w ramach aktualnej polityki tego typu grupy.",
       "refundInitiated": "Zwrot zainicjowany ({variant}). Środki zostaną zwrócone po potwierdzeniu przez operatora płatności.",
       "refundFailed": "Zwrot nieudany: {error}. Kredyty zostały przywrócone."
+    },
+    "invoice": {
+      "requested": "Faktura została zgłoszona. Akademia wystawi ją ręcznie.",
+      "marked": "Faktura oznaczona jako wystawiona.",
+      "request": "Poproś o fakturę",
+      "markIssued": "Oznacz jako wystawioną",
+      "invoiceNumber": "Numer faktury",
+      "pendingListTitle": "Faktury do wystawienia",
+      "issuedListTitle": "Wystawione faktury",
+      "client": "Klient",
+      "amount": "Kwota",
+      "package": "Pakiet",
+      "requestedAt": "Zgłoszono",
+      "issuedAt": "Wystawiono",
+      "noPending": "Brak oczekujących faktur.",
+      "subtitle": "Ręcznie oznaczaj zakupy kredytowe jako sfakturowane."
     }
   },
   "staffPanel": {

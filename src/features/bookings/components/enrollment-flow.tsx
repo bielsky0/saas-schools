@@ -18,7 +18,7 @@ import {
   Input,
 } from "@/components/ui";
 import type { CalendarDay, CalendarSlot } from "../calendar";
-import type { PaymentOptionsView } from "../payment-options";
+import type { PaymentOptionsView, PackageTeaser } from "../payment-options";
 import { createBookingAction, type CreateBookingState } from "../actions";
 
 type Recognized = {
@@ -71,14 +71,38 @@ export function EnrollmentFlow(props: EnrollmentFlowProps) {
 
   // Offers that cannot be booked render their message and stop — no calendar,
   // no submit (US-4.4/AC4, decision F; US-23.4/AC1, F12e).
-  if (props.paymentView.kind === "packages_only") {
-    return <Notice>{t("payment.packagesOnly")}</Notice>;
-  }
   if (props.paymentView.kind === "no_packages_available") {
     return <Notice>{t("payment.noPackagesAvailable")}</Notice>;
   }
   if (props.paymentView.kind === "none_available") {
     return <Notice>{t("payment.noneAvailable")}</Notice>;
+  }
+
+  // Packages-only: show available packages inline (Faza 19).
+  if (props.paymentView.kind === "packages_available") {
+    return (
+      <PackageSection
+        packages={props.paymentView.packages}
+        money={money}
+        groupTypeSlug={props.groupTypeSlug}
+      />
+    );
+  }
+
+  // Mixed-mode: show both single-class calendar and packages (Faza 19).
+  if (props.paymentView.kind === "mixed_mode") {
+    return (
+      <div className="mt-6 space-y-8">
+        <PackageSection
+          packages={props.paymentView.packages}
+          money={money}
+          groupTypeSlug={props.groupTypeSlug}
+        />
+        <div className="border-t pt-6">
+          <Bookable {...props} money={money} />
+        </div>
+      </div>
+    );
   }
 
   return <Bookable {...props} money={money} />;
@@ -540,6 +564,45 @@ function Notice({ children }: { children: React.ReactNode }) {
     <Alert className="mt-6">
       <AlertDescription>{children}</AlertDescription>
     </Alert>
+  );
+}
+
+function PackageSection({
+  packages,
+  money,
+  groupTypeSlug,
+}: {
+  packages: PackageTeaser[];
+  money: (minor: number) => string;
+  groupTypeSlug: string;
+}) {
+  const t = useTranslations("enrollment");
+  return (
+    <section className="space-y-4">
+      <h2 className="text-lg font-medium">{t("payment.packages")}</h2>
+      <div className="grid gap-4 sm:grid-cols-2">
+        {packages.map((pkg) => (
+          <Card key={pkg.id}>
+            <CardHeader>
+              <CardTitle>{pkg.name}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <p className="text-2xl font-bold">{money(pkg.price)}</p>
+              <p className="text-muted-foreground text-sm">
+                {t("payment.creditsCount", { count: pkg.creditQuantity })}
+                &nbsp;·&nbsp;
+                {pkg.billingType === "one_time" ? t("payment.oneTime") : t("payment.recurring")}
+              </p>
+              <Button asChild className="w-full">
+                <Link href={`/zapisy/${groupTypeSlug}/purchase/${pkg.id}`}>
+                  {t("payment.buyPackage")}
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </section>
   );
 }
 

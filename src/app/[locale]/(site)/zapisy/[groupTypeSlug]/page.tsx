@@ -4,7 +4,7 @@ import { and, eq, isNull, sql } from "drizzle-orm";
 
 import { buildMonthGrid, defaultMonth } from "@/features/bookings/calendar";
 import { listSessionAvailability } from "@/features/bookings/data";
-import { paymentOptionsFor } from "@/features/bookings/payment-options";
+import { paymentOptionsFor, type PackageTeaser } from "@/features/bookings/payment-options";
 import { EnrollmentFlow } from "@/features/bookings/components/enrollment-flow";
 import { resolveClientSession } from "@/features/client-auth/session";
 import { listAthletes } from "@/features/clients/data";
@@ -51,9 +51,9 @@ export default async function EnrollmentPage({
 
   const t = await getTranslations("enrollment");
 
-  const { groupType, hasActivePackages } = await withTenant(org.id, async (tx) => {
+  const { groupType, packages } = await withTenant(org.id, async (tx) => {
     const gt = await getGroupTypeBySlug(tx, org.id, groupTypeSlug);
-    let hasPkgs = true;
+    let pkgs: PackageTeaser[] = [];
 
     if (gt) {
       const [ct] = await tx
@@ -69,8 +69,14 @@ export default async function EnrollmentPage({
         .limit(1);
 
       if (ct) {
-        const [row] = await tx
-          .select({ count: sql<number>`count(*)::int` })
+        pkgs = await tx
+          .select({
+            id: productTemplate.id,
+            name: productTemplate.name,
+            price: productTemplate.price,
+            creditQuantity: productTemplate.creditQuantity,
+            billingType: productTemplate.billingType,
+          })
           .from(productTemplate)
           .where(
             and(
@@ -78,29 +84,38 @@ export default async function EnrollmentPage({
               eq(productTemplate.organizationId, org.id),
               eq(productTemplate.isActive, true),
             ),
-          )
-          .limit(1);
-        hasPkgs = (row?.count ?? 0) > 0;
+          );
       }
     }
 
-    return { groupType: gt ?? null, hasActivePackages: hasPkgs } as const;
+    return { groupType: gt ?? null, packages: pkgs } as const;
   });
   if (!groupType) notFound();
 
   const principal = await resolveClientSession(org.id);
   const recognized = principal?.isVerified ? principal : null;
 
-  // F11: online availability depends on the org's Stripe Connect status (§2.25).
-  // F12e: hasActivePackages tells paymentOptionsFor whether any active
-  // product_templates exist — drives no_packages_available vs packages_only.
   const paymentView = paymentOptionsFor(
     {
       paymentPolicy: groupType.paymentPolicy,
       allowedPurchaseModes: groupType.allowedPurchaseModes,
+      allowedBillingTypes: groupType.allowedBillingTypes,
     },
-    { onlineAvailable: org.stripeConnectChargesEnabled ?? false, hasActivePackages },
+    {
+      onlineAvailable: org.stripeConnectChargesEnabled ?? false,
+      packages,
+    },
   );
+
+  // Faza 19: log a warning when a package-only group type has no active templates
+  // (configuration error — the group type is "dead", parent sees no_packages_available).
+  if (paymentView.kind === "no_packages_available" && groupType.allowedPurchaseModes.includes("package")) {
+    const logger = await import("@/lib/logger").then((m) => m.createLogger("enrollment"));
+    logger.warn("package-only group type has no active product templates", {
+      groupTypeId: groupType.id,
+      groupTypeSlug,
+    });
+  }
 
   // The month the calendar shows. Package-only / none-available offers render no
   // calendar (see the flow), so the query only runs when there is something to book.

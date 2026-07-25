@@ -1070,9 +1070,14 @@
       "onSite": "Pay on site",
       "online": "Pay online",
       "onlineUnavailable": "Online payments are temporarily unavailable.",
+      "packages": "Available packages",
       "packagesOnly": "This offer is only available as a package purchase.",
       "noPackagesAvailable": "No packages are currently available — please contact the academy.",
-      "noneAvailable": "Online enrolment is temporarily unavailable — please contact the academy."
+      "noneAvailable": "Online enrolment is temporarily unavailable — please contact the academy.",
+      "creditsCount": "{count} credits",
+      "oneTime": "One-time",
+      "recurring": "Subscription",
+      "buyPackage": "Buy package"
     },
     "policy": {
       "heading": "Terms & Conditions",
@@ -1186,6 +1191,22 @@
       "policyViolation": "This package is not available for this group type's current policy.",
       "refundInitiated": "Refund initiated ({variant}). Funds will be returned after payment gateway confirmation.",
       "refundFailed": "Refund failed: {error}. Credits have been restored."
+    },
+    "invoice": {
+      "requested": "Invoice requested. The academy will issue it manually.",
+      "marked": "Invoice marked as issued.",
+      "request": "Request invoice",
+      "markIssued": "Mark as issued",
+      "invoiceNumber": "Invoice number",
+      "pendingListTitle": "Invoices to issue",
+      "issuedListTitle": "Issued invoices",
+      "client": "Client",
+      "amount": "Amount",
+      "package": "Package",
+      "requestedAt": "Requested",
+      "issuedAt": "Issued",
+      "noPending": "No pending invoices.",
+      "subtitle": "Manually mark credit purchase invoices as issued."
     }
   },
   "staffPanel": {

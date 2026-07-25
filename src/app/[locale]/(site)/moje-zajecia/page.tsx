@@ -4,6 +4,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { CancelMyBookingButton } from "@/features/bookings/components/cancel-my-booking-button";
 import { getActiveBookingsForClient } from "@/features/bookings/data";
 import { resolveClientSession } from "@/features/client-auth/session";
+import { RequestInvoiceButton } from "@/features/billing/components/request-invoice-button";
+import { listClientPurchases } from "@/features/billing/invoice-data";
 import { listAvailableCredits } from "@/features/credits/data";
 import { listGradesForClient, listProgressNotesForClient } from "@/features/grades/data";
 import { requireServedOrganization } from "@/features/organizations/served-org";
@@ -22,14 +24,15 @@ export default async function MyBookingsPage() {
     return <p>{t("errors.verifyFirst")}</p>;
   }
 
-  const [bookings, credits, grades, notes] = await withTenant(org.id, async (tx) => {
-    const [b, c, g, n] = await Promise.all([
+  const [bookings, credits, grades, notes, purchases] = await withTenant(org.id, async (tx) => {
+    const [b, c, g, n, p] = await Promise.all([
       getActiveBookingsForClient(tx, org.id, principal.clientId),
       listAvailableCredits(tx, org.id, principal.clientId),
       listGradesForClient(tx, org.id, principal.clientId),
       listProgressNotesForClient(tx, org.id, principal.clientId),
+      listClientPurchases(tx, org.id, principal.clientId),
     ]);
-    return [b, c, g, n] as const;
+    return [b, c, g, n, p] as const;
   });
 
   const formatWhen = new Intl.DateTimeFormat(locale, {
@@ -42,6 +45,11 @@ export default async function MyBookingsPage() {
     timeZone: org.timezone,
     dateStyle: "medium",
   });
+
+  const money = (minor: number) =>
+    new Intl.NumberFormat(locale, { style: "currency", currency: org.currency }).format(
+      minor / 100,
+    );
 
   const sourceLabels: Record<string, string> = {
     cancellation: t("source.cancellation"),
@@ -114,6 +122,36 @@ export default async function MyBookingsPage() {
                   <TableCell className="font-medium">{cr.creditTypeName}</TableCell>
                   <TableCell>{sourceLabels[cr.source] ?? cr.source}</TableCell>
                   <TableCell>{formatDate.format(cr.validUntil)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </section>
+      ) : null}
+
+      {purchases.length > 0 ? (
+        <section>
+          <h2 className="mb-3 text-lg font-medium">{tc("purchase.title")}</h2>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{tc("invoice.package")}</TableHead>
+                <TableHead>{tc("invoice.amount")}</TableHead>
+                <TableHead className="text-right">{tc("invoice.request")}</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {purchases.map((p) => (
+                <TableRow key={p.id}>
+                  <TableCell className="font-medium">{p.productTemplateName}</TableCell>
+                  <TableCell>{money(p.pricePaid)}</TableCell>
+                  <TableCell className="text-right">
+                    {p.invoiceRequestedAt ? (
+                      <span className="text-muted-foreground text-sm">{tc("invoice.requested")}</span>
+                    ) : (
+                      <RequestInvoiceButton purchaseId={p.id} />
+                    )}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

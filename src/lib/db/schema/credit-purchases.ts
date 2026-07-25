@@ -62,6 +62,16 @@ export const creditPurchase = pgTable(
     refundAmount: integer("refund_amount"),
     /** Who confirmed the cash refund. Null for online (webhook-driven). */
     refundConfirmedByUserId: text("refund_confirmed_by_user_id"),
+    // ── Faza 19 — Fakturowanie ręczne (EPIK 27) ──────────────────────
+    //
+    /** Moment the client requested an invoice for this purchase (EPIK 27, US-27.1). */
+    invoiceRequestedAt: timestamp("invoice_requested_at"),
+    /** Moment a staff member marked the invoice as issued (US-27.2/AC2). */
+    invoiceIssuedAt: timestamp("invoice_issued_at"),
+    /** Invoice number entered manually, for reference only. */
+    invoiceNumber: text("invoice_number"),
+    /** Who marked the invoice as issued. */
+    invoiceIssuedByUserId: text("invoice_issued_by_user_id"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (t) => [
@@ -90,6 +100,11 @@ export const creditPurchase = pgTable(
       columns: [t.refundConfirmedByUserId],
       foreignColumns: [user.id],
       name: "credit_purchase_refund_confirmed_by_fk",
+    }).onDelete("set null"),
+    foreignKey({
+      columns: [t.invoiceIssuedByUserId],
+      foreignColumns: [user.id],
+      name: "credit_purchase_invoice_issued_by_fk",
     }).onDelete("set null"),
     index("credit_purchase_org_idx").on(t.organizationId),
     index("credit_purchase_client_idx").on(t.clientId),

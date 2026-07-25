@@ -122,7 +122,11 @@ export type Permission =
   //
   /** Bypass trainer conflict in Schedule-First only. NEVER overrides capacity.
    * Owner+Admin only, per §2.10. Does NOT set `isManuallyAdjusted`. */
-  | "sessions.force_override";
+  | "sessions.force_override"
+  // ── Faza 19 — Fakturowanie ręczne (EPIK 27) ─────────────────────────
+  //
+  /** Mark a manually-issued invoice as settled (US-27.2/AC2). */
+  | "invoices.mark_issued";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -169,6 +173,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "refunds.issue",
     "trainer_availability.manage",
     "sessions.force_override",
+    "invoices.mark_issued",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -208,6 +213,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "refunds.issue",
     "trainer_availability.manage",
     "sessions.force_override",
+    "invoices.mark_issued",
   ],
   /**
    * The three langlion staff roles (§2.10).
@@ -244,6 +250,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
       "group_swap.approve",
       "credits.reassign_athlete",
       "refunds.issue",
+      "invoices.mark_issued",
     ],
   reception: [
     "organization.leave",
@@ -251,6 +258,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "credits.confirm_on_site",
     "bookings.cancel_reschedule",
     "credits.purchase_cash",
+    "invoices.mark_issued",
   ],
   trainer: [
     "organization.leave",

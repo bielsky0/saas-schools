@@ -20,12 +20,30 @@
  * checkout is F11, so no organisation can take a card yet. It is a parameter
  * rather than a hardcoded branch precisely so those phases change a call site and
  * not this logic.
+ *
+ * Faza 19 extends this with `allowedBillingTypes` and a package-teaser list.
+ * When the offer includes `package` mode AND packages exist, the view carries
+ * the filtered list of product templates the client may buy.
  */
+
+/**
+ * A minimal package teaser — what the enrollment form needs to render.
+ * Extended from `product_template` joined with `group_type`.
+ */
+export interface PackageTeaser {
+  id: string;
+  name: string;
+  price: number;
+  creditQuantity: number;
+  billingType: "one_time" | "recurring";
+}
 
 /** The subset of `group_type` this decision reads. */
 export interface OfferPaymentInput {
   paymentPolicy: "online" | "on_site" | "both";
   allowedPurchaseModes: readonly ("single_class" | "package")[];
+  /** Nullable for backward compat — F12 phases set it, earlier callers leave undefined. */
+  allowedBillingTypes?: readonly ("one_time" | "recurring")[] | null;
 }
 
 export type PaymentMethodView =
@@ -38,30 +56,58 @@ export type PaymentOptionsView =
   | { kind: "packages_only" }
   /** Only sold as a package, but no active templates exist (US-23.4/AC1, F12e). */
   | { kind: "no_packages_available" }
+  /**
+   * Both single_class and packages are available. The form shows two paths and
+   * the package list is filtered by allowedBillingTypes.
+   * Faza 19: replaces the old `packages_only` for mixed-mode offers.
+   */
+  | { kind: "mixed_mode"; packages: PackageTeaser[]; methods: PaymentMethodView[] }
+  /**
+   * Only sold as a package, packages exist, and are rendered inline.
+   * Faza 19: richer than the old `packages_only` notice — now carries the
+   * actual filtered package teasers.
+   */
+  | { kind: "packages_available"; packages: PackageTeaser[] }
   /** The policy allows only online, and online cannot be taken right now. */
   | { kind: "none_available" }
   | { kind: "options"; methods: PaymentMethodView[] };
 
 export function paymentOptionsFor(
   offer: OfferPaymentInput,
-  context: { onlineAvailable: boolean; hasActivePackages?: boolean },
+  context: {
+    onlineAvailable: boolean;
+    hasActivePackages?: boolean;
+    packages?: PackageTeaser[];
+  },
 ): PaymentOptionsView {
+  const hasSingleClass = offer.allowedPurchaseModes.includes("single_class");
+  const hasPackage = offer.allowedPurchaseModes.includes("package");
+  const packages = context.packages ?? [];
+  const hasActivePkgs = context.hasActivePackages !== false && packages.length > 0;
+
+  // ── Filter packages by allowedBillingTypes (US-23.3, Faza 19) ──────────
+  const filteredPackages = offer.allowedBillingTypes
+    ? packages.filter((p) => offer.allowedBillingTypes!.includes(p.billingType))
+    : packages;
+
+  const hasFilteredPkgs = filteredPackages.length > 0;
+
   /*
-   * Checked FIRST, and the order matters. An offer sold only as a package has no
-   * single-class price to charge by any method, so asking "which methods?" is the
-   * wrong question — answering it would render a payment picker for a purchase the
-   * parent cannot make (US-4.4/AC4).
-   *
-   * US-23.4/AC1 (F12e): when the group type is package-only but no active
-   * product_template exists, return no_packages_available instead — the parent
-   * must contact the academy. When hasActivePackages is undefined (caller did not
-   * provide the info), assume packages exist for backward compatibility.
+   * Package-only offer: no single-class path, but packages may exist.
+   * US-23.4/AC1 (F12e): no active templates at all → no_packages_available.
+   * Faza 19: when filtered packages exist, return packages_available with
+   * the actual teasers; when none survive billing-type filtering, still show
+   * no_packages_available (same message — two distinct causes, same UX for
+   * the parent; logged as warn server-side in the enrollment page).
    */
-  if (!offer.allowedPurchaseModes.includes("single_class")) {
-    if (context.hasActivePackages === false) {
+  if (!hasSingleClass) {
+    if (!hasActivePkgs) {
       return { kind: "no_packages_available" };
     }
-    return { kind: "packages_only" };
+    if (!hasFilteredPkgs) {
+      return { kind: "no_packages_available" };
+    }
+    return { kind: "packages_available", packages: filteredPackages };
   }
 
   const methods: PaymentMethodView[] = [];
@@ -80,6 +126,11 @@ export function paymentOptionsFor(
     );
   }
 
+  // Mixed-mode: both single_class and packages available.
+  if (hasPackage && hasFilteredPkgs) {
+    return { kind: "mixed_mode", packages: filteredPackages, methods };
+  }
+
   /*
    * An online-only offer with online switched off. Reachable in F5 for every such
    * offer, and NO acceptance criterion covered it — the spec assumed online would
@@ -95,11 +146,14 @@ export function paymentOptionsFor(
   return { kind: "options", methods };
 }
 
-/** Whether any booking at all can be made — the calendar and the submit hang off this. */
+/**
+ * Whether any booking at all can be made — the calendar and the submit hang off this.
+ * Faza 19: mixed_mode is also bookable (single-class path still works alongside packages).
+ */
 export function isBookable(
   view: PaymentOptionsView,
-): view is { kind: "options"; methods: PaymentMethodView[] } {
-  return view.kind === "options";
+): view is { kind: "options"; methods: PaymentMethodView[] } | { kind: "mixed_mode"; packages: PackageTeaser[]; methods: PaymentMethodView[] } {
+  return view.kind === "options" || view.kind === "mixed_mode";
 }
 
 /**
@@ -121,6 +175,7 @@ export function isMethodAcceptable(
   context: { onlineAvailable: boolean },
 ): boolean {
   const view = paymentOptionsFor(offer, context);
-  if (view.kind !== "options") return false;
-  return view.methods.some((entry) => entry.method === method && entry.enabled);
+  if (view.kind !== "options" && view.kind !== "mixed_mode") return false;
+  const methods = view.kind === "mixed_mode" ? view.methods : view.methods;
+  return methods.some((entry) => entry.method === method && entry.enabled);
 }
