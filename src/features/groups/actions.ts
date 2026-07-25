@@ -1,6 +1,6 @@
 "use server";
 
-import { and, eq, gte, isNull, sql } from "drizzle-orm";
+import { and, eq, gte, isNull, lte, or, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 
@@ -9,7 +9,7 @@ import { enqueueJob } from "@/features/jobs";
 import { requireOrgPermission } from "@/features/organizations/context";
 import { generateSessionsForRecurrence } from "@/features/schedule/generate";
 import { generateOccurrences } from "@/features/schedule/recurrence";
-import { classSession, creditType, groupType, groupTypeRecurrence, location, productTemplate } from "@/lib/db/schema";
+import { classSession, clientPriceOverride, clientSubscription, creditType, groupType, groupTypeRecurrence, location, productTemplate } from "@/lib/db/schema";
 import { withTenant, type TenantDb } from "@/lib/db/tenant";
 import {
   SQLSTATE_EXCLUSION_VIOLATION,
@@ -245,6 +245,46 @@ export async function updateGroupTypeAction(
         .update(groupType)
         .set({ ...after, updatedAt: new Date() })
         .where(and(eq(groupType.id, groupTypeId), eq(groupType.organizationId, ctx.org.id)));
+
+      // Faza 21: when catalog price changes, enqueue subscription price sync
+      // for clients with active percent_discount overrides on this group_type.
+      if (before.price !== parsed.data.price) {
+        const affected = await tx
+          .selectDistinct({
+            clientId: clientPriceOverride.clientId,
+          })
+          .from(clientPriceOverride)
+          .innerJoin(
+            clientSubscription,
+            and(
+              eq(clientSubscription.clientId, clientPriceOverride.clientId),
+              eq(clientSubscription.organizationId, ctx.org.id),
+              eq(clientSubscription.status, "active"),
+            ),
+          )
+          .where(
+            and(
+              eq(clientPriceOverride.organizationId, ctx.org.id),
+              eq(clientPriceOverride.isActive, true),
+              eq(clientPriceOverride.overrideType, "percent_discount"),
+              lte(clientPriceOverride.validFrom, sql`now()::date`),
+              or(
+                isNull(clientPriceOverride.validUntil),
+                gte(clientPriceOverride.validUntil, sql`now()::date`),
+              ),
+              or(
+                eq(clientPriceOverride.groupTypeId, groupTypeId),
+                isNull(clientPriceOverride.groupTypeId),
+              ),
+            ),
+          );
+        for (const row of affected) {
+          await enqueueJob(tx, "pricing.sync_subscription_price", {
+            organizationId: ctx.org.id,
+            clientId: row.clientId,
+          });
+        }
+      }
 
       // US-23.4 AC2 (F12e): ostrzeżenie gdy `package` włączone, brak aktywnego template.
       let pkgWarning: string | undefined;

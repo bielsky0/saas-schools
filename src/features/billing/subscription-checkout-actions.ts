@@ -7,6 +7,7 @@ import { resolveClientSession } from "@/features/client-auth/session";
 import { requireServedOrganization } from "@/features/organizations/served-org";
 import { assertConnectActive } from "@/features/billing/checkout";
 import { startConnectSubscriptionCheckout } from "@/features/billing/connect-checkout";
+import { findActiveOverride, resolveClientPrice } from "@/features/pricing/resolve";
 import { withTenant } from "@/lib/db/tenant";
 import { client, creditType, groupType, productTemplate } from "@/lib/db/schema";
 import type { FormState } from "@/lib/validation";
@@ -73,11 +74,13 @@ export async function checkoutSubscriptionAction(
 
     // US-23.6 AC2/AC3: sprawdź politykę grupy (F12e).
     let policy: { allowedPurchaseModes: readonly string[]; allowedBillingTypes: readonly string[] | null } | null = null;
+    let resolvedGroupTypeId: string | null = null;
     if (tmpl) {
       const [p] = await tx
         .select({
           allowedPurchaseModes: groupType.allowedPurchaseModes,
           allowedBillingTypes: groupType.allowedBillingTypes,
+          groupTypeId: groupType.id,
         })
         .from(groupType)
         .innerJoin(creditType, eq(creditType.groupTypeId, groupType.id))
@@ -90,12 +93,21 @@ export async function checkoutSubscriptionAction(
         )
         .limit(1);
       policy = p ?? null;
+      if (p) resolvedGroupTypeId = p.groupTypeId;
     }
 
-    return { tmpl: tmpl ?? null, parent: parent ?? null, policy } as const;
+    const override = resolvedGroupTypeId
+      ? await findActiveOverride(tx, principal.clientId, resolvedGroupTypeId)
+      : null;
+    const resolvedPrice = override
+      ? await resolveClientPrice(tx, principal.clientId, resolvedGroupTypeId!, tmpl!.price)
+      : tmpl?.price ?? 0;
+    const usePriceData = override !== null;
+
+    return { tmpl: tmpl ?? null, parent: parent ?? null, policy, resolvedPrice, usePriceData } as const;
   });
 
-  const { tmpl, parent, policy } = results;
+  const { tmpl, parent, policy, resolvedPrice, usePriceData } = results;
 
   if (!tmpl) {
     return { error: "Package not found" };
@@ -127,10 +139,10 @@ export async function checkoutSubscriptionAction(
     tmpl.creditTypeId,
     tmpl.id,
     tmpl.creditQuantity,
-    tmpl.price,
+    usePriceData ? resolvedPrice : tmpl.price,
     org.currency,
     org.stripeConnectAccountId,
-    tmpl.stripePriceId ?? null,
+    usePriceData ? null : (tmpl.stripePriceId ?? null),
     tmpl.interval,
     tmpl.intervalCount ?? 1,
   );

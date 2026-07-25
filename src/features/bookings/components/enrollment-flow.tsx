@@ -39,6 +39,7 @@ export interface EnrollmentFlowProps {
   groupTypeSlug: string;
   groupTypeName: string;
   price: number;
+  discountedPrice?: number;
   currency: string;
   isNewClientOnly: boolean;
   paymentView: PaymentOptionsView;
@@ -111,6 +112,7 @@ export function EnrollmentFlow(props: EnrollmentFlowProps) {
 function Bookable({
   groupTypeSlug,
   price,
+  discountedPrice,
   isNewClientOnly,
   paymentView,
   month,
@@ -162,7 +164,18 @@ function Bookable({
 
   return (
     <div className="mt-6 space-y-6">
-      <p className="text-lg font-medium">{t("offer.price", { price: money(price) })}</p>
+      <p className="text-lg font-medium">
+        {discountedPrice != null && discountedPrice !== price ? (
+          <>
+            <span className="text-muted-foreground line-through mr-2">
+              {t("offer.price", { price: money(price) })}
+            </span>
+            <span className="text-green-700">{money(discountedPrice)}</span>
+          </>
+        ) : (
+          t("offer.price", { price: money(price) })
+        )}
+      </p>
       {isNewClientOnly ? <Badge variant="outline">{t("offer.newClientOnly")}</Badge> : null}
 
       {/* Step 2/3 — the calendar and the day's slots. */}

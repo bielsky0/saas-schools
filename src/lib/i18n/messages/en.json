@@ -1363,5 +1363,22 @@
       "ip": "IP address",
       "empty": "No acceptances yet."
     }
+  },
+  "pricing": {
+    "errors": {
+      "generic": "An error occurred.",
+      "clientNotFound": "Client not found.",
+      "groupTypeNotFound": "Group type not found.",
+      "overrideNotFound": "Price override not found."
+    },
+    "granted": "Price override granted.",
+    "deactivated": "Price override deactivated.",
+    "validation": {
+      "clientRequired": "Select a client.",
+      "valueInvalid": "Enter a valid value.",
+      "validFromRequired": "Select a start date.",
+      "reasonRequired": "A reason is required.",
+      "overrideIdRequired": "Override ID is required."
+    }
   }
 }

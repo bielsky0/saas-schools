@@ -9,6 +9,7 @@ import { sessionsGenerateHandler } from "@/features/schedule/generate";
 import { storagePurgeHandler } from "@/features/storage/purge";
 import { groupChangesExpireHandler } from "@/features/bookings/change-group-expire";
 import { refundsRecoverHandler } from "@/features/credits/refund-recover";
+import { pricingSyncSubscriptionHandler, pricingDeactivateExpiredHandler } from "@/features/pricing/handler";
 import { jobPruneHandler } from "./handler";
 
 /**
@@ -37,4 +38,6 @@ export const registry: JobRegistry = {
   "credits.expire": creditsExpireHandler,
   "group_changes.expire": groupChangesExpireHandler,
   "refunds.recover": refundsRecoverHandler,
+  "pricing.sync_subscription_price": pricingSyncSubscriptionHandler,
+  "pricing.deactivate_expired_overrides": pricingDeactivateExpiredHandler,
 };

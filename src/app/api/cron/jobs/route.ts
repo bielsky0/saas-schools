@@ -103,6 +103,16 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
    * are genuinely stuck, not ones still in-flight.
    */
   await jobs.enqueue(db, "refunds.recover", {}, { dedupeKey: `refunds.recover:${thisHour}` });
+  /*
+   * Client price override expiry (Faza 21, EPIK 33). Daily.
+   *
+   * Deactivates overrides whose valid_until is in the past and enqueues
+   * subscription price syncs for affected clients with active subscriptions.
+   * Same daily dedupe pattern as credits.expire.
+   */
+  await jobs.enqueue(db, "pricing.deactivate_expired_overrides", {}, {
+    dedupeKey: `pricing.deactivate_expired_overrides:${today}`,
+  });
 
   const result = await jobs.drain(registry, { budgetMs: BATCH_BUDGET_MS });
   const stats = await jobStats();

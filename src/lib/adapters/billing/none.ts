@@ -71,6 +71,16 @@ export const noneBillingAdapter: BillingAdapter = {
     return { ok: false, code: "NOT_CONFIGURED" };
   },
 
+  // ── Faza 21 — Indywidualne ceny klienta (EPIK 33, §2.31) ──────────────
+
+  async resolveConnectSubscriptionItem(): Promise<{ ok: false; code: "NOT_CONFIGURED" }> {
+    return { ok: false, code: "NOT_CONFIGURED" };
+  },
+
+  async updateConnectSubscriptionItemPrice(): Promise<void> {
+    // No-op: no payment provider configured.
+  },
+
   // ── Faza 16 — Zwroty fiducjarne (EPIK 18) ─────────────────────────────
 
   async createConnectRefund(): Promise<{ ok: false; code: "NOT_CONFIGURED" }> {

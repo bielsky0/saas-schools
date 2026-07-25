@@ -6,6 +6,7 @@ import { getTranslations } from "next-intl/server";
 import { resolveClientSession } from "@/features/client-auth/session";
 import { getGroupTypeBySlug } from "@/features/groups/data";
 import { getActivePolicyForGroupType } from "@/features/policies/data";
+import { resolveClientPrice } from "@/features/pricing/resolve";
 import { requireServedOrganization } from "@/features/organizations/served-org";
 import { withTenant } from "@/lib/db/tenant";
 import type { FormState } from "@/lib/validation";
@@ -86,19 +87,26 @@ export async function createBookingAction(
       const gt = await getGroupTypeBySlug(tx, org.id, parsed.data.groupTypeSlug);
       if (!gt) throw new UnknownSessionError(parsed.data.groupTypeSlug);
 
-      const policyDoc = gt.policyDocumentId
-        ? await getActivePolicyForGroupType(tx, org.id, gt.id)
-        : null;
-      const acceptedPolicyVersion = parsed.data.acceptedPolicyVersion;
+        const policyDoc = gt.policyDocumentId
+          ? await getActivePolicyForGroupType(tx, org.id, gt.id)
+          : null;
+        const acceptedPolicyVersion = parsed.data.acceptedPolicyVersion;
 
-      return createBooking(tx, {
-        organizationId: org.id,
-        groupType: {
-          id: gt.id,
-          price: gt.price,
-          paymentPolicy: gt.paymentPolicy,
-          allowedPurchaseModes: gt.allowedPurchaseModes,
-        },
+        const resolvedPrice = await resolveClientPrice(
+          tx,
+          principal.clientId,
+          gt.id,
+          gt.price,
+        );
+
+        return createBooking(tx, {
+          organizationId: org.id,
+          groupType: {
+            id: gt.id,
+            price: resolvedPrice,
+            paymentPolicy: gt.paymentPolicy,
+            allowedPurchaseModes: gt.allowedPurchaseModes,
+          },
         currency: org.currency,
         client: { id: principal.clientId, email: principal.email },
         sessionId: parsed.data.sessionId,

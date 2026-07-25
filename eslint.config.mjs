@@ -204,6 +204,7 @@ const eslintConfig = defineConfig([
       "src/features/billing/connect-webhooks.ts",
       "src/features/credits/expire.ts",
       "src/features/bookings/change-group-expire.ts",
+      "src/features/pricing/handler.ts",
     ],
     rules: {
       "no-restricted-imports": [

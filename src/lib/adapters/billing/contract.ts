@@ -503,6 +503,35 @@ export interface BillingAdapter {
    */
   createConnectPortalSession(input: PortalSessionInput): Promise<BillingRedirectResult>;
 
+  // ── F21 — Indywidualne ceny klienta (EPIK 33, §2.31) ══════════════════
+
+  /**
+   * Resolve the first subscription item id (si_xxx) for a Connect subscription.
+   *
+   * Called by the pricing.sync_subscription_price job when the cached
+   * stripeSubscriptionItemId is null on client_subscription. A Stripe
+   * subscription created via checkout always has exactly one item.
+   */
+  resolveConnectSubscriptionItem(
+    input: ResolveConnectSubscriptionItemInput,
+  ): Promise<ResolveConnectSubscriptionItemResult>;
+
+  /**
+   * Update a subscription item's price on a Connected Account using ad-hoc
+   * price_data with proration_behavior: none (Rozstrzygnięcie #20).
+   *
+   * Called by the pricing.sync_subscription_price job when a client's price
+   * override changes. The subscription item is the individual line item on
+   * the Stripe subscription that corresponds to this client's package.
+   *
+   * Proration is deliberately disabled: a mid-cycle override should not
+   * generate a prorated credit or charge on the next invoice — the new
+   * price applies to the NEXT full cycle only.
+   */
+  updateConnectSubscriptionItemPrice(
+    input: UpdateSubscriptionItemPriceInput,
+  ): Promise<void>;
+
   // ── Faza 16 — Zwroty fiducjarne (EPIK 18) ─────────────────────────────
 
   /**
@@ -526,6 +555,28 @@ export interface BillingAdapter {
     sessionId: string,
     accountId: string,
   ): Promise<{ ok: true; paymentIntentId: string } | { ok: false; code: BillingResolutionErrorCode }>;
+}
+
+export interface ResolveConnectSubscriptionItemInput {
+  subscriptionId: string;
+  accountId: string;
+}
+
+export type ResolveConnectSubscriptionItemResult =
+  | { ok: true; subscriptionItemId: string }
+  | { ok: false; code: BillingResolutionErrorCode };
+
+export interface UpdateSubscriptionItemPriceInput {
+  /** The org's Stripe Connect account id (acct_xxx). */
+  accountId: string;
+  /** The Stripe subscription item id (si_xxx) on the Connected Account. */
+  subscriptionItemId: string;
+  /** The new amount in minor units (after override). */
+  amount: number;
+  /** ISO 4217 currency, lowercase. */
+  currency: string;
+  /** Product name for the ad-hoc price_data. */
+  productName: string;
 }
 
 export interface ConnectRefundInput {

@@ -64,7 +64,9 @@ export type JobName =
   | "sessions.generate"
   | "credits.expire"
   | "group_changes.expire"
-  | "refunds.recover";
+  | "refunds.recover"
+  | "pricing.sync_subscription_price"
+  | "pricing.deactivate_expired_overrides";
 
 /**
  * `email.send`'s `template` is `string`, not the email adapter's `TemplateName`:
@@ -188,6 +190,27 @@ export interface JobPayloads {
    * Idempotency key on the Stripe call guarantees safety against double refund.
    */
   "refunds.recover": Record<string, never>;
+  /**
+   * F21 / EPIK 33 — synchronize a client's subscription price on the Connected
+   * Account after a price override change.
+   *
+   * Triggered by: (a) grant/update of client_price_override, (b) change to
+   * group_type.price / product_template.price for clients with active
+   * percent_discount, (c) cron deactivation of expired overrides.
+   *
+   * Uses price_data with proration_behavior: none (Rozstrzygnięcie #20).
+   */
+  "pricing.sync_subscription_price": {
+    organizationId: string;
+    clientId: string;
+  };
+  /**
+   * F21 / EPIK 33 — scheduled cron that deactivates expired client_price_override
+   * rows and enqueues sync jobs for any affected active subscriptions.
+   *
+   * Runs daily via /api/cron/jobs. No payload — the handler scans all tenants.
+   */
+  "pricing.deactivate_expired_overrides": Record<string, never>;
 }
 
 export interface EnqueueOptions {

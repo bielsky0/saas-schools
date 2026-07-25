@@ -295,6 +295,27 @@
       "when": 1785500000000,
       "tag": "0041_rls_trainer_rate",
       "breakpoints": true
+    },
+    {
+      "idx": 42,
+      "version": "7",
+      "when": 1785600000000,
+      "tag": "0042_thankful_carlie_cooper",
+      "breakpoints": true
+    },
+    {
+      "idx": 43,
+      "version": "7",
+      "when": 1785600000100,
+      "tag": "0043_rls_client_price_override",
+      "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1784995668955,
+      "tag": "0044_faza21_subscription_item",
+      "breakpoints": true
     }
   ]
 }

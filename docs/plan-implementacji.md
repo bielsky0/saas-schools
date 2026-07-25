@@ -40,7 +40,7 @@ Ten plik jest nadal **jedynym trwałym źródłem prawdy o planie i postępie** 
 | Faza 18 — Silniki Availability-First i Slot-First + Force Override               | [docs/plan/faza-18.md](plan/faza-18.md)                                       | ✅ zakończona (2026-07-25) |
 | Faza 19 — Warunkowe UI formularza + fakturowanie ręczne                          | [docs/plan/faza-19.md](plan/faza-19.md)                                       | ✅ zakończona (2026-07-25) |
 | Faza 20 — Wynagrodzenia trenerów, wyłącznie informacyjne (EPIK 32, v15)          | [docs/plan/faza-20.md](plan/faza-20.md)                                       | ✅ zakończona (2026-07-25) |
-| Faza 21 — Indywidualne ceny klienta (EPIK 33, v15)                               | [docs/plan/faza-21.md](plan/faza-21.md)                                       |
+| Faza 21 — Indywidualne ceny klienta (EPIK 33, v15)                               | [docs/plan/faza-21.md](plan/faza-21.md)                                       | ✅ zakończona (2026-07-25) |
 | Fazy 22–25 — poprawki konkurencyjne (spec v17)                                   | [docs/plan/faza-22-25.md](plan/faza-22-25.md)                                 |
 | Fazy 26–28 — dalsze poprawki konkurencyjne (spec v18)                            | [docs/plan/faza-26-28.md](plan/faza-26-28.md)                                 |
 | Faza 29 (29a, 29b) — Hasło klienta jako alternatywna metoda logowania (spec v19) | [docs/plan/faza-29.md](plan/faza-29.md)                                       |

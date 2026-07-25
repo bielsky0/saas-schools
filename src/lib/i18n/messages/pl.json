@@ -1363,5 +1363,22 @@
       "ip": "Adres IP",
       "empty": "Brak akceptacji."
     }
+  },
+  "pricing": {
+    "errors": {
+      "generic": "Wystąpił błąd.",
+      "clientNotFound": "Nie znaleziono klienta.",
+      "groupTypeNotFound": "Nie znaleziono typu grupy.",
+      "overrideNotFound": "Nie znaleziono nadpisania ceny."
+    },
+    "granted": "Rabat przyznany.",
+    "deactivated": "Rabat dezaktywowany.",
+    "validation": {
+      "clientRequired": "Wybierz klienta.",
+      "valueInvalid": "Podaj prawidłową wartość.",
+      "validFromRequired": "Wybierz datę rozpoczęcia.",
+      "reasonRequired": "Powód jest wymagany.",
+      "overrideIdRequired": "ID nadpisania jest wymagane."
+    }
   }
 }

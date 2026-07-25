@@ -1,6 +1,6 @@
 ### Faza 21 — Indywidualne ceny klienta (EPIK 33, v15)
 
-**Status:** nierozpoczęta
+**Status:** ✅ zakończona (2026-07-25)
 **Cel:** admin przyznaje wynegocjowany rabat konkretnemu klientowi; rabat stosuje się automatycznie i jest widoczny przed zapłatą.
 **Pokrywa:** EPIK 33; §2.31; US-4.2/AC4–AC6; §2.10 (uprawnienie `client_price_override.manage`); Constraint 9 (§1.3).
 **Zależności:** **F5** (ścieżka wyliczania `booking.price_snapshot` dla pojedynczych zajęć) oraz **F12** (pakiety i subskrypcje — rabat obejmuje `product_template.price`, w tym `billing_type=recurring`). Pośrednio F3 (encja `client`).

@@ -39,6 +39,9 @@ export const clientSubscription = pgTable(
     productTemplateId: text("product_template_id").notNull(),
     /** The Stripe subscription id (sub_xxx) on the Connected Account. UNIQUE for idempotency. */
     stripeSubscriptionId: text("stripe_subscription_id").notNull().unique(),
+    /** The Stripe subscription item id (si_xxx). Resolved on first invoice.paid;
+     *  cached here so sync jobs don't need an extra Stripe API call. Faza 21. */
+    stripeSubscriptionItemId: text("stripe_subscription_item_id"),
     /** Current lifecycle state. */
     status: text("status")
       .$type<"active" | "past_due" | "canceled">()

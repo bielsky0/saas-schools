@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { and, eq, isNull, sql } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 
 import { buildMonthGrid, defaultMonth } from "@/features/bookings/calendar";
 import { listSessionAvailability } from "@/features/bookings/data";
@@ -10,6 +10,7 @@ import { resolveClientSession } from "@/features/client-auth/session";
 import { listAthletes } from "@/features/clients/data";
 import { getGroupTypeBySlug } from "@/features/groups/data";
 import { getActivePolicyForGroupType, getLatestAcceptanceForClientGroupType } from "@/features/policies/data";
+import { resolveClientPrice } from "@/features/pricing/resolve";
 import { requireServedOrganization } from "@/features/organizations/served-org";
 import { creditType, productTemplate } from "@/lib/db/schema";
 import { withTenant } from "@/lib/db/tenant";
@@ -95,6 +96,13 @@ export default async function EnrollmentPage({
   const principal = await resolveClientSession(org.id);
   const recognized = principal?.isVerified ? principal : null;
 
+  // Faza 21: resolve individual client price if recognized and verified.
+  const discountedPrice = recognized
+    ? await withTenant(org.id, (tx) =>
+        resolveClientPrice(tx, recognized.clientId, groupType.id, groupType.price),
+      )
+    : null;
+
   const paymentView = paymentOptionsFor(
     {
       paymentPolicy: groupType.paymentPolicy,
@@ -176,6 +184,7 @@ export default async function EnrollmentPage({
         groupTypeSlug={groupTypeSlug}
         groupTypeName={groupType.name}
         price={groupType.price}
+        discountedPrice={discountedPrice ?? undefined}
         currency={org.currency}
         isNewClientOnly={groupType.isNewClientOnly}
         paymentView={paymentView}

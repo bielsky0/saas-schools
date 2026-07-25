@@ -23,6 +23,9 @@ import type {
   CreateCustomerInput,
   CreateCustomerResult,
   PortalSessionInput,
+  ResolveConnectSubscriptionItemInput,
+  ResolveConnectSubscriptionItemResult,
+  UpdateSubscriptionItemPriceInput,
   VerifyConnectWebhookResult,
   VerifyWebhookResult,
 } from "./contract";
@@ -637,6 +640,63 @@ export function createStripeBillingAdapter(): BillingAdapter {
       } catch (err) {
         return providerError("createConnectPortalSession", err);
       }
+    },
+
+    // ── Faza 21 — Indywidualne ceny klienta (EPIK 33, §2.31) ──────────────
+
+    async resolveConnectSubscriptionItem(
+      input: ResolveConnectSubscriptionItemInput,
+    ): Promise<ResolveConnectSubscriptionItemResult> {
+      try {
+        const subscription = await stripe.subscriptions.retrieve(
+          input.subscriptionId,
+          { expand: ["items"] },
+          { stripeAccount: input.accountId },
+        );
+        const item = subscription.items.data[0];
+        if (!item) {
+          return { ok: false, code: "NOT_FOUND" };
+        }
+        return { ok: true, subscriptionItemId: item.id };
+      } catch (err) {
+        return providerError("resolveConnectSubscriptionItem", err);
+      }
+    },
+
+    async updateConnectSubscriptionItemPrice(
+      input: UpdateSubscriptionItemPriceInput,
+    ): Promise<void> {
+      const item = await stripe.subscriptionItems.retrieve(
+        input.subscriptionItemId,
+        { expand: ["price"] },
+        { stripeAccount: input.accountId },
+      );
+      const price = item.price as {
+        id: string;
+        product: string | { id: string };
+        recurring: { interval: "day" | "week" | "month" | "year"; interval_count?: number } | null;
+        unit_amount: number | null;
+        currency: string;
+      };
+      const productId =
+        typeof price.product === "string" ? price.product : price.product.id;
+
+      await stripe.subscriptionItems.update(
+        input.subscriptionItemId,
+        {
+          price_data: {
+            currency: input.currency,
+            product: productId,
+            unit_amount: input.amount,
+            recurring: {
+              interval: price.recurring?.interval ?? "month",
+              interval_count: price.recurring?.interval_count ?? 1,
+            },
+          },
+          proration_behavior: "none",
+        },
+        { stripeAccount: input.accountId },
+      );
     },
 
     // ── Faza 16 — Zwroty fiducjarne (EPIK 18) ─────────────────────────────

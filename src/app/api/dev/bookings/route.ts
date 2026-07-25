@@ -15,6 +15,7 @@ import {
 import { ACTIVE_BOOKING_FILTER } from "@/features/bookings/data";
 import { getGroupType } from "@/features/groups/data";
 import { getClient } from "@/features/clients/data";
+import { resolveClientPrice } from "@/features/pricing/resolve";
 import { getOrgById } from "@/features/organizations/data";
 import { booking, classSession } from "@/lib/db/schema";
 import { withTenant } from "@/lib/db/tenant";
@@ -127,11 +128,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           ? { id: body.policyDocumentId, version: body.policyDocumentVersion ?? 1 }
           : undefined;
 
+        const resolvedPrice = await resolveClientPrice(
+          tx,
+          client.id,
+          groupType.id,
+          groupType.price,
+        );
+
         return createBooking(tx, {
           organizationId,
           groupType: {
             id: groupType.id,
-            price: groupType.price,
+            price: resolvedPrice,
             paymentPolicy: groupType.paymentPolicy,
             allowedPurchaseModes: groupType.allowedPurchaseModes,
           },

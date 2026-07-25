@@ -275,6 +275,13 @@ export const AUDIT_ACTIONS = [
   // F20 / EPIK 32 — Trainer rates
   "trainer_rate.created",
   "trainer_rate.deleted",
+  // F21 / EPIK 33 — Individual client pricing (§2.31)
+  //
+  // Logged on every grant AND revoke, with the mandatory `reason` in metadata.
+  // A grant creates value out of nothing on one person's say-so (same as
+  // `credit.grant`) — the mandatory reason is what makes it answerable.
+  "client_price_override.grant",
+  "client_price_override.revoke",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];

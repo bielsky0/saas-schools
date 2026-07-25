@@ -134,7 +134,13 @@ export type Permission =
   | "trainer_rates.manage"
   /** View the earnings report (§2.30). Owner+Admin see all; Trainer sees
    * own data only, enforced on the backend regardless of UI. */
-  | "trainer_earnings.view";
+  | "trainer_earnings.view"
+  // ── Faza 21 — Indywidualne ceny klienta (EPIK 33, §2.31) ────────────
+  //
+  /** Grant/revoke individual client price overrides. Owner+Admin only, and
+   * paired in the action with a REQUIRED reason — same pattern as
+   * `credits.manual_grant` (§2.10). */
+  | "client_price_override.manage";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -184,6 +190,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "invoices.mark_issued",
     "trainer_rates.manage",
     "trainer_earnings.view",
+    "client_price_override.manage",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -226,6 +233,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "invoices.mark_issued",
     "trainer_rates.manage",
     "trainer_earnings.view",
+    "client_price_override.manage",
   ],
   /**
    * The three langlion staff roles (§2.10).
