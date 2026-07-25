@@ -567,6 +567,7 @@ export type LanglionState = {
     locationId: string | null;
     trainerId: string | null;
     isManuallyAdjusted: boolean;
+    forceOverride: boolean;
     generatedFromRecurrenceId: string | null;
   }[];
 };

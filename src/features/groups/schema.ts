@@ -68,11 +68,17 @@ export function createGroupTypeSchema(t: ValidationTranslator) {
       policyDocumentId: z.string().optional(),
       allowedPurchaseModes: z.array(purchaseMode).min(1, t("purchaseModesRequired")),
       allowedBillingTypes: z.array(billingType).optional(),
+      defaultDurationMinutes: z.coerce.number().int().positive(t("defaultDurationInvalid")).optional(),
+      defaultCapacity: z.coerce.number().int().positive(t("defaultCapacityInvalid")).optional(),
     })
     .refine(
       (v) =>
         !v.allowedPurchaseModes.includes("package") || (v.allowedBillingTypes?.length ?? 0) > 0,
       { message: t("billingTypesRequired"), path: ["allowedBillingTypes"] },
+    )
+    .refine(
+      (v) => v.engine !== "slot_first" || (v.defaultCapacity ?? 1) <= 1,
+      { message: t("slotFirstCapacityMax1"), path: ["defaultCapacity"] },
     );
 }
 

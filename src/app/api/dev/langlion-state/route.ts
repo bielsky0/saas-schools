@@ -90,6 +90,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         locationId: classSession.locationId,
         trainerId: classSession.trainerId,
         isManuallyAdjusted: classSession.isManuallyAdjusted,
+        forceOverride: classSession.forceOverride,
         generatedFromRecurrenceId: classSession.generatedFromRecurrenceId,
       })
       .from(classSession)

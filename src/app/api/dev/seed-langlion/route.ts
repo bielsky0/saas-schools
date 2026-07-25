@@ -61,6 +61,9 @@ type Body = {
     slug: string;
     name?: string;
     price?: number;
+    engine?: string;
+    defaultCapacity?: number;
+    defaultDurationMinutes?: number;
     description?: string;
     paymentPolicy?: "online" | "on_site" | "both";
     allowedPurchaseModes?: ("single_class" | "package")[];
@@ -154,7 +157,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             name: body.groupType.name ?? "E2E Group",
             slug: body.groupType.slug,
             description: body.groupType.description ?? null,
-            engine: "schedule_first",
+            engine: (body.groupType.engine ?? "schedule_first") as "schedule_first" | "availability_first" | "slot_first",
+            defaultCapacity: body.groupType.defaultCapacity ?? null,
+            defaultDurationMinutes: body.groupType.defaultDurationMinutes ?? null,
             paymentPolicy: body.groupType.paymentPolicy ?? "both",
             price: body.groupType.price ?? 10_000,
             allowedPurchaseModes: body.groupType.allowedPurchaseModes ?? ["single_class"],

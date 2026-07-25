@@ -1,6 +1,6 @@
 ### Faza 18 — Silniki Availability-First i Slot-First + Force Override
 
-**Status:** nierozpoczęta
+**Status:** ✅ zakończona (2026-07-25)
 **Cel:** pozostałe dwa silniki rezerwacji + kontrolowane wymuszanie konfliktu trenera.
 **Pokrywa:** §2.1 (AF/SF), §2.32 (wpięcie dostępności), EPIK 14.5, EPIK 34 (US-34.2/34.3/34.4 — konsumpcja slotów w silnikach); spec §5 pkt 16–17.
 **Zależności:** F5 (ścieżka rezerwacji), F2 (definicje), **F17.5 (warstwa dostępności + kolumny `group_type.default_*`)**.

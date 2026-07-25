@@ -117,7 +117,12 @@ export type Permission =
   // ── Faza 17.5 — Dyspozycyjność trenerów (EPIK 34) ────────────────────
   //
   /** Manage trainer availability windows (owner, admin, or trainer own only). */
-  | "trainer_availability.manage";
+  | "trainer_availability.manage"
+  // ── Faza 18 — Force Override (EPIK 14.5) ─────────────────────────────
+  //
+  /** Bypass trainer conflict in Schedule-First only. NEVER overrides capacity.
+   * Owner+Admin only, per §2.10. Does NOT set `isManuallyAdjusted`. */
+  | "sessions.force_override";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -163,6 +168,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "credits.reassign_athlete",
     "refunds.issue",
     "trainer_availability.manage",
+    "sessions.force_override",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -201,6 +207,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "credits.reassign_athlete",
     "refunds.issue",
     "trainer_availability.manage",
+    "sessions.force_override",
   ],
   /**
    * The three langlion staff roles (§2.10).

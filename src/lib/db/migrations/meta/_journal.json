@@ -267,6 +267,13 @@
       "when": 1785200000100,
       "tag": "0037_rls_trainer_availability",
       "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1785300000000,
+      "tag": "0038_faza18_force_override",
+      "breakpoints": true
     }
   ]
 }

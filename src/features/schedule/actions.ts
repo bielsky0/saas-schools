@@ -1,13 +1,14 @@
 "use server";
 
-import { and, eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 
 import { changed, recordAudit, resolveActor, withImpersonation } from "@/features/admin/audit";
 import { requireOrgPermission } from "@/features/organizations/context";
-import { classSession, location } from "@/lib/db/schema";
-import { withTenant } from "@/lib/db/tenant";
+import { hasPermission } from "@/features/rbac";
+import { groupType as groupTypeTable, classSession, location } from "@/lib/db/schema";
+import { withTenant, type TenantDb } from "@/lib/db/tenant";
 import { SQLSTATE_EXCLUSION_VIOLATION, sqlStateOf } from "@/lib/db/sql-error";
 import { wallClockToInstant } from "@/lib/datetime";
 import type { FormState } from "@/lib/validation";
@@ -16,7 +17,7 @@ import {
   SessionNotFoundError as CancelSessionNotFoundError,
   cancelClassSession,
 } from "./cancel-session";
-import { updateSessionSchema } from "./schema";
+import { createSessionSchema, updateSessionSchema } from "./schema";
 import { massReassignTrainer } from "./mass-reassign-trainer";
 import {
   MassMoveDifferentGroupTypeError,
@@ -102,79 +103,87 @@ export async function updateSessionAction(
   const movedInTimeOrSpace =
     parsed.data.startTime !== undefined || parsed.data.locationId !== undefined;
 
-  let outcome: "ok" | "not-found" | "trainer-conflict";
-  try {
-    outcome = await withTenant(ctx.org.id, async (tx) => {
-      // FOR UPDATE, same lock the pattern edit takes (§3.4/AC6) and the same one
-      // booking creation will take in F5. One row, one queue — an admin moving a
-      // session and a parent booking it serialise rather than interleave.
-      const [before] = await tx
-        .select()
-        .from(classSession)
-        .where(and(eq(classSession.id, sessionId), eq(classSession.organizationId, ctx.org.id)))
-        .limit(1)
-        .for("update");
-      if (!before) return "not-found" as const;
+  const doUpdate = async (tx: TenantDb, forceOverride: boolean) => {
+    const [before] = await tx
+      .select()
+      .from(classSession)
+      .where(and(eq(classSession.id, sessionId), eq(classSession.organizationId, ctx.org.id)))
+      .limit(1)
+      .for("update");
+    if (!before) return "not-found" as const;
 
-      if (parsed.data.locationId) {
-        const [row] = await tx
-          .select({ id: location.id })
-          .from(location)
-          .where(
-            and(eq(location.id, parsed.data.locationId), eq(location.organizationId, ctx.org.id)),
-          )
-          .limit(1);
-        if (!row) return "not-found" as const;
-      }
+    if (!forceOverride && parsed.data.locationId) {
+      const [row] = await tx
+        .select({ id: location.id })
+        .from(location)
+        .where(
+          and(eq(location.id, parsed.data.locationId), eq(location.organizationId, ctx.org.id)),
+        )
+        .limit(1);
+      if (!row) return "not-found" as const;
+    }
 
-      const after = {
-        startTime: parsed.data.startTime ?? before.startTime,
-        endTime: parsed.data.endTime ?? before.endTime,
-        locationId:
-          parsed.data.locationId === undefined ? before.locationId : parsed.data.locationId,
-        capacity: parsed.data.capacity ?? before.capacity,
-        // AC9. OR-ed rather than assigned: once a session has been hand-adjusted
-        // it stays that way, so a later capacity-only edit cannot clear the mark
-        // and re-expose the row to bulk pattern updates.
-        isManuallyAdjusted: before.isManuallyAdjusted || movedInTimeOrSpace,
-      };
+    const after = {
+      startTime: parsed.data.startTime ?? before.startTime,
+      endTime: parsed.data.endTime ?? before.endTime,
+      locationId:
+        parsed.data.locationId === undefined ? before.locationId : parsed.data.locationId,
+      capacity: parsed.data.capacity ?? before.capacity,
+      isManuallyAdjusted: before.isManuallyAdjusted || (movedInTimeOrSpace && !forceOverride),
+    };
 
-      // The denormalised times on any bookings for this session are maintained by
-      // the composite FK's ON UPDATE CASCADE (decyzja D4) — not by code here.
-      // US-14.3/AC3 is satisfied structurally; a manual UPDATE would be dead code.
+    if (forceOverride) {
       await tx
         .update(classSession)
-        .set({ ...after, updatedAt: new Date() })
+        .set({ forceOverride: true })
         .where(and(eq(classSession.id, sessionId), eq(classSession.organizationId, ctx.org.id)));
+    }
 
-      await recordAudit(tx, {
-        actor,
-        organizationId: ctx.org.id,
-        action: "class_session.update",
-        targetType: "class_session",
-        targetId: sessionId,
-        targetLabel: before.startTime.toISOString(),
-        metadata: withImpersonation(ctx.session, {
-          changes: changed(before, after, [
-            "startTime",
-            "endTime",
-            "locationId",
-            "capacity",
-            "isManuallyAdjusted",
-          ]),
-        }),
-      });
+    await tx
+      .update(classSession)
+      .set({ ...after, updatedAt: new Date() })
+      .where(and(eq(classSession.id, sessionId), eq(classSession.organizationId, ctx.org.id)));
 
-      return "ok" as const;
+    await recordAudit(tx, {
+      actor,
+      organizationId: ctx.org.id,
+      action: forceOverride ? "session.force_override" : "class_session.update",
+      targetType: "class_session",
+      targetId: sessionId,
+      targetLabel: before.startTime.toISOString(),
+      metadata: withImpersonation(ctx.session, {
+        changes: changed(before, after, [
+          "startTime",
+          "endTime",
+          "locationId",
+          "capacity",
+          "isManuallyAdjusted",
+        ]),
+        ...(forceOverride ? { forceOverride: true } : {}),
+      }),
     });
+
+    return "ok" as const;
+  };
+
+  let outcome: "ok" | "not-found" | "trainer-conflict";
+  try {
+    outcome = await withTenant(ctx.org.id, (tx) => doUpdate(tx, false));
   } catch (error) {
-    // §5.1 — the trainer is busy at the new time. A hard block: Force Override
-    // (F18) is the only thing that will ever be allowed past this, and it does
-    // not exist yet, so there is deliberately no bypass to reach for here.
-    if (sqlStateOf(error) === SQLSTATE_EXCLUSION_VIOLATION) {
+    if (sqlStateOf(error) !== SQLSTATE_EXCLUSION_VIOLATION) throw error;
+
+    if (hasPermission(ctx.role, "sessions.force_override") && movedInTimeOrSpace) {
+      try {
+        outcome = await withTenant(ctx.org.id, (tx) => doUpdate(tx, true));
+      } catch (retryError) {
+        if (sqlStateOf(retryError) === SQLSTATE_EXCLUSION_VIOLATION) {
+          return { error: t("errors.trainerConflict") };
+        }
+        throw retryError;
+      }
+    } else {
       return { error: t("errors.trainerConflict") };
     }
-    throw error;
   }
 
   if (outcome === "not-found") return { error: t("errors.notFound") };
@@ -325,3 +334,99 @@ export async function massMoveBookingsAction(
     throw e;
   }
 }
+
+// ── Faza 18 — Availability-First: pojedyncza sesja bez wzorca ────────────
+
+/**
+ * Create a single ad-hoc session for Availability-First group types (F18, §2.1).
+ *
+ * Availability-First sessions have `generatedFromRecurrenceId = NULL` and
+ * trainerId always required. Trainer conflict = Hard Block (no force_override).
+ * The availability layer (F17.5) provides a soft warning in the UI only.
+ */
+export async function createSingleSessionAction(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const ctx = await requireOrgPermission("sessions.manage");
+  const [t, tv] = await Promise.all([
+    getTranslations("schedule"),
+    getTranslations("schedule.validation"),
+  ]);
+
+  const rawStart = str(formData.get("startTime"));
+  const rawEnd = str(formData.get("endTime"));
+
+  const parsed = createSessionSchema(tv).safeParse({
+    groupTypeId: str(formData.get("groupTypeId")),
+    trainerId: str(formData.get("trainerId")),
+    startTime: rawStart ? wallClockToInstant(rawStart, ctx.org.timezone) : undefined,
+    endTime: rawEnd ? wallClockToInstant(rawEnd, ctx.org.timezone) : undefined,
+    locationId: str(formData.get("locationId")) || null,
+    capacity: str(formData.get("capacity")) || undefined,
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? t("errors.createFailed") };
+  }
+
+  const actor = await resolveActor(ctx.session);
+
+  try {
+    await withTenant(ctx.org.id, async (tx) => {
+      const [gt] = await tx
+        .select({ engine: groupTypeTable.engine, defaultCapacity: groupTypeTable.defaultCapacity })
+        .from(groupTypeTable)
+        .where(
+          and(
+            eq(groupTypeTable.id, parsed.data.groupTypeId),
+            eq(groupTypeTable.organizationId, ctx.org.id),
+            isNull(groupTypeTable.deletedAt),
+          ),
+        )
+        .limit(1);
+      if (!gt) throw new UnknownGroupTypeError();
+      if (gt.engine !== "availability_first") throw new WrongEngineError();
+
+      const capacity = parsed.data.capacity ?? gt.defaultCapacity ?? 1;
+
+      const [row] = await tx
+        .insert(classSession)
+        .values({
+          organizationId: ctx.org.id,
+          groupTypeId: parsed.data.groupTypeId,
+          trainerId: parsed.data.trainerId,
+          startTime: parsed.data.startTime,
+          endTime: parsed.data.endTime,
+          capacity,
+          locationId: parsed.data.locationId ?? null,
+        })
+        .returning({ id: classSession.id });
+
+      await recordAudit(tx, {
+        actor,
+        organizationId: ctx.org.id,
+        action: "class_session.create",
+        targetType: "class_session",
+        targetId: row!.id,
+        targetLabel: parsed.data.startTime.toISOString(),
+        metadata: {
+          groupTypeId: parsed.data.groupTypeId,
+          engine: "availability_first",
+        },
+      });
+    });
+  } catch (error) {
+    if (error instanceof UnknownGroupTypeError) return { error: t("errors.notFound") };
+    if (error instanceof WrongEngineError) return { error: t("errors.createFailed") };
+    if (sqlStateOf(error) === SQLSTATE_EXCLUSION_VIOLATION) {
+      return { error: t("errors.trainerConflict") };
+    }
+    throw error;
+  }
+
+  revalidatePath(`/dashboard/schedule`);
+  return { success: t("created") };
+}
+
+class UnknownGroupTypeError extends Error {}
+class WrongEngineError extends Error {}

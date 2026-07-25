@@ -786,7 +786,10 @@
       "durationInvalid": "Duration must be a positive number of minutes.",
       "capacityInvalid": "Capacity must be a positive number.",
       "startDateFormat": "Use a date in YYYY-MM-DD format.",
-      "occurrencesRequired": "A recurring pattern needs a number of occurrences."
+      "occurrencesRequired": "A recurring pattern needs a number of occurrences.",
+      "slotFirstCapacityMax1": "Slot-First requires defaultCapacity = 1.",
+      "defaultDurationInvalid": "Duration must be a positive number of minutes.",
+      "defaultCapacityInvalid": "Capacity must be a positive number."
     },
     "title": "Group types",
     "subtitle": "The offers your academy sells. Editing one never changes sessions already generated.",
@@ -941,10 +944,23 @@
     "manuallyAdjusted": "Adjusted by hand",
     "noTrainer": "—",
     "noLocation": "—",
+    "created": "Session created.",
+    "forceOverrideApplied": "Trainer conflict was force overridden.",
+    "availabilityWarning": "This trainer has not declared availability at that time.",
     "errors": {
       "generic": "Could not update the session.",
       "notFound": "That session no longer exists.",
-      "trainerConflict": "This trainer has a schedule conflict at that time."
+      "trainerConflict": "This trainer has a schedule conflict at that time.",
+      "createFailed": "Could not create the session."
+    },
+    "validation": {
+      "groupTypeRequired": "Group type is required.",
+      "trainerRequired": "Trainer is required.",
+      "startTimeInvalid": "Invalid start time.",
+      "endTimeInvalid": "Invalid end time.",
+      "endBeforeStart": "End time must be after start time.",
+      "capacityInvalid": "Capacity must be a positive number.",
+      "bothTimesRequired": "Both start and end times are required."
     },
     "cancelSession": "Cancel session",
     "cancellingSession": "Cancelling…",

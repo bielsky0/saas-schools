@@ -38,8 +38,6 @@ export function updateSessionSchema(t: ValidationTranslator) {
         message: t("endBeforeStart"),
         path: ["endTime"],
       })
-      // Moving one endpoint without the other would silently keep the old duration
-      // against a new start, which is never what the admin meant.
       .refine((v) => Boolean(v.startTime) === Boolean(v.endTime), {
         message: t("bothTimesRequired"),
         path: ["endTime"],
@@ -48,3 +46,27 @@ export function updateSessionSchema(t: ValidationTranslator) {
 }
 
 export type UpdateSessionValues = z.infer<ReturnType<typeof updateSessionSchema>>;
+
+/**
+ * AF/SF single session creation (F18, §2.1).
+ *
+ * Availability-First: admin creates a manual session (no recurrence pattern).
+ * Trainer conflict = Hard Block. Availability from F17.5 shown as soft warning.
+ */
+export function createSessionSchema(t: ValidationTranslator) {
+  return z
+    .object({
+      groupTypeId: z.string().min(1, t("groupTypeRequired")),
+      trainerId: z.string().min(1, t("trainerRequired")),
+      startTime: z.coerce.date(t("startTimeInvalid")),
+      endTime: z.coerce.date(t("endTimeInvalid")),
+      locationId: z.string().min(1).nullable().optional(),
+      capacity: z.coerce.number().int().positive(t("capacityInvalid")).optional(),
+    })
+    .refine((v) => v.endTime > v.startTime, {
+      message: t("endBeforeStart"),
+      path: ["endTime"],
+    });
+}
+
+export type CreateSessionValues = z.infer<ReturnType<typeof createSessionSchema>>;

@@ -82,6 +82,13 @@ export const classSession = pgTable(
      * adjusted", not "was something unusual done here".
      */
     isManuallyAdjusted: boolean("isManuallyAdjusted").notNull().default(false),
+    /**
+     * Set when a Schedule-First session update bypasses a trainer conflict
+     * via Force Override (US-14.5, F18). Once set, the §5.1 EXCLUDE constraint
+     * ignores this row so the conflicting time is persisted.
+     * Does NOT set `isManuallyAdjusted` (AC10).
+     */
+    forceOverride: boolean("force_override").notNull().default(false),
     createdAt: timestamp("createdAt").notNull().defaultNow(),
     updatedAt: timestamp("updatedAt").notNull().defaultNow(),
   },

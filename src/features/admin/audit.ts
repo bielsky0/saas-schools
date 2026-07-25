@@ -214,6 +214,8 @@ export const AUDIT_ACTIONS = [
   "group_change.expire",
   "group_change.complete",
   "credit.reassign",
+  // `class_session.create` — AF/SF ad-hoc session creation (F18).
+  "class_session.create",
   // `class_session.cancel` — admin odwołuje całą sesję (US-19.2).
   // Loguje liczbę anulowanych bookingów i przyznanych kredytów.
   "class_session.cancel",
@@ -234,6 +236,7 @@ export const AUDIT_ACTIONS = [
   "location.deactivate",
   "session.reassign_trainer",
   "session.mass_reassign_trainer",
+  "session.force_override",
   "booking.mass_move",
   // F9 / EPIK 29 — Plany i limity jako dane w DB
   //

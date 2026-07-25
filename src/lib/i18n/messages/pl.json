@@ -786,7 +786,10 @@
       "durationInvalid": "Czas trwania musi być dodatnią liczbą minut.",
       "capacityInvalid": "Pojemność musi być liczbą dodatnią.",
       "startDateFormat": "Podaj datę w formacie RRRR-MM-DD.",
-      "occurrencesRequired": "Wzorzec cykliczny wymaga liczby powtórzeń."
+      "occurrencesRequired": "Wzorzec cykliczny wymaga liczby powtórzeń.",
+      "slotFirstCapacityMax1": "Slot-First wymaga defaultCapacity = 1.",
+      "defaultDurationInvalid": "Czas trwania musi być liczbą dodatnią.",
+      "defaultCapacityInvalid": "Pojemność musi być liczbą dodatnią."
     },
     "title": "Typy grup",
     "subtitle": "Oferty sprzedawane przez akademię. Edycja nigdy nie zmienia już wygenerowanych sesji.",
@@ -941,10 +944,23 @@
     "manuallyAdjusted": "Skorygowana ręcznie",
     "noTrainer": "—",
     "noLocation": "—",
+    "created": "Sesja została utworzona.",
+    "forceOverrideApplied": "Konflikt trenera został wymuszony (Force Override).",
+    "availabilityWarning": "Trener nie zadeklarował dostępności w tym czasie.",
     "errors": {
       "generic": "Nie udało się zaktualizować sesji.",
       "notFound": "Ta sesja już nie istnieje.",
-      "trainerConflict": "Ten trener ma wtedy kolizję w grafiku."
+      "trainerConflict": "Ten trener ma wtedy kolizję w grafiku.",
+      "createFailed": "Nie udało się utworzyć sesji."
+    },
+    "validation": {
+      "groupTypeRequired": "Typ grupy jest wymagany.",
+      "trainerRequired": "Trener jest wymagany.",
+      "startTimeInvalid": "Nieprawidłowa data rozpoczęcia.",
+      "endTimeInvalid": "Nieprawidłowa data zakończenia.",
+      "endBeforeStart": "Koniec sesji musi być po jej rozpoczęciu.",
+      "capacityInvalid": "Pojemność musi być liczbą dodatnią.",
+      "bothTimesRequired": "Podaj obie godziny (początek i koniec)."
     },
     "cancelSession": "Odwołaj sesję",
     "cancellingSession": "Odwoływanie…",

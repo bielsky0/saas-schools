@@ -95,6 +95,8 @@ export async function createGroupTypeAction(
     policyDocumentId: str(formData.get("policyDocumentId")) || undefined,
     allowedPurchaseModes: strList(formData, "allowedPurchaseModes"),
     allowedBillingTypes: strList(formData, "allowedBillingTypes"),
+    defaultDurationMinutes: str(formData.get("defaultDurationMinutes")) || undefined,
+    defaultCapacity: str(formData.get("defaultCapacity")) || undefined,
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? t("errors.generic") };
@@ -126,6 +128,8 @@ export async function createGroupTypeAction(
           policyDocumentId: parsed.data.policyDocumentId ?? null,
           allowedPurchaseModes: parsed.data.allowedPurchaseModes,
           allowedBillingTypes: parsed.data.allowedBillingTypes ?? null,
+          defaultDurationMinutes: parsed.data.defaultDurationMinutes ?? null,
+          defaultCapacity: parsed.data.defaultCapacity ?? null,
         })
         .returning({ id: groupType.id });
 
@@ -176,6 +180,8 @@ export async function updateGroupTypeAction(
     policyDocumentId: str(formData.get("policyDocumentId")) || undefined,
     allowedPurchaseModes: strList(formData, "allowedPurchaseModes"),
     allowedBillingTypes: strList(formData, "allowedBillingTypes"),
+    defaultDurationMinutes: str(formData.get("defaultDurationMinutes")) || undefined,
+    defaultCapacity: str(formData.get("defaultCapacity")) || undefined,
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? t("errors.generic") };
@@ -231,6 +237,8 @@ export async function updateGroupTypeAction(
         policyDocumentId: parsed.data.policyDocumentId ?? null,
         allowedPurchaseModes: parsed.data.allowedPurchaseModes,
         allowedBillingTypes: parsed.data.allowedBillingTypes ?? null,
+        defaultDurationMinutes: parsed.data.defaultDurationMinutes ?? null,
+        defaultCapacity: parsed.data.defaultCapacity ?? null,
       };
 
       await tx
