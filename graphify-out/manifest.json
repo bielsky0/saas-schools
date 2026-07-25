@@ -45,8 +45,8 @@
     "semantic_hash": "75afe2eddbbe7a9d09cb2254ac75e583"
   },
   "src/app/[locale]/(app)/dashboard/academy-home.tsx": {
-    "mtime": 1784938157.6209474,
-    "ast_hash": "6d51b1f2962c615644f28474e9fb3ab6",
+    "mtime": 1784985593.212744,
+    "ast_hash": "98636d8baf525cfb8d1e165743660589",
     "semantic_hash": ""
   },
   "src/app/[locale]/(app)/dashboard/credits/page.tsx": {
@@ -590,8 +590,8 @@
     "semantic_hash": "e3eb5275c53dcbb1336b2b527383219d"
   },
   "src/features/admin/audit.ts": {
-    "mtime": 1784969194.8168676,
-    "ast_hash": "f0b7cf428c170d35ee4f36950c275cb3",
+    "mtime": 1784985762.4372983,
+    "ast_hash": "077c20072763cd8271941f8bbb7aba29",
     "semantic_hash": ""
   },
   "src/features/admin/components/admin-nav.tsx": {
@@ -1275,8 +1275,8 @@
     "semantic_hash": "e8d47a8877c9cef44dad7d9152b37780"
   },
   "src/features/rbac/index.ts": {
-    "mtime": 1784982326.5310721,
-    "ast_hash": "ea8fe14f19f2175937d193d182b58e6d",
+    "mtime": 1784985329.9281182,
+    "ast_hash": "a5315cde38c1ae1b784692d58b8bc685",
     "semantic_hash": ""
   },
   "src/features/schedule/actions.ts": {
@@ -1765,8 +1765,8 @@
     "semantic_hash": "2aa4ed85c6e0d831f1d5450bcf174e7f"
   },
   "src/lib/db/migrations/meta/_journal.json": {
-    "mtime": 1784982342.7599232,
-    "ast_hash": "5851430460e9ee889ef0081ed8ffb6c3",
+    "mtime": 1784985293.0103037,
+    "ast_hash": "a80c78a7786c2dd1e8dcc70b0f9a4e03",
     "semantic_hash": ""
   },
   "src/lib/db/pagination.ts": {
@@ -1855,8 +1855,8 @@
     "semantic_hash": ""
   },
   "src/lib/db/schema/index.ts": {
-    "mtime": 1784938157.6227582,
-    "ast_hash": "788a93c0f487fd3981ff5b80d33e2337",
+    "mtime": 1784985223.0870771,
+    "ast_hash": "8c0cb7094353a151eecfe4b42ec38a9d",
     "semantic_hash": ""
   },
   "src/lib/db/schema/invitations.ts": {
@@ -1955,8 +1955,8 @@
     "semantic_hash": "3b64e00c025c78804573926d4942d4cc"
   },
   "src/lib/i18n/messages/en.json": {
-    "mtime": 1784982693.394505,
-    "ast_hash": "283b0ed8971a3c687d8f96cafcdbf682",
+    "mtime": 1784985540.8051546,
+    "ast_hash": "5b1b98768e9385586bbaa2fd872c6c38",
     "semantic_hash": ""
   },
   "src/lib/i18n/messages/index.ts": {
@@ -1965,8 +1965,8 @@
     "semantic_hash": "db411c8644383bf22f5895f831c046fc"
   },
   "src/lib/i18n/messages/pl.json": {
-    "mtime": 1784982700.6959045,
-    "ast_hash": "fcb4e75bfc6bf391afd1da3d216274ae",
+    "mtime": 1784985535.8961892,
+    "ast_hash": "ad4676f51a3275c89eb8af5cd9cccc28",
     "semantic_hash": ""
   },
   "src/lib/i18n/navigation.ts": {
@@ -2105,8 +2105,8 @@
     "semantic_hash": "d63631dae7f6f99a109182d4d94b0c34"
   },
   "docs/plan-implementacji.md": {
-    "mtime": 1784982747.833215,
-    "ast_hash": "828729634402fa4567fbde355b0fea8c",
+    "mtime": 1784985911.1840467,
+    "ast_hash": "39c8feffc02f8e9b8ab7f3ca527e6613",
     "semantic_hash": ""
   },
   "docs/specyfikacja-cms.md": {
@@ -2665,9 +2665,9 @@
     "semantic_hash": "2b539053387f30c37086ff26c671d535"
   },
   "docs/plan/faza-20.md": {
-    "mtime": 1784658600.374117,
-    "ast_hash": "1cb4518c3f7059b75cf6a44ca44d8e88",
-    "semantic_hash": "1cb4518c3f7059b75cf6a44ca44d8e88"
+    "mtime": 1784985906.7898996,
+    "ast_hash": "9b80b7ca1ec89470037c7e664bb7ea26",
+    "semantic_hash": ""
   },
   "docs/plan/faza-21.md": {
     "mtime": 1784658600.3741841,
@@ -3920,8 +3920,8 @@
     "semantic_hash": ""
   },
   "src/features/billing/components/invoice-pending-list.tsx": {
-    "mtime": 1784982559.606471,
-    "ast_hash": "49284cb58e885a7ebb559689460c3906",
+    "mtime": 1784983207.2173932,
+    "ast_hash": "772f85f1d1c3bb62ba193f1d1399e727",
     "semantic_hash": ""
   },
   "src/features/billing/components/request-invoice-button.tsx": {
@@ -3942,6 +3942,76 @@
   "src/lib/db/migrations/0039_faza19_invoice_fields.sql": {
     "mtime": 1784982338.6356215,
     "ast_hash": "2ea55bb2c38c56649067ab116c59b55b",
+    "semantic_hash": ""
+  },
+  "e2e/langlion-invoices.spec.ts": {
+    "mtime": 1784983301.4829102,
+    "ast_hash": "c397b90a7835146631e30503b4b88631",
+    "semantic_hash": ""
+  },
+  "e2e/langlion-trainer-earnings.spec.ts": {
+    "mtime": 1784985877.2058687,
+    "ast_hash": "61ff3d3abcd74f12b3cfdb9d7a6a2850",
+    "semantic_hash": ""
+  },
+  "src/app/[locale]/(app)/dashboard/trainers/earnings/page.tsx": {
+    "mtime": 1784985581.5346508,
+    "ast_hash": "70f0f5988f23817fdb68d87b2843152a",
+    "semantic_hash": ""
+  },
+  "src/app/[locale]/(app)/dashboard/trainers/rates/page.tsx": {
+    "mtime": 1784985561.7568493,
+    "ast_hash": "2cf26436f325f217e3652ad69a5f3b75",
+    "semantic_hash": ""
+  },
+  "src/features/trainers/components/earnings-report-client.tsx": {
+    "mtime": 1784985822.7771575,
+    "ast_hash": "9c5b071dfdbf1721c0dc82fdb3134659",
+    "semantic_hash": ""
+  },
+  "src/features/trainers/components/rate-form.tsx": {
+    "mtime": 1784985556.4988527,
+    "ast_hash": "7cea6a95387dac399809c8a9646033f4",
+    "semantic_hash": ""
+  },
+  "src/features/trainers/components/rates-page-client.tsx": {
+    "mtime": 1784985549.1802254,
+    "ast_hash": "99b2c04523b4e15c46660ddceec0e71f",
+    "semantic_hash": ""
+  },
+  "src/features/trainers/earnings-data.ts": {
+    "mtime": 1784985660.3989325,
+    "ast_hash": "9db83ba8afc54c0c6956d4a98ae787c2",
+    "semantic_hash": ""
+  },
+  "src/features/trainers/rate-actions.ts": {
+    "mtime": 1784985785.275736,
+    "ast_hash": "3786ae52c9144cdcec6ab330f81f53b6",
+    "semantic_hash": ""
+  },
+  "src/features/trainers/rate-data.ts": {
+    "mtime": 1784985697.6009004,
+    "ast_hash": "7ca7400e23a200d176673451e00bedf1",
+    "semantic_hash": ""
+  },
+  "src/lib/db/migrations/0040_colossal_captain_universe.sql": {
+    "mtime": 1784985274.0344107,
+    "ast_hash": "c57e198c247d40b0d5ba934937a17c06",
+    "semantic_hash": ""
+  },
+  "src/lib/db/migrations/0041_rls_trainer_rate.sql": {
+    "mtime": 1784985288.8464904,
+    "ast_hash": "b0b3fbd44b1f33982e492301be6fe876",
+    "semantic_hash": ""
+  },
+  "src/lib/db/migrations/meta/0040_snapshot.json": {
+    "mtime": 1784985235.4396238,
+    "ast_hash": "2e5528b9dcf5a2263a7d931a04edbeb7",
+    "semantic_hash": ""
+  },
+  "src/lib/db/schema/trainer-rates.ts": {
+    "mtime": 1784985219.215222,
+    "ast_hash": "faabe2b7648a44110ef9d86ef44f4177",
     "semantic_hash": ""
   }
 }

@@ -126,7 +126,15 @@ export type Permission =
   // ── Faza 19 — Fakturowanie ręczne (EPIK 27) ─────────────────────────
   //
   /** Mark a manually-issued invoice as settled (US-27.2/AC2). */
-  | "invoices.mark_issued";
+  | "invoices.mark_issued"
+  // ── Faza 20 — Wynagrodzenia trenerów (EPIK 32, §2.30) ──────────────
+  //
+  /** CRUD on trainer_rate (§2.30). Owner+Admin only — a trainer never edits
+   * their own rate. */
+  | "trainer_rates.manage"
+  /** View the earnings report (§2.30). Owner+Admin see all; Trainer sees
+   * own data only, enforced on the backend regardless of UI. */
+  | "trainer_earnings.view";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -174,6 +182,8 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "trainer_availability.manage",
     "sessions.force_override",
     "invoices.mark_issued",
+    "trainer_rates.manage",
+    "trainer_earnings.view",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -214,6 +224,8 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "trainer_availability.manage",
     "sessions.force_override",
     "invoices.mark_issued",
+    "trainer_rates.manage",
+    "trainer_earnings.view",
   ],
   /**
    * The three langlion staff roles (§2.10).
@@ -271,6 +283,10 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     // action call site (compare trainerId to caller.userId). This map
     // cannot express "own" — see comment at bookings.mark_attendance.
     "trainer_availability.manage",
+    // trainer_earnings.view is scoped to OWN data only at the action call site
+    // (compare trainerId to caller.userId). This map cannot express "own" —
+    // see comment at bookings.mark_attendance.
+    "trainer_earnings.view",
   ],
   // Members may upload content, but not delete other people's files.
   //

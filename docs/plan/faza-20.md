@@ -1,6 +1,6 @@
 ### Faza 20 — Wynagrodzenia trenerów, wyłącznie informacyjne (EPIK 32, v15)
 
-**Status:** nierozpoczęta
+**Status:** ✅ zakończona (2026-07-25)
 **Cel:** akademia widzi, ile jest winna każdemu trenerowi za wybrany okres; rozliczenie odbywa się poza systemem.
 **Pokrywa:** EPIK 32 (w tym **US-32.6, v17 — stawka godzinowa**); §2.30, **§2.37**; §2.10 (uprawnienia `trainer_rates.manage`, `trainer_earnings.view`); Constraint 8 (§1.3).
 **Zależności:** **F6** — kwalifikacja sesji do raportu opiera się na `attendance_status`, więc bez danych frekwencyjnych raport nie ma na czym pracować. Pośrednio F2 (`group_type` dla stawek nadpisujących).
@@ -14,6 +14,74 @@
 **⚠️ Blast radius (poprawka #9 — stawka godzinowa):**
 - **Zakończone fazy do ponownego dotknięcia:** **ŻADNA** — `trainer_rate` nie istnieje jeszcze w schemacie (F20 nierozpoczęta). Najtańsza z sześciu poprawek: czysto dokładający zakres jednej, jeszcze nieotwartej fazy; kolumna `rate_type` wchodzi z pierwszą migracją `trainer_rate`, bez osobnej migracji additive.
 - **Nierozpoczęte fazy rosnące bez ryzyka retrofitu:** wyłącznie F20 (rośnie w miejscu).
+
+---
+
+### Wykonane prace
+
+#### A. Schemat + migracja
+
+| Plik | Zmiana |
+|---|---|
+| `src/lib/db/schema/trainer-rates.ts` | Nowa tabela `trainer_rate` z `organizationId`, `trainerId`, `groupTypeId` (nullable), `amount`, `effectiveFrom`, `rateType` (`flat_per_session`\|`hourly`); unique `NULLS NOT DISTINCT` na `(orgId, trainerId, groupTypeId, effectiveFrom)` — zapobiega duplikatom dla stawki bazowej (NULL groupTypeId) |
+| `src/lib/db/schema/index.ts` | Eksport `trainer-rates` |
+| `src/lib/db/migrations/0040_colossal_captain_universe.sql` | Ręcznie przycięta migracja — CREATE TABLE + FK + indeksy (bez ALTER TABLE z poprzednich faz) |
+| `src/lib/db/migrations/0041_rls_trainer_rate.sql` | RLS wg wzorca `*_tenant_isolation`/`*_system_bypass` z `0015` |
+
+#### B. RBAC
+
+| Plik | Zmiana |
+|---|---|
+| `src/features/rbac/index.ts` | Dwa nowe uprawnienia: `trainer_rates.manage` (Owner/Admin), `trainer_earnings.view` (Owner/Admin/Trainer — własne dane egzekwowane backendowo) |
+
+#### C. DAL
+
+| Plik | Zmiana |
+|---|---|
+| `src/features/trainers/rate-data.ts` | CRUD stawek — `listRates`, `getRate`, `createRate` (INSERT-only, nigdy UPDATE), `deleteRate` |
+| `src/features/trainers/earnings-data.ts` | Raport wynagrodzeń: kwalifikacja sesji (≥1 booking z `attendanceStatus != 'unmarked'`), Constraint 8 resolution (group-specific → base → "no rate" list), `calculateAmount` (flat_per_session = amount, hourly = FLOOR(amount × duration_hours)), scopedTrainerId enforcement dla roli Trainer |
+
+#### D. Akcje
+
+| Plik | Zmiana |
+|---|---|
+| `src/features/trainers/rate-actions.ts` | `createRateAction` (gated `trainer_rates.manage` + audit trail), `deleteRateAction` (jw.), `getEarningsReportAction` (gated `trainer_earnings.view`, Trainer = self-scope force) |
+
+#### E. UI
+
+| Plik | Zmiana |
+|---|---|
+| `src/features/trainers/components/rates-page-client.tsx` | Client component: tabela stawek (trainer, groupType, amount, effectiveFrom, rateType) + przycisk delete |
+| `src/features/trainers/components/rate-form.tsx` | Client component: formularz tworzenia stawki (select trainer, amount, date, rateType, optional groupType) |
+| `src/features/trainers/components/earnings-report-client.tsx` | Client component: filtr dat + trainer (ukryty dla roli Trainer), tabela wyników, sekcja "sesje bez stawki", suma |
+| `src/app/[locale]/(app)/dashboard/trainers/rates/page.tsx` | Strona CRUD stawek — gated `trainer_rates.manage` |
+| `src/app/[locale]/(app)/dashboard/trainers/earnings/page.tsx` | Strona raportu wynagrodzeń — gated `trainer_earnings.view`, self-scope dla roli Trainer |
+| `src/app/[locale]/(app)/dashboard/academy-home.tsx` | Nav linki: "Rates" (gated `trainer_rates.manage`), "Earnings" (gated `trainer_earnings.view`) |
+
+#### F. Audit trail
+
+| Plik | Zmiana |
+|---|---|
+| `src/features/admin/audit.ts` | Nowe akcje: `trainer_rate.created`, `trainer_rate.deleted`; nowy targetType: `trainer_rate` |
+
+#### G. i18n
+
+| Plik | Zmiana |
+|---|---|
+| `src/lib/i18n/messages/pl.json` | Klucze dla dashboard.org (rates, earnings) + dashboard.trainers (rates*, earnings*, myEarnings) |
+| `src/lib/i18n/messages/en.json` | Klucze EN — jw. |
+
+#### H. E2E
+
+| Plik | Zmiana |
+|---|---|
+| `e2e/langlion-trainer-earnings.spec.ts` | Test: admin tworzy stawkę bazową → widoczna w tabeli |
+
+### Rozstrzygnięcia podjęte w trakcie F20
+
+- **Zaokrąglenie hourly:** FLOOR (w dół) — `Math.floor(amount × duration_hours)`. Bezpieczne dla akademii.
+- **Unique dla NULL groupTypeId:** `UNIQUE NULLS NOT DISTINCT` (Postgres 15+) — bez tego dwa rekordy stawki bazowej z tym samym `effectiveFrom` byłyby dozwolone, bo NULL ≠ NULL w domyślnym unique.
+- **audit trail:** `trainer_rate.created` i `trainer_rate.deleted` dodane do `AUDIT_ACTIONS` i `AuditTargetType`.
 
 ---
 

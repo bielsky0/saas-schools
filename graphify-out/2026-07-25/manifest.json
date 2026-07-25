@@ -175,8 +175,8 @@
     "semantic_hash": ""
   },
   "src/app/[locale]/(site)/zapisy/[groupTypeSlug]/page.tsx": {
-    "mtime": 1784934119.3133047,
-    "ast_hash": "c1e167124733e9a24c1536b42655e2ff",
+    "mtime": 1784982705.9407547,
+    "ast_hash": "da77bb9da6f5de8a04c4e6c049023099",
     "semantic_hash": ""
   },
   "src/app/[locale]/forbidden.tsx": {
@@ -770,8 +770,8 @@
     "semantic_hash": "aa098f3fc5f74d2ac09446719e7399f0"
   },
   "src/features/bookings/components/enrollment-flow.tsx": {
-    "mtime": 1784936193.528611,
-    "ast_hash": "b1566a1ecdd03ee2c850525158fa55a4",
+    "mtime": 1784982680.1622238,
+    "ast_hash": "14c15f26b40dbed983b84495db792569",
     "semantic_hash": ""
   },
   "src/features/bookings/create.ts": {
@@ -785,13 +785,13 @@
     "semantic_hash": ""
   },
   "src/features/bookings/payment-options.test.ts": {
-    "mtime": 1784578977.9018846,
-    "ast_hash": "b99c5fb3d87fd8c968527e8932b62208",
-    "semantic_hash": "b99c5fb3d87fd8c968527e8932b62208"
+    "mtime": 1784982629.593028,
+    "ast_hash": "743f3600ab8860f91746838f18b28fa6",
+    "semantic_hash": ""
   },
   "src/features/bookings/payment-options.ts": {
-    "mtime": 1784914870.10283,
-    "ast_hash": "7552aaa6dd412970adb4064d9817a32f",
+    "mtime": 1784982609.9610238,
+    "ast_hash": "a4e2315901bfbe2bf4bbdc16c2f7d1ff",
     "semantic_hash": ""
   },
   "src/features/bookings/schema.ts": {
@@ -1275,8 +1275,8 @@
     "semantic_hash": "e8d47a8877c9cef44dad7d9152b37780"
   },
   "src/features/rbac/index.ts": {
-    "mtime": 1784968857.4999886,
-    "ast_hash": "55dc5abe0d9bfee0dcf95a5701262b5c",
+    "mtime": 1784982326.5310721,
+    "ast_hash": "ea8fe14f19f2175937d193d182b58e6d",
     "semantic_hash": ""
   },
   "src/features/schedule/actions.ts": {
@@ -1765,8 +1765,8 @@
     "semantic_hash": "2aa4ed85c6e0d831f1d5450bcf174e7f"
   },
   "src/lib/db/migrations/meta/_journal.json": {
-    "mtime": 1784968931.6077425,
-    "ast_hash": "19a0680061ff39f2624730bb99c0692e",
+    "mtime": 1784982342.7599232,
+    "ast_hash": "5851430460e9ee889ef0081ed8ffb6c3",
     "semantic_hash": ""
   },
   "src/lib/db/pagination.ts": {
@@ -1955,8 +1955,8 @@
     "semantic_hash": "3b64e00c025c78804573926d4942d4cc"
   },
   "src/lib/i18n/messages/en.json": {
-    "mtime": 1784972939.2334936,
-    "ast_hash": "e5da32ca89df34600928c591aaa3a9dd",
+    "mtime": 1784982693.394505,
+    "ast_hash": "283b0ed8971a3c687d8f96cafcdbf682",
     "semantic_hash": ""
   },
   "src/lib/i18n/messages/index.ts": {
@@ -1965,8 +1965,8 @@
     "semantic_hash": "db411c8644383bf22f5895f831c046fc"
   },
   "src/lib/i18n/messages/pl.json": {
-    "mtime": 1784972952.6154873,
-    "ast_hash": "80a22942e5b740929375ceabcea0eba8",
+    "mtime": 1784982700.6959045,
+    "ast_hash": "fcb4e75bfc6bf391afd1da3d216274ae",
     "semantic_hash": ""
   },
   "src/lib/i18n/navigation.ts": {
@@ -2105,8 +2105,8 @@
     "semantic_hash": "d63631dae7f6f99a109182d4d94b0c34"
   },
   "docs/plan-implementacji.md": {
-    "mtime": 1784969570.7524586,
-    "ast_hash": "99aff29dbd7b5989ff1dacc85291f3a3",
+    "mtime": 1784982747.833215,
+    "ast_hash": "828729634402fa4567fbde355b0fea8c",
     "semantic_hash": ""
   },
   "docs/specyfikacja-cms.md": {
@@ -2655,9 +2655,9 @@
     "semantic_hash": ""
   },
   "docs/plan/faza-19.md": {
-    "mtime": 1784658600.37405,
-    "ast_hash": "4302b4c4d2e35486fb3a5dfe8ec0b69c",
-    "semantic_hash": "4302b4c4d2e35486fb3a5dfe8ec0b69c"
+    "mtime": 1784982744.0701501,
+    "ast_hash": "82c1ca128a512790cbbb57e545df4025",
+    "semantic_hash": ""
   },
   "docs/plan/faza-2.md": {
     "mtime": 1784658600.372362,
@@ -3100,8 +3100,8 @@
     "semantic_hash": ""
   },
   "src/app/[locale]/(site)/moje-zajecia/page.tsx": {
-    "mtime": 1784918013.1358178,
-    "ast_hash": "824c678a85d6f803c4b76d2095d93352",
+    "mtime": 1784982514.514124,
+    "ast_hash": "9f5be28e8299d5ce7d5d5e85ffcfd74c",
     "semantic_hash": ""
   },
   "src/app/api/billing/connect/authorize/route.ts": {
@@ -3580,8 +3580,8 @@
     "semantic_hash": ""
   },
   "src/lib/db/schema/credit-purchases.ts": {
-    "mtime": 1784931468.473052,
-    "ast_hash": "ba1af2ab5519c56df353e0a24c80f665",
+    "mtime": 1784982309.160192,
+    "ast_hash": "d9df1cb6f33ff8566d2255ba71ab1310",
     "semantic_hash": ""
   },
   "src/lib/db/schema/product-templates.ts": {
@@ -3912,6 +3912,36 @@
   "src/lib/db/migrations/0038_faza18_force_override.sql": {
     "mtime": 1784968925.0859435,
     "ast_hash": "50baf336dffde310060b13d45286aa6f",
+    "semantic_hash": ""
+  },
+  "src/app/[locale]/(app)/dashboard/invoices/page.tsx": {
+    "mtime": 1784982546.866752,
+    "ast_hash": "9d46ce218ea17f55913467205f3e7da2",
+    "semantic_hash": ""
+  },
+  "src/features/billing/components/invoice-pending-list.tsx": {
+    "mtime": 1784982559.606471,
+    "ast_hash": "49284cb58e885a7ebb559689460c3906",
+    "semantic_hash": ""
+  },
+  "src/features/billing/components/request-invoice-button.tsx": {
+    "mtime": 1784982458.0046358,
+    "ast_hash": "c01a4a22a6c9843d8dc921fcc17a08cc",
+    "semantic_hash": ""
+  },
+  "src/features/billing/invoice-actions.ts": {
+    "mtime": 1784982493.4825711,
+    "ast_hash": "9cf065a05eb0757de4a7e119bf0d11d8",
+    "semantic_hash": ""
+  },
+  "src/features/billing/invoice-data.ts": {
+    "mtime": 1784982510.8361127,
+    "ast_hash": "113d19c103cfdd38750f9f94024b0aa2",
+    "semantic_hash": ""
+  },
+  "src/lib/db/migrations/0039_faza19_invoice_fields.sql": {
+    "mtime": 1784982338.6356215,
+    "ast_hash": "2ea55bb2c38c56649067ab116c59b55b",
     "semantic_hash": ""
   }
 }

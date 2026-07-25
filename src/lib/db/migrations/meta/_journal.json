@@ -281,6 +281,20 @@
       "when": 1785400000000,
       "tag": "0039_faza19_invoice_fields",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1784985235439,
+      "tag": "0040_colossal_captain_universe",
+      "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1785500000000,
+      "tag": "0041_rls_trainer_rate",
+      "breakpoints": true
     }
   ]
 }

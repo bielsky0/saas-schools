@@ -79,6 +79,16 @@ export default async function AcademyHome() {
             <Link href="/dashboard/trainers">{t("trainers")}</Link>
           </Button>
         ) : null}
+        {hasPermission(role, "trainer_rates.manage") ? (
+          <Button asChild variant="outline" size="sm">
+            <Link href="/dashboard/trainers/rates">{t("rates")}</Link>
+          </Button>
+        ) : null}
+        {hasPermission(role, "trainer_earnings.view") ? (
+          <Button asChild variant="outline" size="sm">
+            <Link href="/dashboard/trainers/earnings">{t("earnings")}</Link>
+          </Button>
+        ) : null}
         {/* Cosmetic gating only (spec 4.2) — the page itself calls
             requireOrgPermission, which is the actual boundary. */}
         {hasPermission(role, "audit.read") ? (

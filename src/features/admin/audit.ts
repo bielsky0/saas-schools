@@ -272,6 +272,9 @@ export const AUDIT_ACTIONS = [
   "credit.refund_webhook",
   "credit.refund_failed",
   "credit.refund_recovery_failed",
+  // F20 / EPIK 32 — Trainer rates
+  "trainer_rate.created",
+  "trainer_rate.deleted",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -316,7 +319,8 @@ export type AuditTargetType =
   /** The purchase journal entry — target of `credit.purchase_cash` (F12b). */
   | "credit_purchase"
   | "group_change_request"
-  | "credit";
+  | "credit"
+  | "trainer_rate";
 
 /**
  * WHO acted, as a kind — §6.4's actor model. A different question from WHICH
