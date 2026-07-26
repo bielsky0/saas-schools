@@ -27,6 +27,8 @@ import {
   insertHandoff,
   isSlugTaken,
   isSubdomainTaken,
+  upsertPermissionOverride,
+  deletePermissionOverride,
 } from "./data";
 import { createOrgSchema, inviteMemberSchema, slugSchema, updateRoleSchema } from "./schema";
 import { resolveUniqueSlug } from "./slug";
@@ -749,4 +751,99 @@ export async function deleteOrganizationAction(): Promise<ActionState> {
    * directory is where they actually belong.
    */
   redirect(await apexUrl("/dashboard"));
+}
+
+// ── Faza 23 — membership_permission_override actions (§2.36, EPIK 38) ────────
+
+/**
+ * Upsert (grant or revoke) a single permission override on a member of the
+ * CURRENT org. Called from the member permissions page, which is gated by
+ * `requireOrgPermission("member_permissions.manage")` — the page guards, the
+ * action re-checks.
+ */
+export async function upsertPermissionOverrideAction(
+  _prev: ActionState,
+  form: FormData,
+): Promise<ActionState> {
+  const ctx = await requireOrgPermission("member_permissions.manage");
+  const t = await getTranslations("organizations.permissions");
+
+  const membershipId = str(form.get("membershipId"));
+  const permissionKey = str(form.get("permissionKey"));
+  const overrideType = str(form.get("overrideType")) as "grant" | "revoke" | "";
+  const reason = str(form.get("reason"));
+
+  if (!membershipId || !permissionKey || !overrideType || !reason.trim()) {
+    return { error: t("reasonRequired") };
+  }
+  if (overrideType !== "grant" && overrideType !== "revoke") {
+    return { error: t("invalidOverrideType") };
+  }
+  if (permissionKey === "member_permissions.manage") {
+    return { error: t("notOverridable") };
+  }
+
+  const actor = await resolveActor(ctx.session);
+
+  try {
+    await withTenant(ctx.org.id, async (tx) => {
+      await upsertPermissionOverride(tx, {
+        organizationId: ctx.org.id,
+        membershipId,
+        permissionKey,
+        overrideType,
+        reason: reason.trim(),
+      });
+      await recordAudit(tx, {
+        action: "member_permission.override",
+        actor,
+        organizationId: ctx.org.id,
+        targetType: "membership",
+        targetId: membershipId,
+        targetLabel: `${overrideType} ${permissionKey}`,
+        metadata: withImpersonation(ctx.session, { permissionKey, overrideType, reason: reason.trim() }),
+      });
+    });
+    revalidatePath("/dashboard/members/[membershipId]/permissions", "page");
+    return { success: t("saved") };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : t("saveError") };
+  }
+}
+
+export async function deletePermissionOverrideAction(
+  _prev: ActionState,
+  form: FormData,
+): Promise<ActionState> {
+  const ctx = await requireOrgPermission("member_permissions.manage");
+  const t = await getTranslations("organizations.permissions");
+
+  const overrideId = str(form.get("overrideId"));
+  if (!overrideId) {
+    return { error: t("missingId") };
+  }
+
+  const actor = await resolveActor(ctx.session);
+
+  let deleted = false;
+  await withTenant(ctx.org.id, async (tx) => {
+    deleted = await deletePermissionOverride(tx, overrideId);
+    if (deleted) {
+      await recordAudit(tx, {
+        action: "member_permission.override",
+        actor,
+        organizationId: ctx.org.id,
+        targetType: "membership",
+        targetId: overrideId,
+        targetLabel: "delete override",
+        metadata: withImpersonation(ctx.session, { overrideId }),
+      });
+    }
+  });
+
+  if (deleted) {
+    revalidatePath("/dashboard/members/[membershipId]/permissions", "page");
+    return { success: t("deleted") };
+  }
+  return { error: t("deleteError") };
 }

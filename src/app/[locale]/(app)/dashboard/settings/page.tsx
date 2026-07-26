@@ -1,7 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
-import { hasPermission } from "@/features/rbac";
 import { requireOrgPermission } from "@/features/organizations/context";
 import { DeleteOrgButton, OrgSettingsForm } from "@/features/organizations/components/org-settings";
 
@@ -12,8 +11,8 @@ import { DeleteOrgButton, OrgSettingsForm } from "@/features/organizations/compo
  * gated to Owners.
  */
 export default async function OrgSettingsPage() {
-  const { org, role } = await requireOrgPermission("organization.update");
-  const canDelete = hasPermission(role, "organization.delete");
+  const { org, effectivePermissions } = await requireOrgPermission("organization.update");
+  const canDelete = effectivePermissions.has("organization.delete");
   const t = await getTranslations("dashboard.settings");
 
   return (

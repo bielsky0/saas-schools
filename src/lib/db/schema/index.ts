@@ -138,3 +138,4 @@ export * from "./trainer-availability";
 export * from "./trainer-rates";
 export * from "./client-price-overrides";
 export * from "./interest-signups";
+export * from "./membership-permission-overrides";

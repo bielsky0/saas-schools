@@ -330,6 +330,20 @@
       "when": 1785700000100,
       "tag": "0046_rls_interest_signup",
       "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1785800000000,
+      "tag": "0047_faza23_permission_override",
+      "breakpoints": true
+    },
+    {
+      "idx": 48,
+      "version": "7",
+      "when": 1785800000100,
+      "tag": "0048_rls_permission_override",
+      "breakpoints": true
     }
   ]
 }

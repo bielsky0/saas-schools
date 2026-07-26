@@ -285,6 +285,8 @@ export const AUDIT_ACTIONS = [
   // Faza 22 / EPIK 36 — Interest signup (§2.34)
   "interest.signup",
   "interest.convert",
+  // Faza 23 / EPIK 38 — Granular permission overrides (§2.36)
+  "member_permission.override",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];

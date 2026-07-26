@@ -6,7 +6,6 @@ import { getTranslations } from "next-intl/server";
 
 import { changed, recordAudit, resolveActor, withImpersonation } from "@/features/admin/audit";
 import { requireOrgPermission } from "@/features/organizations/context";
-import { hasPermission } from "@/features/rbac";
 import { groupType as groupTypeTable, classSession, location } from "@/lib/db/schema";
 import { withTenant, type TenantDb } from "@/lib/db/tenant";
 import { SQLSTATE_EXCLUSION_VIOLATION, sqlStateOf } from "@/lib/db/sql-error";
@@ -172,7 +171,7 @@ export async function updateSessionAction(
   } catch (error) {
     if (sqlStateOf(error) !== SQLSTATE_EXCLUSION_VIOLATION) throw error;
 
-    if (hasPermission(ctx.role, "sessions.force_override") && movedInTimeOrSpace) {
+    if (ctx.effectivePermissions.has("sessions.force_override") && movedInTimeOrSpace) {
       try {
         outcome = await withTenant(ctx.org.id, (tx) => doUpdate(tx, true));
       } catch (retryError) {

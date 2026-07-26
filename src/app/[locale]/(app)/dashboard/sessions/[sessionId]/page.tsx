@@ -11,7 +11,6 @@ import {
   TableRow,
 } from "@/components/ui";
 import { requireOrgAccess } from "@/features/organizations/context";
-import { hasPermission } from "@/features/rbac";
 import { getSession } from "@/features/schedule/data";
 import { getGroupType } from "@/features/groups/data";
 import { listRosterForSession } from "@/features/bookings/data";
@@ -45,7 +44,7 @@ export default async function SessionRosterPage({
   params: Promise<{ sessionId: string }>;
 }) {
   const { sessionId } = await params;
-  const { org, role } = await requireOrgAccess();
+  const { org, effectivePermissions } = await requireOrgAccess();
   const [t, tg, locale] = await Promise.all([
     getTranslations("staffPanel"),
     getTranslations("grades"),
@@ -86,11 +85,11 @@ export default async function SessionRosterPage({
     timeStyle: "short",
   });
 
-  const canConfirmCash = hasPermission(role, "credits.confirm_on_site");
-  const canMarkAttendance = hasPermission(role, "bookings.mark_attendance");
-  const canEnterGrades = hasPermission(role, "grades.enter");
-  const canManageGradeFields = hasPermission(role, "grade_fields.manage");
-  const canCancelBooking = hasPermission(role, "bookings.cancel_reschedule");
+  const canConfirmCash = effectivePermissions.has("credits.confirm_on_site");
+  const canMarkAttendance = effectivePermissions.has("bookings.mark_attendance");
+  const canEnterGrades = effectivePermissions.has("grades.enter");
+  const canManageGradeFields = effectivePermissions.has("grade_fields.manage");
+  const canCancelBooking = effectivePermissions.has("bookings.cancel_reschedule");
 
   const paymentBadge = (status: string) =>
     status === "confirmed" ? "success" : status === "booked_offline" ? "warning" : "outline";
@@ -104,7 +103,7 @@ export default async function SessionRosterPage({
             {formatWhen.format(session.startTime)} · {org.timezone}
           </p>
         </div>
-        {session.status === "scheduled" && hasPermission(role, "sessions.manage") ? (
+        {session.status === "scheduled" && effectivePermissions.has("sessions.manage") ? (
           <CancelSessionButton sessionId={sessionId} />
         ) : null}
       </div>

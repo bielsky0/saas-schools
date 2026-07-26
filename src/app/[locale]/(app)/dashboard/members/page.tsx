@@ -2,6 +2,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 
 import {
   Badge,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -13,8 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui";
+import { Link } from "@/lib/i18n/navigation";
 import { formatContentDate } from "@/features/content/format";
-import { hasPermission } from "@/features/rbac";
 import { requireOrgAccess } from "@/features/organizations/context";
 import { listMembers, listPendingInvitations } from "@/features/organizations/data";
 import { withTenant } from "@/lib/db/tenant";
@@ -28,7 +29,7 @@ import { RevokeInviteButton } from "@/features/organizations/components/invitati
  * the actions re-check permissions and the last-owner rule server-side (spec §4.2).
  */
 export default async function MembersPage() {
-  const { org, role } = await requireOrgAccess();
+  const { org, effectivePermissions } = await requireOrgAccess();
   const [t, tr, locale] = await Promise.all([
     getTranslations("dashboard.members"),
     getTranslations("organizations.roles"),
@@ -41,10 +42,11 @@ export default async function MembersPage() {
   const roleLabel = (role: string) =>
     role === "owner" || role === "admin" || role === "member" ? tr(role) : role;
 
-  const canInvite = hasPermission(role, "members.invite");
-  const canUpdateRole = hasPermission(role, "members.update_role");
-  const canRemove = hasPermission(role, "members.remove");
-  const canRevoke = hasPermission(role, "invitations.revoke");
+  const canInvite = effectivePermissions.has("members.invite");
+  const canUpdateRole = effectivePermissions.has("members.update_role");
+  const canRemove = effectivePermissions.has("members.remove");
+  const canRevoke = effectivePermissions.has("invitations.revoke");
+  const canManagePermissions = effectivePermissions.has("member_permissions.manage");
 
   // One transaction, not `Promise.all`: both tables are under RLS, so each query
   // needs the tenant GUC, and two `withTenant` calls would take two connections
@@ -80,6 +82,7 @@ export default async function MembersPage() {
             <TableRow>
               <TableHead>{t("colMember")}</TableHead>
               <TableHead>{t("colRole")}</TableHead>
+              {canManagePermissions ? <TableHead>{t("colPermissions")}</TableHead> : null}
               {canUpdateRole || canRemove ? (
                 <TableHead className="text-right">{t("colActions")}</TableHead>
               ) : null}
@@ -102,6 +105,15 @@ export default async function MembersPage() {
                     ) : null}
                   </div>
                 </TableCell>
+                {canManagePermissions ? (
+                  <TableCell>
+                    <Button asChild variant="link" size="sm" className="h-auto p-0">
+                      <Link href={`/dashboard/members/${m.membershipId}/permissions`}>
+                        {t("permissions")}
+                      </Link>
+                    </Button>
+                  </TableCell>
+                ) : null}
                 {canUpdateRole || canRemove ? (
                   <TableCell className="text-right">
                     <MemberActions

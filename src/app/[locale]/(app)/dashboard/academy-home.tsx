@@ -2,7 +2,6 @@ import { getTranslations } from "next-intl/server";
 
 import { Badge, Button } from "@/components/ui";
 import { Link } from "@/lib/i18n/navigation";
-import { hasPermission } from "@/features/rbac";
 import { requireOrgAccess } from "@/features/organizations/context";
 import { LeaveOrgButton } from "@/features/organizations/components/org-settings";
 
@@ -18,7 +17,7 @@ import { LeaveOrgButton } from "@/features/organizations/components/org-settings
  * host names no academy), not by the caller having checked already.
  */
 export default async function AcademyHome() {
-  const { org, role } = await requireOrgAccess();
+  const { org, role, effectivePermissions } = await requireOrgAccess();
   const [t, tr] = await Promise.all([
     getTranslations("dashboard.org"),
     getTranslations("organizations.roles"),
@@ -44,59 +43,59 @@ export default async function AcademyHome() {
         </Button>
         {/* langlion (EPIK 2, 3, 22). Same cosmetic gating as below — each page
             calls requireOrgPermission itself, which is the real boundary. */}
-        {hasPermission(role, "group_types.manage") ? (
+        {effectivePermissions.has("group_types.manage") ? (
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard/group-types">{t("groupTypes")}</Link>
           </Button>
         ) : null}
-        {hasPermission(role, "sessions.manage") ? (
+        {effectivePermissions.has("sessions.manage") ? (
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard/schedule">{t("schedule")}</Link>
           </Button>
         ) : null}
-        {hasPermission(role, "credits.manual_grant") ? (
+        {effectivePermissions.has("credits.manual_grant") ? (
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard/credits">{t("credits")}</Link>
           </Button>
         ) : null}
-        {hasPermission(role, "credits.purchase_cash") ? (
+        {effectivePermissions.has("credits.purchase_cash") ? (
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard/purchases">{t("purchases")}</Link>
           </Button>
         ) : null}
-        {hasPermission(role, "locations.manage") ? (
+        {effectivePermissions.has("locations.manage") ? (
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard/locations">{t("locations")}</Link>
           </Button>
         ) : null}
-        {hasPermission(role, "group_types.manage") ? (
+        {effectivePermissions.has("group_types.manage") ? (
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard/policies">{t("policies")}</Link>
           </Button>
         ) : null}
-        {hasPermission(role, "trainer_availability.manage") ? (
+        {effectivePermissions.has("trainer_availability.manage") ? (
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard/trainers">{t("trainers")}</Link>
           </Button>
         ) : null}
-        {hasPermission(role, "trainer_rates.manage") ? (
+        {effectivePermissions.has("trainer_rates.manage") ? (
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard/trainers/rates">{t("rates")}</Link>
           </Button>
         ) : null}
-        {hasPermission(role, "trainer_earnings.view") ? (
+        {effectivePermissions.has("trainer_earnings.view") ? (
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard/trainers/earnings">{t("earnings")}</Link>
           </Button>
         ) : null}
         {/* Cosmetic gating only (spec 4.2) — the page itself calls
             requireOrgPermission, which is the actual boundary. */}
-        {hasPermission(role, "audit.read") ? (
+        {effectivePermissions.has("audit.read") ? (
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard/settings/audit">{t("audit")}</Link>
           </Button>
         ) : null}
-        {hasPermission(role, "billing.manage") ? (
+        {effectivePermissions.has("billing.manage") ? (
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard/settings/billing">{t("billing")}</Link>
           </Button>

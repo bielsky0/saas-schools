@@ -5,6 +5,7 @@ import type { TenantDb } from "@/lib/db/tenant";
 import {
   invitation,
   membership,
+  membershipPermissionOverride,
   organization,
   personalAccount,
   staffSessionHandoff,
@@ -252,3 +253,107 @@ export async function insertHandoff(
  * would hand the escape hatch to `getMembership` and `listMembers`, the two
  * functions the fence exists to constrain. Import them from `./cross-tenant`.
  */
+
+// ── Faza 23 — membership_permission_override (§2.36, EPIK 38) ──────────────
+
+/**
+ * All permission overrides for a given membership. Used by `requireOrgAccess`
+ * to compute the effective permission set in the same `withTenant` transaction
+ * as `getMembership` — one additional SELECT, no round-trip overhead beyond
+ * the index scan.
+ */
+export async function getMembershipPermissionOverrides(
+  tx: TenantDb,
+  membershipId: string,
+): Promise<{ permissionKey: string; overrideType: "grant" | "revoke" }[]> {
+  const rows = await tx
+    .select({ permissionKey: membershipPermissionOverride.permissionKey, overrideType: membershipPermissionOverride.overrideType })
+    .from(membershipPermissionOverride)
+    .where(eq(membershipPermissionOverride.membershipId, membershipId));
+  return rows as { permissionKey: string; overrideType: "grant" | "revoke" }[];
+}
+
+/** Full override rows for display on the member permissions page. Includes id,
+ * createdAt, and reason — everything the UI needs to render and delete. */
+export async function listPermissionOverrides(
+  tx: TenantDb,
+  membershipId: string,
+) {
+  return tx
+    .select()
+    .from(membershipPermissionOverride)
+    .where(eq(membershipPermissionOverride.membershipId, membershipId))
+    .orderBy(membershipPermissionOverride.createdAt);
+}
+
+/**
+ * Upsert a permission override on a membership. Grant or revoke a single
+ * permission for a specific staff member.
+ *
+ * WRITE GATES (three, all enforced before the INSERT):
+ * 1. `reason` must be non-empty — every override requires a justification.
+ * 2. Owner memberships are immune — the membership's role must not be "owner".
+ * 3. `member_permissions.manage` is not overridable — closing the escalation
+ *    chain.
+ *
+ * These are the primary enforcement layer. `computeEffectivePermissions`
+ * repeats rules 2–3 as defense-in-depth, so an override that reaches the DB
+ * through a bug or direct INSERT is still harmless.
+ */
+export async function upsertPermissionOverride(
+  tx: TenantDb,
+  input: {
+    organizationId: string;
+    membershipId: string;
+    permissionKey: string;
+    overrideType: "grant" | "revoke";
+    reason: string;
+  },
+): Promise<string> {
+  if (!input.reason.trim()) {
+    throw new Error("reason is required");
+  }
+  if (input.permissionKey === "member_permissions.manage") {
+    throw new Error("member_permissions.manage is not overridable");
+  }
+
+  const [member] = await tx
+    .select({ role: membership.role })
+    .from(membership)
+    .where(and(eq(membership.id, input.membershipId), eq(membership.organizationId, input.organizationId)))
+    .limit(1);
+  if (!member) {
+    throw new Error("membership not found");
+  }
+  if (member.role === "owner") {
+    throw new Error("owner membership permissions are immutable");
+  }
+
+  const [row] = await tx
+    .insert(membershipPermissionOverride)
+    .values({
+      organizationId: input.organizationId,
+      membershipId: input.membershipId,
+      permissionKey: input.permissionKey,
+      overrideType: input.overrideType,
+      reason: input.reason.trim(),
+    })
+    .onConflictDoUpdate({
+      target: [membershipPermissionOverride.membershipId, membershipPermissionOverride.permissionKey],
+      set: { overrideType: input.overrideType, reason: input.reason.trim(), updatedAt: new Date() },
+    })
+    .returning({ id: membershipPermissionOverride.id });
+  return row!.id;
+}
+
+/** Delete a single permission override by id. Returns false if it did not exist. */
+export async function deletePermissionOverride(
+  tx: TenantDb,
+  id: string,
+): Promise<boolean> {
+  const [deleted] = await tx
+    .delete(membershipPermissionOverride)
+    .where(eq(membershipPermissionOverride.id, id))
+    .returning({ id: membershipPermissionOverride.id });
+  return deleted !== undefined;
+}

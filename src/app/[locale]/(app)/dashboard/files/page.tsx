@@ -1,7 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
-import { hasPermission } from "@/features/rbac";
 import { requireOrgAccess } from "@/features/organizations/context";
 import { listFilesForOwner } from "@/features/storage/data";
 import { withOwner } from "@/lib/db/tenant";
@@ -15,7 +14,7 @@ import { FileUpload } from "@/features/storage/components/file-upload";
  * control renders only with `storage.upload` (cosmetic — the API re-checks).
  */
 export default async function OrgFilesPage() {
-  const { org, role } = await requireOrgAccess();
+  const { org, effectivePermissions } = await requireOrgAccess();
   const t = await getTranslations("storage");
 
   const owner = { kind: "organization", organizationId: org.id } as const;
@@ -26,8 +25,8 @@ export default async function OrgFilesPage() {
     visibility: f.visibility,
   }));
 
-  const canUpload = hasPermission(role, "storage.upload");
-  const canDelete = hasPermission(role, "storage.delete");
+  const canUpload = effectivePermissions.has("storage.upload");
+  const canDelete = effectivePermissions.has("storage.delete");
 
   return (
     <div className="flex flex-col gap-6">

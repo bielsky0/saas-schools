@@ -146,7 +146,13 @@ export type Permission =
   /** View interest signups and convert them to real bookings through full §5
    * protection. Owner, Admin, Sekretariat — same group as `group_swap.approve`
    * (§2.10). */
-  | "interest.manage";
+  | "interest.manage"
+  // ── Faza 23 — Granular permission overrides (EPIK 38, §2.36) ──────────
+  //
+  /** Grant/revoke individual permission overrides on a membership. Owner+Admin
+   * only. This permission itself is NOT overridable — see
+   * `computeEffectivePermissions`. */
+  | "member_permissions.manage";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -198,6 +204,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "trainer_earnings.view",
     "client_price_override.manage",
     "interest.manage",
+    "member_permissions.manage",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -242,6 +249,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "trainer_earnings.view",
     "client_price_override.manage",
     "interest.manage",
+    "member_permissions.manage",
   ],
   /**
    * The three langlion staff roles (§2.10).
@@ -323,3 +331,78 @@ export function hasPermission(role: Role, permission: Permission): boolean {
 export function isRole(value: string): value is Role {
   return (ROLES as readonly string[]).includes(value);
 }
+
+/** All known permission keys, for validating override inputs. */
+const ALL_PERMISSION_KEYS = new Set(
+  Object.values(ROLE_PERMISSIONS).flat(),
+);
+
+/** Narrow an arbitrary string to a known Permission. Fail-closed: unknown keys are
+ * not permissions and an override on one must be silently ignored. */
+export function isPermissionKey(key: string): key is Permission {
+  return ALL_PERMISSION_KEYS.has(key as Permission);
+}
+
+/**
+ * Shape of a single override row from the database, as consumed by
+ * `computeEffectivePermissions`. Deliberately minimal — the function does not
+ * need the id, org, or timestamps to resolve the effective set.
+ */
+export type OverrideRow = {
+  permissionKey: string;
+  overrideType: "grant" | "revoke";
+};
+
+/**
+ * Resolve the effective permission set for a membership (Faza 23, §2.36).
+ *
+ * Starts from the static ROLE_PERMISSIONS[role] base, then applies each
+ * override: grant adds, revoke removes.
+ *
+ * TWO HARDENING RULES, both defense-in-depth (also enforced at the write gate
+ * in the data layer, but repeated here so that an override that reaches the DB
+ * through a bug or a direct INSERT is still harmless):
+ *
+ * 1. Owner memberships are immune — always return the full base set with no
+ *    override applied. An Admin must not be able to revoke the Owner's
+ *    member_permissions.manage (or any other permission).
+ * 2. member_permissions.manage is NEVER influenced by an override, on any role.
+ *    Allowing it would open an escalation chain: Admin grants reception the
+ *    permission to manage overrides → reception grants itself everything else.
+ *
+ * @param role   The member's base role from membership.role.
+ * @param overrides  Rows from membership_permission_override for this membership.
+ * @returns The effective set — all permissions the member currently holds.
+ */
+export function computeEffectivePermissions(
+  role: Role,
+  overrides: readonly OverrideRow[],
+): ReadonlySet<Permission> {
+  if (role === "owner") {
+    return new Set(ROLE_PERMISSIONS["owner"]);
+  }
+
+  const effective = new Set(ROLE_PERMISSIONS[role]);
+
+  for (const ov of overrides) {
+    if (ov.permissionKey === "member_permissions.manage") continue;
+    if (!isPermissionKey(ov.permissionKey)) continue;
+
+    if (ov.overrideType === "grant") {
+      effective.add(ov.permissionKey);
+    } else {
+      effective.delete(ov.permissionKey);
+    }
+  }
+
+  return effective;
+}
+
+/**
+ * All permission keys that are valid targets for an override — every known
+ * Permission EXCEPT member_permissions.manage, which is never overridable.
+ * Used by the admin UI to populate the permission-key dropdown.
+ */
+export const OVERRIDABLE_PERMISSIONS: Permission[] = [...ALL_PERMISSION_KEYS].filter(
+  (k) => k !== "member_permissions.manage",
+).sort() as Permission[];

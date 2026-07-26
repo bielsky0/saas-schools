@@ -2,11 +2,11 @@ import { forbidden, notFound } from "next/navigation";
 
 import { requireSession } from "@/lib/auth";
 import type { Session } from "@/lib/adapters/auth";
-import { hasPermission, isRole, type Permission, type Role } from "@/features/rbac";
+import { isRole, type Permission, type Role, computeEffectivePermissions } from "@/features/rbac";
 import { orgsEnabled } from "@/lib/tenancy";
 import { withTenant } from "@/lib/db/tenant";
 import { servedOrganization, type ServedOrganization } from "./served-org";
-import { getMembership } from "./data";
+import { getMembership, getMembershipPermissionOverrides } from "./data";
 
 /**
  * Active-org context resolution + authorization (spec 3.5 / 4.2).
@@ -31,6 +31,22 @@ export type OrgContext = {
   org: ServedOrganization;
   membership: NonNullable<Awaited<ReturnType<typeof getMembership>>>;
   role: Role;
+  /**
+   * The effective permission set for this membership — the static
+   * ROLE_PERMISSIONS[role] base plus any membership_permission_override
+   * grant/revoke rows, computed once in requireOrgAccess and stored here
+   * so requireOrgPermission and UI call sites read it without re-querying.
+   *
+   * Computed fresh on every request (NOT cached in a session/JWT/cookie):
+   * an admin revoking an override takes effect on the very next request the
+   * affected member makes, with no login/logout cycle required. This is a
+   * deliberate property, not an accident — store it anywhere persistent and
+   * you must also build the invalidation channel.
+   *
+   * For owner memberships this is always the full ROLE_PERMISSIONS["owner"]
+   * set, regardless of any override rows in the database. Owner is immune.
+   */
+  effectivePermissions: ReadonlySet<Permission>;
 };
 
 /**
@@ -104,24 +120,41 @@ export async function requireOrgAccess(): Promise<OrgContext> {
   const org = await servedOrganization();
   if (!org) notFound();
 
-  const membership = await withTenant(org.id, (tx) => getMembership(tx, org.id, session.user.id));
-  if (!membership || membership.status !== "active") {
+  const membership = await withTenant(org.id, async (tx) => {
+    const membership = await getMembership(tx, org.id, session.user.id);
+    if (!membership || membership.status !== "active") return null;
+    if (!isRole(membership.role)) return null;
+
+    // Additional SELECT on membership_permission_override per request. The
+    // table is sparse (most memberships have no overrides), and the index
+    // mpo_membership_idx makes this cheap. If it ever shows up as a hot
+    // path in a profiler, the fix is a middleware cache (e.g. Redis with
+    // invalidation on override write), not moving permissions into a
+    // session or JWT — that would trade correctness for latency and then
+    // require solving cache invalidation anyway.
+    const overrides = await getMembershipPermissionOverrides(tx, membership.id);
+    const effectivePermissions = computeEffectivePermissions(membership.role, overrides);
+
+    return { membership, effectivePermissions };
+  });
+  if (!membership) {
     forbidden();
   }
-  if (!isRole(membership.role)) {
-    forbidden();
-  }
-  return { session, org, membership, role: membership.role };
+  return { session, org, membership: membership.membership, role: membership.membership.role as Role, effectivePermissions: membership.effectivePermissions };
 }
 
 /**
  * Require a specific permission in the org context. Resolves access first, then
- * checks the centralized role→permission map; 403s if the permission is missing.
- * Every data-changing org action MUST call this before mutating.
+ * checks the effective permission set (base role + overrides); 403s if the
+ * permission is missing. Every data-changing org action MUST call this before
+ * mutating.
+ *
+ * Public signature is unchanged — the switch from hasPermission(role, p) to
+ * effectivePermissions.has(p) is internal, so no call site changes.
  */
 export async function requireOrgPermission(permission: Permission): Promise<OrgContext> {
   const ctx = await requireOrgAccess();
-  if (!hasPermission(ctx.role, permission)) {
+  if (!ctx.effectivePermissions.has(permission)) {
     forbidden();
   }
   return ctx;
