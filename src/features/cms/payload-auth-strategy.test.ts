@@ -20,7 +20,7 @@ import { getOrgBySubdomain, getMembership } from "@/features/organizations/data"
 import { withTenant } from "@/lib/db/tenant";
 import { betterAuthPayloadStrategy } from "./payload-auth-strategy";
 
-const mockGetSession = auth.api.getSession as ReturnType<typeof vi.fn>;
+const mockGetSession = auth.api.getSession as unknown as ReturnType<typeof vi.fn>;
 
 type AuthenticateArgs = Parameters<typeof betterAuthPayloadStrategy.authenticate>[0];
 
@@ -30,14 +30,14 @@ function makeHeaders(headers?: Record<string, string>): Headers {
   return h;
 }
 
-function callAuth(overrides?: Partial<AuthenticateArgs>) {
+function callAuth(overrides?: Record<string, unknown>) {
   const req = {} as Record<string, unknown>;
-  const defaults: AuthenticateArgs = {
+  const defaults: Record<string, unknown> = {
     headers: makeHeaders(),
-    req: req as never,
-    payload: {} as never,
+    req,
+    payload: {},
   };
-  return betterAuthPayloadStrategy.authenticate({ ...defaults, ...overrides });
+  return betterAuthPayloadStrategy.authenticate({ ...defaults, ...overrides } as never);
 }
 
 describe("betterAuthPayloadStrategy.authenticate", () => {

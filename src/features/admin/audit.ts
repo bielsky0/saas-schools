@@ -322,6 +322,17 @@ export const AUDIT_ACTIONS = [
   // or { triggeredBy: "staff" } (future staff reset).
   "client_password.set",
   "client_password.reset",
+  // Faza 30b — CMS Website Builder (docs/specyfikacja-cms.md §3).
+  "page.create",
+  "page.publish",
+  "page.unpublish",
+  "page.delete",
+  // Faza 30b+ — CMS media and theme (30c), block grants (30d).
+  "media.upload",
+  "media.delete",
+  "block.grant",
+  "block.revoke",
+  "theme.update",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -380,7 +391,12 @@ export type AuditTargetType =
   // Faza 28 / EPIK 43
   | "lesson_topic"
   | "homework"
-  | "homework_completion";
+  | "homework_completion"
+  // Faza 30b — CMS Website Builder
+  | "page"
+  | "media"
+  | "tenant_block_access"
+  | "theme";
 
 /**
  * WHO acted, as a kind — §6.4's actor model. A different question from WHICH

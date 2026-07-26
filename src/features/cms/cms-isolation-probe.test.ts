@@ -9,12 +9,13 @@ vi.mock("@/lib/db/tenant", () => ({ withTenant: vi.fn() }));
 vi.mock("@/lib/db/system", () => ({ withSystemBypass: vi.fn() }));
 vi.mock("../sql-error", () => ({ sqlStateOf: vi.fn() }));
 
+import type { NextRequest } from "next/server";
 import { POST } from "@/app/api/dev/cms-isolation-probe/route";
 
 function mockRequest(body: Record<string, unknown>) {
   return {
     json: () => Promise.resolve(body),
-  } as unknown as Request;
+  } as unknown as NextRequest;
 }
 
 describe("/api/dev/cms-isolation-probe production guard", () => {

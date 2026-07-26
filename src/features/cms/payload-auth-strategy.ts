@@ -5,9 +5,13 @@ import { ORG_SUBDOMAIN_HEADER } from "@/lib/tenant-host";
 import { withTenant } from "@/lib/db/tenant";
 import { getOrgBySubdomain, getMembership } from "@/features/organizations/data";
 
+type AuthenticateArgs = { headers: Headers; req?: Record<string, unknown> };
+
 export const betterAuthPayloadStrategy: AuthStrategy = {
   name: "better-auth",
-  authenticate: async ({ headers, req }) => {
+  authenticate: async (args) => {
+    const { headers } = args;
+    const req = (args as AuthenticateArgs).req ?? {};
     const session = await auth.api.getSession({ headers });
     if (!session) return { user: null };
 

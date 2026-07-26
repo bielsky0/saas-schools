@@ -14,7 +14,7 @@ let _payload: PayloadInstance | null = null;
 
 async function getInstance(): Promise<PayloadInstance> {
   if (!_payload) {
-    _payload = (await getPayload({ config: payloadConfig })) as PayloadInstance;
+    _payload = (await getPayload({ config: payloadConfig })) as unknown as PayloadInstance;
   }
   return _payload;
 }

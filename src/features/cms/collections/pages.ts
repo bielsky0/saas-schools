@@ -1,5 +1,9 @@
 import type { CollectionConfig } from "payload";
 
+import { getAllBlockConfigs } from "../block-registry";
+
+const ALL_BLOCKS = getAllBlockConfigs();
+
 type CmsReq = { organizationId?: string } & Record<string, unknown>;
 
 export const pagesCollection: CollectionConfig = {
@@ -66,7 +70,7 @@ export const pagesCollection: CollectionConfig = {
     {
       name: "blocks",
       type: "blocks",
-      blocks: [],
+      blocks: ALL_BLOCKS,
     },
   ],
 };

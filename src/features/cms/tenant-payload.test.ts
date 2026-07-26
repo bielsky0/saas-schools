@@ -152,16 +152,12 @@ describe("concurrent tenantFind isolation", () => {
     ];
 
     const results = await Promise.allSettled(calls);
-    expect(results[0].status).toBe("fulfilled");
-    expect(results[1].status).toBe("rejected");
-    expect(results[2].status).toBe("fulfilled");
-    expect(results[3].status).toBe("rejected");
-    if (results[1].status === "rejected") {
-      expect(results[1].reason).toBeInstanceOf(Error);
-    }
-    if (results[3].status === "rejected") {
-      expect(results[3].reason).toBeInstanceOf(Error);
-    }
+    expect(results[0]!.status).toBe("fulfilled");
+    expect(results[1]!.status).toBe("rejected");
+    expect(results[2]!.status).toBe("fulfilled");
+    expect(results[3]!.status).toBe("rejected");
+    expect((results[1]! as PromiseRejectedResult).reason).toBeInstanceOf(Error);
+    expect((results[3]! as PromiseRejectedResult).reason).toBeInstanceOf(Error);
   });
 });
 
@@ -190,17 +186,19 @@ describe("behavioral: depth > 0 with populated cross-org relations", () => {
     });
 
     const [resultA, resultB] = await Promise.all([
-      tenantFind({ collection: "pages", depth: 1, user: { organizationId: "org-a" } }),
-      tenantFind({ collection: "pages", depth: 1, user: { organizationId: "org-b" } }),
+      tenantFind<{ docs: Array<Record<string, unknown>>; totalDocs: number }>({ collection: "pages", depth: 1, user: { organizationId: "org-a" } }),
+      tenantFind<{ docs: Array<Record<string, unknown>>; totalDocs: number }>({ collection: "pages", depth: 1, user: { organizationId: "org-b" } }),
     ]);
 
     // Org A's page's populated media belongs to Org A, not Org B
-    const mediaA = resultA.docs[0].media;
+    const docA = resultA.docs[0]!;
+    const mediaA = docA.media as Record<string, unknown>;
     expect(mediaA.organizationId).toBe("org-a");
     expect(mediaA.organizationId).not.toBe("org-b");
 
     // Org B's page's populated media belongs to Org B, not Org A
-    const mediaB = resultB.docs[0].media;
+    const docB = resultB.docs[0]!;
+    const mediaB = docB.media as Record<string, unknown>;
     expect(mediaB.organizationId).toBe("org-b");
     expect(mediaB.organizationId).not.toBe("org-a");
 
@@ -242,9 +240,10 @@ describe("ESLint no-restricted-imports — payload access fence", () => {
       overrideConfigFile: "eslint.config.mjs",
     });
 
-    const [result] = await eslint.lintText(violatingCode, {
+    const results = await eslint.lintText(violatingCode, {
       filePath: "src/features/cms/some-file.ts",
     });
+    const result = results[0]!;
 
     const restrictedMessages = result.messages.filter(
       (m) => m.ruleId === "no-restricted-imports",
@@ -269,9 +268,10 @@ describe("ESLint no-restricted-imports — payload access fence", () => {
       overrideConfigFile: "eslint.config.mjs",
     });
 
-    const [result] = await eslint.lintText(violatingCode, {
+    const results = await eslint.lintText(violatingCode, {
       filePath: "src/features/cms/some-file.ts",
     });
+    const result = results[0]!;
 
     const restrictedMessages = result.messages.filter(
       (m) => m.ruleId === "no-restricted-imports",
@@ -296,9 +296,10 @@ describe("ESLint no-restricted-imports — payload access fence", () => {
       overrideConfigFile: "eslint.config.mjs",
     });
 
-    const [result] = await eslint.lintText(allowedCode, {
+    const results = await eslint.lintText(allowedCode, {
       filePath: "src/features/cms/tenant-payload.ts",
     });
+    const result = results[0]!;
 
     const restrictedMessages = result.messages.filter(
       (m) => m.ruleId === "no-restricted-imports",
