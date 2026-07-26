@@ -140,7 +140,13 @@ export type Permission =
   /** Grant/revoke individual client price overrides. Owner+Admin only, and
    * paired in the action with a REQUIRED reason — same pattern as
    * `credits.manual_grant` (§2.10). */
-  | "client_price_override.manage";
+  | "client_price_override.manage"
+  // ── Faza 22 — Zapisy-zainteresowanie (EPIK 36, §2.34) ─────────────
+  //
+  /** View interest signups and convert them to real bookings through full §5
+   * protection. Owner, Admin, Sekretariat — same group as `group_swap.approve`
+   * (§2.10). */
+  | "interest.manage";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -191,6 +197,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "trainer_rates.manage",
     "trainer_earnings.view",
     "client_price_override.manage",
+    "interest.manage",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -234,6 +241,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "trainer_rates.manage",
     "trainer_earnings.view",
     "client_price_override.manage",
+    "interest.manage",
   ],
   /**
    * The three langlion staff roles (§2.10).
@@ -271,6 +279,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
       "credits.reassign_athlete",
       "refunds.issue",
       "invoices.mark_issued",
+      "interest.manage",
     ],
   reception: [
     "organization.leave",

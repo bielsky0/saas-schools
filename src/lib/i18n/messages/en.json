@@ -865,6 +865,8 @@
       "noPolicy": "No policy",
       "allowedPurchaseModes": "Purchase modes",
       "allowedBillingTypes": "Billing types for packages",
+      "status": "Status",
+      "statusHint": "Scheduled offers show a session calendar. Collecting interest shows a signup form instead.",
       "submit": "Create group type",
       "submitting": "Creating…",
       "save": "Save changes",
@@ -883,6 +885,10 @@
     "purchaseMode": {
       "single_class": "Single class",
       "package": "Package"
+    },
+    "status": {
+      "scheduled": "Scheduled",
+      "collecting_interest": "Collecting interest"
     },
     "billingType": {
       "one_time": "One-off",
@@ -959,7 +965,23 @@
     "deactivateConfirm": "Are you sure you want to deactivate this group type? Existing sessions and bookings will remain untouched.",
     "deactivateReason": "(optional) Deactivation reason",
     "hasActiveRecurrences": "Active recurring patterns ({count})",
-    "hasFutureSessions": "Future unheld sessions ({count})"
+    "hasFutureSessions": "Future unheld sessions ({count})",
+    "interest": {
+      "title": "Interest signups",
+      "subtitle": "Parents requesting to be notified when the schedule is published.",
+      "empty": "No interest signups yet.",
+      "convert": "Convert to booking",
+      "converting": "Converting…",
+      "convertSuccess": "Interest signup converted to booking.",
+      "convertMissingFields": "Select a session to convert to.",
+      "converted": "Converted",
+      "athlete": "Athlete",
+      "client": "Client",
+      "date": "Date",
+      "actions": "Actions",
+      "notFound": "That interest signup no longer exists.",
+      "groupTypeGone": "That offer no longer exists."
+    }
   },
   "schedule": {
     "validation": {
@@ -1057,7 +1079,8 @@
   "bookings": {
     "validation": {
       "athleteRequired": "Choose a participant.",
-      "athleteNameMin": "Participant name must be at least 2 characters."
+      "athleteNameMin": "Participant name must be at least 2 characters.",
+      "participantsRequired": "Add one or more participants."
     }
   },
   "enrollment": {
@@ -1130,10 +1153,25 @@
       "submit": "Enrol",
       "booking": "Enrolling…"
     },
+    "interest": {
+      "notice": "This offer is currently collecting interest — no schedule has been published yet. Register your interest and we'll let you know when it's available.",
+      "submit": "Register interest",
+      "submitting": "Registering…",
+      "done": "Your interest has been recorded. We'll contact you when the schedule is available.",
+      "alreadySubmitted": "This child is already registered for this offer."
+    },
+    "multiChild": {
+      "heading": "Participants",
+      "addAnother": "Add another child",
+      "remove": "Remove",
+      "childLabel": "Child {n}"
+    },
     "done": {
       "booked": "Booking created.",
       "bookedOffline": "Pay on site before the class.",
-      "redirecting": "Redirecting to payment gateway…"
+      "redirecting": "Redirecting to payment gateway…",
+      "partialSuccess": "{created} of {total} children enrolled.",
+      "viewSummary": "View summary"
     },
     "errors": {
       "verifyFirst": "Confirm your email address with a code first.",
@@ -1146,7 +1184,8 @@
       "noCredits": "No credits available — contact the reception.",
       "policyVersionChanged": "The policy was updated while you were filling the form. Refresh the page.",
       "policyNotAccepted": "You must accept the policy to proceed.",
-      "generic": "Something went wrong. Please try again."
+      "generic": "Something went wrong. Please try again.",
+      "interestAlreadyExists": "This child is already registered for this offer."
     },
     "myBookings": "My bookings",
     "noBookings": "No upcoming bookings.",

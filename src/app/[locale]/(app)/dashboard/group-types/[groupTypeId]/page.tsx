@@ -23,6 +23,9 @@ import { listMembers } from "@/features/organizations/data";
 import { listPolicyDocuments } from "@/features/policies/data";
 import { GroupTypeForm } from "@/features/groups/components/group-type-form";
 import { RecurrenceForm } from "@/features/groups/components/recurrence-form";
+import { InterestSignupList } from "@/features/interest-signups/components/interest-signup-list";
+import { listInterestSignups } from "@/features/interest-signups/data";
+import { listSessionAvailability } from "@/features/bookings/data";
 import { withTenant } from "@/lib/db/tenant";
 
 /** Roles that may be scheduled to teach (§2.10). */
@@ -52,12 +55,27 @@ export default async function GroupTypeDetailPage({
   const data = await withTenant(org.id, async (tx) => {
     const groupType = await getGroupType(tx, org.id, groupTypeId);
     if (!groupType) return null;
+    const [recurrences, locations, members, policyDocuments, interestSignups] = await Promise.all([
+      listRecurrencesWithDetails(tx, org.id, groupTypeId),
+      listLocations(tx, org.id),
+      listMembers(tx, org.id),
+      listPolicyDocuments(tx, org.id),
+      listInterestSignups(tx, org.id, groupTypeId),
+    ]);
+    // Fetch future sessions for interest-to-booking conversion picker.
+    const sessions = await listSessionAvailability(tx, org.id, {
+      groupTypeId,
+      from: new Date(),
+      to: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+    });
     return {
       groupType,
-      recurrences: await listRecurrencesWithDetails(tx, org.id, groupTypeId),
-      locations: await listLocations(tx, org.id),
-      members: await listMembers(tx, org.id),
-      policyDocuments: await listPolicyDocuments(tx, org.id),
+      recurrences,
+      locations,
+      members,
+      policyDocuments,
+      interestSignups,
+      sessions,
     };
   });
 
@@ -105,6 +123,7 @@ export default async function GroupTypeDetailPage({
               description: data.groupType.description,
               engine: data.groupType.engine,
               paymentPolicy: data.groupType.paymentPolicy,
+              status: data.groupType.status,
               price: data.groupType.price,
               isNewClientOnly: data.groupType.isNewClientOnly,
               defaultLocationId: data.groupType.defaultLocationId,
@@ -205,6 +224,23 @@ export default async function GroupTypeDetailPage({
           </CardContent>
         </Card>
       </section>
+
+      <InterestSignupList
+        rows={data.interestSignups.map((row) => ({
+          id: row.id,
+          athleteName: row.athleteName,
+          clientName: row.clientName ?? row.clientEmail ?? "",
+          clientEmail: row.clientEmail ?? "",
+          createdAt: (row.createdAt as Date).toISOString().slice(0, 10),
+          converted: row.convertedBookingId !== null,
+          convertedBookingId: row.convertedBookingId,
+        }))}
+        sessions={data.sessions.map((s) => ({
+          id: s.sessionId,
+          label: `${s.startTime.toLocaleString()} — ${s.locationName ?? ""} (${s.activeCount}/${s.capacity})`,
+        }))}
+      />
+
     </div>
   );
 }

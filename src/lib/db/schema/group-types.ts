@@ -33,6 +33,7 @@ import { policyDocument } from "./policy-documents";
  * `features/groups/schema.ts`:
  *   engine         "schedule_first" | "availability_first" | "slot_first"
  *   paymentPolicy  "online" | "on_site" | "both"
+ *   status         "scheduled" | "collecting_interest" (Faza 22, §2.34)
  *   purchase modes "single_class" | "package"
  *   billing types  "one_time" | "recurring"
  *
@@ -64,6 +65,16 @@ export const groupType = pgTable(
       .$type<"schedule_first" | "availability_first" | "slot_first">()
       .notNull(),
     paymentPolicy: text("paymentPolicy").$type<"online" | "on_site" | "both">().notNull(),
+    /**
+     * Faza 22 (§2.34) — controls branching on the public enrollment page.
+     * `scheduled` (default): the offer has a schedule — render the session calendar.
+     * `collecting_interest`: no schedule yet — render the interest signup form instead.
+     * Admin switches manually; no automation or threshold triggers.
+     */
+    status: text("status")
+      .$type<"scheduled" | "collecting_interest">()
+      .notNull()
+      .default("scheduled"),
     /**
      * Minor units of `organization.currency` (§2.14) — grosze, not złote. Integer
      * throughout, matching what Stripe expects, so there is no rounding layer to

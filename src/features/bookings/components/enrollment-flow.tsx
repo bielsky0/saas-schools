@@ -19,7 +19,7 @@ import {
 } from "@/components/ui";
 import type { CalendarDay, CalendarSlot } from "../calendar";
 import type { PaymentOptionsView, PackageTeaser } from "../payment-options";
-import { createBookingAction, type CreateBookingState } from "../actions";
+import { createBookingManyAction, type CreateBookingManyState } from "../actions";
 
 type Recognized = {
   email: string;
@@ -50,8 +50,6 @@ export interface EnrollmentFlowProps {
   recognized: Recognized | null;
   policyDocument: PolicyDocumentProp | null;
 }
-
-const initial: CreateBookingState = {};
 
 /**
  * The single-route enrollment step machine (F5, EPIK 4).
@@ -131,35 +129,21 @@ function Bookable({
   const [slot, setSlot] = useState<CalendarSlot | null>(null);
   // A parent with a live cookie is recognised: skip email + OTP entirely.
   const [verified, setVerified] = useState<boolean>(recognized !== null);
-  const [state, formAction, pending] = useActionState(createBookingAction, initial);
+  const [bookingResult, setBookingResult] = useState<CreateBookingManyState | null>(null);
 
   const daySlots =
     grid.find((d) => d.dayKey === selectedDay)?.slots.filter((s) => s.bookable) ?? [];
 
-  // Redirect to Stripe Checkout when online payment is needed.
-  useEffect(() => {
-    if (state.checkoutUrl) {
-      window.location.href = state.checkoutUrl;
-    }
-  }, [state.checkoutUrl]);
-
-  if (state.bookingId) {
-    // Online payment: redirect is about to happen (or already happened).
-    // If there's a checkoutUrl, the redirect effect fires above — show a
-    // transitional message. If there's no checkoutUrl, the Stripe session
-    // creation failed; the booking is pending and needs manual attention.
-    if (state.checkoutUrl) {
-      return (
-        <Notice>
-          {t("done.redirecting")}
-        </Notice>
-      );
-    }
+  if (bookingResult?.success) {
     return (
       <Notice>
-        {t("done.booked")} {t("done.bookedOffline")}
+        {bookingResult.success}
       </Notice>
     );
+  }
+
+  if (bookingResult?.error) {
+    // error is shown in ConfirmStep via state propagation
   }
 
   return (
@@ -216,14 +200,14 @@ function Bookable({
               />
             ) : (
               <ConfirmStep
-                formAction={formAction}
-                pending={pending}
+                pending={false}
                 groupTypeSlug={groupTypeSlug}
                 sessionId={slot.sessionId}
                 methods={methods}
                 recognizedAthletes={recognized?.athletes ?? []}
-                error={state.error}
+                error={bookingResult?.error}
                 policyDocument={policyDocument}
+                onComplete={setBookingResult}
               />
             )}
             <Button variant="ghost" type="button" onClick={() => setSlot(null)}>
@@ -434,8 +418,9 @@ function VerifyStep({ onVerified }: { onVerified: () => void }) {
   );
 }
 
+const participantsInitial: CreateBookingManyState = {};
+
 function ConfirmStep({
-  formAction,
   pending,
   groupTypeSlug,
   sessionId,
@@ -443,8 +428,8 @@ function ConfirmStep({
   recognizedAthletes,
   error,
   policyDocument,
+  onComplete,
 }: {
-  formAction: (formData: FormData) => void;
   pending: boolean;
   groupTypeSlug: string;
   sessionId: string;
@@ -452,72 +437,125 @@ function ConfirmStep({
   recognizedAthletes: { id: string; name: string }[];
   error?: string;
   policyDocument: PolicyDocumentProp | null;
+  onComplete?: (state: CreateBookingManyState) => void;
 }) {
   const t = useTranslations("enrollment");
   const hasExisting = recognizedAthletes.length > 0;
-  const [participantKind, setParticipantKind] = useState<"existing" | "new">(
-    hasExisting ? "existing" : "new",
-  );
-  const [athleteId, setAthleteId] = useState(recognizedAthletes[0]?.id ?? "");
   const enabledMethod = methods.find((m) => m.enabled)?.method ?? "on_site";
+
+  const [state, formAction, pendingAction] = useActionState(
+    createBookingManyAction,
+    participantsInitial,
+  );
+  const [children, setChildren] = useState([{ kind: hasExisting ? "existing" as const : "new" as const, athleteId: recognizedAthletes[0]?.id ?? "", name: "", age: "" }]);
+
+  useEffect(() => {
+    if (onComplete && (state.success || state.error)) onComplete(state);
+  }, [state, onComplete]);
+
+  function addChild() {
+    setChildren((prev) => [...prev, { kind: "new", athleteId: "", name: "", age: "" }]);
+  }
+
+  function removeChild(index: number) {
+    setChildren((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  function updateChild(index: number, patch: Partial<typeof children[number]>) {
+    setChildren((prev) => prev.map((c, i) => (i === index ? { ...c, ...patch } : c)));
+  }
 
   return (
     <form action={formAction} className="space-y-4">
       <input type="hidden" name="groupTypeSlug" value={groupTypeSlug} />
       <input type="hidden" name="sessionId" value={sessionId} />
+      <input type="hidden" name="participantCount" value={children.length} />
 
-      <fieldset className="space-y-2">
-        <legend className="font-medium">{t("participant.heading")}</legend>
-        {hasExisting ? (
-          <>
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="participantKind"
-                value="existing"
-                checked={participantKind === "existing"}
-                onChange={() => setParticipantKind("existing")}
-              />
-              {t("participant.existing")}
-            </label>
-            {participantKind === "existing" ? (
-              <select
-                name="athleteId"
-                value={athleteId}
-                onChange={(e) => setAthleteId(e.target.value)}
-                className="border-input w-full rounded border px-3 py-2"
-              >
-                {recognizedAthletes.map((a) => (
-                  <option key={a.id} value={a.id}>
-                    {a.name}
-                  </option>
-                ))}
-              </select>
+      <fieldset className="space-y-4">
+        <legend className="font-medium">{t("multiChild.heading")}</legend>
+        {children.map((child, index) => (
+          <div key={index} className="space-y-2 rounded border p-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">
+                {t("multiChild.childLabel", { n: index + 1 })}
+              </span>
+              {children.length > 1 ? (
+                <button
+                  type="button"
+                  onClick={() => removeChild(index)}
+                  className="text-destructive text-sm"
+                >
+                  {t("multiChild.remove")}
+                </button>
+              ) : null}
+            </div>
+
+            {hasExisting ? (
+              <>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name={`participantKind.${index}`}
+                    value="existing"
+                    checked={child.kind === "existing"}
+                    onChange={() => updateChild(index, { kind: "existing" })}
+                  />
+                  {t("participant.existing")}
+                </label>
+                {child.kind === "existing" ? (
+                  <select
+                    name={`athleteId.${index}`}
+                    value={child.athleteId}
+                    onChange={(e) => updateChild(index, { athleteId: e.target.value })}
+                    className="border-input w-full rounded border px-3 py-2"
+                  >
+                    {recognizedAthletes.map((a) => (
+                      <option key={a.id} value={a.id}>
+                        {a.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : null}
+                <label className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name={`participantKind.${index}`}
+                    value="new"
+                    checked={child.kind === "new"}
+                    onChange={() => updateChild(index, { kind: "new" })}
+                  />
+                  {t("participant.addNew")}
+                </label>
+              </>
+            ) : (
+              <input type="hidden" name={`participantKind.${index}`} value="new" />
+            )}
+            {child.kind === "new" ? (
+              <div className="space-y-2">
+                <FormField label={t("participant.name")} htmlFor={`ll-name-${index}`}>
+                  <Input
+                    id={`ll-name-${index}`}
+                    name={`participantName.${index}`}
+                    value={child.name}
+                    onChange={(e) => updateChild(index, { name: e.target.value })}
+                  />
+                </FormField>
+                <FormField label={t("participant.age")} htmlFor={`ll-age-${index}`}>
+                  <Input
+                    id={`ll-age-${index}`}
+                    name={`participantAge.${index}`}
+                    inputMode="numeric"
+                    value={child.age}
+                    onChange={(e) => updateChild(index, { age: e.target.value })}
+                  />
+                </FormField>
+              </div>
             ) : null}
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="participantKind"
-                value="new"
-                checked={participantKind === "new"}
-                onChange={() => setParticipantKind("new")}
-              />
-              {t("participant.addNew")}
-            </label>
-          </>
-        ) : (
-          <input type="hidden" name="participantKind" value="new" />
-        )}
-        {participantKind === "new" ? (
-          <div className="space-y-2">
-            <FormField label={t("participant.name")} htmlFor="ll-participant">
-              <Input id="ll-participant" name="participantName" />
-            </FormField>
-            <FormField label={t("participant.age")} htmlFor="ll-age">
-              <Input id="ll-age" name="participantAge" inputMode="numeric" />
-            </FormField>
           </div>
-        ) : null}
+        ))}
+        <Button type="button" variant="outline" size="sm" onClick={addChild}>
+          + {t("multiChild.addAnother")}
+        </Button>
       </fieldset>
 
       <fieldset className="space-y-2">
@@ -564,9 +602,9 @@ function ConfirmStep({
         </fieldset>
       ) : null}
 
-      {error ? <FieldError>{error}</FieldError> : null}
-      <Button type="submit" disabled={pending}>
-        {pending ? t("confirm.booking") : t("confirm.submit")}
+      {state.error || error ? <FieldError>{state.error || error}</FieldError> : null}
+      <Button type="submit" disabled={pendingAction || pending}>
+        {pendingAction || pending ? t("confirm.booking") : t("confirm.submit")}
       </Button>
     </form>
   );

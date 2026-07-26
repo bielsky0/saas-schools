@@ -12,6 +12,7 @@ import { getGroupTypeBySlug } from "@/features/groups/data";
 import { getActivePolicyForGroupType, getLatestAcceptanceForClientGroupType } from "@/features/policies/data";
 import { resolveClientPrice } from "@/features/pricing/resolve";
 import { requireServedOrganization } from "@/features/organizations/served-org";
+import { InterestSignupForm } from "@/features/interest-signups/components/interest-signup-form";
 import { creditType, productTemplate } from "@/lib/db/schema";
 import { withTenant } from "@/lib/db/tenant";
 import { monthRangeInZone, shiftMonth } from "@/lib/datetime";
@@ -170,6 +171,31 @@ export default async function EnrollmentPage({
         getLatestAcceptanceForClientGroupType(tx, org.id, recognized.clientId, groupType.id),
       )
     : null;
+
+  // Faza 22: when an offer is collecting_interest, render the interest signup
+  // form instead of the session calendar and booking flow (§2.34).
+  if (groupType.status === "collecting_interest") {
+    const interestAthletes = recognized
+      ? await withTenant(org.id, (tx) =>
+          listAthletes(tx, org.id, recognized.clientId),
+        ).then((rows) => rows.map((a) => ({ id: a.id, name: a.name })))
+      : [];
+
+    return (
+      <main>
+        <h1 className="text-2xl font-semibold">{t("title", { name: groupType.name })}</h1>
+        {groupType.description ? (
+          <div className="text-muted-foreground mt-2 whitespace-pre-line">
+            {groupType.description}
+          </div>
+        ) : null}
+        <InterestSignupForm
+          groupTypeSlug={groupTypeSlug}
+          athletes={interestAthletes}
+        />
+      </main>
+    );
+  }
 
   return (
     <main>

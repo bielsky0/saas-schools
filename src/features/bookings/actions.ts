@@ -23,7 +23,8 @@ import {
   SessionPastError,
   UnknownSessionError,
 } from "./create";
-import { createBookingSchema } from "./schema";
+import { createManyBookings, type CreateManyResult } from "./create-many";
+import { createBookingSchema, createBookingManySchema } from "./schema";
 
 /**
  * The public enrollment submission (F5, EPIK 4/6/14).
@@ -172,6 +173,139 @@ function messageFor(error: unknown, t: Awaited<ReturnType<typeof getTranslations
   if (error instanceof PolicyVersionChangedError) return t("errors.policyVersionChanged");
   if (error instanceof PolicyNotAcceptedError) return t("errors.policyNotAccepted");
   throw error;
+}
+
+/**
+ * Multi-child enrollment submission (Faza 22, EPIK 40, §2.39, Constraint 15).
+ *
+ * A parent can enrol N children to the same session in a single pass.
+ * Each child gets an INDEPENDENT `withTenant` transaction — failure of one
+ * child does NOT roll back the committed booking of a sibling.
+ *
+ * Returns a partial-success report so the UI can show which children were
+ * enrolled and which failed (and why).
+ */
+export type CreateBookingManyState = FormState & {
+  report?: CreateManyResult;
+};
+
+export async function createBookingManyAction(
+  _prev: CreateBookingManyState,
+  formData: FormData,
+): Promise<CreateBookingManyState> {
+  const org = await requireServedOrganization();
+
+  const principal = await resolveClientSession(org.id);
+  const [t, tv] = await Promise.all([
+    getTranslations("enrollment"),
+    getTranslations("bookings.validation"),
+  ]);
+
+  if (!principal || !principal.isVerified) {
+    return { error: t("errors.verifyFirst") };
+  }
+
+  const participants = parseManyParticipants(formData);
+
+  const parsed = createBookingManySchema(tv).safeParse({
+    groupTypeSlug: str(formData.get("groupTypeSlug")),
+    sessionId: str(formData.get("sessionId")),
+    paymentMethod: str(formData.get("paymentMethod")),
+    participants,
+    acceptedPolicyVersion: str(formData.get("acceptedPolicyVersion")) || undefined,
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? t("errors.generic") };
+  }
+
+  const { groupType, policyDoc, resolvedPrice } = await withTenant(org.id, async (tx) => {
+    const gt = await getGroupTypeBySlug(tx, org.id, parsed.data.groupTypeSlug);
+    if (!gt) throw new UnknownSessionError(parsed.data.groupTypeSlug);
+
+    const doc = gt.policyDocumentId
+      ? await getActivePolicyForGroupType(tx, org.id, gt.id)
+      : null;
+    const price = await resolveClientPrice(tx, principal.clientId, gt.id, gt.price);
+
+    return { groupType: gt, policyDoc: doc, resolvedPrice: price };
+  });
+
+  const report = await createManyBookings(
+    (fn) => withTenant(org.id, fn),
+    {
+      organizationId: org.id,
+      organizationCurrency: org.currency,
+      groupType: {
+        id: groupType.id,
+        price: resolvedPrice,
+        paymentPolicy: groupType.paymentPolicy,
+        allowedPurchaseModes: groupType.allowedPurchaseModes,
+      },
+      client: { id: principal.clientId, email: principal.email },
+      sessionId: parsed.data.sessionId,
+      paymentMethod: parsed.data.paymentMethod,
+      participants: parsed.data.participants,
+      onlineAvailable: org.stripeConnectChargesEnabled ?? false,
+      policyDocument: policyDoc,
+      acceptedPolicyVersion: parsed.data.acceptedPolicyVersion,
+    },
+  );
+
+  revalidatePath(`/zapisy/${parsed.data.groupTypeSlug}`);
+
+  const created = report.results.filter((r) => !r.error).length;
+  const total = report.results.length;
+
+  if (created === 0) {
+    const firstError = report.results.find((r) => r.error)?.error;
+    return { error: messageForLabel(firstError, t), report };
+  }
+
+  if (created < total) {
+    return {
+      success: t("done.partialSuccess", { created, total }),
+      report,
+    };
+  }
+
+  return { success: t("done.booked"), report };
+}
+
+function parseManyParticipants(formData: FormData) {
+  const count = parseInt(str(formData.get("participantCount")) || "1", 10);
+  const participants: Array<{ kind: "existing"; athleteId: string } | { kind: "new"; name: string; age?: number }> = [];
+
+  for (let i = 0; i < count; i++) {
+    const kind = str(formData.get(`participantKind.${i}`));
+    if (kind === "existing") {
+      participants.push({
+        kind: "existing",
+        athleteId: str(formData.get(`athleteId.${i}`)),
+      });
+    } else {
+      participants.push({
+        kind: "new",
+        name: str(formData.get(`participantName.${i}`)),
+        age: parseInt(str(formData.get(`participantAge.${i}`)), 10) || undefined,
+      });
+    }
+  }
+
+  return participants;
+}
+
+function messageForLabel(label: string | undefined, t: Awaited<ReturnType<typeof getTranslations>>): string {
+  switch (label) {
+    case "sessionFull": return t("errors.sessionFull");
+    case "sessionCancelled": return t("errors.sessionCancelled");
+    case "sessionPast": return t("errors.sessionPast");
+    case "paymentMethodUnavailable": return t("errors.paymentMethodUnavailable");
+    case "foreignAthlete": return t("errors.foreignAthlete");
+    case "unknownSession": return t("errors.unknownSession");
+    case "policyVersionChanged": return t("errors.policyVersionChanged");
+    case "policyNotAccepted": return t("errors.policyNotAccepted");
+    default: return t("errors.generic");
+  }
 }
 
 function str(value: FormDataEntryValue | null): string {

@@ -865,6 +865,8 @@
       "noPolicy": "Brak regulaminu",
       "allowedPurchaseModes": "Tryby zakupu",
       "allowedBillingTypes": "Rozliczenie pakietów",
+      "status": "Status",
+      "statusHint": "Oferty z harmonogramem pokazują kalendarz sesji. Zbieranie zainteresowania pokazuje formularz zgłoszenia.",
       "submit": "Utwórz typ grupy",
       "submitting": "Tworzenie…",
       "save": "Zapisz zmiany",
@@ -883,6 +885,10 @@
     "purchaseMode": {
       "single_class": "Pojedyncze zajęcia",
       "package": "Pakiet"
+    },
+    "status": {
+      "scheduled": "Z harmonogramem",
+      "collecting_interest": "Zbieranie zainteresowania"
     },
     "billingType": {
       "one_time": "Jednorazowy",
@@ -959,7 +965,23 @@
     "deactivateConfirm": "Czy na pewno chcesz dezaktywować ten typ grupy? Istniejące sesje i rezerwacje pozostaną nietknięte.",
     "deactivateReason": "(opcjonalnie) Powód dezaktywacji",
     "hasActiveRecurrences": "Aktywne wzorce cykliczne ({count})",
-    "hasFutureSessions": "Przyszłe nieodbyte sesje ({count})"
+    "hasFutureSessions": "Przyszłe nieodbyte sesje ({count})",
+    "interest": {
+      "title": "Zgłoszenia zainteresowania",
+      "subtitle": "Rodzice zgłaszający chęć zapisu po opublikowaniu harmonogramu.",
+      "empty": "Brak zgłoszeń zainteresowania.",
+      "convert": "Przenieś do rezerwacji",
+      "converting": "Przenoszenie…",
+      "convertSuccess": "Zgłoszenie przeniesione do rezerwacji.",
+      "convertMissingFields": "Wybierz sesję, na którą przenieść.",
+      "converted": "Przeniesione",
+      "athlete": "Uczestnik",
+      "client": "Rodzic",
+      "date": "Data",
+      "actions": "Akcje",
+      "notFound": "To zgłoszenie już nie istnieje.",
+      "groupTypeGone": "Ta oferta już nie istnieje."
+    }
   },
   "schedule": {
     "validation": {
@@ -1057,7 +1079,8 @@
   "bookings": {
     "validation": {
       "athleteRequired": "Wybierz uczestnika.",
-      "athleteNameMin": "Imię uczestnika musi mieć co najmniej 2 znaki."
+      "athleteNameMin": "Imię uczestnika musi mieć co najmniej 2 znaki.",
+      "participantsRequired": "Dodaj co najmniej jednego uczestnika."
     }
   },
   "enrollment": {
@@ -1130,10 +1153,25 @@
       "submit": "Zapisz",
       "booking": "Zapisywanie…"
     },
+    "interest": {
+      "notice": "Ta oferta zbiera obecnie zainteresowanie — harmonogram nie został jeszcze opublikowany. Zgłoś zainteresowanie, a damy znać, gdy będzie dostępny.",
+      "submit": "Zgłoś zainteresowanie",
+      "submitting": "Zgłaszanie…",
+      "done": "Twoje zainteresowanie zostało zapisane. Skontaktujemy się, gdy harmonogram będzie dostępny.",
+      "alreadySubmitted": "To dziecko jest już zapisane do tej oferty."
+    },
+    "multiChild": {
+      "heading": "Uczestnicy",
+      "addAnother": "Dodaj kolejne dziecko",
+      "remove": "Usuń",
+      "childLabel": "Dziecko {n}"
+    },
     "done": {
       "booked": "Rezerwacja utworzona.",
       "bookedOffline": "Zapłać na miejscu przed zajęciami.",
-      "redirecting": "Przekierowujemy do bramki płatności…"
+      "redirecting": "Przekierowujemy do bramki płatności…",
+      "partialSuccess": "Zapisano {created} z {total} dzieci.",
+      "viewSummary": "Zobacz podsumowanie"
     },
     "errors": {
       "verifyFirst": "Najpierw potwierdź swój adres e-mail kodem.",
@@ -1146,7 +1184,8 @@
       "noCredits": "Brak dostępnych kredytów — skontaktuj się z recepcją.",
       "policyVersionChanged": "Regulamin został zmieniony w trakcie wypełniania formularza. Odśwież stronę.",
       "policyNotAccepted": "Wymagana jest akceptacja regulaminu.",
-      "generic": "Coś poszło nie tak. Spróbuj ponownie."
+      "generic": "Coś poszło nie tak. Spróbuj ponownie.",
+      "interestAlreadyExists": "To dziecko jest już zapisane do tej oferty."
     },
     "myBookings": "Moje zajęcia",
     "noBookings": "Brak nadchodzących zajęć.",

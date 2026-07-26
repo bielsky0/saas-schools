@@ -21,6 +21,7 @@ type ValidationTranslator = NamespaceTranslator<"groups.validation">;
  */
 export const engine = z.enum(["schedule_first", "availability_first", "slot_first"]);
 export const paymentPolicy = z.enum(["online", "on_site", "both"]);
+export const groupTypeStatus = z.enum(["scheduled", "collecting_interest"]);
 export const purchaseMode = z.enum(["single_class", "package"]);
 export const billingType = z.enum(["one_time", "recurring"]);
 
@@ -61,6 +62,8 @@ export function createGroupTypeSchema(t: ValidationTranslator) {
         .optional(),
       engine,
       paymentPolicy,
+      /** Faza 22 (§2.34) — "scheduled" or "collecting_interest", defaults to "scheduled". */
+      status: groupTypeStatus.default("scheduled"),
       /** Minor units of `organization.currency` — grosze, not złote (§2.14). */
       price: z.coerce.number().int().nonnegative(t("priceInvalid")),
       isNewClientOnly: z.boolean().default(false),

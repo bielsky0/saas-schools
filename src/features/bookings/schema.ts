@@ -72,5 +72,38 @@ export function createBookingSchema(t: ValidationTranslator) {
   });
 }
 
+/**
+ * Faza 22 — multi-child enrollment (EPIK 40, §2.39).
+ *
+ * A SEPARATE schema from `createBookingSchema` on purpose: `createBooking`
+ * stays single-child (one athlete per transaction, the single seat-taking
+ * writer). This schema wraps N participants and is used ONLY by the new
+ * `createBookingManyAction` / `create-many.ts` orkiestrator, which loops
+ * `createBooking` per child in N independent `withTenant` transactions
+ * (Constraint 15 — separate top-level COMMITs, not savepoints).
+ *
+ * The `participants` array uses the same discriminated union as the single
+ * schema so the form reuses the same participant component.
+ */
+export function createBookingManySchema(t: ValidationTranslator) {
+  const participantShape = z.discriminatedUnion("kind", [
+    z.object({ kind: z.literal("existing"), athleteId: z.string().min(1, t("athleteRequired")) }),
+    z.object({
+      kind: z.literal("new"),
+      name: z.string().trim().min(2, t("athleteNameMin")).max(160),
+      age: z.coerce.number().int().min(1).max(120).optional(),
+    }),
+  ]);
+
+  return z.object({
+    groupTypeSlug: z.string().min(1),
+    sessionId: z.string().min(1),
+    paymentMethod,
+    participants: z.array(participantShape).min(1, t("participantsRequired")),
+    acceptedPolicyVersion: z.coerce.number().int().optional(),
+  });
+}
+
 export type PriceSnapshot = z.infer<typeof priceSnapshot>;
 export type CreateBookingValues = z.infer<ReturnType<typeof createBookingSchema>>;
+export type CreateBookingManyValues = z.infer<ReturnType<typeof createBookingManySchema>>;

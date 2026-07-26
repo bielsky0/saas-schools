@@ -18,7 +18,7 @@ import {
 } from "@/components/ui";
 import type { FormState } from "@/lib/validation";
 import { createGroupTypeAction, updateGroupTypeAction } from "../actions";
-import { billingType, engine, paymentPolicy, purchaseMode } from "../schema";
+import { billingType, engine, groupTypeStatus, paymentPolicy, purchaseMode } from "../schema";
 
 const initial: FormState = {};
 
@@ -36,6 +36,7 @@ export type GroupTypeDefaults = {
   policyDocumentId: string | null;
   allowedPurchaseModes: string[];
   allowedBillingTypes: string[] | null;
+  status: string;
 };
 
 /**
@@ -103,7 +104,7 @@ export function GroupTypeForm({
         />
       </FormField>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <FormField label={t("form.engine")} htmlFor="gt-engine">
           <Select name="engine" defaultValue={defaults?.engine ?? "schedule_first"}>
             <SelectTrigger id="gt-engine" aria-label={t("form.engine")}>
@@ -128,6 +129,21 @@ export function GroupTypeForm({
               {paymentPolicy.options.map((value) => (
                 <SelectItem key={value} value={value}>
                   {t(`paymentPolicy.${value}`)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </FormField>
+
+        <FormField label={t("form.status")} htmlFor="gt-status" hint={t("form.statusHint")}>
+          <Select name="status" defaultValue={defaults?.status ?? "scheduled"}>
+            <SelectTrigger id="gt-status" aria-label={t("form.status")}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {groupTypeStatus.options.map((value) => (
+                <SelectItem key={value} value={value}>
+                  {t(`status.${value}`)}
                 </SelectItem>
               ))}
             </SelectContent>

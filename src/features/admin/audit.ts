@@ -282,6 +282,9 @@ export const AUDIT_ACTIONS = [
   // `credit.grant`) — the mandatory reason is what makes it answerable.
   "client_price_override.grant",
   "client_price_override.revoke",
+  // Faza 22 / EPIK 36 — Interest signup (§2.34)
+  "interest.signup",
+  "interest.convert",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -327,7 +330,9 @@ export type AuditTargetType =
   | "credit_purchase"
   | "group_change_request"
   | "credit"
-  | "trainer_rate";
+  | "trainer_rate"
+  // Faza 22 / EPIK 36
+  | "interest_signup";
 
 /**
  * WHO acted, as a kind — §6.4's actor model. A different question from WHICH
