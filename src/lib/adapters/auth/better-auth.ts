@@ -17,9 +17,11 @@ import {
 } from "@/features/organizations/cross-tenant";
 import {
   ensurePersonalAccount,
+  getMembership,
   getOrgBySubdomain,
   getPersonalAccountByUserId,
 } from "@/features/organizations/data";
+import { withTenant } from "@/lib/db/tenant";
 import { startOnboardingSequence } from "@/features/onboarding/sequence";
 import { db, schema } from "@/lib/db";
 import { env } from "@/lib/env/server";
@@ -196,6 +198,24 @@ function staffSessionHandoffPlugin() {
             })();
           const servedOrg = servedSubdomain ? await getOrgBySubdomain(servedSubdomain) : null;
           if (!servedOrg || servedOrg.id !== redeemed.organizationId) {
+            throw ctx.redirect(redirectTo("/login"));
+          }
+
+          // Verify the user is still an active member of this org (D78).
+          // Between token mint (staff action on the apex) and redeem (tenant
+          // host), the membership may have been suspended or removed — the
+          // token TTL is 120 seconds, which is enough time for an admin to
+          // act. Pattern matches requireOrgAccess() in context.ts.
+          const handoffMembership = await withTenant(servedOrg.id, async (tx) =>
+            getMembership(tx, servedOrg.id, redeemed.userId),
+          );
+          if (!handoffMembership || handoffMembership.status !== "active") {
+            // eslint-disable-next-line no-console
+            // Intentional security event — no structured logger available.
+            console.warn(
+              `[SECURITY] staff handoff: token valid for org ${servedOrg.id} user ${redeemed.userId} ` +
+                `but membership is ${handoffMembership?.status ?? "missing"} — denying session`,
+            );
             throw ctx.redirect(redirectTo("/login"));
           }
 

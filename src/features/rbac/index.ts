@@ -192,7 +192,14 @@ export type Permission =
    * session roster (§2.42, EPIK 43). "Own sessions only" for a trainer cannot
    * be expressed by this map — enforced at the action call site by comparing
    * `classSession.trainerId` to the caller (same pattern as grades.enter). */
-  | "lesson_log.manage";
+  | "lesson_log.manage"
+  // ── Faza 30a — CMS: zarządzanie treścią stron (Owner, Admin) ──────────────
+  //
+  /** Create, edit, publish, and delete CMS pages, media, and theme
+   * (plan faza-30-32.md §30a). Jedno uprawnienie pokrywa tworzenie, edycję
+   * I publikację. Można rozdzielić w przyszłości (dodać `cms.publish`) bez
+   * migracji schematu. Owner + Admin tylko. */
+  | "cms.manage";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -252,6 +259,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "qualification_card.complete_return",
     "extra_fees.manage",
     "lesson_log.manage",
+    "cms.manage",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -304,6 +312,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "qualification_card.complete_return",
     "extra_fees.manage",
     "lesson_log.manage",
+    "cms.manage",
   ],
   /**
    * The three langlion staff roles (§2.10).

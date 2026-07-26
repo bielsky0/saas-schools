@@ -126,74 +126,94 @@ const eslintConfig = defineConfig([
   },
 
   /**
-   * The same fence, for the other door out of tenant isolation (langlion §1.3).
+   * Fences around tenant-isolation bypasses (spec §1.3, Faza 30a).
    *
-   * `@/lib/db/system` exports `withSystemBypass`, which turns Row-Level Security
-   * off for a transaction. It has to exist — super-admin views, webhook handlers
-   * resolving an owner they do not yet know, and cross-tenant sweeps all need it —
-   * but "who can read every academy's data?" should have an answer you can grep,
-   * and that answer is this `ignores` list.
+   * Four doors lead out of tenant-scoped access, and each must have an
+   * exemption list you can grep:
    *
-   * A separate block rather than another `patterns` entry above, because the
-   * exemptions differ: the admin fence exempts the admin feature and its routes,
-   * this one exempts the paths below. A new consumer adds itself here, in a
-   * diff a human reads, and explains itself in its own header.
+   *  1. `payload-config` — the Payload config passed to `getPayload()`.
+   *     Allowed only in `tenant-payload.ts`, which wraps `getPayload` and
+   *     exposes `tenantFind`/`tenantFindByID` that enforce `overrideAccess: false`.
    *
-   * THE EXEMPTIONS. Five arrived with F1a (`membership`, `invitation`, `file`,
-   * `notification` came under RLS) and a sixth with F1b (the billing tables);
-   * these are the paths that genuinely cannot name a tenant:
+   *  2. `getPayload` from the `payload` package — the factory for a raw
+   *     Payload instance whose `find`/`findByID` default to `overrideAccess: true`.
+   *     Same exemption as #1.
    *
-   *  - `features/organizations/cross-tenant.ts` — the account switcher spans orgs
-   *    by definition, and an invitation's org is unknown until its token hash
-   *    resolves. Deliberately a separate file from `./data.ts`, so the exemption
-   *    does not also cover `getMembership`/`listMembers`.
-   *  - `features/admin/data.ts` — the super-admin panel reads membership across
-   *    every tenant; the §6.2 carve-out that already fences this module.
-   *  - `features/admin/actions.ts` — user hard-delete removes that user's
-   *    membership in every org they belong to (§11.3): one statement, no owner.
-   *  - `features/storage/purge.ts` — the retention cron sweeps soft-deleted files
-   *    for all owners. The bypass covers ONLY `listPurgeableFiles`; each
-   *    `hardDeleteFile` re-enters the context of its own row's owner.
-   *  - `features/onboarding/data.ts` — `hasPaidSubscription` answers "is this
-   *    person paying anywhere", joining membership across every org; the input is
-   *    a user id, not an owner.
-   *  - `features/credits/expire.ts` (F4) — credits lapse on their own clock in
-   *    every academy at once, so the work list cannot name a tenant. The bypass
-   *    covers ONLY that read; each update re-enters its rows' own organization,
-   *    so WITH CHECK stays load-bearing where a mix-up would destroy paid-for
-   *    value. Same narrow shape as `storage/purge.ts` above.
-   *  - `features/billing/cross-tenant.ts` (F1b) — a provider webhook learns which
-   *    tenant an event belongs to by resolving its customer id; the owner is the
-   *    OUTPUT of that lookup, so there is nothing to scope by until it returns.
-   *    Deliberately a separate file from `./data.ts` AND from `./webhooks.ts`, so
-   *    the exemption covers neither the tenant-scoped reads nor the two upserts
-   *    whose `WITH CHECK` is the last line on the only externally-driven write
-   *    path in the application.
+   *  3. `payload.db.drizzle` — Payload's Drizzle ORM handle, which bypasses
+   *     Payload access control entirely. Same exemption as #1.
    *
-   * Also exempt, and worth naming rather than leaving to be discovered in the
-   * array below: `src/app/api/dev/**`. Every dev route can bypass RLS. They 404
-   * in production, and the RLS probe needs the bypass to assert what the policies
-   * hide — but a reader counting bullets should not have to infer this one.
+   *  4. `@/lib/db/system` / `withSystemBypass` — turns RLS off for a
+   *     transaction. Its exemptions are the cross-tenant paths that
+   *     genuinely cannot name a tenant:
    *
-   * WHAT IS DELIBERATELY NOT EXEMPT, so a reviewer does not add it out of sympathy:
+   *        - `features/organizations/cross-tenant.ts` — the account switcher
+   *          spans orgs by definition, and an invitation's org is unknown
+   *          until its token hash resolves. Deliberately a separate file from
+   *          `./data.ts`, so the exemption does not also cover `getMembership`
+   *          / `listMembers`.
+   *        - `features/admin/data.ts` — the super-admin panel reads membership
+   *          across every tenant; the §6.2 carve-out that already fences this
+   *          module.
+   *        - `features/admin/actions.ts` — user hard-delete removes that user's
+   *          membership in every org they belong to (§11.3): one statement,
+   *          no owner.
+   *        - `features/storage/purge.ts` — the retention cron sweeps
+   *          soft-deleted files for all owners. The bypass covers ONLY
+   *          `listPurgeableFiles`; each `hardDeleteFile` re-enters the context
+   *          of its own row's owner.
+   *        - `features/onboarding/data.ts` — `hasPaidSubscription` answers
+   *          "is this person paying anywhere", joining membership across every
+   *          org; the input is a user id, not an owner.
+   *        - `features/credits/expire.ts` (F4) — credits lapse on their own
+   *          clock in every academy at once, so the work list cannot name a
+   *          tenant. The bypass covers ONLY that read; each update re-enters
+   *          its rows' own organization, so WITH CHECK stays load-bearing
+   *          where a mix-up would destroy paid-for value. Same narrow shape
+   *          as `storage/purge.ts` above.
+   *        - `features/billing/cross-tenant.ts` (F1b) — a provider webhook
+   *          learns which tenant an event belongs to by resolving its customer
+   *          id; the owner is the OUTPUT of that lookup, so there is nothing
+   *          to scope by until it returns. Deliberately a separate file from
+   *          `./data.ts` AND from `./webhooks.ts`, so the exemption covers
+   *          neither the tenant-scoped reads nor the two upserts whose
+   *          `WITH CHECK` is the last line on the only externally-driven
+   *          write path in the application.
+   *
+   *  Also exempt: `src/app/api/dev/**`. Every dev route can bypass RLS. They
+   *  404 in production, and the RLS probe needs the bypass to assert what the
+   *  policies hide — but a reader counting bullets should not have to infer
+   *  this one.
+   *
+   * WHAT IS DELIBERATELY NOT EXEMPT, so a reviewer does not add it out of
+   * sympathy:
    *  - `features/billing/data.ts` — `resolveBillingRecipients` takes an
-   *    `organizationId` parameter, so it scopes itself with `withTenant`; its one
-   *    cross-tenant read moved out to `./cross-tenant.ts` in F1b.
+   *    `organizationId` parameter, so it scopes itself with `withTenant`;
+   *    its one cross-tenant read moved out to `./cross-tenant.ts` in F1b.
    *  - `features/billing/webhooks.ts` — it resolves its owner through
-   *    `./cross-tenant.ts` first, then writes inside `withOwner`, so the policy
-   *    stays load-bearing on the write path.
-   *  - `features/organizations/actions.ts` — `acceptInvitation` resolves the org
-   *    through `cross-tenant.ts` first, then writes inside `withTenant`, so the
+   *    `./cross-tenant.ts` first, then writes inside `withOwner`, so the
    *    policy stays load-bearing on the write path.
-   *  - `features/organizations/context.ts` — `requireOrgAccess` is per-request and
-   *    uses `withTenant`; routing it here would emit a warn on every authenticated
-   *    request and drown the signal this fence exists to keep countable.
-   *  - `lib/adapters/auth/better-auth.ts` — its hooks touch `personal_account` and
-   *    `user` only, neither under RLS.
+   *  - `features/organizations/actions.ts` — `acceptInvitation` resolves the
+   *    org through `cross-tenant.ts` first, then writes inside `withTenant`,
+   *    so the policy stays load-bearing on the write path.
+   *  - `features/organizations/context.ts` — `requireOrgAccess` is per-request
+   *    and uses `withTenant`; routing it here would emit a warn on every
+   *    authenticated request and drown the signal this fence exists to keep
+   *    countable.
+   *  - `lib/adapters/auth/better-auth.ts` — its hooks touch `personal_account`
+   *    and `user` only, neither under RLS.
+   *
+   * IMPORTANT: This is a SINGLE block despite the two concerns, because
+   * ESLint flat config replaces the entire rule value when a later block
+   * also sets `no-restricted-imports`. Keeping them separate would silently
+   * drop one set of restrictions. (Faza 30-spike discovered this the hard
+   * way.)
    */
   {
     files: ["src/**/*.{ts,tsx}"],
     ignores: [
+      // CMS: tenant-payload.ts is the sole gateway to Payload Local API
+      "src/features/cms/tenant-payload.ts",
+      // withSystemBypass: cross-tenant paths
       "src/app/api/dev/**",
       "src/features/organizations/cross-tenant.ts",
       "src/features/admin/data.ts",
@@ -210,7 +230,20 @@ const eslintConfig = defineConfig([
       "no-restricted-imports": [
         "error",
         {
+          paths: [
+            {
+              name: "payload",
+              importNames: ["getPayload"],
+              message:
+                "getPayload gives a raw Payload instance whose find/findByID default to overrideAccess: true. Import through tenant-payload.ts and use tenantFind/tenantFindByID instead (Faza 30a).",
+            },
+          ],
           patterns: [
+            {
+              group: ["@/features/cms/payload-config", "**/features/cms/payload-config"],
+              message:
+                "payload-config is the Payload configuration module; import payload instances through tenant-payload.ts or through req.payload (Faza 30a).",
+            },
             {
               group: ["@/lib/db/system", "**/lib/db/system"],
               message:

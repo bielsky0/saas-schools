@@ -79,6 +79,10 @@ const RLS_TABLES = [
   "subscription",
   "billing_payment",
   "webhook_event",
+  // CMS tables (Faza 30a) — added by afterSchemaInit + RLS migration
+  "pages",
+  "media",
+  "theme",
 ];
 
 /** Tables that must NOT have RLS — each for a reason recorded in its own header. */

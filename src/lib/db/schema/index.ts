@@ -143,3 +143,4 @@ export * from "./consent-documents";
 export * from "./qualification-cards";
 export * from "./extra-fees";
 export * from "./lesson-logs";
+export * from "./cms-tenant-block-access";
