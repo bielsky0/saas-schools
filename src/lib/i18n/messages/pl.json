@@ -144,6 +144,20 @@
       "body": "Zwrot w kwocie {refundAmount} został przetworzony ({variant}).",
       "partial": "zwrot częściowy",
       "fullReversal": "zwrot pełny z cofnięciem"
+    },
+    "lesson-topic-added": {
+      "subject": "Nowy temat lekcji - {orgName}",
+      "preview": "Zapisano nowy temat lekcji w {orgName}.",
+      "heading": "Nowy temat lekcji",
+      "body": "Zapisano nowy temat dla zajęć z dnia {sessionDate}."
+    },
+    "homework-assigned": {
+      "subject": "Nowa praca domowa - {orgName}",
+      "preview": "Zadano nową pracę domową w {orgName}.",
+      "heading": "Nowa praca domowa",
+      "body": "Zadano nową pracę domową dla zajęć z dnia {sessionDate}.",
+      "description": "Zadanie",
+      "dueDate": "Termin"
     }
   },
   "auth": {
@@ -1024,9 +1038,13 @@
   },
   "schedule": {
     "validation": {
+      "groupTypeRequired": "Typ grupy jest wymagany.",
+      "trainerRequired": "Trener jest wymagany.",
+      "startTimeInvalid": "Nieprawidłowa data rozpoczęcia.",
+      "endTimeInvalid": "Nieprawidłowa data zakończenia.",
+      "endBeforeStart": "Koniec sesji musi być po jej rozpoczęciu.",
       "capacityInvalid": "Pojemność musi być liczbą dodatnią.",
-      "endBeforeStart": "Godzina zakończenia musi być późniejsza niż rozpoczęcia.",
-      "bothTimesRequired": "Zmień godzinę rozpoczęcia i zakończenia razem."
+      "bothTimesRequired": "Podaj obie godziny (początek i koniec)."
     },
     "title": "Grafik",
     "subtitle": "Wygenerowane sesje, od najbliższej.",
@@ -1060,15 +1078,6 @@
       "notFound": "Ta sesja już nie istnieje.",
       "trainerConflict": "Ten trener ma wtedy kolizję w grafiku.",
       "createFailed": "Nie udało się utworzyć sesji."
-    },
-    "validation": {
-      "groupTypeRequired": "Typ grupy jest wymagany.",
-      "trainerRequired": "Trener jest wymagany.",
-      "startTimeInvalid": "Nieprawidłowa data rozpoczęcia.",
-      "endTimeInvalid": "Nieprawidłowa data zakończenia.",
-      "endBeforeStart": "Koniec sesji musi być po jej rozpoczęciu.",
-      "capacityInvalid": "Pojemność musi być liczbą dodatnią.",
-      "bothTimesRequired": "Podaj obie godziny (początek i koniec)."
     },
     "cancelSession": "Odwołaj sesję",
     "cancellingSession": "Odwoływanie…",
@@ -1555,6 +1564,31 @@
       "cannotCancelPaid": "Nie można anulować opłaconej opłaty — nie ma ścieżki zwrotu.",
       "noStripeConnect": "Płatność online nie jest dostępna dla tej organizacji.",
       "checkoutFailed": "Nie udało się utworzyć sesji płatności."
+    }
+  },
+  "lessonLog": {
+    "sectionTopic": "Szczegóły lekcji",
+    "sectionHomework": "Praca domowa",
+    "topicTitle": "Temat",
+    "topicTitlePlaceholder": "Co było dzisiaj na zajęciach?",
+    "topicBody": "Szczegóły",
+    "topicBodyPlaceholder": "Opisz, co zostało zrealizowane podczas lekcji...",
+    "saveTopic": "Zapisz temat",
+    "topicSaved": "Temat zapisany.",
+    "homeworkDescription": "Opis",
+    "homeworkDescriptionPlaceholder": "Opisz zadanie domowe...",
+    "homeworkDueDate": "Termin (opcjonalnie)",
+    "homeworkDue": "Termin",
+    "createHomework": "Zadaj pracę domową",
+    "homeworkCreated": "Praca domowa zadana.",
+    "homeworkUpdated": "Praca domowa zaktualizowana.",
+    "completionUpdated": "Wykonanie zaktualizowane.",
+    "done": "Wykonane",
+    "notDone": "Niewykonane",
+    "errors": {
+      "generic": "Coś poszło nie tak.",
+      "sessionNotFound": "Nie znaleziono sesji.",
+      "foreignSession": "Możesz to zrobić tylko dla własnych sesji."
     }
   }
 }

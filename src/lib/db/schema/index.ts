@@ -142,3 +142,4 @@ export * from "./membership-permission-overrides";
 export * from "./consent-documents";
 export * from "./qualification-cards";
 export * from "./extra-fees";
+export * from "./lesson-logs";

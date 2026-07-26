@@ -57,7 +57,11 @@ export type TemplateName =
   // Faza 15 — Credit transfer (US-7.5)
   | "credit-transfer-completed"
   // Faza 16 — Zwroty fiducjarne (EPIK 18)
-  | "refund-confirmed";
+  | "refund-confirmed"
+  // Faza 28 — Tematy lekcji i prace domowe (EPIK 43, §2.42)
+  // E-mail-first client notification (Rozstrzygnięcie #3/24).
+  | "lesson-topic-added"
+  | "homework-assigned";
 // `magic-link` lands with spec 2.2, which is not implemented yet.
 
 /**
@@ -194,6 +198,9 @@ export interface TemplateProps {
     refundAmount: string;
     refundVariant: string;
   };
+  // Faza 28 — Tematy lekcji i prace domowe (EPIK 43, §2.42)
+  "lesson-topic-added": { orgName: string; sessionDate: string };
+  "homework-assigned": { orgName: string; sessionDate: string; description: string; dueDate?: string };
 }
 
 /** Loose payload shape for callers that resolve the template at runtime. */

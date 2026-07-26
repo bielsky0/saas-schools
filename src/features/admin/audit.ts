@@ -302,6 +302,13 @@ export const AUDIT_ACTIONS = [
   "extra_fee.cancel",
   "extra_fee.confirm_cash",
   "extra_fee.bulk_create",
+  // Faza 28 — Lesson topics and homework (EPIK 43, §2.42)
+  //
+  // Only first creation is audited — no audit on update/overwrite.
+  // homework_completion.mark is audited on every change (like attendance_status).
+  "lesson_topic.create",
+  "homework.create",
+  "homework_completion.mark",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -356,7 +363,11 @@ export type AuditTargetType =
   // Faza 26 / EPIK 41
   | "qualification_card"
   // Faza 27 / EPIK 42
-  | "extra_fee";
+  | "extra_fee"
+  // Faza 28 / EPIK 43
+  | "lesson_topic"
+  | "homework"
+  | "homework_completion";
 
 /**
  * WHO acted, as a kind — §6.4's actor model. A different question from WHICH

@@ -83,6 +83,9 @@ const EMAIL_TEMPLATE_MAP: Record<string, TemplateName> = {
   "credit-transfer-completed": "credit-transfer-completed",
   // ── Faza 16 — Zwroty fiducjarne (EPIK 18) ──────────────────────────
   "refund-confirmed": "refund-confirmed",
+  // ── Faza 28 — Lesson topics and homework (EPIK 43, §2.42) ───────────
+  "lesson_topic_added": "lesson-topic-added",
+  "homework_assigned": "homework-assigned",
 };
 
 const EVENT_TYPES_WITH_EMAIL = new Set(Object.keys(EMAIL_TEMPLATE_MAP));

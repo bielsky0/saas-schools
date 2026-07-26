@@ -144,6 +144,20 @@
       "body": "A refund of {refundAmount} has been processed ({variant}).",
       "partial": "partial refund",
       "fullReversal": "full refund with reversal"
+    },
+    "lesson-topic-added": {
+      "subject": "New lesson topic at {orgName}",
+      "preview": "A new lesson topic was recorded at {orgName}.",
+      "heading": "New lesson topic",
+      "body": "A new topic was recorded for the session on {sessionDate}."
+    },
+    "homework-assigned": {
+      "subject": "New homework assigned at {orgName}",
+      "preview": "New homework was assigned at {orgName}.",
+      "heading": "New homework assigned",
+      "body": "New homework was assigned for the session on {sessionDate}.",
+      "description": "Assignment",
+      "dueDate": "Due date"
     }
   },
   "auth": {
@@ -1024,9 +1038,13 @@
   },
   "schedule": {
     "validation": {
+      "groupTypeRequired": "Group type is required.",
+      "trainerRequired": "Trainer is required.",
+      "startTimeInvalid": "Invalid start time.",
+      "endTimeInvalid": "Invalid end time.",
+      "endBeforeStart": "End time must be after start time.",
       "capacityInvalid": "Capacity must be a positive number.",
-      "endBeforeStart": "The end time must be after the start time.",
-      "bothTimesRequired": "Change the start and end time together."
+      "bothTimesRequired": "Both start and end times are required."
     },
     "title": "Schedule",
     "subtitle": "Generated sessions, soonest first.",
@@ -1060,15 +1078,6 @@
       "notFound": "That session no longer exists.",
       "trainerConflict": "This trainer has a schedule conflict at that time.",
       "createFailed": "Could not create the session."
-    },
-    "validation": {
-      "groupTypeRequired": "Group type is required.",
-      "trainerRequired": "Trainer is required.",
-      "startTimeInvalid": "Invalid start time.",
-      "endTimeInvalid": "Invalid end time.",
-      "endBeforeStart": "End time must be after start time.",
-      "capacityInvalid": "Capacity must be a positive number.",
-      "bothTimesRequired": "Both start and end times are required."
     },
     "cancelSession": "Cancel session",
     "cancellingSession": "Cancelling…",
@@ -1501,7 +1510,7 @@
       "parentContactDuringCamp": "Parent contact during the camp",
       "parentContactDuringCampPlaceholder": "Phone number where you can be reached during the camp...",
       "submit": "Save qualification card",
-      "saving": "Saving\u2026"
+      "saving": "Saving…"
     },
     "status": {
       "parent_pending": "Not yet completed",
@@ -1555,6 +1564,31 @@
       "cannotCancelPaid": "Cannot cancel a paid fee — no refund path exists.",
       "noStripeConnect": "Online payment is not available for this organization.",
       "checkoutFailed": "Could not create payment session."
+    }
+  },
+  "lessonLog": {
+    "sectionTopic": "Lesson Details",
+    "sectionHomework": "Homework",
+    "topicTitle": "Topic",
+    "topicTitlePlaceholder": "What was covered today?",
+    "topicBody": "Details",
+    "topicBodyPlaceholder": "Describe what was done during this lesson...",
+    "saveTopic": "Save topic",
+    "topicSaved": "Topic saved.",
+    "homeworkDescription": "Description",
+    "homeworkDescriptionPlaceholder": "Describe the homework assignment...",
+    "homeworkDueDate": "Due date (optional)",
+    "homeworkDue": "Due",
+    "createHomework": "Assign homework",
+    "homeworkCreated": "Homework assigned.",
+    "homeworkUpdated": "Homework updated.",
+    "completionUpdated": "Completion updated.",
+    "done": "Done",
+    "notDone": "Not done",
+    "errors": {
+      "generic": "Something went wrong.",
+      "sessionNotFound": "Session not found.",
+      "foreignSession": "You may only do this for your own sessions."
     }
   }
 }

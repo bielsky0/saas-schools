@@ -185,7 +185,14 @@ export type Permission =
    * Owner, Admin, Secretariat, Reception — Reception handles desk-side money
    * (like credits.confirm_on_site and credits.purchase_cash). Trainer does NOT
    * get this. */
-  | "extra_fees.manage";
+  | "extra_fees.manage"
+  // ── Faza 28 — Tematy lekcji i prace domowe (EPIK 43, §2.42) ─────────────────
+  //
+  /** Write lesson topic, assign homework, mark homework completion from the
+   * session roster (§2.42, EPIK 43). "Own sessions only" for a trainer cannot
+   * be expressed by this map — enforced at the action call site by comparing
+   * `classSession.trainerId` to the caller (same pattern as grades.enter). */
+  | "lesson_log.manage";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -244,6 +251,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "qualification_cards.manage",
     "qualification_card.complete_return",
     "extra_fees.manage",
+    "lesson_log.manage",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -295,6 +303,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "qualification_cards.manage",
     "qualification_card.complete_return",
     "extra_fees.manage",
+    "lesson_log.manage",
   ],
   /**
    * The three langlion staff roles (§2.10).
@@ -361,6 +370,10 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     // (compare trainerId to caller.userId). This map cannot express "own" —
     // see comment at bookings.mark_attendance.
     "trainer_earnings.view",
+    // lesson_log.manage is scoped to OWN sessions only at the action call site
+    // (compare classSession.trainerId to caller.userId). This map cannot
+    // express "own" — see comment at bookings.mark_attendance.
+    "lesson_log.manage",
   ],
   // Members may upload content, but not delete other people's files.
   //

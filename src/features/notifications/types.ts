@@ -27,6 +27,9 @@ export const NOTIFICATION_TYPES = [
   // ── Faza 15 — Credit transfer (US-7.5) ──────────────────────────────
   "credit-transfer-submitted",    // do admina — nowy wniosek o przeniesienie
   "credit-transfer-completed",    // do klienta — przeniesienie zakończone
+  // ── Faza 28 — Lesson topics and homework (EPIK 43, §2.42) ───────────
+  "lesson_topic_added",           // do klienta — nowy temat lekcji
+  "homework_assigned",            // do klienta — nowa praca domowa
 ] as const;
 
 export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
@@ -58,6 +61,8 @@ export const NOTIFICATION_META: Record<NotificationType, { suppressible: boolean
   "group-change-completed": { suppressible: true },
   "credit-transfer-submitted": { suppressible: false },
   "credit-transfer-completed": { suppressible: true },
+  "lesson_topic_added": { suppressible: true },
+  "homework_assigned": { suppressible: true },
 };
 
 export function isNotificationType(value: string): value is NotificationType {

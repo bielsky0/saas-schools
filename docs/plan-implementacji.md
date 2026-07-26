@@ -42,6 +42,6 @@ Ten plik jest nadal **jedynym trwałym źródłem prawdy o planie i postępie** 
 | Faza 20 — Wynagrodzenia trenerów, wyłącznie informacyjne (EPIK 32, v15)          | [docs/plan/faza-20.md](plan/faza-20.md)                                       | ✅ zakończona (2026-07-25) |
 | Faza 21 — Indywidualne ceny klienta (EPIK 33, v15)                               | [docs/plan/faza-21.md](plan/faza-21.md)                                       | ✅ zakończona (2026-07-25) |
 | Fazy 22–25 — poprawki konkurencyjne (spec v17)                                   | [docs/plan/faza-22-25.md](plan/faza-22-25.md)                                 | Faza 22 ✅ (2026-07-26), Faza 23 ✅ (2026-07-26), Faza 24 ✅ (2026-07-26), Faza 25 ✅ (2026-07-26) |
-| Fazy 26–28 — dalsze poprawki konkurencyjne (spec v18)                            | [docs/plan/faza-26-28.md](plan/faza-26-28.md)                                 | Faza 26 ✅ (2026-07-26), Faza 27 ✅ (2026-07-26) |
+| Fazy 26–28 — dalsze poprawki konkurencyjne (spec v18)                            | [docs/plan/faza-26-28.md](plan/faza-26-28.md)                                 | Faza 26 ✅ (2026-07-26), Faza 27 ✅ (2026-07-26), Faza 28 ✅ (2026-07-26) |
 | Faza 29 (29a, 29b) — Hasło klienta jako alternatywna metoda logowania (spec v19) | [docs/plan/faza-29.md](plan/faza-29.md)                                       |
 | Ryzyka i otwarte pytania                                                         | [docs/plan/ryzyka-i-otwarte-pytania.md](plan/ryzyka-i-otwarte-pytania.md)     |

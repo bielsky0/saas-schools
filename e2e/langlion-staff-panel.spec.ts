@@ -542,3 +542,148 @@ test("e-dziennik — progress note triggers email; grade/note entry preserves pa
   expect(after.bookings[0]!.paymentStatus).toBe("confirmed");
   expect(after.bookings[0]!.attendanceStatus).toBe("unmarked");
 });
+
+/**
+ * Faza 28 — Lesson topics and homework tracking (EPIK 43, §2.42).
+ *
+ * Two tests: happy-path (trainer on own session) and backend enforcement
+ * (trainer blocked on foreign session). Both use the same UI patterns as
+ * the e-dziennik tests above.
+ */
+
+test("Faza 28: trainer writes lesson topic, assigns homework, marks completion — parent is e-mailed", async ({
+  page,
+  request,
+}) => {
+  const ownerEmail = uniqueEmail("f28-owner");
+  await registerViaApi(request, ownerEmail);
+  const trainerEmail = uniqueEmail("f28-trainer");
+  await registerViaApi(request, trainerEmail);
+  const trainerId = await getUserId(request, trainerEmail);
+
+  const { orgId, subdomain } = await seedOrgFull(request, {
+    ownerEmail,
+    name: "Lesson Log Academy",
+    slug: uniqueId("f28"),
+    subdomain: uniqueSubdomain("f28"),
+    members: [{ email: trainerEmail, role: "trainer" }],
+  });
+
+  const slot = uniqueNearFutureSlot(20);
+  const parentEmail = uniqueEmail("f28-parent");
+  const seed = await seedLanglion(request, {
+    organizationId: orgId,
+    trainerId,
+    groupType: {
+      slug: uniqueId("f28-offer").replace(/_/g, "-"),
+      name: "Lesson Log offer",
+    },
+    sessions: [{ startsAt: slot.startsAt, endsAt: slot.endsAt, capacity: 8 }],
+    client: { email: parentEmail, isVerified: true },
+    athletes: [{ name: "Log Kid" }],
+    bookings: [{ sessionIndex: 0, athleteIndex: 0, paymentStatus: "confirmed" }],
+  });
+  expect(seed.ok, `seed failed: ${seed.message ?? seed.sqlState}`).toBe(true);
+
+  await loginToAcademy(page, subdomain, trainerEmail, "Password123");
+  await page.goto(tenantUrl(subdomain, `/en/dashboard/sessions/${seed.sessionIds![0]}`));
+
+  // Step 1: Write lesson topic
+  await page.getByLabel("Topic").fill("Present Continuous");
+  await page.getByLabel("Details").fill("Wprowadzenie do czasu Present Continuous — zdania twierdzące.");
+  await page.getByRole("button", { name: "Save topic" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Topic saved." })).toBeVisible();
+
+  // Step 2: Assign homework
+  await page.getByLabel("Description").fill("Ćwiczenia 1-5, strona 42");
+  await page.getByRole("button", { name: "Assign homework" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Homework assigned." })).toBeVisible();
+
+  // Step 3: Parent receives email about the homework
+  const mail = await waitForEmail(request, parentEmail, "homework-assigned");
+  expect(mail.to).toBe(parentEmail);
+
+  // Step 4: Mark homework completion for the participant
+  const toggle = page.getByRole("button", { name: "Not done" }).first();
+  await toggle.click();
+  await expect(page.getByRole("status").filter({ hasText: "Completion updated." })).toBeVisible();
+
+  // Step 5: Verify booking state unchanged (Constraint 18 — independent axis)
+  const state = await bookingState(request, orgId, seed.sessionIds![0]!);
+  expect(state.bookings[0]!.paymentStatus).toBe("confirmed");
+  expect(state.bookings[0]!.attendanceStatus).toBe("unmarked");
+});
+
+test("Faza 28: trainer is blocked on a foreign session — lesson log actions refuse at the backend", async ({
+  page,
+  request,
+}) => {
+  const ownerEmail = uniqueEmail("f28f-owner");
+  await registerViaApi(request, ownerEmail);
+  const trainerAEmail = uniqueEmail("f28f-trainer-a");
+  await registerViaApi(request, trainerAEmail);
+  const trainerAId = await getUserId(request, trainerAEmail);
+  const trainerBEmail = uniqueEmail("f28f-trainer-b");
+  await registerViaApi(request, trainerBEmail);
+  const trainerBId = await getUserId(request, trainerBEmail);
+
+  const { orgId, subdomain } = await seedOrgFull(request, {
+    ownerEmail,
+    name: "Foreign Log Academy",
+    slug: uniqueId("f28f"),
+    subdomain: uniqueSubdomain("f28f"),
+    members: [
+      { email: trainerAEmail, role: "trainer" },
+      { email: trainerBEmail, role: "trainer" },
+    ],
+  });
+
+  const slotA = uniqueNearFutureSlot(22);
+  const slotB = uniqueNearFutureSlot(24);
+
+  // Trainer A's session
+  const seedA = await seedLanglion(request, {
+    organizationId: orgId,
+    trainerId: trainerAId,
+    groupType: {
+      slug: uniqueId("f28f-a").replace(/_/g, "-"),
+      name: "Trainer A offer",
+    },
+    sessions: [{ startsAt: slotA.startsAt, endsAt: slotA.endsAt, capacity: 8 }],
+    client: { email: uniqueEmail("f28f-parent-a"), isVerified: true },
+    athletes: [{ name: "Kid A" }],
+    bookings: [{ sessionIndex: 0, athleteIndex: 0, paymentStatus: "confirmed" }],
+  });
+  expect(seedA.ok, `seedA failed: ${seedA.message ?? seedA.sqlState}`).toBe(true);
+
+  // Trainer B's session (with a different group type so they can coexist)
+  const seedB = await seedLanglion(request, {
+    organizationId: orgId,
+    trainerId: trainerBId,
+    groupType: {
+      slug: uniqueId("f28f-b").replace(/_/g, "-"),
+      name: "Trainer B offer",
+    },
+    sessions: [{ startsAt: slotB.startsAt, endsAt: slotB.endsAt, capacity: 8 }],
+    client: { email: uniqueEmail("f28f-parent-b"), isVerified: true },
+    athletes: [{ name: "Kid B" }],
+    bookings: [{ sessionIndex: 0, athleteIndex: 0, paymentStatus: "confirmed" }],
+  });
+  expect(seedB.ok, `seedB failed: ${seedB.message ?? seedB.sqlState}`).toBe(true);
+
+  // Login as Trainer A
+  await loginToAcademy(page, subdomain, trainerAEmail, "Password123");
+
+  // Navigate to Trainer B's session
+  await page.goto(tenantUrl(subdomain, `/en/dashboard/sessions/${seedB.sessionIds![0]}`));
+
+  // Try to save lesson topic on foreign session — backend refuses
+  await page.getByLabel("Topic").fill("Hacker topic");
+  await page.getByRole("button", { name: "Save topic" }).click();
+  await expect(page.getByText("You may only do this for your own sessions.")).toBeVisible();
+
+  // Try to assign homework on foreign session — backend refuses
+  await page.getByLabel("Description").fill("Hacker homework");
+  await page.getByRole("button", { name: "Assign homework" }).click();
+  await expect(page.getByText("You may only do this for your own sessions.")).toBeVisible();
+});

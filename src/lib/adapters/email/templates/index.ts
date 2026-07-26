@@ -22,6 +22,8 @@ import { PlanLimitReached, planLimitReachedSubject } from "./plan-limit-reached"
 import { SubscriptionPaymentFailed, subscriptionPaymentFailedSubject } from "./subscription-payment-failed";
 import { GroupChangeNotification, groupChangeSubject, CreditTransferNotification, creditTransferSubject } from "./group-change";
 import { RefundConfirmed, refundConfirmedSubject } from "./refund-confirmed";
+import { LessonTopicAdded, lessonTopicAddedSubject } from "./lesson-topic-added";
+import { HomeworkAssigned, homeworkAssignedSubject } from "./homework-assigned";
 
 /**
  * Template registry (spec 10.2 — component templates, HTML + plain-text).
@@ -109,6 +111,15 @@ const templates: { [N in TemplateName]: TemplateDef<N> } = {
   "refund-confirmed": {
     subject: refundConfirmedSubject,
     component: RefundConfirmed,
+  },
+  // Faza 28 — Tematy lekcji i prace domowe (EPIK 43, §2.42)
+  "lesson-topic-added": {
+    subject: lessonTopicAddedSubject,
+    component: LessonTopicAdded,
+  },
+  "homework-assigned": {
+    subject: homeworkAssignedSubject,
+    component: HomeworkAssigned,
   },
 };
 

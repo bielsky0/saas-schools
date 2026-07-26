@@ -81,6 +81,10 @@ export const TEMPLATE_CATEGORY: Record<TemplateName, EmailCategory> = {
   // Faza 16 — Zwroty fiducjarne. Transactional: klient musi wiedzieć o zwrocie,
   // zwłaszcza gdy pieniądze wracają na konto. Unsuppressible per spec (seed).
   "refund-confirmed": "transactional",
+  // Faza 28 — Tematy lekcji i prace domowe. Transactional: klient musi wiedzieć
+  // o nowym temacie/zadaniu — ten sam wzorzec co grade-recorded (e-mail-first).
+  "lesson-topic-added": "transactional",
+  "homework-assigned": "transactional",
 };
 
 export function categoryFor(template: TemplateName): EmailCategory {

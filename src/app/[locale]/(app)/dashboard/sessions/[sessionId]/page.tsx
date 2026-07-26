@@ -26,17 +26,24 @@ import {
 import { GradeFieldForm } from "@/features/grades/components/grade-field-form";
 import { EnterGradeForm } from "@/features/grades/components/enter-grade-form";
 import { ProgressNoteForm } from "@/features/grades/components/progress-note-form";
+import { LessonTopicForm } from "@/features/lesson-logs/components/lesson-topic-form";
+import { HomeworkForm } from "@/features/lesson-logs/components/homework-form";
+import { HomeworkCompletionToggle } from "@/features/lesson-logs/components/homework-completion-toggle";
+import {
+  getLessonTopicBySession,
+  listHomeworkBySession,
+  getCompletionMap,
+} from "@/features/lesson-logs/data";
 import { withTenant } from "@/lib/db/tenant";
 
 /**
- * Session roster — the staff panel of langlion §2.29/§2.33 (Faza 6).
+ * Session roster — the staff panel of langlion §2.29/§2.33/§2.42 (Faza 6 + Faza 28).
  *
  * Visible to every staff role (`requireOrgAccess`, not `requireOrgPermission`):
  * everyone may LOOK at who is booked into a session. Each action is gated
  * individually by `hasPermission`, cosmetically — the backend re-checks and, for
- * attendance/grades, additionally enforces "own sessions only" for a trainer
- * (see `features/bookings/attendance.ts`), which this page cannot express by
- * hiding a button (a trainer sees every roster, only their own is actionable).
+ * attendance/grades/lesson-log, additionally enforces "own sessions only" for a
+ * trainer, which this page cannot express by hiding a button.
  */
 export default async function SessionRosterPage({
   params,
@@ -45,39 +52,67 @@ export default async function SessionRosterPage({
 }) {
   const { sessionId } = await params;
   const { org, effectivePermissions } = await requireOrgAccess();
-  const [t, tg, locale] = await Promise.all([
+  const [t, tg, tl, locale] = await Promise.all([
     getTranslations("staffPanel"),
     getTranslations("grades"),
+    getTranslations("lessonLog"),
     getLocale(),
   ]);
 
-  const { session, groupType, roster, gradeFields, gradesByBooking, notesByBooking } =
-    await withTenant(org.id, async (tx) => {
-      const session = await getSession(tx, org.id, sessionId);
-      if (!session) return null;
+  const {
+    session,
+    groupType,
+    roster,
+    gradeFields,
+    gradesByBooking,
+    notesByBooking,
+    topic,
+    homeworkList,
+    completionMap,
+  } = await withTenant(org.id, async (tx) => {
+    const session = await getSession(tx, org.id, sessionId);
+    if (!session) return null;
 
-      const [groupType, roster, gradeFields] = await Promise.all([
-        getGroupType(tx, org.id, session.groupTypeId),
-        listRosterForSession(tx, org.id, sessionId),
-        listGradeFieldsForSessionRoster(tx, org.id, {
-          groupTypeId: session.groupTypeId,
-          sessionId,
-        }),
+    const [groupType, roster, gradeFields, topic, homeworkList] = await Promise.all([
+      getGroupType(tx, org.id, session.groupTypeId),
+      listRosterForSession(tx, org.id, sessionId),
+      listGradeFieldsForSessionRoster(tx, org.id, {
+        groupTypeId: session.groupTypeId,
+        sessionId,
+      }),
+      getLessonTopicBySession(tx, org.id, sessionId),
+      listHomeworkBySession(tx, org.id, sessionId),
+    ]);
+
+    const gradesByBooking = new Map<string, Map<string, string>>();
+    const notesByBooking = new Map<string, { id: string; content: string }[]>();
+    for (const row of roster) {
+      const [grades, notes] = await Promise.all([
+        listGradesForBooking(tx, org.id, row.bookingId),
+        listProgressNotesForBooking(tx, org.id, row.bookingId),
       ]);
+      gradesByBooking.set(row.bookingId, new Map(grades.map((g) => [g.gradeFieldId, g.value])));
+      notesByBooking.set(row.bookingId, notes);
+    }
 
-      const gradesByBooking = new Map<string, Map<string, string>>();
-      const notesByBooking = new Map<string, { id: string; content: string }[]>();
-      for (const row of roster) {
-        const [grades, notes] = await Promise.all([
-          listGradesForBooking(tx, org.id, row.bookingId),
-          listProgressNotesForBooking(tx, org.id, row.bookingId),
-        ]);
-        gradesByBooking.set(row.bookingId, new Map(grades.map((g) => [g.gradeFieldId, g.value])));
-        notesByBooking.set(row.bookingId, notes);
-      }
+    const completionMap = await getCompletionMap(
+      tx,
+      org.id,
+      homeworkList.map((h) => h.id),
+    );
 
-      return { session, groupType, roster, gradeFields, gradesByBooking, notesByBooking };
-    }).then((result) => result ?? notFound());
+    return {
+      session,
+      groupType,
+      roster,
+      gradeFields,
+      gradesByBooking,
+      notesByBooking,
+      topic,
+      homeworkList,
+      completionMap,
+    };
+  }).then((result) => result ?? notFound());
 
   const formatWhen = new Intl.DateTimeFormat(locale, {
     timeZone: org.timezone,
@@ -90,6 +125,7 @@ export default async function SessionRosterPage({
   const canEnterGrades = effectivePermissions.has("grades.enter");
   const canManageGradeFields = effectivePermissions.has("grade_fields.manage");
   const canCancelBooking = effectivePermissions.has("bookings.cancel_reschedule");
+  const canManageLessonLog = effectivePermissions.has("lesson_log.manage");
 
   const paymentBadge = (status: string) =>
     status === "confirmed" ? "success" : status === "booked_offline" ? "warning" : "outline";
@@ -186,6 +222,60 @@ export default async function SessionRosterPage({
           <h2 className="text-lg font-medium">{tg("title")}</h2>
           <p className="text-muted-foreground text-sm">{tg("subtitle")}</p>
           <GradeFieldForm groupTypeId={session.groupTypeId} sessionId={sessionId} />
+        </div>
+      ) : null}
+
+      {/* ── Faza 28: Lesson Details (topic) ───────────────────────────── */}
+      {canManageLessonLog ? (
+        <div className="flex flex-col gap-3 border-t pt-6">
+          <h2 className="text-lg font-medium">{tl("sectionTopic")}</h2>
+          <LessonTopicForm
+            sessionId={sessionId}
+            defaultTitle={topic?.title}
+            defaultBody={topic?.body}
+          />
+        </div>
+      ) : null}
+
+      {/* ── Faza 28: Homework + completion ────────────────────────────── */}
+      {canManageLessonLog ? (
+        <div className="flex flex-col gap-4 border-t pt-6">
+          <h2 className="text-lg font-medium">{tl("sectionHomework")}</h2>
+
+          <HomeworkForm sessionId={sessionId} />
+
+          {homeworkList.length > 0 ? (
+            <div className="flex flex-col gap-4">
+              {homeworkList.map((hw) => (
+                <div key={hw.id} className="border-muted rounded-md border p-4">
+                  <div className="mb-2 flex items-start justify-between">
+                    <div>
+                      <p className="text-sm font-medium">{hw.description}</p>
+                      {hw.dueDate ? (
+                        <p className="text-muted-foreground text-xs">
+                          {tl("homeworkDue")}: {hw.dueDate}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {roster.map((row) => {
+                      const comp = completionMap.get(hw.id)?.get(row.athleteId);
+                      return (
+                        <HomeworkCompletionToggle
+                          key={`${hw.id}-${row.bookingId}`}
+                          homeworkId={hw.id}
+                          athleteId={row.athleteId}
+                          sessionId={sessionId}
+                          current={comp?.status ?? "not_done"}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </div>
       ) : null}
     </div>
