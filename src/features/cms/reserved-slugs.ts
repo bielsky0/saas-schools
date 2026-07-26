@@ -92,6 +92,7 @@ export const RESERVED_PATH_PREFIXES: Readonly<Record<string, PathStage>> = {
   api: "tenant",
   zapisy: "tenant",
   karta: "tenant",
+  "moje-konto": "tenant",
 
   /*
    * Staff panel and auth surface — the same path on both hosts, different

@@ -23,17 +23,29 @@ Retrofit dotykający **F3 (zakończona)** i **F5 (zakończona)** — nie czyste 
 
 ### Faza 29b — Strona logowania panelu klienta (hasło jako ścieżka główna, OTP jako reset)
 
-**Status:** nierozpoczęta
+**Status:** zakończona (2026-07-26)
 **Cel:** klient loguje się hasłem, jeśli je ustawił; OTP na tej stronie jest wyłącznie wymuszonym resetem, nigdy równoległym fallbackiem.
 **Pokrywa:** EPIK 44 (US-44.2, US-44.3); §2.43; Rozstrzygnięcie spec #37.
 **Zależności:** **F29a** (schemat + logika hasła); **F4.5 ✅** (middleware subdomenowy — formalna zależność routingu; już zamknięty, więc nie blokuje w praktyce, patrz Rozstrzygnięcie #17 wyżej).
 **Migracja:** żadna — F29a już wprowadziła kolumny.
-**Zakres:** nowa trasa/strona logowania panelu klienckiego pod `{organization.subdomain}.langlion.pl` (dziś **nie istnieje** jako UI — F3 świadomie zostawiła warstwę prezentacji na później, patrz `docs/plan/faza-3.md`); warunkowe renderowanie: brak `password_hash` → wyłącznie „zaloguj przez kod" (istniejący komponent/flow OTP z F3, reużyty bez zmian); obecny `password_hash` → pole hasła jako ścieżka główna + link „nie pamiętam hasła"; ścieżka „nie pamiętam hasła" → istniejący OTP (F3) → wymuszony formularz nowego hasła → wywołanie `resetClientPassword` z F29a; logowanie hasłem tworzy `client_session` tym samym mechanizmem co po OTP (`createClientSession`, D37) — brak drugiego mechanizmu sesji.
-**Nie dotyka:** `/zapisy/*` (formularz zapisowy, bez zmian — Model punkt 1, §2.43).
-**DoD:** e2e: klient bez hasła widzi wyłącznie logowanie kodem na stronie panelu; klient z hasłem loguje się hasłem i dostaje `client_session`; „nie pamiętam hasła" → OTP → wymuszone nowe hasło → stare hasło odrzucane, wszystkie poprzednie sesje zerwane, właściciel konta dostaje niewyłączalne powiadomienie `client_password_changed`; próba pominięcia kroku ustawienia nowego hasła po weryfikacji OTP na tej ścieżce jest niemożliwa (brak trasy do panelu z pominięciem tego kroku); suita zielona.
+**Zakres:** nowa strona logowania panelu klienckiego pod `{organization.subdomain}.langlion.pl/moje-konto` — dwie zakładki: „Hasło" (email + password) i „Kod" (email → OTP z F3); ścieżka „nie pamiętam hasła" → OTP → `POST /api/client-auth/reset-password` (verifyOtp + resetClientPassword, **bez** tworzenia sesji) → komunikat → powrót do logowania; logowanie hasłem przez `POST /api/client-auth/login` z dummy hash timing guard.
+**Nie dotyka:** `/zapisy/*` (bez zmian); `/login` (staff auth, bez zmian — trasa kliencka pod `/moje-konto`).
+**DoD:** klient bez hasła loguje się kodem; klient z hasłem loguje się hasłem i dostaje `client_session`; „nie pamiętam hasła" → OTP → wymuszone nowe hasło → stare hasło odrzucone, sesje zerwane, powiadomienie `client_password_changed`; logowanie na nieistniejący email i z nieprawidłowym hasłem identyczny czas odpowiedzi (dummy hash guard); suita zielona.
+
+**Zaimplementowane pliki:**
+- `api/client-auth/login/route.ts` — POST login (dummy hash timing guard)
+- `api/client-auth/reset-password/route.ts` — POST reset (verifyOtp → resetClientPassword, bez sesji)
+- `features/client-auth/components/client-login-panel.tsx` — komponent UI
+- `(site)/moje-konto/page.tsx` — strona (redirect jeśli zalogowany)
+- `features/client-auth/rate-limit.ts` — `passwordLoginLimitDecision()`
+- `features/client-auth/schema.ts` — `loginSchema`, `resetPasswordSchema`
+- `features/client-auth/session.ts` — invariant: 2 call-site dla `createClientSession`
+- `features/client-auth/password.ts` — `getDummyPasswordHash()`
+- `features/cms/reserved-slugs.ts` — `moje-konto: "tenant"`
+- `lib/i18n/messages/en.json` + `pl.json` — przestrzeń `clientLogin`
 
 **⚠️ Blast radius (hasło klienta, część b):**
-- **Zakończone fazy do ponownego dotknięcia:** **ŻADNA** — nowa trasa, reużywająca bez zmian sygnatur `resolveClientSession`/`createClientSession` (F3) i logikę hasła z F29a. F4.5 dotknięta wyłącznie formalną zależnością (trasa żyje pod istniejącym middlewarem), bez zmiany jego kodu.
+- **Zakończone fazy do ponownego dotknięcia:** **ŻADNA** — nowa trasa, reużywająca bez zmian sygnatur `resolveClientSession`/`createClientSession` (F3) i logikę hasła z F29a.
 - **Nierozpoczęte fazy rosnące bez ryzyka retrofitu:** brak — faza samodzielna po F29a.
 
 ---

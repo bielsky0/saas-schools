@@ -41,6 +41,23 @@ export function verifyClientPassword(hash: string, plaintext: string): Promise<b
 }
 
 /**
+ * A dummy scrypt hash, computed once, used when a login attempt targets a
+ * non-existent client. Verifying against it costs the same as verifying
+ * against a real hash, so the response time does not reveal whether the
+ * email exists (timing oracle — see `/api/client-auth/login/route.ts`).
+ *
+ * Computed lazily on first use because `hashPassword` is async.
+ */
+let _dummyPasswordHash: string | null = null;
+
+export async function getDummyPasswordHash(): Promise<string> {
+  if (!_dummyPasswordHash) {
+    _dummyPasswordHash = await hashPassword("langlion-dummy-timing-guard---v1");
+  }
+  return _dummyPasswordHash;
+}
+
+/**
  * Set a password for the first time (from the booking confirmation screen).
  *
  * Sets all three password columns. If the client already has a password_hash,

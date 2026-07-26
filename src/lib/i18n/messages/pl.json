@@ -1611,5 +1611,42 @@
       "sessionNotFound": "Nie znaleziono sesji.",
       "foreignSession": "Możesz to zrobić tylko dla własnych sesji."
     }
+  },
+  "clientLogin": {
+    "title": "Zaloguj się",
+    "passwordTab": "Hasło",
+    "codeTab": "Kod",
+    "emailLabel": "Email",
+    "passwordLabel": "Hasło",
+    "submit": "Zaloguj się",
+    "loggingIn": "Logowanie…",
+    "forgotPassword": "Nie pamiętasz hasła?",
+    "forgotPasswordHeading": "Zresetuj hasło",
+    "forgotPasswordDescription": "Wyślemy kod na adres {email}.",
+    "noPasswordLoginWithCode": "Zaloguj się kodem",
+    "wantToUsePassword": "Mam hasło — zaloguj się",
+    "invalidCredentials": "Nieprawidłowy email lub hasło.",
+    "rateLimited": "Zbyt wiele prób. Spróbuj ponownie później.",
+    "codeDescription": "Wyślemy jednorazowy kod na Twój email.",
+    "sendCode": "Wyślij kod",
+    "sendingCode": "Wysyłanie…",
+    "codeLabel": "Kod",
+    "verifyCode": "Zweryfikuj",
+    "verifying": "Weryfikacja…",
+    "resendCode": "Wyślij ponownie",
+    "otpPrompt": "Wysłaliśmy sześciocyfrowy kod na {email}.",
+    "otpInvalid": "Nieprawidłowy lub wygasły kod.",
+    "newPasswordLabel": "Nowe hasło",
+    "confirmPasswordLabel": "Potwierdź hasło",
+    "passwordHint": "Co najmniej 8 znaków, w tym litera i cyfra.",
+    "passwordMismatch": "Hasła nie są zgodne.",
+    "passwordWeak": "Hasło musi mieć co najmniej 8 znaków, w tym literę i cyfrę.",
+    "resetSubmit": "Ustaw nowe hasło",
+    "resetting": "Ustawianie…",
+    "resetSuccess": "Hasło zmienione. Możesz się teraz zalogować nowym hasłem.",
+    "backToLogin": "Powrót do logowania",
+    "errors": {
+      "generic": "Coś poszło nie tak. Spróbuj ponownie."
+    }
   }
 }

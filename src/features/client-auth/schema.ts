@@ -65,6 +65,23 @@ export const verifyCodeSchema = z.object({
 export type RequestCodeInput = z.infer<typeof requestCodeSchema>;
 export type VerifyCodeInput = z.infer<typeof verifyCodeSchema>;
 
+/** Body of `POST /api/client-auth/login` (Faza 29b). */
+export const loginSchema = z.object({
+  email,
+  password: z.string().min(1),
+});
+
+export type LoginInput = z.infer<typeof loginSchema>;
+
+/** Body of `POST /api/client-auth/reset-password` (Faza 29b). */
+export const resetPasswordSchema = z.object({
+  email,
+  code: z.string().trim().regex(new RegExp(`^\\d{${OTP_LENGTH}}$`)),
+  password: z.string().min(1),
+});
+
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+
 /**
  * Shared password validation for client passwords (langlion spec v19, EPIK 44,
  * Faza 29a).

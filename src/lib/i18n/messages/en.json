@@ -1611,5 +1611,42 @@
       "sessionNotFound": "Session not found.",
       "foreignSession": "You may only do this for your own sessions."
     }
+  },
+  "clientLogin": {
+    "title": "Log in",
+    "passwordTab": "Password",
+    "codeTab": "Code",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "submit": "Log in",
+    "loggingIn": "Logging in…",
+    "forgotPassword": "Forgot password?",
+    "forgotPasswordHeading": "Reset your password",
+    "forgotPasswordDescription": "We will send a code to {email}.",
+    "noPasswordLoginWithCode": "Log in with a code instead",
+    "wantToUsePassword": "I have a password — log in",
+    "invalidCredentials": "Invalid email or password.",
+    "rateLimited": "Too many attempts. Try again later.",
+    "codeDescription": "We'll send a one-time code to your email.",
+    "sendCode": "Send code",
+    "sendingCode": "Sending…",
+    "codeLabel": "Code",
+    "verifyCode": "Verify",
+    "verifying": "Verifying…",
+    "resendCode": "Resend",
+    "otpPrompt": "We sent a six-digit code to {email}.",
+    "otpInvalid": "Invalid or expired code.",
+    "newPasswordLabel": "New password",
+    "confirmPasswordLabel": "Confirm password",
+    "passwordHint": "At least 8 characters, including a letter and a number.",
+    "passwordMismatch": "Passwords do not match.",
+    "passwordWeak": "Password must be at least 8 characters with a letter and a number.",
+    "resetSubmit": "Set new password",
+    "resetting": "Setting…",
+    "resetSuccess": "Password changed. You can now log in with your new password.",
+    "backToLogin": "Back to log in",
+    "errors": {
+      "generic": "Something went wrong. Try again."
+    }
   }
 }

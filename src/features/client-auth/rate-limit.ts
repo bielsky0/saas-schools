@@ -9,6 +9,8 @@ import {
   OTP_ISSUE_IP_RULE,
   OTP_VERIFY_EMAIL_RULE,
   OTP_VERIFY_IP_RULE,
+  PASSWORD_LOGIN_EMAIL_RULE,
+  PASSWORD_LOGIN_IP_RULE,
 } from "./config";
 
 /**
@@ -155,5 +157,20 @@ export function verifyLimitDecision(
     identity,
     OTP_VERIFY_EMAIL_RULE,
     OTP_VERIFY_IP_RULE,
+  );
+}
+
+export function passwordLoginLimitDecision(
+  organizationId: string,
+  email: string,
+  identity: RequestIdentity,
+): Promise<RateLimited | null> {
+  return consumeBoth(
+    "login",
+    organizationId,
+    email,
+    identity,
+    PASSWORD_LOGIN_EMAIL_RULE,
+    PASSWORD_LOGIN_IP_RULE,
   );
 }
