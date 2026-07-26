@@ -32,6 +32,7 @@ export type GroupTypeDefaults = {
   paymentPolicy: string;
   price: number;
   isNewClientOnly: boolean;
+  requiresQualificationCard: boolean;
   defaultLocationId: string | null;
   policyDocumentId: string | null;
   allowedPurchaseModes: string[];
@@ -231,6 +232,16 @@ export function GroupTypeForm({
           className="accent-primary size-4"
         />
         {t("form.isNewClientOnly")}
+      </label>
+
+      <label className="flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          name="requiresQualificationCard"
+          defaultChecked={defaults?.requiresQualificationCard ?? false}
+          className="accent-primary size-4"
+        />
+        {t("form.requiresQualificationCard")}
       </label>
 
       {policyDocuments ? (

@@ -2,11 +2,13 @@ import { and, count, eq } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
 
 import {
+  ConsentRequiredError,
   createBooking,
   ForeignAthleteError,
   PaymentMethodUnavailableError,
   PolicyNotAcceptedError,
   PolicyVersionChangedError,
+  QualificationCardRequiredError,
   SessionCancelledError,
   SessionFullError,
   SessionPastError,
@@ -142,6 +144,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             price: resolvedPrice,
             paymentPolicy: groupType.paymentPolicy,
             allowedPurchaseModes: groupType.allowedPurchaseModes,
+            requiresQualificationCard: groupType.requiresQualificationCard,
           },
           currency: org.currency,
           client: { id: client.id, email: client.email },
@@ -183,5 +186,7 @@ function reasonFor(error: unknown): string | null {
   if (error instanceof ForeignAthleteError) return "foreign_athlete";
   if (error instanceof PolicyVersionChangedError) return "policy_version_changed";
   if (error instanceof PolicyNotAcceptedError) return "policy_not_accepted";
+  if (error instanceof ConsentRequiredError) return "consentRequired";
+  if (error instanceof QualificationCardRequiredError) return "qualificationCardRequired";
   return null;
 }

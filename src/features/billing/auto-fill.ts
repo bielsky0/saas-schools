@@ -108,6 +108,7 @@ export async function autoFillCredits(input: AutoFillInput): Promise<AutoFillRes
         price: gtRow.price,
         paymentPolicy: gtRow.paymentPolicy,
         allowedPurchaseModes: gtRow.allowedPurchaseModes,
+        requiresQualificationCard: false,
       } satisfies CreateBookingInput["groupType"],
       targetAthletes,
     };

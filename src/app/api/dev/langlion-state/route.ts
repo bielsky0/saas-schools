@@ -51,6 +51,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         defaultLocationId: groupType.defaultLocationId,
         allowedPurchaseModes: groupType.allowedPurchaseModes,
         allowedBillingTypes: groupType.allowedBillingTypes,
+        requiresQualificationCard: groupType.requiresQualificationCard,
       })
       .from(groupType)
       .where(eq(groupType.organizationId, org.id))

@@ -91,6 +91,7 @@ export const RESERVED_PATH_PREFIXES: Readonly<Record<string, PathStage>> = {
   // Served on the academy's own host.
   api: "tenant",
   zapisy: "tenant",
+  karta: "tenant",
 
   /*
    * Staff panel and auth surface — the same path on both hosts, different

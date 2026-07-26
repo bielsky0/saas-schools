@@ -64,6 +64,8 @@ export function createGroupTypeSchema(t: ValidationTranslator) {
       paymentPolicy,
       /** Faza 22 (§2.34) — "scheduled" or "collecting_interest", defaults to "scheduled". */
       status: groupTypeStatus.default("scheduled"),
+      /** Faza 26 (§2.40, EPIK 41) — this offer requires a qualification card for camp/colony. */
+      requiresQualificationCard: z.boolean().default(false),
       /** Minor units of `organization.currency` — grosze, not złote (§2.14). */
       price: z.coerce.number().int().nonnegative(t("priceInvalid")),
       isNewClientOnly: z.boolean().default(false),

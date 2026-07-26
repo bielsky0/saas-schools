@@ -125,6 +125,7 @@ export async function createSlotFirstBookingAction(
           price: gt.price,
           paymentPolicy: gt.paymentPolicy,
           allowedPurchaseModes: gt.allowedPurchaseModes,
+          requiresQualificationCard: false,
         },
         currency: ctx.org.currency,
         client: { id: parsed.data.clientId, email: actor.actorEmail },

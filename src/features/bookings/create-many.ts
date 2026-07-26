@@ -7,6 +7,7 @@ import {
   PaymentMethodUnavailableError,
   PolicyNotAcceptedError,
   PolicyVersionChangedError,
+  QualificationCardRequiredError,
   SessionCancelledError,
   SessionFullError,
   SessionPastError,
@@ -49,6 +50,7 @@ export interface CreateManyInput {
     price: number;
     paymentPolicy: "online" | "on_site" | "both";
     allowedPurchaseModes: readonly ("single_class" | "package")[];
+    requiresQualificationCard: boolean;
   };
   client: { id: string; email: string };
   sessionId: string;
@@ -102,6 +104,7 @@ export async function createManyBookings(
             price: resolvedPrice,
             paymentPolicy: input.groupType.paymentPolicy,
             allowedPurchaseModes: input.groupType.allowedPurchaseModes,
+            requiresQualificationCard: input.groupType.requiresQualificationCard,
           },
           currency: input.organizationCurrency,
           client: input.client,
@@ -140,5 +143,6 @@ function createManyErrorLabel(error: unknown): string {
   if (error instanceof PolicyVersionChangedError) return "policyVersionChanged";
   if (error instanceof PolicyNotAcceptedError) return "policyNotAccepted";
   if (error instanceof ConsentRequiredError) return "consentRequired";
+  if (error instanceof QualificationCardRequiredError) return "qualificationCardRequired";
   throw error;
 }

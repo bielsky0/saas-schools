@@ -49,6 +49,7 @@ export interface EnrollmentFlowProps {
   discountedPrice?: number;
   currency: string;
   isNewClientOnly: boolean;
+  requiresQualificationCard: boolean;
   paymentView: PaymentOptionsView;
   month: string;
   prevMonth: string;
@@ -120,6 +121,7 @@ function Bookable({
   price,
   discountedPrice,
   isNewClientOnly,
+  requiresQualificationCard,
   paymentView,
   month,
   prevMonth,
@@ -217,6 +219,7 @@ function Bookable({
                 error={bookingResult?.error}
                 policyDocument={policyDocument}
                 consentDocuments={consentDocuments}
+                requiresQualificationCard={requiresQualificationCard}
                 onComplete={setBookingResult}
               />
             )}
@@ -439,6 +442,7 @@ function ConfirmStep({
   error,
   policyDocument,
   consentDocuments,
+  requiresQualificationCard,
   onComplete,
 }: {
   pending: boolean;
@@ -449,6 +453,7 @@ function ConfirmStep({
   error?: string;
   policyDocument: PolicyDocumentProp | null;
   consentDocuments: ConsentDocumentProp[];
+  requiresQualificationCard: boolean;
   onComplete?: (state: CreateBookingManyState) => void;
 }) {
   const t = useTranslations("enrollment");
@@ -637,6 +642,19 @@ function ConfirmStep({
           </label>
           <ViewDocumentLink fileId={policyDocument.fileId} />
           <input type="hidden" name="acceptedPolicyVersion" value={policyDocument.version} />
+        </fieldset>
+      ) : null}
+
+      {requiresQualificationCard ? (
+        <fieldset className="space-y-2 rounded border p-3 border-amber-200 bg-amber-50">
+          <legend className="font-medium text-amber-800">{t("qualificationCard.heading")}</legend>
+          <p className="text-sm text-amber-700">{t("qualificationCard.requiredNotice")}</p>
+          <p className="text-sm text-amber-700">
+            {t("qualificationCard.fillLink")}{" "}
+            <Link href={`/karta/${groupTypeSlug}`} className="underline font-medium">
+              {t("qualificationCard.goToForm")}
+            </Link>
+          </p>
         </fieldset>
       ) : null}
 

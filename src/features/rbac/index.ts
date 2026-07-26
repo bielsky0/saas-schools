@@ -167,7 +167,18 @@ export type Permission =
   /** Bulk-import parents and children from a single CSV file during onboarding.
    * Owner+Admin only — this is an admin tool for migrating an existing academy
    * database, not a self-serve feature. */
-  | "data.import";
+  | "data.import"
+  // ── Faza 26 — Karta kwalifikacyjna uczestnika wypoczynku (EPIK 41, §2.40) ──
+  //
+  /** View and manage qualification cards (parent phase + card list). Owner, Admin,
+   * Secretariat — same circle as interest.manage (§2.10). Health data additionally
+   * gated behind athlete_health.view (sensitive GDPR data). */
+  | "qualification_cards.manage"
+  /** Complete the "after camp" phase of the qualification card (health during camp,
+   * incidents, signature; §2.40). Owner, Admin in static map; camp leader role
+   * granted via permission override from F23 (§8 #21). Consciously separate from
+   * bookings.mark_attendance — different role, different data. */
+  | "qualification_card.complete_return";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -223,6 +234,8 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "consent_documents.manage",
     "athlete_health.view",
     "data.import",
+    "qualification_cards.manage",
+    "qualification_card.complete_return",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -271,6 +284,8 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "consent_documents.manage",
     "athlete_health.view",
     "data.import",
+    "qualification_cards.manage",
+    "qualification_card.complete_return",
   ],
   /**
    * The three langlion staff roles (§2.10).
@@ -309,6 +324,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
       "refunds.issue",
       "invoices.mark_issued",
       "interest.manage",
+      "qualification_cards.manage",
     ],
   reception: [
     "organization.leave",

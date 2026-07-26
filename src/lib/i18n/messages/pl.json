@@ -905,6 +905,7 @@
       "allowedBillingTypes": "Rozliczenie pakietów",
       "status": "Status",
       "statusHint": "Oferty z harmonogramem pokazują kalendarz sesji. Zbieranie zainteresowania pokazuje formularz zgłoszenia.",
+      "requiresQualificationCard": "Wymaga karty kwalifikacyjnej (obóz)",
       "submit": "Utwórz typ grupy",
       "submitting": "Tworzenie…",
       "save": "Zapisz zmiany",
@@ -1191,6 +1192,12 @@
       "acceptLabel": "Akceptuję \"{name}\" (wersja {version})",
       "mustAccept": "Wymagana jest akceptacja wszystkich zgód."
     },
+    "qualificationCard": {
+      "heading": "Karta kwalifikacyjna wymagana",
+      "requiredNotice": "Ta oferta wymaga karty kwalifikacyjnej dla każdego dziecka. Karta zbiera informacje zdrowotne wymagane prawnie dla kolonii i półkolonii.",
+      "fillLink": "Kliknij poniższy link, aby wypełnić kartę przed wysłaniem rezerwacji.",
+      "goToForm": "Przejdź do formularza karty kwalifikacyjnej"
+    },
     "confirm": {
       "heading": "Podsumowanie",
       "submit": "Zapisz",
@@ -1228,6 +1235,7 @@
       "policyVersionChanged": "Regulamin został zmieniony w trakcie wypełniania formularza. Odśwież stronę.",
       "policyNotAccepted": "Wymagana jest akceptacja regulaminu.",
       "consentRequired": "Wymagana jest akceptacja wszystkich zgód.",
+      "qualificationCardRequired": "Przed zapisem na ten obóz wymagane jest wypełnienie karty kwalifikacyjnej.",
       "generic": "Coś poszło nie tak. Spróbuj ponownie.",
       "interestAlreadyExists": "To dziecko jest już zapisane do tej oferty."
     },
@@ -1471,5 +1479,45 @@
     "fileHint": "Wymagane kolumny: email, childName. Opcjonalne: parentName, phone, age, emergencyContactName, emergencyContactPhone, healthNotes.",
     "import": "Importuj",
     "importing": "Importowanie…"
+  },
+  "qualificationCards": {
+    "page": {
+      "title": "Karta kwalifikacyjna",
+      "subtitle": "Oferta obozu: {offerName}",
+      "loginRequired": "Zaloguj się, aby wypełnić kartę kwalifikacyjną. Najpierw przejdź na stronę zapisów."
+    },
+    "form": {
+      "parentExplanation": "Tę sekcję musi wypełnić rodzic lub opiekun prawny przed rozpoczęciem obozu. Wszystkie dane zdrowotne są traktowane jako dane wrażliwe RODO.",
+      "chronicConditions": "Choroby przewlekłe",
+      "chronicConditionsPlaceholder": "Wypisz choroby przewlekłe dziecka...",
+      "medications": "Leki",
+      "medicationsPlaceholder": "Wypisz leki przyjmowane regularnie, z dawkowaniem...",
+      "allergies": "Alergie",
+      "allergiesPlaceholder": "Wypisz znane alergie...",
+      "dietaryRestrictions": "Ograniczenia dietetyczne",
+      "dietaryRestrictionsPlaceholder": "Specjalne wymagania dietetyczne...",
+      "vaccinationsInfo": "Informacja o szczepieniach",
+      "vaccinationsInfoPlaceholder": "Istotna historia szczepień...",
+      "parentContactDuringCamp": "Kontakt do rodzica w trakcie obozu",
+      "parentContactDuringCampPlaceholder": "Numer telefonu, pod którym można się kontaktować w trakcie obozu...",
+      "submit": "Zapisz kartę kwalifikacyjną",
+      "saving": "Zapisywanie…"
+    },
+    "status": {
+      "parent_pending": "Jeszcze nie wypełniona",
+      "parent_completed": "Wypełniona przez rodzica",
+      "leader_completed": "Wypełniona przez kierownika"
+    },
+    "parentCompleted": "Karta kwalifikacyjna zapisana.",
+    "leaderCompleted": "Część kierownika zapisana.",
+    "errors": {
+      "verifyFirst": "Najpierw potwierdź swoją tożsamość.",
+      "missingIds": "Brak informacji o uczestniku lub ofercie.",
+      "missingCardId": "ID karty jest wymagane.",
+      "generic": "Nie udało się zapisać karty kwalifikacyjnej.",
+      "notFound": "Nie znaleziono karty kwalifikacyjnej.",
+      "cardExists": "Karta dla tego dziecka i oferty już istnieje."
+    },
+    "validation": {}
   }
 }

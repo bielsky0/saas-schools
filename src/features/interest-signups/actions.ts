@@ -81,6 +81,7 @@ export async function convertInterestSignupAction(
           price: gt.price,
           paymentPolicy: gt.paymentPolicy,
           allowedPurchaseModes: gt.allowedPurchaseModes,
+          requiresQualificationCard: false,
         },
         currency: org.currency,
         client: { id: row.clientId, email: "" },

@@ -140,3 +140,4 @@ export * from "./client-price-overrides";
 export * from "./interest-signups";
 export * from "./membership-permission-overrides";
 export * from "./consent-documents";
+export * from "./qualification-cards";

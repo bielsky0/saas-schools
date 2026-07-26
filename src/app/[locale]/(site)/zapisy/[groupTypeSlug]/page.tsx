@@ -219,6 +219,7 @@ export default async function EnrollmentPage({
         discountedPrice={discountedPrice ?? undefined}
         currency={org.currency}
         isNewClientOnly={groupType.isNewClientOnly}
+        requiresQualificationCard={groupType.requiresQualificationCard}
         paymentView={paymentView}
         month={month}
         prevMonth={shiftMonth(month || todayMonth(org.timezone), -1)}

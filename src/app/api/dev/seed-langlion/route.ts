@@ -69,6 +69,7 @@ type Body = {
     allowedPurchaseModes?: ("single_class" | "package")[];
     allowedBillingTypes?: ("one_time" | "recurring")[];
     isNewClientOnly?: boolean;
+    requiresQualificationCard?: boolean;
   };
   /** Set the price on an EXISTING offer, to prove `price_snapshot` is frozen (US-4.6). */
   setGroupTypePrice?: { groupTypeId: string; price: number };
@@ -165,6 +166,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             allowedPurchaseModes: body.groupType.allowedPurchaseModes ?? ["single_class"],
             allowedBillingTypes: body.groupType.allowedBillingTypes ?? null,
             isNewClientOnly: body.groupType.isNewClientOnly ?? false,
+            requiresQualificationCard: body.groupType.requiresQualificationCard ?? false,
             defaultLocationId: locationId,
           })
           .returning({ id: groupType.id });

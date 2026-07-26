@@ -19,6 +19,7 @@ import {
   PaymentMethodUnavailableError,
   PolicyNotAcceptedError,
   PolicyVersionChangedError,
+  QualificationCardRequiredError,
   SessionCancelledError,
   SessionFullError,
   SessionPastError,
@@ -108,6 +109,7 @@ export async function createBookingAction(
             price: resolvedPrice,
             paymentPolicy: gt.paymentPolicy,
             allowedPurchaseModes: gt.allowedPurchaseModes,
+            requiresQualificationCard: gt.requiresQualificationCard,
           },
         currency: org.currency,
         client: { id: principal.clientId, email: principal.email },
@@ -174,6 +176,7 @@ function messageFor(error: unknown, t: Awaited<ReturnType<typeof getTranslations
   if (error instanceof PolicyVersionChangedError) return t("errors.policyVersionChanged");
   if (error instanceof PolicyNotAcceptedError) return t("errors.policyNotAccepted");
   if (error instanceof ConsentRequiredError) return t("errors.consentRequired");
+  if (error instanceof QualificationCardRequiredError) return t("errors.qualificationCardRequired");
   throw error;
 }
 
@@ -242,6 +245,7 @@ export async function createBookingManyAction(
         price: resolvedPrice,
         paymentPolicy: groupType.paymentPolicy,
         allowedPurchaseModes: groupType.allowedPurchaseModes,
+        requiresQualificationCard: groupType.requiresQualificationCard,
       },
       client: { id: principal.clientId, email: principal.email },
       sessionId: parsed.data.sessionId,
@@ -308,6 +312,7 @@ function messageForLabel(label: string | undefined, t: Awaited<ReturnType<typeof
     case "policyVersionChanged": return t("errors.policyVersionChanged");
     case "policyNotAccepted": return t("errors.policyNotAccepted");
     case "consentRequired": return t("errors.consentRequired");
+    case "qualificationCardRequired": return t("errors.qualificationCardRequired");
     default: return t("errors.generic");
   }
 }

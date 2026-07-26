@@ -358,6 +358,20 @@
       "when": 1785900000200,
       "tag": "0050_rls_athlete_consents",
       "breakpoints": true
+    },
+    {
+      "idx": 51,
+      "version": "7",
+      "when": 1786000000100,
+      "tag": "0051_faza26_qualification_card",
+      "breakpoints": true
+    },
+    {
+      "idx": 52,
+      "version": "7",
+      "when": 1786000000200,
+      "tag": "0052_rls_qualification_card",
+      "breakpoints": true
     }
   ]
 }

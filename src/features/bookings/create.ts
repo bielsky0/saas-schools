@@ -5,6 +5,7 @@ import { checkLimit } from "@/features/billing/limits";
 import { getOwnedAthlete, insertAthlete } from "@/features/clients/data";
 import { insertAthleteConsent, getActiveConsentsForSignup } from "@/features/consents/data";
 import { getActivePolicyForGroupType, insertPolicyAcceptance } from "@/features/policies/data";
+import { getQualificationCard } from "@/features/qualification-cards/data";
 import { booking, classSession } from "@/lib/db/schema";
 import type { TenantDb } from "@/lib/db/tenant";
 import { isMethodAcceptable } from "./payment-options";
@@ -65,6 +66,18 @@ export class ConsentRequiredError extends Error {
   }
 }
 
+/** F26: The parent has not completed the qualification card for a camp offer. */
+export class QualificationCardRequiredError extends Error {
+  constructor(
+    message: string,
+    public readonly groupTypeId: string,
+    public readonly athleteId: string,
+  ) {
+    super(message);
+    this.name = "QualificationCardRequiredError";
+  }
+}
+
 export interface CreateBookingInput {
   organizationId: string;
   /** The offer whose page this booking came from — a session from another offer is refused. */
@@ -73,6 +86,8 @@ export interface CreateBookingInput {
     price: number;
     paymentPolicy: "online" | "on_site" | "both";
     allowedPurchaseModes: readonly ("single_class" | "package")[];
+    /** F26: when true, a parent_completed qualification card must exist for the athlete. */
+    requiresQualificationCard: boolean;
   };
   /** The academy's currency, frozen into the snapshot at booking time (§2.14). */
   currency: string;
@@ -224,6 +239,20 @@ export async function createBooking(
         consentDocumentVersion: consent.version,
         granted: true,
       });
+    }
+  }
+
+  // 4.6 F26 — qualification card: if the group type requires one, a parent_completed
+  // card must already exist for this athlete. The parent fills it on the standalone
+  // `/karta/...` page before attempting to book.
+  if (input.groupType.requiresQualificationCard) {
+    const card = await getQualificationCard(tx, input.organizationId, input.groupType.id, athleteId);
+    if (!card || card.status === "parent_pending") {
+      throw new QualificationCardRequiredError(
+        `Qualification card not completed`,
+        input.groupType.id,
+        athleteId,
+      );
     }
   }
 

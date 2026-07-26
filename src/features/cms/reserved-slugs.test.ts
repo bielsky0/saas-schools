@@ -10,7 +10,7 @@ import { RESERVED_PATH_PREFIXES, isReservedSlug, reservedPrefixOf } from "./rese
 
 describe("isReservedSlug", () => {
   it("refuses the six prefixes the CMS spec names", () => {
-    for (const slug of ["dashboard", "admin", "api", "zapisy", "login", "logout"]) {
+    for (const slug of ["dashboard", "admin", "api", "zapisy", "karta", "login", "logout"]) {
       expect(isReservedSlug(slug), slug).toBe(true);
     }
   });

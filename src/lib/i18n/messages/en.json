@@ -905,6 +905,7 @@
       "allowedBillingTypes": "Billing types for packages",
       "status": "Status",
       "statusHint": "Scheduled offers show a session calendar. Collecting interest shows a signup form instead.",
+      "requiresQualificationCard": "Requires qualification card (camp)",
       "submit": "Create group type",
       "submitting": "Creating…",
       "save": "Save changes",
@@ -1191,6 +1192,12 @@
       "acceptLabel": "I accept \"{name}\" (version {version})",
       "mustAccept": "You must accept all required consents to proceed."
     },
+    "qualificationCard": {
+      "heading": "Qualification card required",
+      "requiredNotice": "This offer requires a qualification card for each child. The card collects health information required by law for camps and holiday programs.",
+      "fillLink": "Click the link below to fill the card before submitting your booking.",
+      "goToForm": "Go to qualification card form"
+    },
     "confirm": {
       "heading": "Summary",
       "submit": "Enrol",
@@ -1228,6 +1235,7 @@
       "policyVersionChanged": "The policy was updated while you were filling the form. Refresh the page.",
       "policyNotAccepted": "You must accept the policy to proceed.",
       "consentRequired": "You must accept all required consents to proceed.",
+      "qualificationCardRequired": "You must complete the qualification card before booking this camp.",
       "generic": "Something went wrong. Please try again.",
       "interestAlreadyExists": "This child is already registered for this offer."
     },
@@ -1471,5 +1479,45 @@
     "fileHint": "Required columns: email, childName. Optional: parentName, phone, age, emergencyContactName, emergencyContactPhone, healthNotes.",
     "import": "Import",
     "importing": "Importing…"
+  },
+  "qualificationCards": {
+    "page": {
+      "title": "Qualification card",
+      "subtitle": "Camp offer: {offerName}",
+      "loginRequired": "Please sign in to fill the qualification card. Go to the booking page first."
+    },
+    "form": {
+      "parentExplanation": "This section must be completed by the parent or legal guardian before the camp starts. All health information is treated as sensitive data under GDPR.",
+      "chronicConditions": "Chronic conditions",
+      "chronicConditionsPlaceholder": "List any chronic conditions the child has...",
+      "medications": "Medications",
+      "medicationsPlaceholder": "List any medications the child takes regularly, with dosage...",
+      "allergies": "Allergies",
+      "allergiesPlaceholder": "List any known allergies...",
+      "dietaryRestrictions": "Dietary restrictions",
+      "dietaryRestrictionsPlaceholder": "Any special dietary requirements...",
+      "vaccinationsInfo": "Vaccination information",
+      "vaccinationsInfoPlaceholder": "Relevant vaccination history...",
+      "parentContactDuringCamp": "Parent contact during the camp",
+      "parentContactDuringCampPlaceholder": "Phone number where you can be reached during the camp...",
+      "submit": "Save qualification card",
+      "saving": "Saving\u2026"
+    },
+    "status": {
+      "parent_pending": "Not yet completed",
+      "parent_completed": "Completed by parent",
+      "leader_completed": "Completed by camp leader"
+    },
+    "parentCompleted": "Qualification card saved.",
+    "leaderCompleted": "Leader section completed.",
+    "errors": {
+      "verifyFirst": "Please confirm your identity first.",
+      "missingIds": "Missing athlete or offer information.",
+      "missingCardId": "Card ID is required.",
+      "generic": "Could not save the qualification card.",
+      "notFound": "Qualification card not found.",
+      "cardExists": "A card already exists for this child and offer."
+    },
+    "validation": {}
   }
 }

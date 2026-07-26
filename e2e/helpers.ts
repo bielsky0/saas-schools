@@ -545,6 +545,8 @@ export type LanglionState = {
     defaultLocationId: string | null;
     allowedPurchaseModes: string[];
     allowedBillingTypes: string[] | null;
+    requiresQualificationCard: boolean;
+    status: string;
   }[];
   recurrences: {
     id: string;

@@ -294,6 +294,9 @@ export const AUDIT_ACTIONS = [
   "athlete_consent.accept",
   // Faza 25 — Import masowy CSV (EPIK 39, §2.38)
   "data.import_csv",
+  // Faza 26 — Karta kwalifikacyjna uczestnika wypoczynku (EPIK 41, §2.40)
+  "qualification_card.parent_completed",
+  "qualification_card.leader_completed",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -344,7 +347,9 @@ export type AuditTargetType =
   | "interest_signup"
   // Faza 24 / EPIK 37
   | "consent_document"
-  | "athlete_consent";
+  | "athlete_consent"
+  // Faza 26 / EPIK 41
+  | "qualification_card";
 
 /**
  * WHO acted, as a kind — §6.4's actor model. A different question from WHICH

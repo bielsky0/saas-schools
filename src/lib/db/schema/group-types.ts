@@ -100,6 +100,13 @@ export const groupType = pgTable(
      */
     policyDocumentId: text("policyDocumentId"),
     /**
+     * Faza 26 (§2.40, EPIK 41) — when true, this offer requires a qualification
+     * card (karta kwalifikacyjna uczestnika wypoczynku). The enrollment flow
+     * adds a card step between the consent step and the submit button; the
+     * parent must complete phase 1 before the booking is created.
+     */
+    requiresQualificationCard: boolean("requires_qualification_card").notNull().default(false),
+    /**
      * Default duration (minutes) and capacity for this group type (F17.5, EPIK 34).
      *
      * Used by the slot-availability layer (`computeAvailabilitySlots`) when
