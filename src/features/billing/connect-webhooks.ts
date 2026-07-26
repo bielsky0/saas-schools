@@ -25,6 +25,7 @@ import { issueCredits } from "@/features/credits/issue";
 import { spendCredit } from "@/features/credits/consume";
 import { autoFillCredits } from "@/features/billing/auto-fill";
 import { emitDomainNotification } from "@/features/notifications/emit";
+import { markExtraFeePaidByWebhook } from "@/features/extra-fees/data";
 import { updateConnectStatus } from "./connect-data";
 
 const log = createLogger("billing:connect:webhook");
@@ -133,6 +134,8 @@ export async function processConnectPaymentEvent(
       return processSubscriptionInitial(event);
     case "group_change_payment":
       return processGroupChangePayment(event);
+    case "extra_fee_payment":
+      return processExtraFeePayment(event);
     default:
       log.warn("ignoring Connect payment event with unknown purchaseKind", {
         event: event.id,
@@ -1370,6 +1373,71 @@ export async function processConnectRefundEvent(
       });
 
       return { status: "processed" };
+    },
+  );
+}
+
+/**
+ * Process an extra_fee online payment (Faza 27, purchaseKind = "extra_fee_payment").
+ *
+ * Extra_fee already exists in "pending" status when this webhook fires —
+ * the row was created BEFORE the checkout session. This handler marks it as
+ * paid. Race condition protection: .for("update") lock + WHERE status = 'pending',
+ * same pattern as cash confirmation.
+ */
+async function processExtraFeePayment(
+  event: ConnectPaymentEvent,
+): Promise<ConnectProcessResult> {
+  const orgId = event.metadata.organizationId;
+  const extraFeeId = event.metadata.bookingId;
+  if (!orgId || !extraFeeId) {
+    log.warn("ignoring extra_fee payment event without org/extraFee metadata", {
+      event: event.id,
+    });
+    return { status: "unknown_account" };
+  }
+
+  return withSystemBypass(
+    "extra_fee webhook — no user session, RLS does not apply",
+    async (tx) => {
+      const [marker] = await tx
+        .insert(webhookEvent)
+        .values({
+          provider: event.provider,
+          providerEventId: event.id,
+          type: event.type,
+          organizationId: orgId,
+          occurredAt: event.occurredAt,
+        })
+        .onConflictDoNothing({
+          target: [webhookEvent.provider, webhookEvent.providerEventId],
+        })
+        .returning({ id: webhookEvent.id });
+
+      if (!marker) {
+        log.info("duplicate extra_fee payment event", { event: event.id });
+        return { status: "duplicate" } as const;
+      }
+
+      const resolved = await markExtraFeePaidByWebhook(
+        tx,
+        orgId,
+        extraFeeId,
+        event.id,
+      );
+
+      if (!resolved) {
+        log.info("extra_fee already confirmed", { event: event.id, extraFeeId });
+        return { status: "processed" } as const;
+      }
+
+      log.info("extra_fee paid via Connect webhook", {
+        event: event.id,
+        extraFeeId,
+        amount: event.amount,
+      });
+
+      return { status: "processed" } as const;
     },
   );
 }

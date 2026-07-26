@@ -61,6 +61,8 @@ export type {
   CreateCustomerResult,
   PortalSessionInput,
   PurchaseKind,
+  // ── Faza 27 — Extra fee (EPIK 42) ──
+  // extra_fee_payment uses existing ConnectCheckoutInput with purchaseKind field
   VerifyConnectWebhookResult,
   VerifyWebhookResult,
 } from "./contract";

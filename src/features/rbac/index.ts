@@ -178,7 +178,14 @@ export type Permission =
    * incidents, signature; §2.40). Owner, Admin in static map; camp leader role
    * granted via permission override from F23 (§8 #21). Consciously separate from
    * bookings.mark_attendance — different role, different data. */
-  | "qualification_card.complete_return";
+  | "qualification_card.complete_return"
+  // ── Faza 27 — Opłaty dodatkowe ad-hoc (EPIK 42, §2.41) ───────────────────
+  //
+  /** Create and cancel one-time ad-hoc fees (uniforms, materials, entry fees).
+   * Owner, Admin, Secretariat, Reception — Reception handles desk-side money
+   * (like credits.confirm_on_site and credits.purchase_cash). Trainer does NOT
+   * get this. */
+  | "extra_fees.manage";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -236,6 +243,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "data.import",
     "qualification_cards.manage",
     "qualification_card.complete_return",
+    "extra_fees.manage",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -286,6 +294,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "data.import",
     "qualification_cards.manage",
     "qualification_card.complete_return",
+    "extra_fees.manage",
   ],
   /**
    * The three langlion staff roles (§2.10).
@@ -325,6 +334,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
       "invoices.mark_issued",
       "interest.manage",
       "qualification_cards.manage",
+      "extra_fees.manage",
     ],
   reception: [
     "organization.leave",
@@ -334,6 +344,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "credits.purchase_cash",
     "invoices.mark_issued",
     "athlete_health.view",
+    "extra_fees.manage",
   ],
   trainer: [
     "organization.leave",

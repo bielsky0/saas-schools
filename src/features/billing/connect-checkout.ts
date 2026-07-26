@@ -78,6 +78,41 @@ export async function startConnectGroupChangeCheckout(
 }
 
 /**
+ * Create a Checkout Session on the org's Stripe Connect account for an
+ * extra_fee payment (Faza 27, EPIK 42).
+ *
+ * Extra_fee already exists in "pending" status before checkout is created
+ * — same pattern as booking_payment (F11). The extra_fee_id travels in
+ * the checkout session's metadata as bookingId, matching the existing
+ * ConnectCheckoutInput shape (the field is overloaded — see contract.ts).
+ */
+export async function startExtraFeeConnectCheckout(
+  orgId: string,
+  subdomain: string | null,
+  extraFeeId: string,
+  amount: number,
+  currency: string,
+  connectAccountId: string,
+): Promise<BillingRedirectResult> {
+  const successUrl = await tenantUrl(
+    subdomain ?? "",
+    "/moje-oplaty?status=paid",
+  );
+  const cancelUrl = await tenantUrl(subdomain ?? "", "/moje-oplaty");
+
+  return billing.createConnectCheckoutSession({
+    accountId: connectAccountId,
+    amount,
+    currency: currency.toLowerCase(),
+    bookingId: extraFeeId,
+    organizationId: orgId,
+    purchaseKind: "extra_fee_payment",
+    successUrl,
+    cancelUrl,
+  });
+}
+
+/**
  * Create a Checkout Session on the org's Stripe Connect account for a
  * one-time package purchase (F12c / EPIK 9).
  *

@@ -330,7 +330,7 @@ export type VerifyConnectWebhookResult =
  * Routing by this field, not by presence/absence of bookingId — the latter is
  * fragile and breaks the moment a new flow omits it.
  */
-export type PurchaseKind = "booking_payment" | "package_purchase" | "subscription_initial" | "group_change_payment";
+export type PurchaseKind = "booking_payment" | "package_purchase" | "subscription_initial" | "group_change_payment" | "extra_fee_payment";
 
 /**
  * Input for creating a Checkout Session on a Connected Account for a package

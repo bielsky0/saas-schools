@@ -1519,5 +1519,42 @@
       "cardExists": "Karta dla tego dziecka i oferty już istnieje."
     },
     "validation": {}
+  },
+  "extraFees": {
+    "title": "Opłaty dodatkowe",
+    "create": "Dodaj opłatę",
+    "bulkCreate": "Dodaj zbiorczo",
+    "description": "Opis",
+    "amount": "Kwota",
+    "paymentMethod": "Metoda płatności",
+    "paymentMethodOnline": "Online",
+    "paymentMethodCash": "Gotówka",
+    "statusPending": "Oczekująca",
+    "statusPaid": "Opłacona",
+    "statusCancelled": "Anulowana",
+    "created": "Opłata utworzona.",
+    "bulkCreated": "Utworzono {count} opłat.",
+    "bulkCreatedPartial": "Utworzono {created}, {failed} nie powiodło się.",
+    "cancelled": "Opłata anulowana.",
+    "confirmed": "Płatność gotówkowa potwierdzona.",
+    "invoiceRequested": "Zgłoszono chęć faktury.",
+    "invoiceMarked": "Faktura oznaczona jako wystawiona.",
+    "cancel": "Anuluj opłatę",
+    "payOnline": "Zapłać online",
+    "confirmCash": "Potwierdź gotówkę",
+    "requestInvoice": "Poproś o fakturę",
+    "markInvoiceIssued": "Oznacz fakturę jako wystawioną",
+    "invoiceNumber": "Numer faktury",
+    "errors": {
+      "generic": "Nie udało się przetworzyć opłaty.",
+      "notFound": "Nie znaleziono opłaty.",
+      "verifyFirst": "Najpierw potwierdź swoją tożsamość.",
+      "noBookingsInSession": "Brak uczestników w tej sesji.",
+      "notPending": "Ta opłata nie może być teraz opłacona.",
+      "alreadyPaid": "Ta opłata została już opłacona lub anulowana.",
+      "cannotCancelPaid": "Nie można anulować opłaconej opłaty — nie ma ścieżki zwrotu.",
+      "noStripeConnect": "Płatność online nie jest dostępna dla tej organizacji.",
+      "checkoutFailed": "Nie udało się utworzyć sesji płatności."
+    }
   }
 }

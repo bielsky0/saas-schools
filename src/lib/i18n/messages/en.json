@@ -1519,5 +1519,42 @@
       "cardExists": "A card already exists for this child and offer."
     },
     "validation": {}
+  },
+  "extraFees": {
+    "title": "Additional fees",
+    "create": "Create additional fee",
+    "bulkCreate": "Bulk create",
+    "description": "Description",
+    "amount": "Amount",
+    "paymentMethod": "Payment method",
+    "paymentMethodOnline": "Online",
+    "paymentMethodCash": "Cash",
+    "statusPending": "Pending",
+    "statusPaid": "Paid",
+    "statusCancelled": "Cancelled",
+    "created": "Fee created.",
+    "bulkCreated": "{count} fees created.",
+    "bulkCreatedPartial": "{created} created, {failed} failed.",
+    "cancelled": "Fee cancelled.",
+    "confirmed": "Cash payment confirmed.",
+    "invoiceRequested": "Invoice requested.",
+    "invoiceMarked": "Invoice marked as issued.",
+    "cancel": "Cancel fee",
+    "payOnline": "Pay online",
+    "confirmCash": "Confirm cash payment",
+    "requestInvoice": "Request invoice",
+    "markInvoiceIssued": "Mark invoice issued",
+    "invoiceNumber": "Invoice number",
+    "errors": {
+      "generic": "Could not process the fee.",
+      "notFound": "Fee not found.",
+      "verifyFirst": "Please confirm your identity first.",
+      "noBookingsInSession": "No participants found in this session.",
+      "notPending": "This fee cannot be paid at this time.",
+      "alreadyPaid": "This fee has already been paid or cancelled.",
+      "cannotCancelPaid": "Cannot cancel a paid fee — no refund path exists.",
+      "noStripeConnect": "Online payment is not available for this organization.",
+      "checkoutFailed": "Could not create payment session."
+    }
   }
 }

@@ -297,6 +297,11 @@ export const AUDIT_ACTIONS = [
   // Faza 26 — Karta kwalifikacyjna uczestnika wypoczynku (EPIK 41, §2.40)
   "qualification_card.parent_completed",
   "qualification_card.leader_completed",
+  // Faza 27 — Opłaty dodatkowe ad-hoc (EPIK 42, §2.41)
+  "extra_fee.create",
+  "extra_fee.cancel",
+  "extra_fee.confirm_cash",
+  "extra_fee.bulk_create",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -349,7 +354,9 @@ export type AuditTargetType =
   | "consent_document"
   | "athlete_consent"
   // Faza 26 / EPIK 41
-  | "qualification_card";
+  | "qualification_card"
+  // Faza 27 / EPIK 42
+  | "extra_fee";
 
 /**
  * WHO acted, as a kind — §6.4's actor model. A different question from WHICH
