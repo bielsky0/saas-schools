@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { servedOrganization } from "@/features/organizations/served-org";
 import { getPage } from "@/features/cms/data";
 import { CmsRenderer } from "@/features/cms/renderer";
+import { ThemeInjector } from "@/features/cms/components/theme-injector";
 import { withTenant } from "@/lib/db/tenant";
 
 /**
@@ -32,8 +33,10 @@ export default async function CmsPage({
   if (!page || page.status !== "published") notFound();
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-8">
-      <CmsRenderer blocks={page.blocks as unknown[]} />
-    </main>
+    <ThemeInjector organizationId={org.id}>
+      <main className="mx-auto max-w-5xl px-4 py-8">
+        <CmsRenderer blocks={page.blocks as unknown[]} />
+      </main>
+    </ThemeInjector>
   );
 }

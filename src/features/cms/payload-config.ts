@@ -1,4 +1,5 @@
 import { postgresAdapter } from "@payloadcms/db-postgres";
+import { cloudStoragePlugin } from "@payloadcms/plugin-cloud-storage";
 import { buildConfig } from "payload";
 import { Pool } from "pg";
 
@@ -8,6 +9,7 @@ import { pagesCollection } from "./collections/pages";
 import { mediaCollection } from "./collections/media";
 import { themeCollection } from "./collections/theme";
 import { betterAuthPayloadStrategy } from "./payload-auth-strategy";
+import { cmsStorageAdapter } from "./payload-storage-adapter";
 
 async function run(sql: string) {
   const pool = new Pool({ connectionString: env.DATABASE_URL, max: 1 });
@@ -63,6 +65,15 @@ export default buildConfig({
     ],
   }),
   collections: [pagesCollection, mediaCollection, themeCollection],
+  plugins: [
+    cloudStoragePlugin({
+      collections: {
+        media: {
+          adapter: cmsStorageAdapter,
+        },
+      },
+    }),
+  ],
   auth: {
     strategies: [betterAuthPayloadStrategy],
   },

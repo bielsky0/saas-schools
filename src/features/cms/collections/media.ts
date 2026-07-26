@@ -8,6 +8,7 @@ export const mediaCollection: CollectionConfig = {
     useAsTitle: "altText",
     group: "CMS",
   },
+  upload: true,
   access: {
     read: ({ req }) => {
       const cmsReq = req as unknown as CmsReq;

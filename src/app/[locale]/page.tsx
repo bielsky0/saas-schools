@@ -13,6 +13,7 @@ import { organizationJsonLd, webSiteJsonLd } from "@/features/content/jsonld";
 import { servedOrganization, servedSubdomain } from "@/features/organizations/served-org";
 import { getPage } from "@/features/cms/data";
 import { CmsRenderer } from "@/features/cms/renderer";
+import { ThemeInjector } from "@/features/cms/components/theme-injector";
 import { Link } from "@/lib/i18n/navigation";
 import { withTenant } from "@/lib/db/tenant";
 import { site } from "@/lib/site";
@@ -136,9 +137,11 @@ export default async function Home() {
     if (!page || page.status !== "published") notFound();
 
     return (
-      <main className="mx-auto max-w-5xl px-4 py-8">
-        <CmsRenderer blocks={page.blocks as unknown[]} />
-      </main>
+      <ThemeInjector organizationId={org.id}>
+        <main className="mx-auto max-w-5xl px-4 py-8">
+          <CmsRenderer blocks={page.blocks as unknown[]} />
+        </main>
+      </ThemeInjector>
     );
   }
 

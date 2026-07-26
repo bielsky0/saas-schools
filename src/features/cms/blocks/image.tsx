@@ -30,13 +30,7 @@ export function ImageBlock({ alt, caption, media }: ImageBlockProps) {
   const mediaUrl = typeof media === "object" && media ? media.url : null;
   const mediaAlt = alt ?? (typeof media === "object" && media ? media.alt : null);
 
-  if (!mediaUrl) {
-    return (
-      <div className="bg-muted flex items-center justify-center rounded-md p-8 text-sm text-muted-foreground">
-        Image (media upload required — available in Faza 30c)
-      </div>
-    );
-  }
+  if (!mediaUrl) return null;
 
   return (
     <figure className="my-4">
