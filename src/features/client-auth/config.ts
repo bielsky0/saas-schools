@@ -74,3 +74,22 @@ export const OTP_VERIFY_EMAIL_RULE: RateLimitRule = { limit: 10, windowMs: 15 * 
  */
 export const OTP_ISSUE_IP_RULE: RateLimitRule = { limit: 20, windowMs: 15 * 60 * 1000 };
 export const OTP_VERIFY_IP_RULE: RateLimitRule = { limit: 40, windowMs: 15 * 60 * 1000 };
+
+/**
+ * Rate-limit rules for client password login (langlion spec v19, EPIK 44
+ * US-44.4, Rozstrzygniecie #38 — reuse existing adapter).
+ *
+ * THE RULES ARE DEFINED HERE, BUT THE `passwordLoginLimitDecision` FUNCTION
+ * IS DEFERRED TO FAZA 29B — the login endpoint is not built yet. The
+ * constants serve as the shared reference point consumed by the future
+ * endpoint, the rate-limit documentation, and the e2e plan, without creating
+ * dead code in the current phase.
+ *
+ * Per-address: the primary limit, un-dilutable by network changes.
+ * Per-IP: secondary, looser — this audience sits behind shared NATs, so a
+ * tight IP limit punishes bystanders. The scrypt hash underneath is
+ * brute-force resistant, so fail-open of the adapter is acceptable here
+ * (Rozstrzygniecie #16).
+ */
+export const PASSWORD_LOGIN_EMAIL_RULE: RateLimitRule = { limit: 10, windowMs: 15 * 60 * 1000 };
+export const PASSWORD_LOGIN_IP_RULE: RateLimitRule = { limit: 30, windowMs: 15 * 60 * 1000 };

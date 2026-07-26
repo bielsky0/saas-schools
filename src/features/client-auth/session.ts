@@ -63,6 +63,23 @@ function hashToken(rawToken: string): string {
 /**
  * Start a session and set the cookie. Route Handlers and Server Functions only —
  * `cookies().set` is unavailable during Server Component rendering.
+ *
+ * ─── INVARIANT: THIS IS THE ONLY CALL SITE ────────────────────────────────────
+ *
+ * `createClientSession` is called in exactly ONE place:
+ * `/api/client-auth/verify/route.ts` — after `consumeOtp` succeeded and
+ * `markClientVerified` flipped `isVerified=true`, inside the same transaction.
+ * A session therefore means "the bearer has verified ownership of this email
+ * address at this academy through a consumed OTP", and nothing else.
+ *
+ * If you add a second path to create a session (e.g. staff impersonation,
+ * magic link), you MUST either:
+ *   a. add an explicit `isVerified` gate at that call site, OR
+ *   b. audit every endpoint that trusts session == identity (password set,
+ *      profile write, athlete CRUD) and add explicit `isVerified` checks.
+ *
+ * The `POST /api/client-auth/password` endpoint already has such a check
+ * as defense-in-depth (Faza 29a).
  */
 export async function createClientSession(organizationId: string, clientId: string): Promise<void> {
   const rawToken = randomBytes(32).toString("base64url");

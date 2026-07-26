@@ -1,16 +1,16 @@
 # Graph Report - saas-school  (2026-07-26)
 
 ## Corpus Check
-- 870 files · ~677,255 words
+- 875 files · ~665,424 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3913 nodes · 11285 edges · 286 communities (201 shown, 85 thin omitted)
+- 3936 nodes · 11373 edges · 284 communities (199 shown, 85 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 162 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `9f7d1cf0`
+- Built from commit: `6bd4a10c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -199,8 +199,6 @@
 - reserved-slugs.ts
 - storage/schema.ts
 - clients/schema.ts
-- rbac/index.ts
-- clients/schema.ts
 - next.config.ts
 - Community 191
 - Community 193
@@ -292,13 +290,13 @@
 - extraction-spec.md
 
 ## God Nodes (most connected - your core abstractions)
-1. `TenantDb` - 275 edges
-2. `withTenant()` - 205 edges
+1. `TenantDb` - 276 edges
+2. `withTenant()` - 208 edges
 3. `requireOrgPermission()` - 135 edges
-4. `recordAudit()` - 129 edges
+4. `recordAudit()` - 132 edges
 5. `Button()` - 85 edges
 6. `resolveActor()` - 78 edges
-7. `uniqueEmail()` - 69 edges
+7. `uniqueEmail()` - 71 edges
 8. `cn()` - 65 edges
 9. `organization` - 59 edges
 10. `withSystemBypass()` - 59 edges
@@ -308,12 +306,12 @@
   e2e/langlion-schedule.spec.ts → src/app/api/dev/client-auth/route.ts
 - `seed()` --calls--> `withSystemBypass()`  [EXTRACTED]
   seed-plans.ts → src/lib/db/system.ts
-- `PendingInvoiceCard()` --indirect_call--> `markInvoiceIssuedAction()`  [INFERRED]
-  src/features/billing/components/invoice-pending-list.tsx → src/features/billing/invoice-actions.ts
-- `ConfirmStep()` --indirect_call--> `createBookingManyAction()`  [INFERRED]
-  src/features/bookings/components/enrollment-flow.tsx → src/features/bookings/actions.ts
 - `Zapis wielu uczestników w jednym przejściu (rozszerzenie §2.7, v17)` --semantically_similar_to--> `Zakup pakietu i auto-wypełnienie terminów (§7.5a)`  [INFERRED] [semantically similar]
   docs/spec/02b-opis-funkcjonalnosci-cz2.md → docs/spec/02a-opis-funkcjonalnosci-cz1.md
+- `Receive a provider webhook pattern (signature auth, raw body, marker+effect in one tx, watermark)` --semantically_similar_to--> `Jobs adapter / transactional outbox (enqueue writes row, drain executes)`  [INFERRED] [semantically similar]
+  docs/architecture/reference-patterns/c-platnosci-bezpieczenstwo-flagi.md → docs/architecture/reference-patterns/a-adaptery-i18n-zadania-dane-audyt.md
+- `inviteFromMembers()` --calls--> `tenantUrl()`  [EXTRACTED]
+  e2e/invitation-accept.spec.ts → e2e/host-fixtures.ts
 
 ## Import Cycles
 - None detected.
@@ -340,199 +338,199 @@
 - **Wspólna lista uczestników sesji: obecność, oceny, tematy lekcji/praca domowa** — docs_spec_02d_kryteria_akceptacji_epiki_21_44_02d_k_epik31_potwierdzanie_obecnosci_attendance_status, docs_spec_02d_kryteria_akceptacji_epiki_21_44_02d_o_epik35_e_dziennik_oceny_notatki_grade, docs_spec_02d_kryteria_akceptacji_epiki_21_44_02d_w_epik43_tematy_lekcji_prace_domowe_lesson_topic [EXTRACTED 0.95]
 - **Zasada fail-safe/fail-closed w limitach, dostępności i uprawnieniach** — docs_spec_02d_kryteria_akceptacji_epiki_21_44_02d_i_epik29_limity_planu_feature_gating_fail_closed_limits, docs_spec_02d_kryteria_akceptacji_epiki_21_44_02d_n_epik34_dyspozycyjnosc_trenerow_availability_not_source_of_truth, docs_spec_02d_kryteria_akceptacji_epiki_21_44_02d_r_epik38_granularne_uprawnienia_fail_closed_authorization [INFERRED 0.75]
 
-## Communities (286 total, 85 thin omitted)
+## Communities (284 total, 85 thin omitted)
 
 ### Community 0 - "Email Adapter & RFC Standards"
-Cohesion: 0.17
-Nodes (16): log, payExtraFeeOnlineAction(), requestExtraFeeInvoiceAction(), getExtraFee(), markInvoiceRequested(), BulkCreateExtraFeeInput, bulkCreateExtraFeeSchema, cancelExtraFeeSchema (+8 more)
+Cohesion: 0.09
+Nodes (28): ExtraFeesPage(), bulkCreateExtraFeeAction(), createExtraFeeAction(), log, ExtraFeeForm(), cancelExtraFee(), createExtraFee(), IssuedExtraFeeInvoiceRow (+20 more)
 
 ### Community 1 - "Email Unsubscribe & Categories"
-Cohesion: 0.10
-Nodes (40): RFC-2369, POST(), RFC-8058, CATEGORY_LABEL, generateMetadata(), RFC-8058, UnsubscribePage(), INVALID (+32 more)
+Cohesion: 0.12
+Nodes (30): RFC-2369, POST(), RFC-8058, CATEGORY_LABEL, generateMetadata(), RFC-8058, UnsubscribePage(), INVALID (+22 more)
 
 ### Community 2 - "Admin Auth & OAuth RFCs"
 Cohesion: 0.07
-Nodes (27): RFC-7591, RFC-8414, RFC-9728, blockedAdminSurface(), GET(), handler, POST(), GET (+19 more)
+Nodes (28): RFC-7591, RFC-8414, RFC-9728, blockedAdminSurface(), GET(), handler, POST(), GET (+20 more)
 
 ### Community 3 - "Admin Panel Pages"
-Cohesion: 0.11
-Nodes (31): AdminAuditPage(), AdminOrgDetailPage(), AdminOrganizationsPage(), AdminUsersPage(), OrgAuditPage(), ActorType, AuditAction, AdminOrgDetail (+23 more)
+Cohesion: 0.05
+Nodes (71): AdminAuditPage(), AdminOrgDetailPage(), AdminOrganizationsPage(), AdminIndexPage(), AdminPlansPage(), AdminUsersPage(), AdminUserDetailPage(), OrgAuditPage() (+63 more)
 
 ### Community 4 - "Login & Password Reset Forms"
 Cohesion: 0.16
 Nodes (28): finishSignIn(), ForgotPasswordState, loginBlocked(), requestPasswordResetAction(), resetPasswordAction(), ResetPasswordState, safeCallbackUrl(), signInAction() (+20 more)
 
 ### Community 5 - "Group/Location Admin Pages"
-Cohesion: 0.11
-Nodes (26): CreditsPage(), OrgFilesPage(), NotificationSettingsPage(), FEATURES, Card(), CardContent(), CardDescription(), CardFooter() (+18 more)
+Cohesion: 0.19
+Nodes (17): BlogIndexPage(), Image(), FEATURES, generateMetadata(), Home(), planBullets(), Image(), getAllActivePlans() (+9 more)
 
 ### Community 6 - "Org Actions & Audit Recording"
-Cohesion: 0.21
-Nodes (9): createLocationAction(), deactivateLocationAction(), updateLocationAction(), EditLocationFields(), deactivateLocation(), LocationNotFoundError, createLocationSchema(), CreateLocationValues (+1 more)
+Cohesion: 0.08
+Nodes (51): ClientDetailPage(), CreditsPage(), GroupTypesPage(), LocationsPage(), MemberPermissionsPage(), PurchasesPage(), QualificationCardsPage(), SchedulePage() (+43 more)
 
 ### Community 7 - "E2E Admin/Invite Helpers"
 Cohesion: 0.10
-Nodes (21): ADMIN_ROUTES, seedConnectOrg(), seedBillingOrg(), seedBillingOrg(), loginViaUi(), registerViaApi(), seedOrg(), seedSuperAdmin() (+13 more)
+Nodes (23): ADMIN_ROUTES, loginAs(), seedConnectOrg(), seedBillingOrg(), seedBillingOrg(), getInvitationLink(), loginViaUi(), registerViaApi() (+15 more)
 
 ### Community 8 - "Cron Job Handlers"
 Cohesion: 0.06
-Nodes (41): RenderedEmail, BookingCancelled(), bookingCancelledSubject(), GradeRecorded(), gradeRecordedSubject(), CreditTransferNotification(), CreditTransferProps, creditTransferSubject() (+33 more)
+Nodes (81): RFC-5322, POST(), GET(), EmailAdapter, Recipient, RenderedEmail, SendOptions, TemplateData (+73 more)
 
 ### Community 9 - "Root Layout & Metadata"
-Cohesion: 0.19
-Nodes (11): calculateAmount(), EarningsLine, EarningsReport, EarningsReportInput, generateEarningsReport(), NoRateSession, resolveRate(), SessionRow (+3 more)
+Cohesion: 0.24
+Nodes (9): calculateAmount(), EarningsLine, EarningsReport, EarningsReportInput, generateEarningsReport(), NoRateSession, resolveRate(), SessionRow (+1 more)
 
 ### Community 10 - "Audit Trail Types"
-Cohesion: 0.12
+Cohesion: 0.11
 Nodes (16): adapterFor(), bodySchema, POST(), allowOnError(), decide(), decideNext(), RateLimitAdapter, RateLimitDecision (+8 more)
 
 ### Community 11 - "E2E Billing/Stripe Fixtures"
-Cohesion: 0.12
-Nodes (19): loginAs(), Fixture, seedPendingBooking(), Fixture, signedConnectRequest(), connectAccountDeauthorizedEvent(), connectAccountUpdatedEvent(), connectCheckoutCompletedEvent() (+11 more)
+Cohesion: 0.14
+Nodes (18): Fixture, seedPendingBooking(), Fixture, signedConnectRequest(), connectAccountDeauthorizedEvent(), connectAccountUpdatedEvent(), connectCheckoutCompletedEvent(), ConnectEventBase (+10 more)
 
 ### Community 12 - "Notification Preferences Actions"
-Cohesion: 0.21
-Nodes (20): RFC-5322, TemplateProps, ClientOtp(), clientOtpSubject(), TemplateDef, Invitation(), Button(), EmailLayout() (+12 more)
+Cohesion: 0.16
+Nodes (14): Body, PaymentStatus, listRecurrences(), account, oauthAccessToken, oauthApplication, oauthConsent, session (+6 more)
 
 ### Community 13 - "Dashboard & Billing Owner Resolution"
-Cohesion: 0.13
-Nodes (29): PermissionOverrideForm(), SchedulePage(), Badge(), Pagination(), PaginationLink(), Table(), TableBody(), TableCell() (+21 more)
+Cohesion: 0.05
+Nodes (77): AcademyHome(), OrgFilesPage(), GroupTypeDetailPage(), TEACHING_ROLES, DeleteOverrideButton(), initial, PermissionOverrideForm(), MembersPage() (+69 more)
 
 ### Community 14 - "Blog/Docs/Changelog Slugs"
-Cohesion: 0.11
-Nodes (24): BlogSlug, ChangelogSlug, CATEGORY_IDS, DOC_CATEGORIES, DocSlug, Author, AUTHOR_IDS, AuthorId (+16 more)
+Cohesion: 0.10
+Nodes (26): BlogSlug, ChangelogSlug, CATEGORY_IDS, DOC_CATEGORIES, DocSlug, Author, AUTHOR_IDS, authorFor() (+18 more)
 
 ### Community 15 - "Billing Event Types"
-Cohesion: 0.08
-Nodes (48): Body, POST(), ConnectPanelProps, BillingEvent, BillingEventBase, BillingEventType, BillingOperationErrorCode, BillingPaymentData (+40 more)
+Cohesion: 0.11
+Nodes (38): BillingEvent, BillingEventBase, BillingEventType, BillingOperationErrorCode, BillingPaymentData, BillingPaymentEventType, BillingPaymentStatus, BillingRedirectResult (+30 more)
 
 ### Community 16 - "UI Primitive Components"
-Cohesion: 0.06
-Nodes (54): GroupTypeOption, Labels, initial, initial, Button(), FormField(), FormMessage(), Input() (+46 more)
+Cohesion: 0.07
+Nodes (50): GroupTypeOption, Labels, initial, Button(), ConfirmDialog(), FormField(), FormMessage(), Label() (+42 more)
 
 ### Community 17 - "TS Config & Node Modules"
 Cohesion: 0.06
 Nodes (30): dom, dom.iterable, esnext, **/*.mts, .next/dev/types/**/*.ts, next-env.d.ts, .next/types/**/*.ts, node_modules (+22 more)
 
 ### Community 18 - "Client OTP Rules"
-Cohesion: 0.06
-Nodes (31): findOrgByConnectAccountId(), processConnectRefundEvent(), processSubscriptionFailed(), checkFeatureServer(), checkLimitServer(), checkLimit(), enqueueApproachingNotification(), enqueueLimitReachedNotification() (+23 more)
+Cohesion: 0.08
+Nodes (33): consumeOtp(), insertClientSession(), insertOtp(), markClientVerified(), registerFailedAttempt(), revokeAllSessionsForClient(), supersedeLiveOtps(), upsertClient() (+25 more)
 
 ### Community 19 - "Credit Grant Admin Tools"
-Cohesion: 0.08
-Nodes (23): MyBookingsPage(), clientActor(), listClientPurchases(), BookingAlreadyCancelledError, BookingNotFoundError, CancellationTooLateError, addExtraSessionAction(), cancelMyBookingAction() (+15 more)
+Cohesion: 0.13
+Nodes (16): MyBookingsPage(), clientActor(), listClientPurchases(), addExtraSessionAction(), cancelMyBookingAction(), ClientBookingState, CancelMyBookingButton(), AthleteNotOwnedError (+8 more)
 
 ### Community 20 - "Rate Limit Adapter Core"
-Cohesion: 0.24
-Nodes (15): consumeOtp(), insertOtp(), markClientVerified(), registerFailedAttempt(), supersedeLiveOtps(), upsertClient(), generateCode(), hashCode() (+7 more)
+Cohesion: 0.11
+Nodes (13): Body, POST(), Body, POST(), authAdapter, clientStripeCustomer, env, RFC-8058 (+5 more)
 
 ### Community 21 - "Billing Notification Handlers"
-Cohesion: 0.19
-Nodes (17): PersonalBillingPage(), CheckoutButton(), openProviderUrl(), PortalButton(), BillingPanel(), isPlanId(), Plan, PLAN_BY_PRICE_ID (+9 more)
+Cohesion: 0.17
+Nodes (19): PersonalBillingPage(), CheckoutButton(), openProviderUrl(), PortalButton(), BillingPanel(), getActiveSubscriptionForOwner(), subscriptionOwnerWhere(), isPlanId() (+11 more)
 
 ### Community 22 - "Client OTP Session Flow"
-Cohesion: 0.25
-Nodes (19): uniqueId(), seedAcademy(), uniqueSlug(), seedLanglion(), seedOrgFull(), uniqueEmail(), uniqueNearFutureSlot(), uniqueSubdomain() (+11 more)
+Cohesion: 0.20
+Nodes (20): uniqueId(), getUserId(), seedLanglion(), seedOrgFull(), shiftSlot(), uniqueNearFutureSlot(), uniqueSubdomain(), seedAcademy() (+12 more)
 
 ### Community 23 - "Group Type & Recurrence Actions"
-Cohesion: 0.17
-Nodes (22): languageAlternates(), sitemap(), DocCategoryId, buildIndex(), collectText(), docIndex(), DocSearchHit, IndexedDoc (+14 more)
+Cohesion: 0.12
+Nodes (31): generateStaticParams(), DocsIndexPage(), PageProps, generateStaticParams(), languageAlternates(), sitemap(), DocCategoryId, DocsSearchForm() (+23 more)
 
 ### Community 24 - "MCP Agent Tooling"
-Cohesion: 0.13
-Nodes (26): POST(), ToolName, GET(), markAllReadAction(), markReadAction(), ResolvedNotificationOwner, resolveNotificationOwner(), countUnread() (+18 more)
+Cohesion: 0.12
+Nodes (25): POST(), GET(), DashboardPage(), markAllReadAction(), markReadAction(), updateNotificationPreferencesAction(), initial, NotificationPreferencesForm() (+17 more)
 
 ### Community 25 - "Booking Creation Logic"
 Cohesion: 0.11
-Nodes (33): Body, createBookingManyAction(), CreateBookingState, messageForLabel(), parseAthleteConsents(), parseManyParticipants(), ConsentRequiredError, createBooking() (+25 more)
+Nodes (33): Body, POST(), reasonFor(), ConsentRequiredError, createBooking(), CreateBookingInput, CreateBookingResult, ForeignAthleteError (+25 more)
 
 ### Community 26 - "Marketing Pages (Blog/Docs/Home)"
-Cohesion: 0.05
-Nodes (44): POST(), reasonFor(), POST(), changed(), getClient(), cancelSessionAction(), createSingleSessionAction(), massMoveBookingsAction() (+36 more)
+Cohesion: 0.06
+Nodes (38): POST(), POST(), createSlotFirstBookingAction(), createSlotFirstSchema, createSingleSessionAction(), UnknownGroupTypeError, WrongEngineError, SessionAlreadyCancelledError (+30 more)
 
 ### Community 27 - "E2E Job/Email Test Helpers"
-Cohesion: 0.18
-Nodes (18): POST(), GET(), EmailAdapter, Recipient, SendOptions, TemplateData, TemplateName, createEmailAdapter() (+10 more)
+Cohesion: 0.17
+Nodes (16): POST(), PoliciesPage(), createPolicyDocumentAction(), getClientAcceptanceHistoryAction(), uploadNewPolicyVersionAction(), CreatePolicyForm(), PoliciesPageClient(), createPolicyDocument() (+8 more)
 
 ### Community 28 - "Billing Panel Pages"
-Cohesion: 0.13
-Nodes (16): EnqueueNotificationInput, EnqueueNotificationOptions, BillingNotifyOwner, DrainResult, EnqueueOptions, JobContext, JobName, JobPayloads (+8 more)
+Cohesion: 0.14
+Nodes (16): log, BillingNotifyOwner, DrainResult, EnqueueOptions, JobContext, JobName, JobPayloads, JobRegistry (+8 more)
 
 ### Community 29 - "Public Page Routing"
-Cohesion: 0.07
-Nodes (42): robots(), firstSegment(), isReservedSlug(), PathStage, RESERVED_PATH_PREFIXES, reservedPrefixOf(), UNROUTABLE_SLUGS, stripLocale() (+34 more)
+Cohesion: 0.18
+Nodes (21): localeFromPathname(), negotiateLocale(), preferredLanguages(), stripLocale(), isMetadataImageRoute(), isPublicPage(), rateLimitHeaders(), rateLimitKey() (+13 more)
 
 ### Community 30 - "Invoicing & Feature Gating"
 Cohesion: 0.09
 Nodes (25): Credit Purchase, Epic 27 - Faktury i dokumenty sprzedaży, Ręczny proces fakturowania (invoice_requested_at/invoice_issued_at), Epic 23 - Tryby zakupu i rozliczenia (ref), Epic 29 - Limity Planu i Feature Gating, Fail-closed feature/limit gating, Organization Limit Override, Plan Feature Flag (+17 more)
 
 ### Community 31 - "Org Dashboard Pages"
-Cohesion: 0.11
-Nodes (12): ActiveCancellationBlocksChangeRequestError, BookingAlreadyCancelledError, BookingNotFoundError, DuplicateChangeRequestError, SessionCancelledError, SessionNotFoundError, SourceSessionCancelledError, submitChangeRequest() (+4 more)
+Cohesion: 0.05
+Nodes (28): BookingAlreadyCancelledError, BookingNotFoundError, cancelBooking(), CancelBookingInput, CancelBookingResult, CancellationBlockedByChangeRequestError, CancellationTooLateError, formatSessionDate() (+20 more)
 
 ### Community 32 - "Trainer Availability Calendar UI"
-Cohesion: 0.08
-Nodes (42): AvailabilityRow, buildMonthGrid(), CalendarSlot, daysInMonth(), realDays(), row(), toSlot(), endOfMonthValidity() (+34 more)
+Cohesion: 0.06
+Nodes (54): AvailabilityRow, buildMonthGrid(), CalendarSlot, daysInMonth(), defaultMonth(), realDays(), row(), toSlot() (+46 more)
 
 ### Community 33 - "Booking & Client Queries"
-Cohesion: 0.20
-Nodes (17): clientLogout(), clientSessionOf(), expireCodes(), issueAndReadCode(), otpState, readOtpCode(), requestCode(), verifyCode() (+9 more)
+Cohesion: 0.17
+Nodes (22): clientLogout(), clientSessionOf(), expireCodes(), issueAndReadCode(), otpState, readOtpCode(), requestCode(), resetPassword() (+14 more)
 
 ### Community 34 - "Nav & Theme UI"
-Cohesion: 0.16
-Nodes (18): defaultMonthSeed(), EnrollmentPage(), todayMonth(), todayMonthWith(), defaultMonth(), listSessionAvailability(), isBookable(), isMethodAcceptable() (+10 more)
+Cohesion: 0.17
+Nodes (17): defaultMonthSeed(), EnrollmentPage(), todayMonth(), todayMonthWith(), listSessionAvailability(), isBookable(), isMethodAcceptable(), OfferPaymentInput (+9 more)
 
 ### Community 35 - "Auth/Billing Core Tables"
-Cohesion: 0.12
-Nodes (28): Body, PaymentStatus, ClientOverrideManager(), athlete, account, oauthAccessToken, oauthApplication, oauthConsent (+20 more)
+Cohesion: 0.28
+Nodes (7): athlete, clientSubscription, client, file, GroupChangeRequestStatus, organization, productTemplate
 
 ### Community 36 - "Booking Domain Tables"
-Cohesion: 0.07
-Nodes (50): POST(), POST(), Body, GET(), POST(), POST(), ClientDetailPage(), ExtraFeesPage() (+42 more)
+Cohesion: 0.13
+Nodes (18): EarningsPage(), RatesPage(), listGroupTypes(), EarningsReportClient(), RatesPageClient(), FutureSessionRow, listTrainers(), TrainerRow (+10 more)
 
 ### Community 37 - "Tenant Isolation Probe Tooling"
-Cohesion: 0.10
-Nodes (29): seed(), GET(), AuditEntry, FieldChange, SYSTEM_ACTOR, Writer, retentionCutoff(), processGroupChangePayment() (+21 more)
+Cohesion: 0.06
+Nodes (57): seed(), POST(), GET(), log, SYSTEM_ACTOR, retentionCutoff(), findBillingCustomer(), applyPaymentEvent() (+49 more)
 
 ### Community 38 - "File Ownership Records"
-Cohesion: 0.19
-Nodes (16): baseHandler, handler, actorStore, getMcpActor(), McpActor, runWithMcpActor(), McpOrgAccess, McpOwner (+8 more)
+Cohesion: 0.17
+Nodes (20): POST(), ToolName, baseHandler, handler, actorStore, getMcpActor(), McpActor, runWithMcpActor() (+12 more)
 
 ### Community 39 - "Data Model Relation Diagram"
 Cohesion: 0.22
 Nodes (21): Diagram relacji modelu danych (1.1), booking, group_type, group_type_recurrence, location, organization, session, group_change_request (+13 more)
 
 ### Community 40 - "Docs Page Rendering"
-Cohesion: 0.19
-Nodes (15): assertConnectActive(), startConnectCheckout(), startConnectGroupChangeCheckout(), startConnectPackageCheckout(), startConnectSubscriptionCheckout(), startExtraFeeConnectCheckout(), checkoutPackageAction(), checkoutSubscriptionAction() (+7 more)
+Cohesion: 0.22
+Nodes (14): assertConnectActive(), startConnectCheckout(), startConnectGroupChangeCheckout(), startConnectPackageCheckout(), startConnectSubscriptionCheckout(), startExtraFeeConnectCheckout(), checkoutPackageAction(), checkoutSubscriptionAction() (+6 more)
 
 ### Community 41 - "Blog/Changelog Sitemap Metadata"
 Cohesion: 0.08
-Nodes (48): OrgsLayout(), recordAudit(), resolveActor(), withImpersonation(), markInvoiceIssuedAction(), confirmCashPurchaseAction(), refundInitiateAction(), deactivateCreditTypeAction() (+40 more)
+Nodes (47): POST(), OrgsLayout(), AcceptInvitationPage(), hashToken(), withImpersonation(), acceptInvitationAction(), createOrganizationAction(), deleteOrganizationAction() (+39 more)
 
 ### Community 42 - "Group Type Creation Form"
-Cohesion: 0.11
-Nodes (21): authorized(), GET(), GET(), POST(), log, Body, fastForwardJobs(), JobRow (+13 more)
+Cohesion: 0.19
+Nodes (13): authorized(), GET(), GET(), POST(), fastForwardJobs(), JobRow, jobStats(), listJobs() (+5 more)
 
 ### Community 43 - "Structured Logger Core"
-Cohesion: 0.12
-Nodes (27): GET(), ensureBillingCustomer(), openBillingPortal(), returnUrl(), startCheckout(), BillingOwner, ResolvedBillingOwner, BillingRecipients (+19 more)
+Cohesion: 0.23
+Nodes (12): getSubscriptionByProviderId(), resolveBillingRecipients(), billingNotifyHandler(), LIVE_STATUSES, log, manageUrl(), notifySchema, planName() (+4 more)
 
 ### Community 44 - "Checkout/Portal Input Schemas"
-Cohesion: 0.27
-Nodes (9): GET(), OrgBillingPage(), isSupportedCountry(), SUPPORTED_CONNECT_COUNTRIES, SupportedCountry, getOrgConnectStatus(), log, setConnectAccountId() (+1 more)
+Cohesion: 0.25
+Nodes (10): GET(), OrgBillingPage(), ConnectPanelProps, isSupportedCountry(), SUPPORTED_CONNECT_COUNTRIES, SupportedCountry, getOrgConnectStatus(), log (+2 more)
 
 ### Community 45 - "Background Job Admin API"
-Cohesion: 0.13
-Nodes (20): log, Member, POST(), toDnsLabel(), updateOrganizationAction(), isSlugTaken(), assignableRole, createOrgSchema() (+12 more)
+Cohesion: 0.15
+Nodes (13): createNotification(), isInAppSuppressed(), NotificationOwner, ownerColumns(), log, notificationCreateHandler(), markReadSchema, notificationJobSchema (+5 more)
 
 ### Community 46 - "Login Page Metadata"
-Cohesion: 0.11
-Nodes (17): generateMetadata(), generateMetadata(), LoginPage(), safeCallbackUrl(), generateMetadata(), Image(), generateMetadata(), generateMetadata() (+9 more)
+Cohesion: 0.13
+Nodes (11): generateMetadata(), generateMetadata(), LoginPage(), safeCallbackUrl(), generateMetadata(), generateMetadata(), generateMetadata(), generateMetadata() (+3 more)
 
 ### Community 47 - "Enrollment Booking Flow"
-Cohesion: 0.14
-Nodes (18): TrainerAvailabilityPage(), createAvailabilityAction(), deleteAvailabilityAction(), updateAvailabilityAction(), createAvailability(), deleteAvailability(), findOverlappingWindow(), getAvailability() (+10 more)
+Cohesion: 0.15
+Nodes (17): TrainerAvailabilityPage(), deleteAvailabilityAction(), updateAvailabilityAction(), createAvailability(), deleteAvailability(), findOverlappingWindow(), getAvailability(), listAvailability() (+9 more)
 
 ### Community 48 - "Storage Adapter Types"
 Cohesion: 0.20
@@ -543,8 +541,8 @@ Cohesion: 0.15
 Nodes (19): bookings/create-many.ts — orkiestrator zapisu wielu dzieci, Faza 22 — Retrofit F5: zapisy-zainteresowanie + zapis wielu dzieci (poprawki #1 i #6), interest_signup (zapis zainteresowania bez harmonogramu), Faza 29a — Hasło klienta: schemat + logika domenowa + ekran propozycji, Faza 29b — Strona logowania panelu klienta (hasło jako ścieżka główna), client.password_hash / password_set_at / password_updated_at, client_otp (kod jednorazowy, TTL ~15 min), client_session (opaque token, TTL 30 dni) (+11 more)
 
 ### Community 50 - "Recurrence Form Selects"
-Cohesion: 0.08
-Nodes (36): NAV, LocaleSwitcher(), ThemeToggle(), Alert(), AlertDescription(), AlertProps, AlertTitle(), alertVariants (+28 more)
+Cohesion: 0.09
+Nodes (27): AdminLayout(), NAV, LocaleSwitcher(), ThemeToggle(), ButtonProps, buttonVariants, DialogContent(), DialogDescription() (+19 more)
 
 ### Community 51 - "Storage & Onboarding Spec"
 Cohesion: 0.14
@@ -568,7 +566,7 @@ Nodes (17): Faza 20 — Wynagrodzenia trenerów, wyłącznie informacyjne (EPIK 
 
 ### Community 56 - "Client Session Persistence"
 Cohesion: 0.11
-Nodes (23): POST(), GET(), GET(), POST(), SiteLayout(), RequestInvoiceButton(), markInvoiceIssuedSchema, requestInvoiceAction() (+15 more)
+Nodes (25): POST(), GET(), POST(), GET(), POST(), SiteLayout(), RequestInvoiceButton(), markInvoiceIssuedSchema (+17 more)
 
 ### Community 57 - "Boilerplate Foundation Overview"
 Cohesion: 0.13
@@ -591,36 +589,36 @@ Cohesion: 0.12
 Nodes (16): scripts, build, db:down, db:generate, db:migrate, db:studio, db:up, dev (+8 more)
 
 ### Community 63 - "Billing Notification Application"
-Cohesion: 0.14
-Nodes (15): AcademyHome(), ImportForm(), ImportPage(), MembersPage(), TrainersPage(), DeleteOrgButton(), initial, LeaveOrgButton() (+7 more)
+Cohesion: 0.30
+Nodes (4): billingCustomer, notificationEventType, notificationPreference, personalAccount
 
 ### Community 64 - "Dev Dependencies"
 Cohesion: 0.05
 Nodes (39): @better-auth/cli, dotenv, drizzle-kit, eslint, eslint-config-next, eslint-config-prettier, devDependencies, @better-auth/cli (+31 more)
 
 ### Community 65 - "Credit Consumption Core"
-Cohesion: 0.18
-Nodes (16): consumeCredit(), CreditRow, CreditState, getCreditState(), issueCredits(), post(), runExpirySweep(), seedCreditType() (+8 more)
+Cohesion: 0.27
+Nodes (11): consumeCredit(), CreditRow, CreditState, getCreditState(), issueCredits(), post(), runExpirySweep(), seedCreditType() (+3 more)
 
 ### Community 66 - "Next.js Config & Security Headers"
-Cohesion: 0.09
-Nodes (36): BlogIndexPage(), BlogPostPage(), generateMetadata(), generateStaticParams(), PageProps, publishedPost(), ChangelogPage(), DocsIndexPage() (+28 more)
+Cohesion: 0.14
+Nodes (19): RootLayout(), BlogPostPage(), generateMetadata(), PageProps, publishedPost(), ChangelogPage(), DocPage(), generateMetadata() (+11 more)
 
 ### Community 67 - "Billing Owner Listing Queries"
 Cohesion: 0.20
-Nodes (13): OTP_ISSUE_EMAIL_RULE, OTP_ISSUE_IP_RULE, OTP_VERIFY_EMAIL_RULE, OTP_VERIFY_IP_RULE, consumeBoth(), emailKey(), ipKey(), prefixOf() (+5 more)
+Nodes (13): OTP_ISSUE_EMAIL_RULE, OTP_ISSUE_IP_RULE, OTP_VERIFY_EMAIL_RULE, OTP_VERIFY_IP_RULE, PASSWORD_LOGIN_EMAIL_RULE, PASSWORD_LOGIN_IP_RULE, consumeBoth(), emailKey() (+5 more)
 
 ### Community 68 - "Org Consent & Impersonation UI"
-Cohesion: 0.09
-Nodes (39): AdminLayout(), AdminIndexPage(), AdminPlansPage(), AdminPlansClient(), AdminPlansClientProps, FEATURE_KEYS, FeatureRow(), formatFeatureKey() (+31 more)
+Cohesion: 0.08
+Nodes (39): AdminPlansClient(), AdminPlansClientProps, FEATURE_KEYS, FeatureRow(), formatFeatureKey(), formatLimitKey(), LIMIT_KEYS, LimitRow() (+31 more)
 
 ### Community 69 - "Booking Calendar UI State"
-Cohesion: 0.12
-Nodes (12): CreateBookingManyState, CalendarDay, Calendar(), cellClass(), ConfirmStep(), ConsentDocumentProp, EnrollmentFlow(), EnrollmentFlowProps (+4 more)
+Cohesion: 0.08
+Nodes (19): ImportForm(), initial, ImportPage(), Alert(), AlertDescription(), AlertProps, AlertTitle(), alertVariants (+11 more)
 
 ### Community 70 - "Onboarding Step Handler"
-Cohesion: 0.28
-Nodes (12): getOnboardingUser(), hasPaidSubscription(), OnboardingUser, PAID_STATUSES, log, onboardingStepHandler(), stepPayloadSchema, ONBOARDING_STEPS (+4 more)
+Cohesion: 0.26
+Nodes (13): getOnboardingUser(), hasPaidSubscription(), OnboardingUser, PAID_STATUSES, log, onboardingStepHandler(), stepPayloadSchema, ONBOARDING_STEPS (+5 more)
 
 ### Community 71 - "Project Principles & README"
 Cohesion: 0.14
@@ -640,31 +638,31 @@ Nodes (12): Integracja z SaaS Boilerplate — model tożsamości, Notification C
 
 ### Community 75 - "E2E Environment Config"
 Cohesion: 0.17
-Nodes (19): POST(), countrySchema, POST(), POST(), POST(), setOrgCountry(), resolveBillingOwner(), CheckoutInput (+11 more)
+Nodes (24): POST(), countrySchema, POST(), POST(), POST(), ensureBillingCustomer(), openBillingPortal(), returnUrl() (+16 more)
 
 ### Community 76 - "OTP Request/Verify Schemas"
-Cohesion: 0.18
-Nodes (10): deactivateTrainerAction(), DeactivateTrainerButton(), FutureSessionRow, listFutureSessionsForTrainer(), TrainerRow, deactivateTrainer(), DeactivateTrainerInput, TrainerHasFutureSessionsError (+2 more)
+Cohesion: 0.21
+Nodes (9): findAthlete(), findClient(), findCreditType(), grantCreditsAction(), UnknownTargetError, CreditTypeNotFoundError, deactivateCreditType(), DeactivateCreditTypeInput (+1 more)
 
 ### Community 77 - "Invitation Acceptance Flow"
-Cohesion: 0.17
-Nodes (12): GrantForm(), OverrideRow, deactivatePriceOverrideAction(), findClient(), findGroupType(), grantPriceOverrideAction(), UnknownTargetError, DeactivatePriceOverrideInput (+4 more)
+Cohesion: 0.11
+Nodes (17): Body, GET(), POST(), ClientOverrideManager(), GrantForm(), OverrideRow, deactivatePriceOverrideAction(), findClient() (+9 more)
 
 ### Community 78 - "client-auth/rate-limit.ts"
 Cohesion: 0.20
 Nodes (12): updateHomeworkAction(), updateHomework(), ForeignSessionError, SessionNotFoundError, CreateHomeworkInput, createHomeworkSchema, HomeworkCompletionInput, homeworkCompletionSchema (+4 more)
 
 ### Community 79 - "Location Edit Forms"
-Cohesion: 0.12
-Nodes (24): RFC-4647, geistMono, geistSans, generateMetadata(), RootLayout(), ThemeProvider(), PageMetadataInput, setLocaleAction() (+16 more)
+Cohesion: 0.07
+Nodes (34): RFC-4647, POST(), geistMono, geistSans, generateMetadata(), ThemeProvider(), CreateAthleteValues, RegisterClientValues (+26 more)
 
 ### Community 80 - "Host Parsing Utilities"
-Cohesion: 0.15
-Nodes (17): QualificationCardPage(), listAthletes(), getGroupTypeBySlug(), CardNotFoundError, completeParentPhaseAction(), QualificationCardForm(), completeLeaderPhase(), getQualificationCard() (+9 more)
+Cohesion: 0.16
+Nodes (17): QualificationCardPage(), listAthletes(), CardNotFoundError, completeLeaderPhaseAction(), completeParentPhaseAction(), QualificationCardForm(), completeLeaderPhase(), getQualificationCard() (+9 more)
 
 ### Community 81 - "personalAccount"
-Cohesion: 0.13
-Nodes (9): DeleteOverrideButton(), initial, ConfirmDialog(), initial, OrgActions(), initial, RevokeInviteButton(), TrainerOption (+1 more)
+Cohesion: 0.22
+Nodes (10): clientIp(), ipv6Prefix(), normalize(), byMethod(), CREDENTIAL_PATHS, LOGIN_RULE, RateLimitTier, tierFor() (+2 more)
 
 ### Community 82 - "Notification Center & Credit Transfer"
 Cohesion: 0.18
@@ -675,12 +673,12 @@ Cohesion: 0.18
 Nodes (12): Faktury i dokumenty sprzedaży — proces ręczny, Ochrona przed race conditions (§5), System kredytowy (§7), Zakup pakietu gotówką na miejscu (§7.7a), Opłaty dodatkowe ad-hoc (extra_fee) (v18), EPIK 10 — Zakup pakietu gotówką na miejscu, EPIK 12 — Anulowanie i reguła 24h, EPIK 13 — Odrabianie (+4 more)
 
 ### Community 84 - "[...all]/route.ts"
-Cohesion: 0.21
-Nodes (15): insertAthlete(), importCsvAction(), importCsv(), ALL_HEADERS, colVal(), CsvImportError, CsvImportReport, CsvRow (+7 more)
+Cohesion: 0.24
+Nodes (8): checkFeatureServer(), checkLimitServer(), checkLimit(), enqueueApproachingNotification(), enqueueLimitReachedNotification(), getEffectiveLimit(), getResourceUsage(), LimitKey
 
 ### Community 85 - "subscription-checkout-actions.ts"
-Cohesion: 0.13
-Nodes (20): GroupTypeDetailPage(), TEACHING_ROLES, PoliciesPage(), GroupTypeDefaults, GroupTypeForm(), initial, RecurrenceForm(), listRecurrencesWithDetails() (+12 more)
+Cohesion: 0.24
+Nodes (10): GroupTypeDefaults, initial, billingType, CreateGroupTypeValues, CreateRecurrenceValues, engine, groupTypeStatus, paymentPolicy (+2 more)
 
 ### Community 86 - "Tenant Isolation & RLS GUCs"
 Cohesion: 0.22
@@ -695,8 +693,8 @@ Cohesion: 0.25
 Nodes (11): Model danych powiadomienia (boilerplate), Preferencje kanałów powiadomień, Dostarczanie w czasie rzeczywistym (WebSocket/polling), Sekcja 23 - Notification center (boilerplate), UI licznika nieprzeczytanych powiadomień, Przywracanie (restore) i obsługa konfliktów, Widoczność i kontrola statusu backup/restore, notification (+3 more)
 
 ### Community 89 - "storage/schema.ts"
-Cohesion: 0.36
-Nodes (7): InvoicesPage(), InvoicePendingList(), PendingInvoiceCard(), IssuedInvoiceRow, listIssuedInvoices(), listPendingInvoices(), PendingInvoiceRow
+Cohesion: 0.33
+Nodes (8): InvoicesPage(), InvoicePendingList(), PendingInvoiceCard(), markInvoiceIssuedAction(), IssuedInvoiceRow, listIssuedInvoices(), listPendingInvoices(), PendingInvoiceRow
 
 ### Community 90 - "Recurrence Date Calculation"
 Cohesion: 0.08
@@ -759,20 +757,20 @@ Cohesion: 0.22
 Nodes (9): D13: GRANT migration ordered before tables and policies, D4: booking→class_session composite FK ON UPDATE CASCADE, Postgres RLS on all tenant tables as hard requirement (Rozstrzygnięcie #5), Faza 0 — Fundament domeny: dokumenty + rdzeń modelu danych + infrastruktura RLS, Faza 0 Definicja Ukończenia (DoD), Migracja A: organization timezone/currency backfill, Migracja B — core tables: location, group_type, group_type_recurrence, class_session, client, athlete, booking, RLS infrastructure (Faza 0): app role, FORCE RLS, withTenant wrapper (+1 more)
 
 ### Community 105 - "Docs Search Index"
-Cohesion: 0.20
-Nodes (6): loginToAcademy(), loginAndLand(), OverrideGrantResult, uniqueSlug(), loginAndLand(), loginAndLand()
+Cohesion: 0.08
+Nodes (21): seedAcademy(), uniqueSlug(), getLanglionState(), loginToAcademy(), registerAndVerify(), wallClockIn(), weekdayIn(), loginAndLand() (+13 more)
 
 ### Community 106 - "File Upload Presign Schema"
-Cohesion: 0.19
-Nodes (15): getGradeField(), getGradeForBookingField(), listGradeFieldsForGroupType(), listGradeFieldsForSession(), listGradeFieldsForSessionRoster(), addProgressNote(), AddProgressNoteInput, BookingNotFoundError (+7 more)
+Cohesion: 0.13
+Nodes (23): AuditActor, ConfirmCashPurchaseInput, MarkAttendanceInput, getGradeField(), addProgressNote(), AddProgressNoteInput, BookingNotFoundError, enterGrade() (+15 more)
 
 ### Community 107 - "App Security & AI Agent Spec"
 Cohesion: 0.25
 Nodes (8): Limity budżetowe dla zewnętrznych API, Rate limiting na całym API, Sekcja 22 - Bezpieczeństwo warstwy aplikacji, Walidacja danych jako nazwana warstwa architektoniczna, Audit trail z typem wykonawcy AIAgent, Serwer MCP wystawiający operacje aplikacji, Agent AI przechodzi ten sam RBAC co użytkownik, Sekcja 26 - AI Agent (MCP)
 
 ### Community 108 - "Blog OG Image Generation"
-Cohesion: 0.14
-Nodes (18): POST(), kickDrain(), log, contextStore, createLogger(), emit(), enabled(), formatValue() (+10 more)
+Cohesion: 0.27
+Nodes (9): categoryFor(), TEMPLATE_CATEGORY, isSuppressed(), emailJobSchema, emailSendHandler(), log, enqueueEmail(), EnqueueEmailData (+1 more)
 
 ### Community 110 - "Docker Compose & CI Workflow"
 Cohesion: 0.33
@@ -827,16 +825,16 @@ Cohesion: 0.33
 Nodes (6): Session as a DB row, not a signed cookie (revocability), One-time codes consumed by single conditional UPDATE (decyzja D38), requireClient(organizationId) gate, Two session mechanisms: staff and parents (langlion §2.19, F3), Client (rodzic) = odrębna encja domenowa (Rozstrzygnięcie #2), OTP as forced reset only, not parallel login path (Rozstrzygnięcie #37)
 
 ### Community 124 - "Form Validation Types"
-Cohesion: 0.20
-Nodes (12): POST(), POST(), insertClientSession(), identityFrom(), email, RequestCodeInput, requestCodeSchema, VerifyCodeInput (+4 more)
+Cohesion: 0.19
+Nodes (11): POST(), setPasswordSchema, setClientPassword(), clientPasswordSchema(), ClientPasswordValues, email, RequestCodeInput, requestCodeSchema (+3 more)
 
 ### Community 125 - "purge.ts"
-Cohesion: 0.12
-Nodes (23): Body, GET(), POST(), AcademyDirectory(), DashboardPage(), PersonalDashboard(), Home(), planBullets() (+15 more)
+Cohesion: 0.11
+Nodes (20): Body, GET(), POST(), resolve(), log, Member, toDnsLabel(), Body (+12 more)
 
 ### Community 126 - "CSP Builder"
-Cohesion: 0.04
-Nodes (62): AuditActor, BookingNotFoundError, ForeignSessionError, MarkAttendanceInput, MarkAttendanceResult, cancelBooking(), CancelBookingInput, CancelBookingResult (+54 more)
+Cohesion: 0.05
+Nodes (49): Body, GET(), AutoFillInput, AutoFillResult, log, NoCreditError, adminApproveChangeRequest(), AdminApproveInput (+41 more)
 
 ### Community 127 - "Background Job Cron Constraints"
 Cohesion: 0.40
@@ -879,59 +877,59 @@ Cohesion: 1.00
 Nodes (3): Docs: Installation Guide, Docs: Quickstart Guide, Docs: Theming Guide
 
 ### Community 139 - "recurrence.ts"
-Cohesion: 0.60
-Nodes (4): activeBookings(), CreateBookingResult, devCreateBooking(), post()
+Cohesion: 0.25
+Nodes (8): createInterestSignupAction(), InterestSignupForm(), countInterestSignups(), findInterestSignup(), getInterestSignup(), insertInterestSignup(), InterestSignupRow, interestSignup
 
 ### Community 140 - "Community 140"
-Cohesion: 0.14
-Nodes (23): AdminUserDetailPage(), ActionState, deleteOrganizationAction(), deleteUserAction(), impersonateUserAction(), setSuperAdminAction(), stopImpersonatingAction(), suspendUserAction() (+15 more)
+Cohesion: 0.25
+Nodes (7): Body, POST(), ConnectAccountEvent, ConnectEventBase, ConnectPaymentEvent, ConnectRefundEvent, PurchaseKind
 
 ### Community 141 - "search.ts"
-Cohesion: 0.09
-Nodes (33): findSendJob(), RFC-8058, CapturedEmail, drainJobs(), failNextEmails(), getEmails(), getInvitationLink(), getJob() (+25 more)
+Cohesion: 0.13
+Nodes (24): findSendJob(), RFC-8058, CapturedEmail, drainJobs(), failNextEmails(), getEmails(), getJob(), getJobs() (+16 more)
 
 ### Community 142 - "withSystemBypass"
 Cohesion: 0.22
 Nodes (9): BILLING_TABLES, BOILERPLATE_TABLES, EXCLUDED_TABLES, seedOrg(), uniqueSlug(), rlsProbe(), LANGLION_TABLES, seedAcademy() (+1 more)
 
 ### Community 143 - "package-checkout-actions.ts"
-Cohesion: 0.21
-Nodes (10): POST(), POST(), Body, POST(), Body, POST(), updateConnectStatus(), processConnectEvent() (+2 more)
+Cohesion: 0.13
+Nodes (34): POST(), Body, POST(), autoFillCredits(), updateConnectStatus(), ConnectProcessResult, findOrgByConnectAccountId(), log (+26 more)
 
 ### Community 152 - "boilerplate-rls.spec.ts"
-Cohesion: 0.17
-Nodes (16): GET(), Body, EXCLUDED_TABLES, ownerColumns(), OwnerRef, POST(), PROBE_TABLES, ProbeTable (+8 more)
+Cohesion: 0.10
+Nodes (27): GET(), GET(), Body, EXCLUDED_TABLES, ownerColumns(), OwnerRef, POST(), PROBE_TABLES (+19 more)
 
 ### Community 155 - "change-group-cancel.ts"
-Cohesion: 0.15
-Nodes (14): AppLayout(), NewOrganizationPage(), AcceptInvitationPage(), hashToken(), ConsentForm(), OAuthConsentPage(), OAuthLoginBridge(), ImpersonationBanner() (+6 more)
+Cohesion: 0.13
+Nodes (16): NewOrganizationPage(), OAuthConsentPage(), OAuthLoginBridge(), stopImpersonatingAction(), ImpersonationBanner(), StopImpersonatingButton(), getUserEmailById(), CreateOrgForm() (+8 more)
 
 ### Community 156 - "reserved-slugs.ts"
 Cohesion: 0.14
-Nodes (25): fetchOrganizationIdsContainingFile(), GET(), DELETE(), GET(), POST(), Permission, ResolvedOwner, resolveStorageOwner() (+17 more)
+Nodes (25): fetchOrganizationIdsContainingFile(), GET(), DELETE(), GET(), POST(), ResolvedOwner, resolveStorageOwner(), createFileRecord() (+17 more)
 
 ### Community 158 - "Rozpoznanie istniejącego klienta (§6.1a)"
-Cohesion: 0.29
-Nodes (10): AUDIT_ACTIONS, AuditTargetType, AuditListQuery, auditListQuerySchema, OrgListQuery, orgListQuerySchema, USER_STATUSES, UserListQuery (+2 more)
+Cohesion: 0.32
+Nodes (6): robots(), disallowedPages(), Indexable, PublicPagePath, PublicPageRoute, ROUTE_ENTRIES
 
 ### Community 159 - "refund-actions.ts"
-Cohesion: 0.07
-Nodes (50): SessionRosterPage(), listRosterForSession(), getAthleteConsents(), getLatestAthleteConsentForDocument(), listConsentDocuments(), updateConsentDocument(), cancelExtraFee(), IssuedExtraFeeInvoiceRow (+42 more)
+Cohesion: 0.08
+Nodes (36): SessionRosterPage(), AttendanceControls(), CancelBookingButton(), ConfirmCashButton(), listRosterForSession(), EnterGradeForm(), GradeFieldForm(), ProgressNoteForm() (+28 more)
 
 ### Community 160 - "trainers/data.ts"
-Cohesion: 0.28
-Nodes (10): POST(), updateNotificationPreferencesAction(), initial, NotificationPreferencesForm(), setPreference(), isNotificationType(), isSuppressibleType(), NOTIFICATION_META (+2 more)
+Cohesion: 0.43
+Nodes (6): firstSegment(), isReservedSlug(), PathStage, RESERVED_PATH_PREFIXES, reservedPrefixOf(), UNROUTABLE_SLUGS
 
 ### Community 162 - "site.ts"
-Cohesion: 0.23
-Nodes (10): createConsentDocumentAction(), deactivateConsentDocumentAction(), updateConsentDocumentAction(), createConsentDocument(), deactivateConsentDocument(), getConsentDocument(), createConsentDocumentSchema, CreateConsentDocumentValues (+2 more)
+Cohesion: 0.16
+Nodes (15): createConsentDocumentAction(), deactivateConsentDocumentAction(), createConsentDocument(), deactivateConsentDocument(), getAthleteConsents(), getConsentDocument(), getLatestAthleteConsentForDocument(), listConsentDocuments() (+7 more)
 
 ### Community 166 - "bookings/schema.ts"
-Cohesion: 0.05
-Nodes (54): Body, Body, GET(), POST(), Body, Body, POST(), autoFillCredits() (+46 more)
+Cohesion: 0.07
+Nodes (28): Body, POST(), AuditEntry, FieldChange, Writer, confirmCashPurchaseSchema, AthleteNotFoundError, ClientNotFoundError (+20 more)
 
 ### Community 168 - "recurrence.ts"
-Cohesion: 0.17
+Cohesion: 0.18
 Nodes (3): organizationLimitOverride, planFeatureFlag, planLimitDefinition
 
 ### Community 172 - "tenant-host.ts"
@@ -939,36 +937,28 @@ Cohesion: 0.26
 Nodes (11): buildTenantOrigin(), HostContext, isValidLabel(), LOOPBACK_HOSTS, normalizeHost(), parseHost(), portOf(), apexUrl() (+3 more)
 
 ### Community 174 - "invoice-data.ts"
-Cohesion: 0.12
-Nodes (23): createSlotFirstBookingAction(), createGroupTypeAction(), createRecurrenceAction(), deactivateGroupTypeAction(), localDateIn(), locationBelongsToOrg(), strList(), UnknownLocationError (+15 more)
+Cohesion: 0.18
+Nodes (15): changed(), createGroupTypeAction(), createRecurrenceAction(), deactivateGroupTypeAction(), localDateIn(), locationBelongsToOrg(), strList(), UnknownLocationError (+7 more)
 
 ### Community 176 - "auth"
-Cohesion: 0.32
-Nodes (7): settleJobs(), Body, GET(), POST(), resolve(), clientOtp, clientSession
+Cohesion: 0.29
+Nodes (5): Body, POST(), Body, POST(), ConnectSubscriptionEvent
 
 ### Community 177 - "tenant-host.ts"
-Cohesion: 0.29
-Nodes (10): findBillingCustomer(), applyPaymentEvent(), applySubscriptionEvent(), CustomerOwner, enqueuePaymentNotification(), enqueueSubscriptionNotification(), log, ownerOf() (+2 more)
+Cohesion: 0.67
+Nodes (3): AppLayout(), SignOutButton(), ensurePersonalAccount()
 
 ### Community 182 - "reserved-slugs.ts"
-Cohesion: 0.25
-Nodes (7): CreateBookingResult, CreateBookingManyValues, CreateBookingValues, paymentMethod, paymentStatus, PriceSnapshot, ValidationTranslator
+Cohesion: 0.15
+Nodes (20): createBookingAction(), createBookingManyAction(), CreateBookingState, messageFor(), messageForLabel(), parseAthleteConsents(), parseManyParticipants(), ConfirmStep() (+12 more)
 
 ### Community 183 - "storage/schema.ts"
 Cohesion: 0.52
 Nodes (5): ALLOWED_CONTENT_TYPES, confirmInputSchema, PresignInput, presignInputSchema, VISIBILITIES
 
 ### Community 184 - "clients/schema.ts"
-Cohesion: 0.12
-Nodes (15): addProgressNoteAction(), createGradeFieldAction(), enterGradeAction(), createGradeField(), addProgressNoteSchema(), AddProgressNoteValues, createGradeFieldSchema(), CreateGradeFieldValues (+7 more)
-
-### Community 185 - "rbac/index.ts"
-Cohesion: 0.33
-Nodes (6): ALL_PERMISSION_KEYS, isPermissionKey(), OVERRIDABLE_PERMISSIONS, OverrideRow, ROLE_PERMISSIONS, ROLES
-
-### Community 186 - "clients/schema.ts"
-Cohesion: 0.33
-Nodes (3): CreateAthleteValues, RegisterClientValues, ValidationTranslator
+Cohesion: 0.20
+Nodes (9): addProgressNoteSchema(), AddProgressNoteValues, createGradeFieldSchema(), CreateGradeFieldValues, enterGradeSchema(), EnterGradeValues, gradeFieldType, t (+1 more)
 
 ### Community 187 - "next.config.ts"
 Cohesion: 0.40
@@ -1109,7 +1099,7 @@ Nodes (3): 24.1 Struktura, 24.2 Zakres, 24. Onboarding — wieloetapowy flow po 
   docs/plan/faza-21.md · relation: references
 
 ## Knowledge Gaps
-- **809 isolated node(s):** `$schema`, `.opencode/plugins/graphify.js`, `semi`, `singleQuote`, `trailingComma` (+804 more)
+- **814 isolated node(s):** `$schema`, `.opencode/plugins/graphify.js`, `semi`, `singleQuote`, `trailingComma` (+809 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **85 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -1120,13 +1110,13 @@ _Questions this graph is uniquely positioned to answer:_
   _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
 - **What is the exact relationship between `Faza 19 — Warunkowe UI formularza + fakturowanie ręczne` and `Faza 21 — Indywidualne ceny klienta (EPIK 33, v15)`?**
   _Edge tagged AMBIGUOUS (relation: references) - confidence is low._
-- **Why does `TenantDb` connect `refund-actions.ts` to `Email Adapter & RFC Standards`, `Group/Location Admin Pages`, `Org Actions & Audit Recording`, `Root Layout & Metadata`, `Dashboard & Billing Owner Resolution`, `package-checkout-actions.ts`, `Client OTP Rules`, `Credit Grant Admin Tools`, `Rate Limit Adapter Core`, `MCP Agent Tooling`, `Booking Creation Logic`, `Marketing Pages (Blog/Docs/Home)`, `reserved-slugs.ts`, `Org Dashboard Pages`, `Nav & Theme UI`, `site.ts`, `Booking Domain Tables`, `Tenant Isolation Probe Tooling`, `bookings/schema.ts`, `Auth/Billing Core Tables`, `File Ownership Records`, `Blog/Changelog Sitemap Metadata`, `Docs Page Rendering`, `Structured Logger Core`, `Checkout/Portal Input Schemas`, `invoice-data.ts`, `Enrollment Booking Flow`, `tenant-host.ts`, `Client Session Persistence`, `clients/schema.ts`, `Billing Notification Application`, `E2E Environment Config`, `OTP Request/Verify Schemas`, `Invitation Acceptance Flow`, `client-auth/rate-limit.ts`, `Host Parsing Utilities`, `[...all]/route.ts`, `subscription-checkout-actions.ts`, `storage/schema.ts`, `File Upload Presign Schema`, `Form Validation Types`, `purge.ts`, `CSP Builder`?**
-  _High betweenness centrality (0.046) - this node is a cross-community bridge._
-- **Why does `withTenant()` connect `Booking Domain Tables` to `Email Adapter & RFC Standards`, `Group/Location Admin Pages`, `Org Actions & Audit Recording`, `Dashboard & Billing Owner Resolution`, `UI Primitive Components`, `Client OTP Rules`, `Credit Grant Admin Tools`, `Rate Limit Adapter Core`, `boilerplate-rls.spec.ts`, `Booking Creation Logic`, `Marketing Pages (Blog/Docs/Home)`, `MCP Agent Tooling`, `refund-actions.ts`, `Nav & Theme UI`, `Auth/Billing Core Tables`, `site.ts`, `Tenant Isolation Probe Tooling`, `bookings/schema.ts`, `File Ownership Records`, `Docs Page Rendering`, `Blog/Changelog Sitemap Metadata`, `Structured Logger Core`, `Background Job Admin API`, `invoice-data.ts`, `Enrollment Booking Flow`, `auth`, `Client Session Persistence`, `clients/schema.ts`, `Billing Notification Application`, `OTP Request/Verify Schemas`, `Invitation Acceptance Flow`, `client-auth/rate-limit.ts`, `Host Parsing Utilities`, `[...all]/route.ts`, `subscription-checkout-actions.ts`, `storage/schema.ts`, `File Upload Presign Schema`, `Form Validation Types`, `purge.ts`?**
-  _High betweenness centrality (0.038) - this node is a cross-community bridge._
-- **Why does `Locale` connect `Location Edit Forms` to `Next.js Config & Security Headers`, `Admin Auth & OAuth RFCs`, `Login & Password Reset Forms`, `Group/Location Admin Pages`, `Onboarding Step Handler`, `Cron Job Handlers`, `File Upload Presign Schema`, `Structured Logger Core`, `Notification Preferences Actions`, `client-auth/rate-limit.ts`, `Recurrence Form Selects`, `Rate Limit Adapter Core`, `Group Type & Recurrence Actions`, `E2E Job/Email Test Helpers`, `Public Page Routing`, `CSP Builder`, `refund-actions.ts`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+- **Why does `TenantDb` connect `package-checkout-actions.ts` to `Email Adapter & RFC Standards`, `Org Actions & Audit Recording`, `Root Layout & Metadata`, `recurrence.ts`, `Notification Preferences Actions`, `Dashboard & Billing Owner Resolution`, `Client OTP Rules`, `Credit Grant Admin Tools`, `Billing Notification Handlers`, `boilerplate-rls.spec.ts`, `Booking Creation Logic`, `MCP Agent Tooling`, `E2E Job/Email Test Helpers`, `Marketing Pages (Blog/Docs/Home)`, `reserved-slugs.ts`, `refund-actions.ts`, `Org Dashboard Pages`, `Nav & Theme UI`, `site.ts`, `Booking Domain Tables`, `Tenant Isolation Probe Tooling`, `bookings/schema.ts`, `File Ownership Records`, `Docs Page Rendering`, `Blog/Changelog Sitemap Metadata`, `Structured Logger Core`, `Checkout/Portal Input Schemas`, `invoice-data.ts`, `Enrollment Booking Flow`, `reserved-slugs.ts`, `Client Session Persistence`, `Org Consent & Impersonation UI`, `E2E Environment Config`, `OTP Request/Verify Schemas`, `Invitation Acceptance Flow`, `client-auth/rate-limit.ts`, `Host Parsing Utilities`, `storage/schema.ts`, `File Upload Presign Schema`, `purge.ts`, `CSP Builder`?**
+  _High betweenness centrality (0.037) - this node is a cross-community bridge._
+- **Why does `withTenant()` connect `Org Actions & Audit Recording` to `Email Adapter & RFC Standards`, `recurrence.ts`, `Notification Preferences Actions`, `Dashboard & Billing Owner Resolution`, `package-checkout-actions.ts`, `Client OTP Rules`, `Credit Grant Admin Tools`, `Rate Limit Adapter Core`, `boilerplate-rls.spec.ts`, `Booking Creation Logic`, `Marketing Pages (Blog/Docs/Home)`, `E2E Job/Email Test Helpers`, `refund-actions.ts`, `Trainer Availability Calendar UI`, `Nav & Theme UI`, `site.ts`, `Booking Domain Tables`, `Tenant Isolation Probe Tooling`, `File Ownership Records`, `bookings/schema.ts`, `Docs Page Rendering`, `Blog/Changelog Sitemap Metadata`, `Structured Logger Core`, `invoice-data.ts`, `Enrollment Booking Flow`, `reserved-slugs.ts`, `Client Session Persistence`, `Org Consent & Impersonation UI`, `E2E Environment Config`, `OTP Request/Verify Schemas`, `Invitation Acceptance Flow`, `client-auth/rate-limit.ts`, `Host Parsing Utilities`, `storage/schema.ts`, `File Upload Presign Schema`, `Form Validation Types`, `purge.ts`, `CSP Builder`?**
+  _High betweenness centrality (0.032) - this node is a cross-community bridge._
+- **Why does `Locale` connect `Location Edit Forms` to `Next.js Config & Security Headers`, `Admin Auth & OAuth RFCs`, `Login & Password Reset Forms`, `Group/Location Admin Pages`, `Onboarding Step Handler`, `Cron Job Handlers`, `File Upload Presign Schema`, `Blog/Docs/Changelog Slugs`, `client-auth/rate-limit.ts`, `Recurrence Form Selects`, `Client OTP Rules`, `Group Type & Recurrence Actions`, `boilerplate-rls.spec.ts`, `change-group-cancel.ts`, `Public Page Routing`, `refund-actions.ts`?**
+  _High betweenness centrality (0.027) - this node is a cross-community bridge._
 - **What connects `$schema`, `.opencode/plugins/graphify.js`, `semi` to the rest of the system?**
-  _809 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Email Unsubscribe & Categories` be split into smaller, more focused modules?**
-  _Cohesion score 0.09653092006033183 - nodes in this community are weakly interconnected._
+  _814 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `Email Adapter & RFC Standards` be split into smaller, more focused modules?**
+  _Cohesion score 0.09243697478991597 - nodes in this community are weakly interconnected._

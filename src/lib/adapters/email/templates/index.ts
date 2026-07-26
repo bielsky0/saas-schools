@@ -24,6 +24,7 @@ import { GroupChangeNotification, groupChangeSubject, CreditTransferNotification
 import { RefundConfirmed, refundConfirmedSubject } from "./refund-confirmed";
 import { LessonTopicAdded, lessonTopicAddedSubject } from "./lesson-topic-added";
 import { HomeworkAssigned, homeworkAssignedSubject } from "./homework-assigned";
+import { ClientPasswordChanged, clientPasswordChangedSubject } from "./client-password-changed";
 
 /**
  * Template registry (spec 10.2 — component templates, HTML + plain-text).
@@ -120,6 +121,11 @@ const templates: { [N in TemplateName]: TemplateDef<N> } = {
   "homework-assigned": {
     subject: homeworkAssignedSubject,
     component: HomeworkAssigned,
+  },
+  // Faza 29a — Client password changed (EPIK 44, spec v19)
+  "client-password-changed": {
+    subject: clientPasswordChangedSubject,
+    component: ClientPasswordChanged,
   },
 };
 

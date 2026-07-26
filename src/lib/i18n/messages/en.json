@@ -152,13 +152,19 @@
       "body": "A new topic was recorded for the session on {sessionDate}."
     },
     "homework-assigned": {
-      "subject": "New homework assigned at {orgName}",
-      "preview": "New homework was assigned at {orgName}.",
-      "heading": "New homework assigned",
-      "body": "New homework was assigned for the session on {sessionDate}.",
-      "description": "Assignment",
+      "subject": "New homework at {orgName}",
+      "preview": "New homework has been assigned at {orgName}.",
+      "heading": "New homework",
+      "body": "New homework assigned for {sessionDate}.",
+      "description": "Description",
       "dueDate": "Due date"
-    }
+    },
+    "client-password-changed": {
+      "subject": "Your password was changed — {orgName}",
+      "preview": "Your academy account password was changed.",
+      "heading": "Password changed",
+      "body": "Your password for your {orgName} account was changed. If this was not you, contact the academy immediately."
+    },
   },
   "auth": {
     "validation": {
@@ -1271,7 +1277,22 @@
       "subscription_renewal": "Subscription renewal"
     },
     "makeupBooked": "Make-up session booked using credit.",
-    "extraBooked": "Extra session booked."
+    "extraBooked": "Extra session booked.",
+    "password": {
+      "heading": "Set a password",
+      "description": "Set a password to log in to your academy account without a code next time.",
+      "label": "Password",
+      "confirmLabel": "Confirm password",
+      "submit": "Set password",
+      "skip": "Skip",
+      "saving": "Saving…",
+      "success": "Password set.",
+      "errors": {
+        "mismatch": "Passwords do not match.",
+        "weak": "Password must be at least 8 characters, with a letter and a digit.",
+        "generic": "Could not save password. Try again."
+      }
+    }
   },
   "credits": {
     "validation": {

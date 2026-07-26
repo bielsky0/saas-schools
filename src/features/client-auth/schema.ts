@@ -64,3 +64,30 @@ export const verifyCodeSchema = z.object({
 
 export type RequestCodeInput = z.infer<typeof requestCodeSchema>;
 export type VerifyCodeInput = z.infer<typeof verifyCodeSchema>;
+
+/**
+ * Shared password validation for client passwords (langlion spec v19, EPIK 44,
+ * Faza 29a).
+ *
+ * MATCHES THE STAFF PASSWORD POLICY from `features/auth/schema.ts` — min 8
+ * characters, at least one letter and one digit. The policy is the same because
+ * the credential surface is the same: a password protecting an account.
+ *
+ * Factory pattern (not a constant), same as staff schemas, so the error
+ * messages are translated. The caller passes a `useTranslations()`-derived
+ * translator.
+ *
+ * Used by:
+ *   - POST /api/client-auth/password (server-side, translated error codes)
+ *   - the enrollment-flow password proposal section (client-side, instant
+ *     feedback)
+ */
+export function clientPasswordSchema(t: { (key: string): string }) {
+  return z
+    .string()
+    .min(8, t("passwordMin"))
+    .regex(/[A-Za-z]/, t("passwordLetter"))
+    .regex(/\d/, t("passwordNumber"));
+}
+
+export type ClientPasswordValues = z.infer<ReturnType<typeof clientPasswordSchema>>;

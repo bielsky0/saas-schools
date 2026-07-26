@@ -5,6 +5,7 @@ import { getOrgBySubdomain } from "@/features/organizations/data";
 import { withTenant } from "@/lib/db/tenant";
 import { client, clientOtp, clientSession } from "@/lib/db/schema";
 import { env } from "@/lib/env/server";
+import { resetClientPassword } from "@/features/client-auth/password";
 
 /**
  * Test-only inspector and clock for parent authentication (spec 14.1 pattern).
@@ -34,6 +35,11 @@ type Body = {
   email: string;
   /** Push every live code for this address into the past. */
   action: "expire-codes";
+} | {
+  subdomain: string;
+  email: string;
+  /** Revoke all sessions for this client (for Constraint 19 test in Faza 29a). */
+  action: "reset-password";
 };
 
 async function resolve(subdomain: string) {
@@ -58,7 +64,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
   const state = await withTenant(organization.id, async (tx) => {
     const [parent] = await tx
-      .select({ id: client.id, isVerified: client.isVerified })
+      .select({ id: client.id, isVerified: client.isVerified, passwordHash: client.passwordHash })
       .from(client)
       .where(and(eq(client.organizationId, organization.id), eq(client.email, email)))
       .limit(1);
@@ -88,6 +94,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       organizationId: organization.id,
       clientId: parent?.id ?? null,
       isVerified: parent?.isVerified ?? null,
+      hasPassword: parent?.passwordHash != null,
       codes: codes ?? { total: 0, live: 0, maxAttempts: 0 },
       liveSessions: sessions?.live ?? 0,
     };
@@ -102,7 +109,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 
   const body = (await request.json()) as Body;
-  if (!body.subdomain || !body.email || body.action !== "expire-codes") {
+  if (!body.subdomain || !body.email || !body.action) {
     return NextResponse.json({ error: "subdomain, email and a known action" }, { status: 400 });
   }
 
@@ -113,23 +120,52 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   const email = body.email.trim().toLowerCase();
 
-  const expired = await withTenant(organization.id, async (tx) => {
-    const rows = await tx
-      .update(clientOtp)
-      // One second ago, not "now": `consumeOtp` requires `expiresAt > now()`, and
-      // an equal timestamp would leave the outcome depending on which side of the
-      // boundary Postgres evaluated — a flake, not a test.
-      .set({ expiresAt: new Date(Date.now() - 1000) })
-      .where(
-        and(
-          eq(clientOtp.organizationId, organization.id),
-          eq(clientOtp.email, email),
-          isNull(clientOtp.consumedAt),
-        ),
-      )
-      .returning({ id: clientOtp.id });
-    return rows.length;
-  });
+  if (body.action === "expire-codes") {
+    const expired = await withTenant(organization.id, async (tx) => {
+      const rows = await tx
+        .update(clientOtp)
+        // One second ago, not "now": `consumeOtp` requires `expiresAt > now()`, and
+        // an equal timestamp would leave the outcome depending on which side of the
+        // boundary Postgres evaluated — a flake, not a test.
+        .set({ expiresAt: new Date(Date.now() - 1000) })
+        .where(
+          and(
+            eq(clientOtp.organizationId, organization.id),
+            eq(clientOtp.email, email),
+            isNull(clientOtp.consumedAt),
+          ),
+        )
+        .returning({ id: clientOtp.id });
+      return rows.length;
+    });
 
-  return NextResponse.json({ ok: true, expired });
+    return NextResponse.json({ ok: true, expired });
+  }
+
+  if (body.action === "reset-password") {
+    const [parent] = await withTenant(organization.id, (tx) =>
+      tx
+        .select({ id: client.id, email: client.email })
+        .from(client)
+        .where(and(eq(client.organizationId, organization.id), eq(client.email, email)))
+        .limit(1),
+    );
+
+    if (!parent) {
+      return NextResponse.json({ error: "client not found" }, { status: 404 });
+    }
+
+    const result = await resetClientPassword(
+      organization.id,
+      parent.id,
+      parent.email,
+      "test-reset-password-123!",
+      "self",
+      "en",
+    );
+
+    return NextResponse.json({ ok: true, revokedSessionCount: result.revokedSessionCount });
+  }
+
+  return NextResponse.json({ error: "unknown action" }, { status: 400 });
 }

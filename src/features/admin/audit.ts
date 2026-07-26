@@ -309,6 +309,19 @@ export const AUDIT_ACTIONS = [
   "lesson_topic.create",
   "homework.create",
   "homework_completion.mark",
+  // Faza 29a — Client password management (EPIK 44, spec v19).
+  //
+  // set: the first time a parent sets a password from the booking
+  // confirmation screen. The metadata carries { triggeredBy: "self" }.
+  // A `client_password_changed` NOTIFICATION is NOT emitted here — the
+  // client just did this themselves and sees the visual confirmation.
+  // reset: triggered by the "forgot password" OTP flow (F29b) or a
+  // future staff-initiated reset. A `client_password_changed` notification
+  // IS emitted because the owner did not initiate this change themselves.
+  // The metadata carries { triggeredBy: "self" } (forgot-password flow)
+  // or { triggeredBy: "staff" } (future staff reset).
+  "client_password.set",
+  "client_password.reset",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];

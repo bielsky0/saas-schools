@@ -85,6 +85,8 @@ export const TEMPLATE_CATEGORY: Record<TemplateName, EmailCategory> = {
   // o nowym temacie/zadaniu — ten sam wzorzec co grade-recorded (e-mail-first).
   "lesson-topic-added": "transactional",
   "homework-assigned": "transactional",
+  // Faza 29a — Password changed. Security notification, is_overridable=false.
+  "client-password-changed": "transactional",
 };
 
 export function categoryFor(template: TemplateName): EmailCategory {

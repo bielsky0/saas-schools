@@ -407,6 +407,20 @@
       "when": 1786100000500,
       "tag": "0057_seed_lesson_notifications",
       "breakpoints": true
+    },
+    {
+      "idx": 58,
+      "version": "7",
+      "when": 1786200000000,
+      "tag": "0058_password_hash",
+      "breakpoints": true
+    },
+    {
+      "idx": 59,
+      "version": "7",
+      "when": 1786200000001,
+      "tag": "0059_seed_password_notification",
+      "breakpoints": true
     }
   ]
 }

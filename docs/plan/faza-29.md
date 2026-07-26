@@ -6,7 +6,7 @@ Retrofit dotykający **F3 (zakończona)** i **F5 (zakończona)** — nie czyste 
 
 ### Faza 29a — Hasło klienta: schemat + logika domenowa + ekran propozycji
 
-**Status:** nierozpoczęta
+**Status:** zakończona (2026-07-26)
 **Cel:** klient może opcjonalnie ustawić hasło z ekranu potwierdzenia rezerwacji; backend kompletny (hash, weryfikacja, reset z atomową rewokacją sesji), bez UI strony logowania panelu.
 **Pokrywa:** EPIK 44 (US-44.1 w całości, US-44.4 — logika rate-limit); §2.43; Constraint 19; Rozstrzygnięcia spec #37–#39.
 **Zależności:** **F3 ✅** (encja `client`, `client_session`, `features/client-auth/`), **F5 ✅** (ekran potwierdzenia rezerwacji, `enrollment-flow.tsx`).

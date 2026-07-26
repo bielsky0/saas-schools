@@ -146,11 +146,7 @@ function Bookable({
     grid.find((d) => d.dayKey === selectedDay)?.slots.filter((s) => s.bookable) ?? [];
 
   if (bookingResult?.success) {
-    return (
-      <Notice>
-        {bookingResult.success}
-      </Notice>
-    );
+    return <SuccessStep message={bookingResult.success} />;
   }
 
   if (bookingResult?.error) {
@@ -230,6 +226,123 @@ function Bookable({
         </Card>
       ) : null}
     </div>
+  );
+}
+
+/**
+ * The booking confirmation screen with an optional, skippable password-set
+ * section (langlion spec v19, EPIK 44 US-44.1, Faza 29a).
+ *
+ * ─── SECURITY MODEL ──────────────────────────────────────────────────────────
+ *
+ * This component renderuje the password proposal for ANY client who reached the
+ * booking confirmation screen, including recognised clients who skipped the OTP
+ * step (US-4.2, US-44.1/AC2). The recognised path is safe because:
+ *
+ * 1. Today the ONLY path to a valid client_session is successful OTP
+ *    verification (`/api/client-auth/verify` → `consumeOtp` →
+ *    `markClientVerified` → `createClientSession`). The session is created
+ *    AFTER isVerified=true, inside the same transaction.
+ * 2. The backend endpoint (`POST /api/client-auth/password`) re-checks
+ *    `isVerified` explicitly (defense-in-depth), so even if a future code
+ *    path adds sessions without OTP, the password gate stays closed.
+ *
+ * If you introduce a new way to create `client_session` without OTP
+ * verification (e.g. staff impersonation, magic link), you MUST add an
+ * explicit `isVerified` gate at that path OR add the same defense to every
+ * endpoint that trusts session == identity.
+ */
+function SuccessStep({ message }: { message: string }) {
+  const t = useTranslations("enrollment");
+  const [busy, setBusy] = useState(false);
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [error, setError] = useState("");
+  const [done, setDone] = useState(false);
+  const [show, setShow] = useState(false);
+
+  async function submit() {
+    setError("");
+
+    if (password !== confirm) {
+      setError(t("password.errors.mismatch"));
+      return;
+    }
+
+    if (password.length < 8 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) {
+      setError(t("password.errors.weak"));
+      return;
+    }
+
+    setBusy(true);
+    try {
+      const res = await fetch("/api/client-auth/password", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      setBusy(false);
+
+      if (res.status === 422) {
+        setError(t("password.errors.weak"));
+        return;
+      }
+
+      if (!res.ok) {
+        setError(t("password.errors.generic"));
+        return;
+      }
+
+      setDone(true);
+    } catch {
+      setBusy(false);
+      setError(t("password.errors.generic"));
+    }
+  }
+
+  return (
+    <Notice>
+      {message}
+      {!show ? (
+        <div className="mt-4">
+          <Button type="button" variant="outline" size="sm" onClick={() => setShow(true)}>
+            {t("password.heading")}
+          </Button>
+        </div>
+      ) : done ? (
+        <p className="mt-3 text-sm text-green-700">{t("password.success")}</p>
+      ) : (
+        <div className="mt-4 space-y-3 rounded border p-3">
+          <h3 className="font-medium">{t("password.heading")}</h3>
+          <p className="text-muted-foreground text-sm">{t("password.description")}</p>
+          <FormField label={t("password.label")} htmlFor="ll-pw">
+            <Input
+              id="ll-pw"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </FormField>
+          <FormField label={t("password.confirmLabel")} htmlFor="ll-pw-confirm">
+            <Input
+              id="ll-pw-confirm"
+              type="password"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+            />
+          </FormField>
+          {error ? <FieldError>{error}</FieldError> : null}
+          <div className="flex gap-2">
+            <Button type="button" size="sm" onClick={submit} disabled={busy || !password}>
+              {busy ? t("password.saving") : t("password.submit")}
+            </Button>
+            <Button type="button" size="sm" variant="ghost" onClick={() => setShow(false)}>
+              {t("password.skip")}
+            </Button>
+          </div>
+        </div>
+      )}
+    </Notice>
   );
 }
 

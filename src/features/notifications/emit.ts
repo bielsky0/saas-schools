@@ -86,6 +86,8 @@ const EMAIL_TEMPLATE_MAP: Record<string, TemplateName> = {
   // ── Faza 28 — Lesson topics and homework (EPIK 43, §2.42) ───────────
   "lesson_topic_added": "lesson-topic-added",
   "homework_assigned": "homework-assigned",
+  // ── Faza 29a — Client password changed (EPIK 44, spec v19) ────────────
+  "client_password_changed": "client-password-changed",
 };
 
 const EVENT_TYPES_WITH_EMAIL = new Set(Object.keys(EMAIL_TEMPLATE_MAP));

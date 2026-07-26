@@ -158,6 +158,12 @@
       "body": "Zadano nową pracę domową dla zajęć z dnia {sessionDate}.",
       "description": "Zadanie",
       "dueDate": "Termin"
+    },
+    "client-password-changed": {
+      "subject": "Twoje hasło zostało zmienione — {orgName}",
+      "preview": "Hasło do Twojego konta w akademii zostało zmienione.",
+      "heading": "Hasło zmienione",
+      "body": "Hasło do Twojego konta w {orgName} zostało zmienione. Jeśli to nie Ty, skontaktuj się natychmiast z akademią."
     }
   },
   "auth": {
@@ -1271,7 +1277,22 @@
       "subscription_renewal": "Odnowienie subskrypcji"
     },
     "makeupBooked": "Odrabianie zapisane — wykorzystano kredyt.",
-    "extraBooked": "Dodatkowe zajęcia zapisane."
+    "extraBooked": "Dodatkowe zajęcia zapisane.",
+    "password": {
+      "heading": "Ustaw hasło",
+      "description": "Ustaw hasło, aby następnym razem zalogować się do panelu akademii bez kodu.",
+      "label": "Hasło",
+      "confirmLabel": "Potwierdź hasło",
+      "submit": "Ustaw hasło",
+      "skip": "Pomiń",
+      "saving": "Zapisywanie…",
+      "success": "Hasło ustawione.",
+      "errors": {
+        "mismatch": "Hasła nie są takie same.",
+        "weak": "Hasło musi mieć co najmniej 8 znaków, w tym literę i cyfrę.",
+        "generic": "Nie udało się zapisać hasła. Spróbuj ponownie."
+      }
+    }
   },
   "credits": {
     "validation": {

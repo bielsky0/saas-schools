@@ -29,6 +29,7 @@ export interface OtpState {
   organizationId: string;
   clientId: string | null;
   isVerified: boolean | null;
+  hasPassword: boolean;
   codes: { total: number; live: number; maxAttempts: number };
   liveSessions: number;
 }
@@ -130,4 +131,31 @@ export async function expireCodes(
   });
   expect(res.ok(), `expire-codes failed: ${await res.text()}`).toBe(true);
   return ((await res.json()) as { expired: number }).expired;
+}
+
+/**
+ * Set a password for the currently signed-in client (Faza 29a).
+ * Posts to the academy's host — the client identity comes from the cookie.
+ */
+export function setClientPassword(
+  request: APIRequestContext,
+  subdomain: string,
+  password: string,
+) {
+  return request.post(tenantUrl(subdomain, "/api/client-auth/password"), {
+    data: { password },
+  });
+}
+
+/** Call resetClientPassword via the dev fixture (Faza 29a e2e only). */
+export async function resetPassword(
+  request: APIRequestContext,
+  subdomain: string,
+  email: string,
+): Promise<{ ok: boolean; revokedSessionCount: number }> {
+  const res = await request.post("/api/dev/client-auth", {
+    data: { subdomain, email, action: "reset-password" },
+  });
+  expect(res.ok(), `reset-password failed: ${await res.text()}`).toBe(true);
+  return (await res.json()) as { ok: boolean; revokedSessionCount: number };
 }

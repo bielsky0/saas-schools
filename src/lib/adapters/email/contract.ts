@@ -61,7 +61,10 @@ export type TemplateName =
   // Faza 28 — Tematy lekcji i prace domowe (EPIK 43, §2.42)
   // E-mail-first client notification (Rozstrzygnięcie #3/24).
   | "lesson-topic-added"
-  | "homework-assigned";
+  | "homework-assigned"
+  // Faza 29a — Client password changed (EPIK 44, spec v19).
+  // Security notification: NOT suppressible, fires on reset only (not initial set).
+  | "client-password-changed";
 // `magic-link` lands with spec 2.2, which is not implemented yet.
 
 /**
@@ -201,6 +204,10 @@ export interface TemplateProps {
   // Faza 28 — Tematy lekcji i prace domowe (EPIK 43, §2.42)
   "lesson-topic-added": { orgName: string; sessionDate: string };
   "homework-assigned": { orgName: string; sessionDate: string; description: string; dueDate?: string };
+  // Faza 29a — Client password changed (EPIK 44, spec v19).
+  // Security notification, is_overridable=false. Triggers only on reset (F29b),
+  // not on initial set from the booking confirmation screen.
+  "client-password-changed": { orgName: string };
 }
 
 /** Loose payload shape for callers that resolve the template at runtime. */

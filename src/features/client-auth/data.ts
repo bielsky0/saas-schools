@@ -276,3 +276,26 @@ export async function deleteSessionByTokenHash(
       and(eq(clientSession.organizationId, organizationId), eq(clientSession.tokenHash, tokenHash)),
     );
 }
+
+/**
+ * Revoke EVERY session for a client, atomically with the caller's other work.
+ *
+ * Used inside `resetClientPassword` (Constraint 19 — the DELETE and the hash
+ * update are one transaction) and by future staff-initiated session invalidation.
+ *
+ * Returns the count rather than void so the caller can report how many sessions
+ * were destroyed.
+ */
+export async function revokeAllSessionsForClient(
+  tx: TenantDb,
+  organizationId: string,
+  clientId: string,
+): Promise<number> {
+  const deleted = await tx
+    .delete(clientSession)
+    .where(
+      and(eq(clientSession.organizationId, organizationId), eq(clientSession.clientId, clientId)),
+    )
+    .returning({ id: clientSession.id });
+  return deleted.length;
+}
