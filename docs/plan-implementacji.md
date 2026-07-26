@@ -3,7 +3,7 @@
 **Utworzono:** 2026-07-19
 **Podstawa:** `docs/specyfikacja.md` — wersja dokumentu 19 (EPIK 44 hasło klienta jako alternatywna metoda logowania), budowana na v18 (EPIK 41 karta kwalifikacyjna wypoczynku, EPIK 42 opłaty dodatkowe ad-hoc `extra_fee`, EPIK 43 tematy lekcji + prace domowe), v17 (EPIK 36–40 + stawka godzinowa), v16 (EPIK 34 dyspozycyjność trenerów, EPIK 35 e-dziennik: oceny i notatki — rozszerzenie EPIK 31), v15 (EPIK 31 obecność, EPIK 32 wynagrodzenia trenerów, EPIK 33 indywidualne ceny klienta), rewizja 14.2 (adresowanie, `class_session`), rewizja 14.1 (encja `client`)
 **Specyfikacja fundamentu:** `docs/boilerplate-spec.md` (odwołania „boilerplate §X")
-**Dokument siostrzany:** `docs/specyfikacja-cms.md` — moduł Website Builder (Payload CMS). Nie jest objęty fazami tego planu, ale **dzieli z EPIK 4 jedną zależność blokującą: routing subdomenowy** (patrz „Otwarte pytania"). Middleware budowany raz, dla obu modułów — nie dwa równoległe routingi.
+**Dokument siostrzany:** `docs/specyfikacja-cms.md` — moduł Website Builder (Payload CMS). **Planowane w Fazy 30–32** (`docs/plan/faza-30-32.md`). Routing subdomenowy zbudowany w F4.5/F4.6 — zależność blokująca zamknięta.
 **Konwencje kodu:** `docs/ARCHITECTURE.md`
 
 **To jest spis treści.** Pełna treść planu została podzielona na osobne pliki tematyczne w `docs/plan/`, ponieważ oryginalny dokument (1042 linie) był zbyt duży do wygodnego wczytywania w całości. Zanim zaczniesz czytać którykolwiek z plików poniżej, zapytaj graf graphify o konkretną fazę/temat — patrz sekcja „Duże dokumenty — zasady dostępu" w `CLAUDE.md`.
@@ -44,4 +44,5 @@ Ten plik jest nadal **jedynym trwałym źródłem prawdy o planie i postępie** 
 | Fazy 22–25 — poprawki konkurencyjne (spec v17)                                   | [docs/plan/faza-22-25.md](plan/faza-22-25.md)                                 | Faza 22 ✅ (2026-07-26), Faza 23 ✅ (2026-07-26), Faza 24 ✅ (2026-07-26), Faza 25 ✅ (2026-07-26) |
 | Fazy 26–28 — dalsze poprawki konkurencyjne (spec v18)                            | [docs/plan/faza-26-28.md](plan/faza-26-28.md)                                 | Faza 26 ✅ (2026-07-26), Faza 27 ✅ (2026-07-26), Faza 28 ✅ (2026-07-26) |
 | Faza 29 (29a, 29b) — Hasło klienta jako alternatywna metoda logowania (spec v19) | [docs/plan/faza-29.md](plan/faza-29.md)                                       | Faza 29a ✅ (2026-07-26), Faza 29b ✅ (2026-07-26) |
+| **Fazy 30–32 — Website Builder + Overbooking + Custom Domains (plan przyszłości)** | [docs/plan/faza-30-32.md](plan/faza-30-32.md)                                 | Faza 30-spike ❌ (blokująca), Fazy 30a–30d ❌, Faza 31 ❌, Faza 32 ❌ |
 | Ryzyka i otwarte pytania                                                         | [docs/plan/ryzyka-i-otwarte-pytania.md](plan/ryzyka-i-otwarte-pytania.md)     |
