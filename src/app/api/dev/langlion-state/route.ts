@@ -1,8 +1,8 @@
-import { and, asc, eq } from "drizzle-orm";
+import { and, asc, eq, isNull } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { getOrgBySlug } from "@/features/organizations/data";
-import { classSession, groupType, groupTypeRecurrence } from "@/lib/db/schema";
+import { athlete, classSession, client, groupType, groupTypeRecurrence } from "@/lib/db/schema";
 import { withTenant } from "@/lib/db/tenant";
 import { env } from "@/lib/env/server";
 
@@ -97,7 +97,33 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       .where(and(...sessionFilters))
       .orderBy(asc(classSession.startTime));
 
-    return { groupTypes, recurrences, sessions, timezone: org.timezone };
+    const clients = await tx
+      .select({
+        id: client.id,
+        email: client.email,
+        name: client.name,
+        phone: client.phone,
+        isVerified: client.isVerified,
+      })
+      .from(client)
+      .where(and(eq(client.organizationId, org.id), isNull(client.deletedAt)))
+      .orderBy(asc(client.email));
+
+    const athletes = await tx
+      .select({
+        id: athlete.id,
+        parentClientId: athlete.parentClientId,
+        name: athlete.name,
+        age: athlete.age,
+        emergencyContactName: athlete.emergencyContactName,
+        emergencyContactPhone: athlete.emergencyContactPhone,
+        healthNotes: athlete.healthNotes,
+      })
+      .from(athlete)
+      .where(and(eq(athlete.organizationId, org.id), isNull(athlete.deletedAt)))
+      .orderBy(asc(athlete.name));
+
+    return { groupTypes, recurrences, sessions, timezone: org.timezone, clients, athletes };
   });
 
   return NextResponse.json(state);

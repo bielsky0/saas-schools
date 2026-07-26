@@ -88,6 +88,11 @@ export default async function AcademyHome() {
             <Link href="/dashboard/trainers/earnings">{t("earnings")}</Link>
           </Button>
         ) : null}
+        {effectivePermissions.has("data.import") ? (
+          <Button asChild variant="outline" size="sm">
+            <Link href="/dashboard/import">{t("import")}</Link>
+          </Button>
+        ) : null}
         {/* Cosmetic gating only (spec 4.2) — the page itself calls
             requireOrgPermission, which is the actual boundary. */}
         {effectivePermissions.has("audit.read") ? (

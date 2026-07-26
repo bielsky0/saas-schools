@@ -292,6 +292,8 @@ export const AUDIT_ACTIONS = [
   "consent_document.update",
   "consent_document.deactivate",
   "athlete_consent.accept",
+  // Faza 25 — Import masowy CSV (EPIK 39, §2.38)
+  "data.import_csv",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];

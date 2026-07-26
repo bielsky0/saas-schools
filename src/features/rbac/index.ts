@@ -161,7 +161,13 @@ export type Permission =
   /** View sensitive athlete data (health_notes, emergency_contact). Owner, Admin,
    * Reception — wide scope per user decision (pre-F24). Trainer does NOT get this
    * by default; can be granted via permission override from F23. */
-  | "athlete_health.view";
+  | "athlete_health.view"
+  // ── Faza 25 — Import masowy CSV przy onboardingu (EPIK 39, §2.38) ──
+  //
+  /** Bulk-import parents and children from a single CSV file during onboarding.
+   * Owner+Admin only — this is an admin tool for migrating an existing academy
+   * database, not a self-serve feature. */
+  | "data.import";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -216,6 +222,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "member_permissions.manage",
     "consent_documents.manage",
     "athlete_health.view",
+    "data.import",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -263,6 +270,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "member_permissions.manage",
     "consent_documents.manage",
     "athlete_health.view",
+    "data.import",
   ],
   /**
    * The three langlion staff roles (§2.10).

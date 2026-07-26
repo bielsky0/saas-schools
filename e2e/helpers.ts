@@ -570,6 +570,22 @@ export type LanglionState = {
     forceOverride: boolean;
     generatedFromRecurrenceId: string | null;
   }[];
+  clients: {
+    id: string;
+    email: string;
+    name: string | null;
+    phone: string | null;
+    isVerified: boolean;
+  }[];
+  athletes: {
+    id: string;
+    parentClientId: string;
+    name: string;
+    age: number | null;
+    emergencyContactName: string | null;
+    emergencyContactPhone: string | null;
+    healthNotes: string | null;
+  }[];
 };
 
 /**

@@ -535,7 +535,8 @@
       "policies": "Policies",
       "trainers": "Trainers",
       "rates": "Rates",
-      "earnings": "Earnings"
+      "earnings": "Earnings",
+      "import": "Import CSV"
     },
     "settings": {
       "heading": "Settings",
@@ -1462,5 +1463,13 @@
       "reasonRequired": "A reason is required.",
       "overrideIdRequired": "Override ID is required."
     }
+  },
+  "import": {
+    "title": "Import CSV",
+    "description": "Bulk import parents and children from a CSV file. Each row creates or links to an existing parent by email. Duplicate rows are detected and reported as errors.",
+    "fileLabel": "CSV file",
+    "fileHint": "Required columns: email, childName. Optional: parentName, phone, age, emergencyContactName, emergencyContactPhone, healthNotes.",
+    "import": "Import",
+    "importing": "Importing…"
   }
 }

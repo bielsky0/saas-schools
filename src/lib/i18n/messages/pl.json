@@ -535,7 +535,8 @@
       "policies": "Regulaminy",
       "trainers": "Trenerzy",
       "rates": "Stawki",
-      "earnings": "Wynagrodzenia"
+      "earnings": "Wynagrodzenia",
+      "import": "Import CSV"
     },
     "settings": {
       "heading": "Ustawienia",
@@ -1462,5 +1463,13 @@
       "reasonRequired": "Powód jest wymagany.",
       "overrideIdRequired": "ID nadpisania jest wymagane."
     }
+  },
+  "import": {
+    "title": "Import CSV",
+    "description": "Masowy import rodziców i dzieci z pliku CSV. Każdy wiersz tworzy rodzica lub dopisuje dziecko do istniejącego profilu po adresie e-mail. Zduplikowane wiersze są wykrywane i raportowane jako błędy.",
+    "fileLabel": "Plik CSV",
+    "fileHint": "Wymagane kolumny: email, childName. Opcjonalne: parentName, phone, age, emergencyContactName, emergencyContactPhone, healthNotes.",
+    "import": "Importuj",
+    "importing": "Importowanie…"
   }
 }

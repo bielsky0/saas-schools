@@ -45,8 +45,8 @@
     "semantic_hash": "75afe2eddbbe7a9d09cb2254ac75e583"
   },
   "src/app/[locale]/(app)/dashboard/academy-home.tsx": {
-    "mtime": 1785059591.087127,
-    "ast_hash": "8960218837b6faac609c68b87035b8b2",
+    "mtime": 1785063177.050646,
+    "ast_hash": "31c811f3abc0cb361ba2e8cb93d8ee07",
     "semantic_hash": ""
   },
   "src/app/[locale]/(app)/dashboard/credits/page.tsx": {
@@ -175,8 +175,8 @@
     "semantic_hash": ""
   },
   "src/app/[locale]/(site)/zapisy/[groupTypeSlug]/page.tsx": {
-    "mtime": 1785058191.7085855,
-    "ast_hash": "2b170cca8e428a802295348183fe8833",
+    "mtime": 1785061769.5117464,
+    "ast_hash": "d6b6d690fbe7b9227b0bce3e5fec959c",
     "semantic_hash": ""
   },
   "src/app/[locale]/forbidden.tsx": {
@@ -330,8 +330,8 @@
     "semantic_hash": "383bbe2b07e9fe8518c1dc94c62331e2"
   },
   "src/app/api/dev/langlion-state/route.ts": {
-    "mtime": 1784969479.1425352,
-    "ast_hash": "b23447d96f233b8d5d0ff42c972625ed",
+    "mtime": 1785063453.8589706,
+    "ast_hash": "dd41bdd5db8dbdf150e7df4d451a6ebc",
     "semantic_hash": ""
   },
   "src/app/api/dev/mcp/route.ts": {
@@ -590,8 +590,8 @@
     "semantic_hash": "e3eb5275c53dcbb1336b2b527383219d"
   },
   "src/features/admin/audit.ts": {
-    "mtime": 1785059567.5878432,
-    "ast_hash": "c2e8e1f9d1dcbb9aab1e9ef732cfe207",
+    "mtime": 1785063017.2663972,
+    "ast_hash": "8d253ad4bcdd66cdd8db904583d58281",
     "semantic_hash": ""
   },
   "src/features/admin/components/admin-nav.tsx": {
@@ -755,8 +755,8 @@
     "semantic_hash": ""
   },
   "src/features/bookings/actions.ts": {
-    "mtime": 1785058345.7890723,
-    "ast_hash": "58bd65ba1b7df8bc49f4f5e6dfb6833a",
+    "mtime": 1785061625.3005476,
+    "ast_hash": "b174f3bdb0fdd65960b6c9d881f5f7af",
     "semantic_hash": ""
   },
   "src/features/bookings/calendar.test.ts": {
@@ -770,13 +770,13 @@
     "semantic_hash": "aa098f3fc5f74d2ac09446719e7399f0"
   },
   "src/features/bookings/components/enrollment-flow.tsx": {
-    "mtime": 1785058354.9666386,
-    "ast_hash": "8a66873a3d660c926d8917167194466b",
+    "mtime": 1785061749.4879897,
+    "ast_hash": "e8f37d354fcd72387b19098f1af8370d",
     "semantic_hash": ""
   },
   "src/features/bookings/create.ts": {
-    "mtime": 1784933995.5644917,
-    "ast_hash": "6e353dffe1616c4406c0b1529f126f90",
+    "mtime": 1785061562.7749836,
+    "ast_hash": "74432f3b33fd0e8c5083ab6b679c977f",
     "semantic_hash": ""
   },
   "src/features/bookings/data.ts": {
@@ -830,8 +830,8 @@
     "semantic_hash": "d77b95025589e64ba23e56c48c8a213b"
   },
   "src/features/clients/data.ts": {
-    "mtime": 1784848856.5089283,
-    "ast_hash": "2837a3bde5a6e4c801885dfd1d40c502",
+    "mtime": 1785061533.0608742,
+    "ast_hash": "cb0b995c25ba665e3123450f229c817f",
     "semantic_hash": ""
   },
   "src/features/clients/schema.ts": {
@@ -1275,13 +1275,13 @@
     "semantic_hash": "e8d47a8877c9cef44dad7d9152b37780"
   },
   "src/features/rbac/index.ts": {
-    "mtime": 1785059731.829571,
-    "ast_hash": "d019f73b469fd9746f2b2cf2199fb716",
+    "mtime": 1785063013.0319827,
+    "ast_hash": "b553e507e27735777b391ded57aeae5c",
     "semantic_hash": ""
   },
   "src/features/schedule/actions.ts": {
-    "mtime": 1784969204.335513,
-    "ast_hash": "6b4aa50dfa9a220e0edf96cfe1392a6e",
+    "mtime": 1785060225.2617996,
+    "ast_hash": "93f316c6d6dda517c3c476278929d03b",
     "semantic_hash": ""
   },
   "src/features/schedule/components/session-edit-form.tsx": {
@@ -1765,8 +1765,8 @@
     "semantic_hash": "2aa4ed85c6e0d831f1d5450bcf174e7f"
   },
   "src/lib/db/migrations/meta/_journal.json": {
-    "mtime": 1785059457.3703375,
-    "ast_hash": "43f27ab336633f5fab7e90b96bc29e30",
+    "mtime": 1785065002.8033707,
+    "ast_hash": "0e92a4ece63017e0347073436116b96e",
     "semantic_hash": ""
   },
   "src/lib/db/pagination.ts": {
@@ -1775,9 +1775,9 @@
     "semantic_hash": "7ddb5fe43952819e11ed34e0eea53fb3"
   },
   "src/lib/db/schema/athletes.ts": {
-    "mtime": 1784472303.9901028,
-    "ast_hash": "4e4e4a6a7273d647eb580a0cda2c9764",
-    "semantic_hash": "4e4e4a6a7273d647eb580a0cda2c9764"
+    "mtime": 1785061292.5374422,
+    "ast_hash": "1738cf3129ff77288d14efda0c7d75fd",
+    "semantic_hash": ""
   },
   "src/lib/db/schema/audit-logs.ts": {
     "mtime": 1784448542.6839912,
@@ -1855,8 +1855,8 @@
     "semantic_hash": ""
   },
   "src/lib/db/schema/index.ts": {
-    "mtime": 1785059434.1215765,
-    "ast_hash": "79fdbfc90b41da10049dd6bb2ffde423",
+    "mtime": 1785061313.5767386,
+    "ast_hash": "102ae40cd8e413a28f9b43766a9c6631",
     "semantic_hash": ""
   },
   "src/lib/db/schema/invitations.ts": {
@@ -1955,8 +1955,8 @@
     "semantic_hash": "3b64e00c025c78804573926d4942d4cc"
   },
   "src/lib/i18n/messages/en.json": {
-    "mtime": 1785059885.6580975,
-    "ast_hash": "71fea26ba71cfe75f391e86f4aff934b",
+    "mtime": 1785063158.0748851,
+    "ast_hash": "d78d18531882b84fbc58f7e7e08f97c0",
     "semantic_hash": ""
   },
   "src/lib/i18n/messages/index.ts": {
@@ -1965,8 +1965,8 @@
     "semantic_hash": "db411c8644383bf22f5895f831c046fc"
   },
   "src/lib/i18n/messages/pl.json": {
-    "mtime": 1785059890.1351395,
-    "ast_hash": "d54038faeb27b24cc63f348d6e21a842",
+    "mtime": 1785063171.4308913,
+    "ast_hash": "89066ee36f9b1376230ca5d24ba11ae5",
     "semantic_hash": ""
   },
   "src/lib/i18n/navigation.ts": {
@@ -2105,8 +2105,8 @@
     "semantic_hash": "d63631dae7f6f99a109182d4d94b0c34"
   },
   "docs/plan-implementacji.md": {
-    "mtime": 1785058802.0070882,
-    "ast_hash": "c8e99501ae007caef479520260ef7f13",
+    "mtime": 1785063554.2501674,
+    "ast_hash": "3e937b6da55ba60c2592ace6ff89516d",
     "semantic_hash": ""
   },
   "docs/specyfikacja-cms.md": {
@@ -2270,8 +2270,8 @@
     "semantic_hash": "301a14ddf4c8001fcc224e02406eb8b5"
   },
   "e2e/helpers.ts": {
-    "mtime": 1784969466.3506205,
-    "ast_hash": "fcbd41f587e7aacfbcf6992fd8e6c4e9",
+    "mtime": 1785063462.109017,
+    "ast_hash": "e1e112317c19650583bd12f93f27edb3",
     "semantic_hash": ""
   },
   "e2e/host-fixtures.ts": {
@@ -2675,8 +2675,8 @@
     "semantic_hash": ""
   },
   "docs/plan/faza-22-25.md": {
-    "mtime": 1785060123.7840362,
-    "ast_hash": "dd043dc37c3d225a0ae89ca2cf561356",
+    "mtime": 1785063545.1751375,
+    "ast_hash": "1f3592ab372e2aea48b2bb44c9bb8d55",
     "semantic_hash": ""
   },
   "docs/plan/faza-26-28.md": {
@@ -2735,8 +2735,8 @@
     "semantic_hash": ""
   },
   "docs/plan/ryzyka-i-otwarte-pytania.md": {
-    "mtime": 1784671349.7770715,
-    "ast_hash": "9c6143836d3f10eba910523a5664ef5f",
+    "mtime": 1785063560.0025227,
+    "ast_hash": "08f0351dd29a97c89d0ef4f206ec443d",
     "semantic_hash": ""
   },
   "docs/spec/02a-opis-funkcjonalnosci-cz1.md": {
@@ -4035,8 +4035,8 @@
     "semantic_hash": ""
   },
   "src/features/bookings/create-many.ts": {
-    "mtime": 1785058721.851033,
-    "ast_hash": "243202baae986eb745c565953ac17745",
+    "mtime": 1785061585.1399026,
+    "ast_hash": "47bffd1ad4bd1b13f77bf306a98ab21f",
     "semantic_hash": ""
   },
   "src/features/interest-signups/actions.ts": {
@@ -4152,6 +4152,66 @@
   "src/lib/db/schema/membership-permission-overrides.ts": {
     "mtime": 1785059430.5606744,
     "ast_hash": "d828e860e767615d75f0c8714a42e762",
+    "semantic_hash": ""
+  },
+  "e2e/langlion-csv-import.spec.ts": {
+    "mtime": 1785065133.2458515,
+    "ast_hash": "80ed82bf0fc2ed2bd5ea63b321b3d839",
+    "semantic_hash": ""
+  },
+  "src/app/[locale]/(app)/dashboard/import/import-form.tsx": {
+    "mtime": 1785063135.0487275,
+    "ast_hash": "c2142b8541ab1e110330ad0c48626321",
+    "semantic_hash": ""
+  },
+  "src/app/[locale]/(app)/dashboard/import/page.tsx": {
+    "mtime": 1785063126.988271,
+    "ast_hash": "a975a8d4220eb06d747e14843d16686a",
+    "semantic_hash": ""
+  },
+  "src/features/consents/actions.ts": {
+    "mtime": 1785061506.2833562,
+    "ast_hash": "dc502102e02435ad461ce76627b8ae32",
+    "semantic_hash": ""
+  },
+  "src/features/consents/data.ts": {
+    "mtime": 1785061501.0913408,
+    "ast_hash": "14c3feb37d9207bf75ec0cd7d6f9b078",
+    "semantic_hash": ""
+  },
+  "src/features/consents/schema.ts": {
+    "mtime": 1785061417.9619524,
+    "ast_hash": "0640c7fc18f83df0a94b2470c3a8bda8",
+    "semantic_hash": ""
+  },
+  "src/features/import/actions.ts": {
+    "mtime": 1785065089.8336654,
+    "ast_hash": "627714d374e5a0f0212ddcaaaf501047",
+    "semantic_hash": ""
+  },
+  "src/features/import/import-csv.ts": {
+    "mtime": 1785065116.5657961,
+    "ast_hash": "53ffb80fd0cea3aaa96143f3cb8d8e85",
+    "semantic_hash": ""
+  },
+  "src/features/import/parser.ts": {
+    "mtime": 1785065188.0592566,
+    "ast_hash": "14a6902733b69509def53baabb7b47be",
+    "semantic_hash": ""
+  },
+  "src/lib/db/migrations/0049_faza24_athlete_profile_consents.sql": {
+    "mtime": 1785061264.8312454,
+    "ast_hash": "8a3e956119cd0a3c538da1c09d9b372a",
+    "semantic_hash": ""
+  },
+  "src/lib/db/migrations/0050_rls_athlete_consents.sql": {
+    "mtime": 1785061270.9982095,
+    "ast_hash": "452246bf9b2bbb583839771c45b96121",
+    "semantic_hash": ""
+  },
+  "src/lib/db/schema/consent-documents.ts": {
+    "mtime": 1785061305.4782462,
+    "ast_hash": "99d1914672c1a77d8dad71b04a51bb3c",
     "semantic_hash": ""
   }
 }
