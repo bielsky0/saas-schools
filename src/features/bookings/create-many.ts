@@ -1,6 +1,7 @@
 import { getActivePolicyForGroupType } from "@/features/policies/data";
 import type { TenantDb } from "@/lib/db/tenant";
 import {
+  ConsentRequiredError,
   createBooking,
   ForeignAthleteError,
   PaymentMethodUnavailableError,
@@ -56,6 +57,8 @@ export interface CreateManyInput {
   onlineAvailable: boolean;
   policyDocument?: { id: string; version: number } | null;
   acceptedPolicyVersion?: number;
+  /** F24 — athlete consents per participant (index-aligned with participants). */
+  athleteConsents?: { consentDocumentId: string; granted: boolean }[][];
 }
 
 export interface CreateManyResultEntry {
@@ -83,7 +86,7 @@ export async function createManyBookings(
 ): Promise<CreateManyResult> {
   const results: CreateManyResultEntry[] = [];
 
-  for (const participant of input.participants) {
+  for (const [index, participant] of input.participants.entries()) {
     try {
       const result = await withTx(async (tx) => {
         const resolvedPrice = input.groupType.price;
@@ -108,6 +111,7 @@ export async function createManyBookings(
           onlineAvailable: input.onlineAvailable,
           policyDocument: policyDoc,
           acceptedPolicyVersion: input.acceptedPolicyVersion,
+          athleteConsents: input.athleteConsents?.[index],
         });
       });
 
@@ -135,5 +139,6 @@ function createManyErrorLabel(error: unknown): string {
   if (error instanceof UnknownSessionError) return "unknownSession";
   if (error instanceof PolicyVersionChangedError) return "policyVersionChanged";
   if (error instanceof PolicyNotAcceptedError) return "policyNotAccepted";
+  if (error instanceof ConsentRequiredError) return "consentRequired";
   throw error;
 }

@@ -152,7 +152,16 @@ export type Permission =
   /** Grant/revoke individual permission overrides on a membership. Owner+Admin
    * only. This permission itself is NOT overridable — see
    * `computeEffectivePermissions`. */
-  | "member_permissions.manage";
+  | "member_permissions.manage"
+  // ── Faza 24 — Profil uczestnika: zgody, dane zdrowotne (EPIK 37, §2.35) ──
+  //
+  /** CRUD versioned consent documents (consent_document, §2.35). Owner+Admin only,
+   * same authority level as managing policy_document. */
+  | "consent_documents.manage"
+  /** View sensitive athlete data (health_notes, emergency_contact). Owner, Admin,
+   * Reception — wide scope per user decision (pre-F24). Trainer does NOT get this
+   * by default; can be granted via permission override from F23. */
+  | "athlete_health.view";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -205,6 +214,8 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "client_price_override.manage",
     "interest.manage",
     "member_permissions.manage",
+    "consent_documents.manage",
+    "athlete_health.view",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -250,6 +261,8 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "client_price_override.manage",
     "interest.manage",
     "member_permissions.manage",
+    "consent_documents.manage",
+    "athlete_health.view",
   ],
   /**
    * The three langlion staff roles (§2.10).
@@ -296,6 +309,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "bookings.cancel_reschedule",
     "credits.purchase_cash",
     "invoices.mark_issued",
+    "athlete_health.view",
   ],
   trainer: [
     "organization.leave",

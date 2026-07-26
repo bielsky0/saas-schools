@@ -1180,10 +1180,15 @@
     },
     "policy": {
       "heading": "Regulamin",
-      "acceptLabel": "Akceptuję regulamin \"{name}\" (wersja {version})",
+      "acceptLabel": "Akceptuję \"{name}\" (wersja {version})",
       "mustAccept": "Musisz zaakceptować regulamin, aby kontynuować",
       "updatedInfo": "Regulamin został zaktualizowany — zaakceptuj nową wersję.",
       "viewDocument": "Zobacz regulamin"
+    },
+    "consent": {
+      "heading": "Zgody",
+      "acceptLabel": "Akceptuję \"{name}\" (wersja {version})",
+      "mustAccept": "Wymagana jest akceptacja wszystkich zgód."
     },
     "confirm": {
       "heading": "Podsumowanie",
@@ -1221,6 +1226,7 @@
       "noCredits": "Brak dostępnych kredytów — skontaktuj się z recepcją.",
       "policyVersionChanged": "Regulamin został zmieniony w trakcie wypełniania formularza. Odśwież stronę.",
       "policyNotAccepted": "Wymagana jest akceptacja regulaminu.",
+      "consentRequired": "Wymagana jest akceptacja wszystkich zgód.",
       "generic": "Coś poszło nie tak. Spróbuj ponownie.",
       "interestAlreadyExists": "To dziecko jest już zapisane do tej oferty."
     },

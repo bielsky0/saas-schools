@@ -1185,6 +1185,11 @@
       "updatedInfo": "The terms have been updated — please accept the new version.",
       "viewDocument": "View terms"
     },
+    "consent": {
+      "heading": "Consents",
+      "acceptLabel": "I accept \"{name}\" (version {version})",
+      "mustAccept": "You must accept all required consents to proceed."
+    },
     "confirm": {
       "heading": "Summary",
       "submit": "Enrol",
@@ -1221,6 +1226,7 @@
       "noCredits": "No credits available — contact the reception.",
       "policyVersionChanged": "The policy was updated while you were filling the form. Refresh the page.",
       "policyNotAccepted": "You must accept the policy to proceed.",
+      "consentRequired": "You must accept all required consents to proceed.",
       "generic": "Something went wrong. Please try again.",
       "interestAlreadyExists": "This child is already registered for this offer."
     },

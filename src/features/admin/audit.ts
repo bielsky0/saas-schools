@@ -287,6 +287,11 @@ export const AUDIT_ACTIONS = [
   "interest.convert",
   // Faza 23 / EPIK 38 — Granular permission overrides (§2.36)
   "member_permission.override",
+  // Faza 24 / EPIK 37 — Consent documents and athlete consents (§2.35)
+  "consent_document.create",
+  "consent_document.update",
+  "consent_document.deactivate",
+  "athlete_consent.accept",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -334,7 +339,10 @@ export type AuditTargetType =
   | "credit"
   | "trainer_rate"
   // Faza 22 / EPIK 36
-  | "interest_signup";
+  | "interest_signup"
+  // Faza 24 / EPIK 37
+  | "consent_document"
+  | "athlete_consent";
 
 /**
  * WHO acted, as a kind — §6.4's actor model. A different question from WHICH

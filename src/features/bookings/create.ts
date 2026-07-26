@@ -3,6 +3,7 @@ import { and, eq } from "drizzle-orm";
 import { clientActor, recordAudit } from "@/features/admin/audit";
 import { checkLimit } from "@/features/billing/limits";
 import { getOwnedAthlete, insertAthlete } from "@/features/clients/data";
+import { insertAthleteConsent, getActiveConsentsForSignup } from "@/features/consents/data";
 import { getActivePolicyForGroupType, insertPolicyAcceptance } from "@/features/policies/data";
 import { booking, classSession } from "@/lib/db/schema";
 import type { TenantDb } from "@/lib/db/tenant";
@@ -53,6 +54,16 @@ export class SessionFullError extends Error {}
 export class PolicyVersionChangedError extends Error {}
 /** F17: The client did not accept the current policy document (R3). */
 export class PolicyNotAcceptedError extends Error {}
+/** F24: The parent did not accept a required consent document for this athlete. */
+export class ConsentRequiredError extends Error {
+  constructor(
+    message: string,
+    public readonly documentName: string,
+  ) {
+    super(message);
+    this.name = "ConsentRequiredError";
+  }
+}
 
 export interface CreateBookingInput {
   organizationId: string;
@@ -81,6 +92,12 @@ export interface CreateBookingInput {
   policyDocument?: { id: string; version: number } | null;
   /** F17 — the version the client accepted (re-validated server-side, R3). */
   acceptedPolicyVersion?: number;
+  /**
+   * F24 — athlete consents to validate and freeze.
+   * Each entry: { consentDocumentId, granted }. Only required consents
+   * (is_required_at_signup=true) must be present with granted=true.
+   */
+  athleteConsents?: { consentDocumentId: string; granted: boolean }[];
   now?: Date;
   /**
    * TEST-ONLY. Invoked once the session row lock is held, before the capacity
@@ -184,6 +201,30 @@ export async function createBooking(
       name: input.participant.name,
       age: input.participant.age,
     });
+  }
+
+  // 4.5 F24 — validate required consents (fail-closed) and freeze them.
+  if (input.athleteConsents?.length) {
+    const activeConsents = await getActiveConsentsForSignup(tx, input.organizationId);
+    for (const consent of activeConsents) {
+      const provided = input.athleteConsents.find(
+        (c) => c.consentDocumentId === consent.id,
+      );
+      if (!provided || !provided.granted) {
+        throw new ConsentRequiredError(
+          `Required consent not accepted: ${consent.name}`,
+          consent.name,
+        );
+      }
+      await insertAthleteConsent(tx, {
+        organizationId: input.organizationId,
+        clientId: input.client.id,
+        athleteId,
+        consentDocumentId: consent.id,
+        consentDocumentVersion: consent.version,
+        granted: true,
+      });
+    }
   }
 
   // 5. Capacity, under the lock taken in step 1. `payment_pending` counts (§2.3).

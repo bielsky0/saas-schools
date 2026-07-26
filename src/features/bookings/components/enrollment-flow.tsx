@@ -27,6 +27,13 @@ type Recognized = {
   athletes: { id: string; name: string }[];
 };
 
+export interface ConsentDocumentProp {
+  id: string;
+  name: string;
+  version: number;
+  fileId: string | null;
+}
+
 export interface PolicyDocumentProp {
   id: string;
   name: string;
@@ -49,6 +56,7 @@ export interface EnrollmentFlowProps {
   grid: CalendarDay[];
   recognized: Recognized | null;
   policyDocument: PolicyDocumentProp | null;
+  consentDocuments: ConsentDocumentProp[];
 }
 
 /**
@@ -119,6 +127,7 @@ function Bookable({
   grid,
   recognized,
   policyDocument,
+  consentDocuments,
   money,
 }: EnrollmentFlowProps & { money: (minor: number) => string }) {
   const t = useTranslations("enrollment");
@@ -207,6 +216,7 @@ function Bookable({
                 recognizedAthletes={recognized?.athletes ?? []}
                 error={bookingResult?.error}
                 policyDocument={policyDocument}
+                consentDocuments={consentDocuments}
                 onComplete={setBookingResult}
               />
             )}
@@ -428,6 +438,7 @@ function ConfirmStep({
   recognizedAthletes,
   error,
   policyDocument,
+  consentDocuments,
   onComplete,
 }: {
   pending: boolean;
@@ -437,6 +448,7 @@ function ConfirmStep({
   recognizedAthletes: { id: string; name: string }[];
   error?: string;
   policyDocument: PolicyDocumentProp | null;
+  consentDocuments: ConsentDocumentProp[];
   onComplete?: (state: CreateBookingManyState) => void;
 }) {
   const t = useTranslations("enrollment");
@@ -576,6 +588,32 @@ function ConfirmStep({
           </label>
         ))}
       </fieldset>
+
+      {consentDocuments.length > 0 ? (
+        <fieldset className="space-y-3 rounded border p-3">
+          <legend className="font-medium">{t("consent.heading")}</legend>
+          <p className="text-muted-foreground text-sm">{t("consent.mustAccept")}</p>
+          <input type="hidden" name="consentCount" value={consentDocuments.length} />
+          {consentDocuments.map((doc, di) => (
+            <div key={doc.id} className="space-y-2">
+              <input type="hidden" name={`consentDocId.${di}`} value={doc.id} />
+              {children.map((child, ci) => (
+                <label key={`${doc.id}-${ci}`} className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    name={`consentGranted.${doc.id}.${ci}`}
+                    required
+                  />
+                  <span>
+                    {t("consent.acceptLabel", { name: doc.name, version: doc.version })}
+                    {children.length > 1 ? ` — ${t("multiChild.childLabel", { n: ci + 1 })}` : ""}
+                  </span>
+                </label>
+              ))}
+            </div>
+          ))}
+        </fieldset>
+      ) : null}
 
       {policyDocument ? (
         <fieldset className="space-y-2">

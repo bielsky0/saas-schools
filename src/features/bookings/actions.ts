@@ -13,6 +13,7 @@ import type { FormState } from "@/lib/validation";
 import { assertConnectActive } from "@/features/billing/checkout";
 import { startConnectCheckout } from "@/features/billing/connect-checkout";
 import {
+  ConsentRequiredError,
   createBooking,
   ForeignAthleteError,
   PaymentMethodUnavailableError,
@@ -172,6 +173,7 @@ function messageFor(error: unknown, t: Awaited<ReturnType<typeof getTranslations
   if (error instanceof UnknownSessionError) return t("errors.unknownSession");
   if (error instanceof PolicyVersionChangedError) return t("errors.policyVersionChanged");
   if (error instanceof PolicyNotAcceptedError) return t("errors.policyNotAccepted");
+  if (error instanceof ConsentRequiredError) return t("errors.consentRequired");
   throw error;
 }
 
@@ -248,6 +250,7 @@ export async function createBookingManyAction(
       onlineAvailable: org.stripeConnectChargesEnabled ?? false,
       policyDocument: policyDoc,
       acceptedPolicyVersion: parsed.data.acceptedPolicyVersion,
+      athleteConsents: parseAthleteConsents(formData, participants.length),
     },
   );
 
@@ -304,8 +307,35 @@ function messageForLabel(label: string | undefined, t: Awaited<ReturnType<typeof
     case "unknownSession": return t("errors.unknownSession");
     case "policyVersionChanged": return t("errors.policyVersionChanged");
     case "policyNotAccepted": return t("errors.policyNotAccepted");
+    case "consentRequired": return t("errors.consentRequired");
     default: return t("errors.generic");
   }
+}
+
+function parseAthleteConsents(
+  formData: FormData,
+  childCount: number,
+): { consentDocumentId: string; granted: boolean }[][] | undefined {
+  const consentCount = parseInt(str(formData.get("consentCount")) || "0", 10);
+  if (consentCount === 0) return undefined;
+
+  const docIds: string[] = [];
+  for (let i = 0; i < consentCount; i++) {
+    const docId = str(formData.get(`consentDocId.${i}`));
+    if (docId) docIds.push(docId);
+  }
+  if (docIds.length === 0) return undefined;
+
+  const result: { consentDocumentId: string; granted: boolean }[][] = [];
+  for (let j = 0; j < childCount; j++) {
+    const childConsents: { consentDocumentId: string; granted: boolean }[] = [];
+    for (const docId of docIds) {
+      const granted = str(formData.get(`consentGranted.${docId}.${j}`)) === "on";
+      childConsents.push({ consentDocumentId: docId, granted });
+    }
+    result.push(childConsents);
+  }
+  return result;
 }
 
 function str(value: FormDataEntryValue | null): string {

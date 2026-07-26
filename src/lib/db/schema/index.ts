@@ -139,3 +139,4 @@ export * from "./trainer-rates";
 export * from "./client-price-overrides";
 export * from "./interest-signups";
 export * from "./membership-permission-overrides";
+export * from "./consent-documents";

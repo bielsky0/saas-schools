@@ -68,9 +68,14 @@ export async function insertAthlete(
   tx: TenantDb,
   organizationId: string,
   parentClientId: string,
-  values: { name: string; age?: number },
+  values: {
+    name: string;
+    age?: number;
+    emergencyContactName?: string;
+    emergencyContactPhone?: string;
+    healthNotes?: string;
+  },
 ): Promise<string> {
-  // F9, EPIK 29: Enforce max_students limit before creating new athlete
   await checkLimit(organizationId, "max_students");
 
   const [row] = await tx
@@ -80,6 +85,9 @@ export async function insertAthlete(
       parentClientId,
       name: values.name,
       age: values.age ?? null,
+      emergencyContactName: values.emergencyContactName ?? null,
+      emergencyContactPhone: values.emergencyContactPhone ?? null,
+      healthNotes: values.healthNotes ?? null,
     })
     .returning({ id: athlete.id });
   if (!row) throw new Error("insertAthlete: insert returned no row");

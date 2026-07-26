@@ -8,6 +8,7 @@ import { paymentOptionsFor, type PackageTeaser } from "@/features/bookings/payme
 import { EnrollmentFlow } from "@/features/bookings/components/enrollment-flow";
 import { resolveClientSession } from "@/features/client-auth/session";
 import { listAthletes } from "@/features/clients/data";
+import { getActiveConsentsForSignup } from "@/features/consents/data";
 import { getGroupTypeBySlug } from "@/features/groups/data";
 import { getActivePolicyForGroupType, getLatestAcceptanceForClientGroupType } from "@/features/policies/data";
 import { resolveClientPrice } from "@/features/pricing/resolve";
@@ -172,6 +173,11 @@ export default async function EnrollmentPage({
       )
     : null;
 
+  // Faza 24 — active consent documents required at signup
+  const consentDocuments = await withTenant(org.id, (tx) =>
+    getActiveConsentsForSignup(tx, org.id),
+  );
+
   // Faza 22: when an offer is collecting_interest, render the interest signup
   // form instead of the session calendar and booking flow (§2.34).
   if (groupType.status === "collecting_interest") {
@@ -239,6 +245,12 @@ export default async function EnrollmentPage({
               }
             : null
         }
+        consentDocuments={consentDocuments.map((d) => ({
+          id: d.id,
+          name: d.name,
+          version: d.version,
+          fileId: d.file_id,
+        }))}
       />
     </main>
   );
