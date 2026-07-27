@@ -2,6 +2,7 @@ import type { Block } from "payload";
 
 export const separatorBlock: Block = {
   slug: "separator",
+  admin: { group: "Treść" },
   fields: [],
 };
 

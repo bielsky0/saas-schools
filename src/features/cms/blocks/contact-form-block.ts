@@ -3,7 +3,7 @@ import type { Block } from "payload";
 export const contactFormBlock: Block = {
   slug: "contact_form",
   labels: { singular: "Contact Form", plural: "Contact Forms" },
-  admin: { group: "Custom Blocks" },
+  admin: { group: "Sekcje" },
   fields: [
     {
       name: "title",

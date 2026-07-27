@@ -1,0 +1,51 @@
+/**
+ * Custom SCSS overrides for Payload Admin branding (Faza 30e).
+ *
+ * Overrides Payload's CSS custom properties to match Langlion brand colors.
+ * This is a single SaaS-wide theme — NOT per-tenant (that is the `theme`
+ * collection from Faza 30c, which only affects public pages).
+ */
+:root {
+  --theme-elevation-0: #ffffff;
+  --theme-elevation-50: #f8fafc;
+  --theme-elevation-100: #f1f5f9;
+  --theme-elevation-150: #e2e8f0;
+  --theme-elevation-200: #cbd5e1;
+  --theme-elevation-250: #94a3b8;
+  --theme-elevation-300: #64748b;
+  --theme-elevation-400: #475569;
+  --theme-elevation-500: #334155;
+  --theme-elevation-600: #1e293b;
+  --theme-elevation-700: #0f172a;
+  --theme-elevation-800: #020617;
+  --theme-elevation-900: #000000;
+
+  --theme-bg: var(--theme-elevation-0);
+  --theme-input-bg: var(--theme-elevation-0);
+  --theme-text: var(--theme-elevation-700);
+  --theme-border-color: var(--theme-elevation-150);
+
+  --theme-success-100: #dcfce7;
+  --theme-success-200: #bbf7d0;
+  --theme-success-300: #86efac;
+  --theme-success-400: #4ade80;
+  --theme-success-500: #22c55e;
+  --theme-success-600: #16a34a;
+  --theme-success-700: #15803d;
+
+  --theme-warning-100: #fef9c3;
+  --theme-warning-200: #fef08a;
+  --theme-warning-300: #fde047;
+  --theme-warning-400: #facc15;
+  --theme-warning-500: #eab308;
+  --theme-warning-600: #ca8a04;
+  --theme-warning-700: #a16207;
+
+  --theme-danger-100: #fee2e2;
+  --theme-danger-200: #fecaca;
+  --theme-danger-300: #fca5a5;
+  --theme-danger-400: #f87171;
+  --theme-danger-500: #ef4444;
+  --theme-danger-600: #dc2626;
+  --theme-danger-700: #b91c1c;
+}

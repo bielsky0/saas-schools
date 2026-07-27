@@ -4,6 +4,7 @@ import { buttonSizeClass, buttonVariantClass } from "./style-dictionary";
 
 export const buttonBlock: Block = {
   slug: "button",
+  admin: { group: "Treść" },
   fields: [
     {
       name: "label",

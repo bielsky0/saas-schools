@@ -3,7 +3,7 @@ import type { Block } from "payload";
 export const scheduleGridBlock: Block = {
   slug: "schedule_grid",
   labels: { singular: "Schedule Grid", plural: "Schedule Grids" },
-  admin: { group: "Custom Blocks" },
+  admin: { group: "Sekcje" },
   fields: [
     {
       name: "title",

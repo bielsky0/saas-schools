@@ -3,6 +3,7 @@ import type React from "react";
 
 export const columnBlock: Block = {
   slug: "column",
+  admin: { group: "Layout" },
   fields: [
     {
       name: "blocks",

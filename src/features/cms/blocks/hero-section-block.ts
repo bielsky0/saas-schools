@@ -3,7 +3,7 @@ import type { Block } from "payload";
 export const heroSectionBlock: Block = {
   slug: "hero_section",
   labels: { singular: "Hero Section", plural: "Hero Sections" },
-  admin: { group: "Custom Blocks" },
+  admin: { group: "Sekcje" },
   fields: [
     {
       name: "title",

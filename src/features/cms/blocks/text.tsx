@@ -2,6 +2,7 @@ import type { Block } from "payload";
 
 export const textBlock: Block = {
   slug: "text",
+  admin: { group: "Treść" },
   fields: [
     {
       name: "content",

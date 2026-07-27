@@ -3,7 +3,7 @@ import type { Block } from "payload";
 export const pricingTableBlock: Block = {
   slug: "pricing_table",
   labels: { singular: "Pricing Table", plural: "Pricing Tables" },
-  admin: { group: "Custom Blocks" },
+  admin: { group: "Sekcje" },
   fields: [
     {
       name: "title",

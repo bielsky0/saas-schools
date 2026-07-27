@@ -1,0 +1,12 @@
+"use client"
+
+import { Nav as DefaultNav } from "@payloadcms/ui"
+import type { ServerProps } from "payload"
+
+export function AdminNav(props: ServerProps) {
+  return (
+    <div>
+      <DefaultNav {...props} />
+    </div>
+  )
+}

@@ -1,6 +1,8 @@
 import type { CollectionConfig } from "payload";
 import { sql } from "drizzle-orm";
 
+import { parseHost } from "@/lib/tenant-host";
+
 import { getAllBlockConfigs, isRegisteredBlock } from "../block-registry";
 import { validateBlockAccess } from "../validate-block-access";
 import { CORE_BLOCK_TYPES } from "../block-registry";
@@ -14,7 +16,19 @@ export const pagesCollection: CollectionConfig = {
   admin: {
     useAsTitle: "title",
     group: "CMS",
+    preview: (doc, { req }) => {
+      // Lazy import to avoid t3-env validation at module load time (tests
+      // that import pagesCollection don't set up full server env).
+      const rootDomain = process.env.APP_ROOT_DOMAIN || "localhost";
+      const secret = process.env.PAYLOAD_DRAFT_SECRET || "";
+      const host = req.headers.get("host") || "";
+      const parsed = parseHost(host, rootDomain);
+      if (parsed.kind !== "tenant") return null;
+      const slug = (doc.slug as string) || "";
+      return `https://${parsed.subdomain}.${rootDomain}/api/draft?secret=${secret}&slug=${slug}`;
+    },
   },
+  versions: { drafts: true },
   access: {
     read: ({ req }) => {
       const cmsReq = req as unknown as CmsReq;

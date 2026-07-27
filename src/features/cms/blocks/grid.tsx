@@ -5,6 +5,7 @@ import { gridColumnsClass, gapClass } from "./style-dictionary";
 
 export const gridBlock: Block = {
   slug: "grid",
+  admin: { group: "Layout" },
   fields: [
     {
       name: "columns",

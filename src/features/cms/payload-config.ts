@@ -1,5 +1,6 @@
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { cloudStoragePlugin } from "@payloadcms/plugin-cloud-storage";
+import { pl } from "@payloadcms/translations/languages/pl";
 import { buildConfig } from "payload";
 import { Pool } from "pg";
 
@@ -26,6 +27,20 @@ export default buildConfig({
     user: "users",
     meta: {
       titleSuffix: " — Langlion CMS",
+    },
+    components: {
+      graphics: {
+        Logo: "/src/features/cms/admin/components/logo#AdminLogo",
+        Icon: "/src/features/cms/admin/components/icon#AdminIcon",
+      },
+      Nav: "/src/features/cms/admin/components/nav#AdminNav",
+    },
+    css: "/src/features/cms/admin/styles/admin-overrides.scss",
+  },
+  i18n: {
+    fallbackLanguage: "pl",
+    supportedLanguages: {
+      pl: { translations: pl.translations },
     },
   },
   graphQL: { disable: true } as any, // Not tested in spike — see docs/spike-30/raport.md §4

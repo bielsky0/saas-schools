@@ -1,3 +1,4 @@
+import { draftMode } from "next/headers";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -13,6 +14,11 @@ import { withTenant } from "@/lib/db/tenant";
  * Every path on a tenant host that the app router does not own reaches here.
  * The academy's home page (empty slug) does NOT arrive here: a catch-all segment
  * does not match the empty path, so `/` is handled in `[locale]/page.tsx`.
+ *
+ * Draft mode (Faza 30e): when `draftMode().isEnabled` is true, the status filter
+ * is bypassed to render unpublished pages. The draft mode cookie is only set by
+ * `/api/draft` after verifying `cms.manage` — this component does NOT repeat
+ * that RBAC check (guard is at cookie-issuance time).
  */
 export const dynamic = "force-dynamic";
 
@@ -47,7 +53,8 @@ export default async function CmsPage({ params }: CmsPageProps) {
     return getPage(tx, org.id, slug);
   });
 
-  if (!page || page.status !== "published") notFound();
+  const draft = await draftMode();
+  if (!page || (page.status !== "published" && !draft.isEnabled)) notFound();
 
   return (
     <ThemeInjector organizationId={org.id}>

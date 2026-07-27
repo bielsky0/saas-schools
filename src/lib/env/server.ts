@@ -52,6 +52,9 @@ export const env = createEnv({
     // src/lib/site.ts). Host recognition must not inherit that constraint: it is
     // read per request by src/proxy.ts via `parseHost`.
     APP_ROOT_DOMAIN: z.string().min(1).default("localhost"),
+    // Secret for Next.js Draft Mode preview links (Faza 30e). Used to verify
+    // Live Preview requests from Payload Admin. Generate: openssl rand -base64 32.
+    PAYLOAD_DRAFT_SECRET: z.string().min(32),
     // Selects the email adapter implementation (spec 10.1). "log" prints the
     // message (incl. verification link) to the server console + an in-memory
     // outbox for dev/CI; "resend" sends real mail.

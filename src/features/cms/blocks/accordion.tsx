@@ -2,6 +2,7 @@ import type { Block } from "payload";
 
 export const accordionBlock: Block = {
   slug: "accordion",
+  admin: { group: "Treść" },
   fields: [
     {
       name: "items",

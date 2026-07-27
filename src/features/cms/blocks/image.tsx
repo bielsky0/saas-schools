@@ -2,6 +2,7 @@ import type { Block } from "payload";
 
 export const imageBlock: Block = {
   slug: "image",
+  admin: { group: "Treść" },
   fields: [
     {
       name: "media",
