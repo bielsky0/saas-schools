@@ -66,6 +66,9 @@ export function createGroupTypeSchema(t: ValidationTranslator) {
       status: groupTypeStatus.default("scheduled"),
       /** Faza 26 (§2.40, EPIK 41) — this offer requires a qualification card for camp/colony. */
       requiresQualificationCard: z.boolean().default(false),
+      /** Faza 33 — enable waitlist queue for full sessions. Only valid for
+       * Schedule-First / Availability-First engines (enforced in refine below). */
+      waitlistEnabled: z.boolean().default(false),
       /** Minor units of `organization.currency` — grosze, not złote (§2.14). */
       price: z.coerce.number().int().nonnegative(t("priceInvalid")),
       isNewClientOnly: z.boolean().default(false),
@@ -84,6 +87,10 @@ export function createGroupTypeSchema(t: ValidationTranslator) {
     .refine(
       (v) => v.engine !== "slot_first" || (v.defaultCapacity ?? 1) <= 1,
       { message: t("slotFirstCapacityMax1"), path: ["defaultCapacity"] },
+    )
+    .refine(
+      (v) => v.engine !== "slot_first" || !v.waitlistEnabled,
+      { message: t("waitlistNotForSlotFirst"), path: ["waitlistEnabled"] },
     );
 }
 

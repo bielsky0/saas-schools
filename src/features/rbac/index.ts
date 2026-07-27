@@ -204,7 +204,13 @@ export type Permission =
   //
   /** Connect a custom domain to the organization (owner-only, analogous to
    * `billing_connect.manage` — affects platform infrastructure/reputation). */
-  | "custom_domain.manage";
+  | "custom_domain.manage"
+  // ── Faza 33 — Waitlist (plan faza-33-36.md §33) ─────────────────────
+  //
+  /** View and manage the waitlist queue for full sessions — view position,
+   * manually remove an entry, reorder. Owner, Admin, Sekretariat — same
+   * circle as `group_swap.approve` / `interest.manage` (§2.10). */
+  | "waitlist.manage";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -266,6 +272,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "lesson_log.manage",
     "cms.manage",
     "custom_domain.manage",
+    "waitlist.manage",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -319,6 +326,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "extra_fees.manage",
     "lesson_log.manage",
     "cms.manage",
+    "waitlist.manage",
   ],
   /**
    * The three langlion staff roles (§2.10).
@@ -359,6 +367,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
       "interest.manage",
       "qualification_cards.manage",
       "extra_fees.manage",
+      "waitlist.manage",
     ],
   reception: [
     "organization.leave",

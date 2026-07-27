@@ -11,6 +11,7 @@ import { groupChangesExpireHandler } from "@/features/bookings/change-group-expi
 import { refundsRecoverHandler } from "@/features/credits/refund-recover";
 import { pricingSyncSubscriptionHandler, pricingDeactivateExpiredHandler } from "@/features/pricing/handler";
 import { releaseExpiredPendingHandler } from "@/features/bookings/release-expired";
+import { waitlistExpireHandler } from "@/features/bookings/waitlist-expire";
 import { jobPruneHandler } from "./handler";
 
 /**
@@ -42,4 +43,5 @@ export const registry: JobRegistry = {
   "pricing.sync_subscription_price": pricingSyncSubscriptionHandler,
   "pricing.deactivate_expired_overrides": pricingDeactivateExpiredHandler,
   "bookings.release_expired_pending": releaseExpiredPendingHandler,
+  "waitlist.expire_offers": waitlistExpireHandler,
 };

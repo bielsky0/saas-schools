@@ -67,7 +67,8 @@ export type JobName =
   | "refunds.recover"
   | "pricing.sync_subscription_price"
   | "pricing.deactivate_expired_overrides"
-  | "bookings.release_expired_pending";
+  | "bookings.release_expired_pending"
+  | "waitlist.expire_offers";
 
 /**
  * `email.send`'s `template` is `string`, not the email adapter's `TemplateName`:
@@ -217,6 +218,11 @@ export interface JobPayloads {
    * Cron-shaped, no payload: the handler scans all tenants.
    */
   "bookings.release_expired_pending": Record<string, never>;
+  /**
+   * F33 — Expire waitlist offers past their TTL (2h) and offer the seat to the
+   * next in line. Cron-shaped, no payload: the handler scans all tenants.
+   */
+  "waitlist.expire_offers": Record<string, never>;
 }
 
 export interface EnqueueOptions {

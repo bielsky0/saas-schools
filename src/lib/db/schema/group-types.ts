@@ -107,6 +107,12 @@ export const groupType = pgTable(
      */
     requiresQualificationCard: boolean("requires_qualification_card").notNull().default(false),
     /**
+     * Faza 33 (§2.34a) — when true, a full session offers a waitlist queue
+     * instead of rejecting the booking. Only valid for Schedule-First and
+     * Availability-First engines — validated in the Zod schema/Server Action.
+     */
+    waitlistEnabled: boolean("waitlist_enabled").notNull().default(false),
+    /**
      * Default duration (minutes) and capacity for this group type (F17.5, EPIK 34).
      *
      * Used by the slot-availability layer (`computeAvailabilitySlots`) when

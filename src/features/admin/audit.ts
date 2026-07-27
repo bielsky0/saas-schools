@@ -340,6 +340,12 @@ export const AUDIT_ACTIONS = [
   "custom_domain.verify_success",
   "custom_domain.verify_failure",
   "custom_domain.remove",
+  // Faza 33 — Waitlist (plan faza-33-36.md §33).
+  "waitlist.join",
+  "waitlist.offer",
+  "waitlist.converted",
+  "waitlist.offer_expired",
+  "waitlist.removed_by_admin",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -405,7 +411,9 @@ export type AuditTargetType =
   | "tenant_block_access"
   | "theme"
   // Faza 32 — Custom domains
-  | "custom_domain";
+  | "custom_domain"
+  // Faza 33 — Waitlist
+  | "waitlist_entry";
 
 /**
  * WHO acted, as a kind — §6.4's actor model. A different question from WHICH

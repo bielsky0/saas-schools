@@ -146,3 +146,4 @@ export * from "./lesson-logs";
 export * from "./cms-tenant-block-access";
 export * from "./contact-form-submissions";
 export * from "./custom-domains";
+export * from "./waitlist-entry";

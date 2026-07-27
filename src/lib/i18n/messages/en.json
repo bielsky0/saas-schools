@@ -893,6 +893,7 @@
       "startDateFormat": "Use a date in YYYY-MM-DD format.",
       "occurrencesRequired": "A recurring pattern needs a number of occurrences.",
       "slotFirstCapacityMax1": "Slot-First requires defaultCapacity = 1.",
+      "waitlistNotForSlotFirst": "Waitlist is not supported for Slot-First engine.",
       "defaultDurationInvalid": "Duration must be a positive number of minutes.",
       "defaultCapacityInvalid": "Capacity must be a positive number."
     },

@@ -893,6 +893,7 @@
       "startDateFormat": "Podaj datę w formacie RRRR-MM-DD.",
       "occurrencesRequired": "Wzorzec cykliczny wymaga liczby powtórzeń.",
       "slotFirstCapacityMax1": "Slot-First wymaga defaultCapacity = 1.",
+      "waitlistNotForSlotFirst": "Lista rezerwowa nie jest wspierana dla silnika Slot-First.",
       "defaultDurationInvalid": "Czas trwania musi być liczbą dodatnią.",
       "defaultCapacityInvalid": "Pojemność musi być liczbą dodatnią."
     },

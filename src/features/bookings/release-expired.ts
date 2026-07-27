@@ -2,7 +2,7 @@ import { and, eq, inArray, lt, not, sql } from "drizzle-orm";
 
 import type { JobHandler } from "@/lib/adapters/jobs";
 import { recordAudit, SYSTEM_ACTOR } from "@/features/admin/audit";
-import { booking, groupChangeRequest } from "@/lib/db/schema";
+import { booking, groupChangeRequest, waitlistEntry } from "@/lib/db/schema";
 import { withSystemBypass } from "@/lib/db/system";
 import { withTenant } from "@/lib/db/tenant";
 import { createLogger } from "@/lib/logger";
@@ -35,6 +35,13 @@ export const releaseExpiredPendingHandler: JobHandler<"bookings.release_expired_
               SELECT 1 FROM ${groupChangeRequest} gcr
               WHERE gcr.resulting_booking_id = ${booking.id}
                 AND gcr.status = 'awaiting_payment'
+            )`,
+              ),
+              not(
+                sql`EXISTS (
+              SELECT 1 FROM ${waitlistEntry} we
+              WHERE we.resulting_booking_id = ${booking.id}
+                AND we.status = 'offered'
             )`,
               ),
             ),
