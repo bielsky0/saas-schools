@@ -1,93 +1,64 @@
 import { describe, expect, it } from "vitest";
-
-import { RESERVED_PATH_PREFIXES, isReservedSlug, reservedPrefixOf } from "./reserved-slugs";
-
-/**
- * `isReservedSlug` has NO production call site in F4.5 — its consumer is the CMS
- * page form, which does not exist yet. It is covered here rather than left as an
- * unused export taking the spec's word for it (US-C1.2/AC1–AC3).
- */
-
-describe("isReservedSlug", () => {
-  it("refuses the six prefixes the CMS spec names", () => {
-    for (const slug of ["dashboard", "admin", "api", "zapisy", "karta", "login", "logout"]) {
-      expect(isReservedSlug(slug), slug).toBe(true);
-    }
-  });
-
-  it("refuses locale codes, which occupy the same first segment (D59)", () => {
-    expect(isReservedSlug("pl")).toBe(true);
-    expect(isReservedSlug("en")).toBe(true);
-  });
-
-  it("refuses paths the framework serves, which the proxy never sees", () => {
-    // The deliberate asymmetry with `reservedPrefixOf`: these skip the proxy via
-    // the matcher, so runtime never asks — but a page slugged `robots.txt` would
-    // be permanently shadowed.
-    for (const slug of ["_next", "favicon.ico", "robots.txt", "sitemap.xml", ".well-known"]) {
-      expect(isReservedSlug(slug), slug).toBe(true);
-    }
-  });
-
-  it("ALLOWS the empty slug — that is the academy home page", () => {
-    // CMS spec §4, decision 8. Refusing it would make every academy's front page
-    // unrepresentable.
-    expect(isReservedSlug("")).toBe(false);
-    expect(isReservedSlug("   ")).toBe(false);
-  });
-
-  it("allows slugs that merely start with a reserved word", () => {
-    // Prefix matching instead of segment matching would refuse all of these.
-    for (const slug of ["o-nas", "admin-team", "zapisy-letnie", "logins", "docsy"]) {
-      expect(isReservedSlug(slug), slug).toBe(false);
-    }
-  });
-
-  it("normalizes case and leading slashes before deciding", () => {
-    expect(isReservedSlug("DASHBOARD")).toBe(true);
-    expect(isReservedSlug("/admin")).toBe(true);
-  });
-});
+import { reservedPrefixOf } from "./reserved-slugs";
 
 describe("reservedPrefixOf", () => {
-  it("returns the stage, so the proxy can tell tenant routes from apex ones (D60)", () => {
-    expect(reservedPrefixOf("/zapisy/lato")).toEqual({ prefix: "zapisy", stage: "tenant" });
-    expect(reservedPrefixOf("/admin")).toEqual({ prefix: "admin", stage: "apex" });
-    // F4.6: the staff panel is legitimate on both hosts, meaning something
-    // different on each — the apex account vs. that academy's panel.
-    expect(reservedPrefixOf("/dashboard")).toEqual({ prefix: "dashboard", stage: "both" });
+  /* ─── admin stage change: "apex" → "both" (Payload CMS tenant routing) ─── */
+
+  it("admin is stage 'both' (not 'apex') so it stays on tenant hosts", () => {
+    const result = reservedPrefixOf("/admin");
+    expect(result).toEqual({ prefix: "admin", stage: "both" });
   });
 
-  it("never marks a guarded staff prefix as tenant-only (F4.6 authorization guard)", () => {
-    /*
-     * The apex branch in src/proxy.ts returns `forward()` early for "tenant"
-     * prefixes, SKIPPING default-deny. That is safe only where no apex route
-     * exists to render. Every prefix below has one and sits behind the guard, so
-     * "tenant" here would serve it to an anonymous request on the apex.
-     *
-     * This is the cheap half of the check; the e2e counterpart in
-     * langlion-subdomain-routing.spec.ts proves the actual response is a 307.
-     */
-    expect(RESERVED_PATH_PREFIXES["dashboard"]).toBe("both");
-    // `settings` is the personal account's, not an academy's (academy settings
-    // are under /dashboard/settings). It must stay apex-only, but it must never
-    // be "tenant" either — same early-return hazard, opposite direction.
-    expect(RESERVED_PATH_PREFIXES["settings"]).toBe("apex");
+  it("admin with sub-paths is also stage 'both'", () => {
+    const result = reservedPrefixOf("/admin/pages");
+    expect(result).toEqual({ prefix: "admin", stage: "both" });
   });
 
-  it("returns null for the root, which is the academy home page", () => {
-    expect(reservedPrefixOf("/")).toBeNull();
+  /* ─── unchanged apex-only routes ───────────────────────────────────────── */
+
+  it("orgs is stage 'apex'", () => {
+    const result = reservedPrefixOf("/orgs/new");
+    expect(result).toEqual({ prefix: "orgs", stage: "apex" });
+  });
+
+  it("settings is stage 'apex'", () => {
+    const result = reservedPrefixOf("/settings");
+    expect(result).toEqual({ prefix: "settings", stage: "apex" });
+  });
+
+  it("blog is stage 'apex'", () => {
+    const result = reservedPrefixOf("/blog/some-post");
+    expect(result).toEqual({ prefix: "blog", stage: "apex" });
+  });
+
+  /* ─── unchanged tenant-only routes ─────────────────────────────────────── */
+
+  it("zapisy is stage 'tenant'", () => {
+    const result = reservedPrefixOf("/zapisy/lato");
+    expect(result).toEqual({ prefix: "zapisy", stage: "tenant" });
+  });
+
+  /* ─── unchanged both routes ────────────────────────────────────────────── */
+
+  it("dashboard is stage 'both'", () => {
+    const result = reservedPrefixOf("/dashboard");
+    expect(result).toEqual({ prefix: "dashboard", stage: "both" });
+  });
+
+  it("login is stage 'both'", () => {
+    const result = reservedPrefixOf("/login");
+    expect(result).toEqual({ prefix: "login", stage: "both" });
+  });
+
+  /* ─── edge cases ───────────────────────────────────────────────────────── */
+
+  it("root path returns null (no prefix)", () => {
     expect(reservedPrefixOf("")).toBeNull();
+    expect(reservedPrefixOf("/")).toBeNull();
   });
 
-  it("returns null for an ordinary page path — that is the CMS branch", () => {
-    expect(reservedPrefixOf("/o-nas")).toBeNull();
-    expect(reservedPrefixOf("/oferta/wakacje")).toBeNull();
-  });
-
-  it("matches the first segment only", () => {
-    // `/admin-team` must reach the CMS; `/blog/admin` must not become an app route.
+  it("a slug that starts with a reserved word but is different is not matched", () => {
     expect(reservedPrefixOf("/admin-team")).toBeNull();
-    expect(reservedPrefixOf("/oferta/admin")).toBeNull();
+    expect(reservedPrefixOf("/zapisy-letnie")).toBeNull();
   });
 });

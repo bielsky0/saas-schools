@@ -95,6 +95,11 @@ export default async function AcademyHome() {
         ) : null}
         {/* Cosmetic gating only (spec 4.2) — the page itself calls
             requireOrgPermission, which is the actual boundary. */}
+        {effectivePermissions.has("cms.manage") ? (
+          <Button asChild variant="outline" size="sm">
+            <a href="/admin">{t("pages")}</a>
+          </Button>
+        ) : null}
         {effectivePermissions.has("audit.read") ? (
           <Button asChild variant="outline" size="sm">
             <Link href="/dashboard/settings/audit">{t("audit")}</Link>

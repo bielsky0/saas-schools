@@ -5,13 +5,11 @@ import { ORG_SUBDOMAIN_HEADER } from "@/lib/tenant-host";
 import { withTenant } from "@/lib/db/tenant";
 import { getOrgBySubdomain, getMembership } from "@/features/organizations/data";
 
-type AuthenticateArgs = { headers: Headers; req?: Record<string, unknown> };
-
 export const betterAuthPayloadStrategy: AuthStrategy = {
   name: "better-auth",
   authenticate: async (args) => {
     const { headers } = args;
-    const req = (args as AuthenticateArgs).req ?? {};
+    const req = (args as Record<string, unknown>).req as Record<string, unknown> | undefined;
     const session = await auth.api.getSession({ headers });
     if (!session) return { user: null };
 
@@ -41,11 +39,26 @@ export const betterAuthPayloadStrategy: AuthStrategy = {
     // Make organizationId available to access control functions via req.
     // Payload merges the returned user into req.user, but access.read/update
     // check req.organizationId directly (see collection configs).
-    (req as Record<string, unknown>).organizationId = organizationId;
+    if (req) req.organizationId = organizationId;
+
+    // — upsert payload_admin_users record —
+    // Payload internal mechanisms (preferences, document locks,
+    // /users/me) require a real DB row in the auth collection, not
+    // just a user object returned by the strategy. We upsert by email
+    // (unique per users collection config) so that a record is created
+    // on first login of a given person and re-used on subsequent visits.
+    // The returned id is the payload_admin_users PK, not the Better Auth
+    // user.id — that is the ID that Payload uses internally as a FK in
+    // payload_preferences, payload_locked_documents, etc.
+    const userRecord = await args.payload.db.upsert({
+      collection: "users",
+      where: { email: { equals: session.user.email } },
+      data: { email: session.user.email },
+    });
 
     return {
       user: {
-        id: session.user.id,
+        id: userRecord.id,
         email: session.user.email,
         collection: "users",
         organizationId,

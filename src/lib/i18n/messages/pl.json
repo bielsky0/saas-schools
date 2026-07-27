@@ -556,7 +556,8 @@
       "trainers": "Trenerzy",
       "rates": "Stawki",
       "earnings": "Wynagrodzenia",
-      "import": "Import CSV"
+      "import": "Import CSV",
+      "pages": "Strony"
     },
     "settings": {
       "heading": "Ustawienia",

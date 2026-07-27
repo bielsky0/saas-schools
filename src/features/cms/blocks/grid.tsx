@@ -3,41 +3,43 @@ import type React from "react";
 
 import { gridColumnsClass, gapClass } from "./style-dictionary";
 
-export const gridBlock: Block = {
-  slug: "grid",
-  admin: { group: "Layout" },
-  fields: [
-    {
-      name: "columns",
-      type: "number",
-      defaultValue: 2,
-      min: 1,
-      max: 4,
-      required: true,
-    },
-    {
-      name: "gap",
-      type: "select",
-      options: [
-        { label: "Small", value: "small" },
-        { label: "Medium", value: "medium" },
-        { label: "Large", value: "large" },
-      ],
-      defaultValue: "medium",
-    },
-    {
-      name: "cells",
-      type: "array",
-      fields: [
-        {
-          name: "blocks",
-          type: "blocks",
-          blocks: [],
-        },
-      ],
-    },
-  ],
-};
+export function buildGridBlock(availableBlocks: Block[]): Block {
+  return {
+    slug: "grid",
+    admin: { group: "Layout" },
+    fields: [
+      {
+        name: "columns",
+        type: "number",
+        defaultValue: 2,
+        min: 1,
+        max: 4,
+        required: true,
+      },
+      {
+        name: "gap",
+        type: "select",
+        options: [
+          { label: "Small", value: "small" },
+          { label: "Medium", value: "medium" },
+          { label: "Large", value: "large" },
+        ],
+        defaultValue: "medium",
+      },
+      {
+        name: "cells",
+        type: "array",
+        fields: [
+          {
+            name: "blocks",
+            type: "blocks",
+            blocks: availableBlocks,
+          },
+        ],
+      },
+    ],
+  };
+}
 
 type GridBlockProps = {
   columns: number;

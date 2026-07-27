@@ -1,17 +1,19 @@
 import type { Block } from "payload";
 import type React from "react";
 
-export const columnBlock: Block = {
-  slug: "column",
-  admin: { group: "Layout" },
-  fields: [
-    {
-      name: "blocks",
-      type: "blocks",
-      blocks: [],
-    },
-  ],
-};
+export function buildColumnBlock(availableBlocks: Block[]): Block {
+  return {
+    slug: "column",
+    admin: { group: "Layout" },
+    fields: [
+      {
+        name: "blocks",
+        type: "blocks",
+        blocks: availableBlocks,
+      },
+    ],
+  };
+}
 
 type ColumnBlockProps = {
   blocks?: unknown[];

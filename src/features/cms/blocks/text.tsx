@@ -1,5 +1,7 @@
 import type { Block } from "payload";
 
+import { CMS_LEXICAL_EDITOR } from "../lexical-editor"
+
 export const textBlock: Block = {
   slug: "text",
   admin: { group: "Treść" },
@@ -8,6 +10,7 @@ export const textBlock: Block = {
       name: "content",
       type: "richText",
       required: true,
+      editor: CMS_LEXICAL_EDITOR,
     },
   ],
 };

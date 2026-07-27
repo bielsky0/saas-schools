@@ -30,12 +30,15 @@ function makeHeaders(headers?: Record<string, string>): Headers {
   return h;
 }
 
+/** Shared mock that records calls to db.upsert across tests. */
+const mockUpsert = vi.fn();
+
 function callAuth(overrides?: Record<string, unknown>) {
   const req = {} as Record<string, unknown>;
   const defaults: Record<string, unknown> = {
     headers: makeHeaders(),
     req,
-    payload: {},
+    payload: { db: { upsert: mockUpsert } },
   };
   return betterAuthPayloadStrategy.authenticate({ ...defaults, ...overrides } as never);
 }
@@ -43,6 +46,7 @@ function callAuth(overrides?: Record<string, unknown>) {
 describe("betterAuthPayloadStrategy.authenticate", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockUpsert.mockResolvedValue({ id: "payload-user-id", email: "a@a.com" });
 
     // Default: withTenant calls the callback with a fake tx.
     (withTenant as unknown as ReturnType<typeof vi.fn>).mockImplementation(
@@ -65,9 +69,32 @@ describe("betterAuthPayloadStrategy.authenticate", () => {
     const result = await callAuth();
 
     expect(result).not.toBeNull();
-    expect(result!.user).toMatchObject({ id: "user-1", email: "a@a.com" });
+    expect(result!.user).toMatchObject({ id: "payload-user-id", email: "a@a.com" });
     expect((result!.user as Record<string, unknown>).organizationId).toBeUndefined();
     expect(getOrgBySubdomain).not.toHaveBeenCalled();
+  });
+
+  it("returns the payload_admin_users id, not the Better Auth user id", async () => {
+    mockUpsert.mockResolvedValue({ id: "payload-user-id", email: "b@b.com" });
+    mockGetSession.mockResolvedValue({ user: { id: "better-auth-id", email: "b@b.com" } });
+
+    const result = await callAuth();
+
+    expect(result!.user!.id).toBe("payload-user-id");
+    expect(result!.user!.id).not.toBe("better-auth-id");
+  });
+
+  it("calls db.upsert with collection 'users' and the email from session", async () => {
+    mockUpsert.mockResolvedValue({ id: "pu-1", email: "upsert-me@example.com" });
+    mockGetSession.mockResolvedValue({ user: { id: "user-1", email: "upsert-me@example.com" } });
+
+    await callAuth();
+
+    expect(mockUpsert).toHaveBeenCalledWith({
+      collection: "users",
+      where: { email: { equals: "upsert-me@example.com" } },
+      data: { email: "upsert-me@example.com" },
+    });
   });
 
   describe("with x-org-subdomain header", () => {

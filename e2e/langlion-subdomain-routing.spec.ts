@@ -162,6 +162,56 @@ test("an apex-only route on an academy host hops to the apex, not into a login l
   expect(new URL(location).pathname).toBe("/en/orgs/new");
 });
 
+test("tenant /admin stays on the tenant host instead of redirecting to the apex", async ({
+  request,
+}) => {
+  /*
+   * Regression guard for the admin routing fix (Payload CMS, tenant hosts).
+   *
+   * `/admin` was changed from stage "apex" to "both" in reserved-slugs.ts so
+   * that the Payload CMS admin panel is served under `{subdomain}/admin`
+   * instead of being redirected to the platform apex. On the apex `/admin`
+   * is still the super-admin panel — the two are distinguished by host AND
+   * by the presence of a locale prefix (tenant → bare `/admin`, apex →
+   * `/{locale}/admin`).
+   *
+   * This test verifies that an anonymous request to `/admin` (no locale)
+   * on a tenant host is NOT redirected to the apex — before the fix, the
+   * proxy would 307 to `localtest.me:3000/{locale}/admin`.
+   */
+  const subdomain = await seedAcademy(request, "tenant-admin");
+
+  const res = await request.get(tenantUrl(subdomain, "/admin"), { maxRedirects: 0 });
+
+  // Must NOT redirect to the apex (which was the bug).
+  expect(res.status()).not.toBe(307);
+  // If forwarded without session, the proxy should redirect to /login on
+  // the SAME tenant host — not the apex.
+  const location = res.headers()["location"];
+  if (location) {
+    expect(new URL(location).host).not.toBe(new URL(APEX_ORIGIN).host);
+  }
+});
+
+test("apex /{locale}/admin still requires super-admin access", async ({ request }) => {
+  /*
+   * Regression guard: we changed `/admin` from "apex" to "both", which
+   * affects how the proxy routes requests. On the APEX, `/en/admin` must
+   * still behave as before — an anonymous (or non-super-admin) request
+   * must be redirected to login by default-deny, exactly the same as
+   * any other guarded route on the platform domain.
+   *
+   * This is the super-admin panel (requireSuperAdmin), not the Payload
+   * CMS admin.
+   */
+  const res = await request.get(`${APEX_ORIGIN}/en/admin`, { maxRedirects: 0 });
+
+  expect(res.status()).toBe(307);
+  const location = new URL(res.headers()["location"] ?? "", APEX_ORIGIN);
+  expect(location.pathname).toBe("/en/login");
+  expect(location.searchParams.get("callbackUrl")).toBe("/en/admin");
+});
+
 test("a tenant-stage prefix is not served on the apex", async ({ request }) => {
   /*
    * ⚠️ WHY THIS PASSES CHANGED IN F5, and it is worth knowing which mechanism is

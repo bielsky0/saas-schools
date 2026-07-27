@@ -164,7 +164,7 @@
       "preview": "Your academy account password was changed.",
       "heading": "Password changed",
       "body": "Your password for your {orgName} account was changed. If this was not you, contact the academy immediately."
-    },
+    }
   },
   "auth": {
     "validation": {
@@ -556,7 +556,8 @@
       "trainers": "Trainers",
       "rates": "Rates",
       "earnings": "Earnings",
-      "import": "Import CSV"
+      "import": "Import CSV",
+      "pages": "Pages"
     },
     "settings": {
       "heading": "Settings",

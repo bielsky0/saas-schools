@@ -1,3 +1,4 @@
+import { withPayload } from "@payloadcms/next/withPayload";
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
@@ -109,4 +110,4 @@ const withMDX = createMDX({
  */
 const withNextIntl = createNextIntlPlugin("./src/lib/i18n/request.ts");
 
-export default withNextIntl(withMDX(nextConfig));
+export default withPayload(withNextIntl(withMDX(nextConfig)));

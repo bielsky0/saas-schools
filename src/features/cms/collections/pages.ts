@@ -6,10 +6,11 @@ import { parseHost } from "@/lib/tenant-host";
 import { getAllBlockConfigs, isRegisteredBlock } from "../block-registry";
 import { validateBlockAccess } from "../validate-block-access";
 import { CORE_BLOCK_TYPES } from "../block-registry";
+import { setTenantContext } from "../tenant-context";
 
 const ALL_BLOCKS = getAllBlockConfigs();
 
-type CmsReq = { organizationId?: string } & Record<string, unknown>;
+type CmsReq = { user?: { organizationId?: string } } & Record<string, unknown>;
 
 export const pagesCollection: CollectionConfig = {
   slug: "pages",
@@ -31,32 +32,33 @@ export const pagesCollection: CollectionConfig = {
   versions: { drafts: true },
   access: {
     read: ({ req }) => {
-      const cmsReq = req as unknown as CmsReq;
-      if (!cmsReq.organizationId) return false;
-      return { organizationId: { equals: cmsReq.organizationId } };
+      const orgId = (req as unknown as CmsReq).user?.organizationId;
+      if (!orgId) return false;
+      return { organizationId: { equals: orgId } };
     },
     create: ({ req }) => {
-      const cmsReq = req as unknown as CmsReq;
-      if (!cmsReq.organizationId) return false;
+      const orgId = (req as unknown as CmsReq).user?.organizationId;
+      if (!orgId) return false;
       return true;
     },
     update: ({ req }) => {
-      const cmsReq = req as unknown as CmsReq;
-      if (!cmsReq.organizationId) return false;
-      return { organizationId: { equals: cmsReq.organizationId } };
+      const orgId = (req as unknown as CmsReq).user?.organizationId;
+      if (!orgId) return false;
+      return { organizationId: { equals: orgId } };
     },
     delete: ({ req }) => {
-      const cmsReq = req as unknown as CmsReq;
-      if (!cmsReq.organizationId) return false;
-      return { organizationId: { equals: cmsReq.organizationId } };
+      const orgId = (req as unknown as CmsReq).user?.organizationId;
+      if (!orgId) return false;
+      return { organizationId: { equals: orgId } };
     },
   },
   hooks: {
+    beforeOperation: [setTenantContext],
     beforeChange: [
       ({ data, req }) => {
-        const cmsReq = req as unknown as CmsReq;
-        if (cmsReq.organizationId) {
-          return { ...data, organizationId: cmsReq.organizationId };
+        const orgId = (req as unknown as CmsReq).user?.organizationId;
+        if (orgId) {
+          return { ...data, organizationId: orgId };
         }
         return data;
       },
@@ -101,6 +103,12 @@ export const pagesCollection: CollectionConfig = {
     ],
   },
   fields: [
+    {
+      name: "organizationId",
+      type: "text",
+      admin: { hidden: true },
+      access: { update: () => false, create: () => false },
+    },
     {
       name: "title",
       type: "text",

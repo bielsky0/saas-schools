@@ -1,5 +1,7 @@
 import type { Block } from "payload";
 
+import { CMS_LEXICAL_EDITOR } from "../lexical-editor"
+
 export const accordionBlock: Block = {
   slug: "accordion",
   admin: { group: "Treść" },
@@ -17,6 +19,7 @@ export const accordionBlock: Block = {
           name: "content",
           type: "richText",
           required: true,
+          editor: CMS_LEXICAL_EDITOR,
         },
       ],
     },

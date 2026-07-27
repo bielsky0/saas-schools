@@ -1,6 +1,4 @@
-"use client"
-
-import { Nav as DefaultNav } from "@payloadcms/ui"
+import { DefaultNav } from "@payloadcms/next/rsc"
 import type { ServerProps } from "payload"
 
 export function AdminNav(props: ServerProps) {

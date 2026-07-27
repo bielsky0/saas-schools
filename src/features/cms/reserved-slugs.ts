@@ -119,7 +119,7 @@ export const RESERVED_PATH_PREFIXES: Readonly<Record<string, PathStage>> = {
    * host, because the tenant does not exist yet. Invitations and unsubscribe are
    * cross-org by nature and their links are built from the apex.
    */
-  admin: "apex",
+  admin: "both",
   orgs: "apex",
   /*
    * ACCOUNT settings only (billing, notifications for the personal account).

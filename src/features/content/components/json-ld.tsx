@@ -22,6 +22,6 @@ export async function JsonLd({ data }: { data: JsonLdNode | JsonLdNode[] }) {
   const json = JSON.stringify(data).replace(/</g, "\\u003c");
   const nonce = await getNonce();
   return (
-    <script type="application/ld+json" nonce={nonce} dangerouslySetInnerHTML={{ __html: json }} />
+    <script type="application/ld+json" nonce={nonce} suppressHydrationWarning dangerouslySetInnerHTML={{ __html: json }} />
   );
 }

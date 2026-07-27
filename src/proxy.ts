@@ -111,6 +111,8 @@ function isPublicApiPath(pathname: string): boolean {
   if (pathname.startsWith("/api/auth/")) return true;
   // Test-only email inspector (guarded internally by NODE_ENV, dev/CI only).
   if (pathname.startsWith("/api/dev/")) return true;
+  // TEMP DIAG: payload init test (dev only)
+  if (pathname.startsWith("/api/diag/")) return true;
   // Billing webhooks carry no session — the request SIGNATURE is the auth
   // (spec 5.4), verified in the route. Payment providers do not follow
   // redirects, so guarding this would look like a permanent delivery failure.
@@ -420,24 +422,39 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     const pathLocale = localeFromPathname(pathname);
     if (!pathLocale) {
       /*
-       * The unprefixed → prefixed redirect (§16.1). Two things it must not lose:
-       *
-       *   - `search`. Drop it and `?token=…`, `?callbackUrl=…`, `?status=…` all
-       *     vanish on the first hop, silently breaking password reset, email
-       *     verification and redirect-back.
-       *   - nothing else — this is a REDIRECT, not a rewrite, deliberately.
-       *
-       * It doubles as the safety net that makes the <Link> migration
-       * incremental: a legacy `redirect("/login")` still lands correctly.
+       * On tenant hosts, /admin is the Payload CMS admin panel and lives at
+       * the bare path (no locale prefix). Payload handles its own i18n, so
+       * the proxy must not add a locale prefix here. Without this exception
+       * the locale redirect below would send /admin → /{locale}/admin, which
+       * would then match the super-admin route at [locale]/(admin)/admin/
+       * instead of (payload)/admin/[[...segments]].
        */
-      const target = new URL(
-        withLocale(pathname, negotiateLocale({ cookieLocale, acceptLanguage })) + search,
-        request.url,
-      );
-      return redirectTo(target, requestId, nonce);
+      if (host.kind === "tenant" && pathname.startsWith("/admin")) {
+        locale = negotiateLocale({ cookieLocale, acceptLanguage });
+        bare = pathname;
+      } else {
+        /*
+         * The unprefixed → prefixed redirect (§16.1). Two things it must not
+         * lose:
+         *
+         *   - `search`. Drop it and `?token=…`, `?callbackUrl=…`, `?status=…`
+         *     all vanish on the first hop, silently breaking password reset,
+         *     email verification and redirect-back.
+         *   - nothing else — this is a REDIRECT, not a rewrite, deliberately.
+         *
+         * It doubles as the safety net that makes the <Link> migration
+         * incremental: a legacy `redirect("/login")` still lands correctly.
+         */
+        const target = new URL(
+          withLocale(pathname, negotiateLocale({ cookieLocale, acceptLanguage })) + search,
+          request.url,
+        );
+        return redirectTo(target, requestId, nonce);
+      }
+    } else {
+      locale = pathLocale;
+      bare = stripLocale(pathname);
     }
-    locale = pathLocale;
-    bare = stripLocale(pathname);
   }
 
   /*

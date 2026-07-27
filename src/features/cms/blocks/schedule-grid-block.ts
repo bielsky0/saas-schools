@@ -11,9 +11,7 @@ export const scheduleGridBlock: Block = {
     },
     {
       name: "groupTypeIds",
-      type: "select",
-      hasMany: true,
-      options: [],
+      type: "json",
       admin: {
         components: {
           Field: "/src/features/cms/components/group-type-picker.client#GroupTypePicker",
