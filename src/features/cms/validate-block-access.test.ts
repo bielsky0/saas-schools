@@ -2,6 +2,9 @@ import { describe, expect, it } from "vitest";
 
 import { validateBlockAccess } from "./validate-block-access";
 
+// Only import from block-configs — never from block-registry (pulls in React/env)
+import { CORE_BLOCK_TYPES, isRegisteredBlock } from "./block-configs";
+
 const CORE_BLOCK = {
   blockType: "text",
   content: {},
@@ -17,11 +20,30 @@ const UNREGISTERED_BLOCK = {
   title: "Welcome",
 };
 
+const CUSTOM_BLOCK_WITH_GRANT = {
+  blockType: "hero_section",
+  title: "Welcome",
+};
+
+const CUSTOM_BLOCK_WITHOUT_GRANT = {
+  blockType: "pricing_table",
+  title: "Pricing",
+};
+
 const NESTED_UNREGISTERED = {
   blockType: "grid",
   cells: [
     {
       blocks: [UNREGISTERED_BLOCK],
+    },
+  ],
+};
+
+const NESTED_CUSTOM_WITHOUT_GRANT = {
+  blockType: "grid",
+  cells: [
+    {
+      blocks: [CUSTOM_BLOCK_WITHOUT_GRANT],
     },
   ],
 };
@@ -85,17 +107,36 @@ describe("validateBlockAccess", () => {
     });
   });
 
-  describe("custom blocks (require grant) — will be tested in 30d when custom blocks are in registry", () => {
-    it("unregistered custom block is rejected as unknown (core blocks only in 30b)", () => {
-      const result = validateBlockAccess([UNREGISTERED_BLOCK], EMPTY_GRANT);
+  describe("custom blocks (require grant)", () => {
+    it("rejects custom block without grant", () => {
+      const result = validateBlockAccess([CUSTOM_BLOCK_WITHOUT_GRANT], EMPTY_GRANT);
       expect(result.valid).toBe(false);
-      expect(result.errors[0]).toContain("Unknown block type");
+      expect(result.errors[0]).toContain('requires a grant');
     });
 
-    it("unregistered nested inside grid is also unknown", () => {
-      const result = validateBlockAccess([NESTED_UNREGISTERED], EMPTY_GRANT);
+    it("passes custom block with grant", () => {
+      const grants = new Set(["hero_section"]);
+      const result = validateBlockAccess([CUSTOM_BLOCK_WITH_GRANT], grants);
+      expect(result.valid).toBe(true);
+    });
+
+    it("rejects custom block nested inside grid without grant", () => {
+      const result = validateBlockAccess([NESTED_CUSTOM_WITHOUT_GRANT], EMPTY_GRANT);
       expect(result.valid).toBe(false);
-      expect(result.errors[0]).toContain("Unknown block type");
+      expect(result.errors[0]).toContain('requires a grant');
+    });
+
+    it("passes custom block nested inside grid with grant", () => {
+      const grants = new Set(["pricing_table"]);
+      const result = validateBlockAccess([NESTED_CUSTOM_WITHOUT_GRANT], grants);
+      expect(result.valid).toBe(true);
+    });
+
+    it("rejects custom block with grant for different block key", () => {
+      const grants = new Set(["contact_form"]);
+      const result = validateBlockAccess([CUSTOM_BLOCK_WITH_GRANT], grants);
+      expect(result.valid).toBe(false);
+      expect(result.errors[0]).toContain('requires a grant');
     });
   });
 

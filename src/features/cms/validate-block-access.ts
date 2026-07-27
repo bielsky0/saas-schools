@@ -1,4 +1,4 @@
-import { CORE_BLOCK_TYPES, isRegisteredBlock } from "./block-registry";
+import { CORE_BLOCK_TYPES, isRegisteredBlock } from "./block-configs";
 
 const MAX_DEPTH = 10;
 

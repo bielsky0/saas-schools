@@ -5,49 +5,49 @@ import {
   ButtonBlock,
   ColumnBlock,
   GridBlock,
+  HeroSection,
   ImageBlock,
+  PricingTable,
+  ScheduleGrid,
   SeparatorBlock,
   TextBlock,
-  accordionBlock,
-  buttonBlock,
-  columnBlock,
-  gridBlock,
-  imageBlock,
-  separatorBlock,
-  textBlock,
+  ContactForm,
 } from "./blocks";
 import type { BlockComponent } from "./blocks/types";
+import { BLOCK_CONFIGS, CORE_BLOCK_TYPES } from "./block-configs";
 
 type RegistryEntry = {
   type: "core" | "custom";
   payloadConfig: Block;
   component: BlockComponent;
+  featureKey?: string;
 };
 
-export const BLOCK_REGISTRY: Record<string, RegistryEntry> = {
-  grid: { type: "core", payloadConfig: gridBlock, component: GridBlock },
-  column: { type: "core", payloadConfig: columnBlock, component: ColumnBlock },
-  text: { type: "core", payloadConfig: textBlock, component: TextBlock },
-  button: { type: "core", payloadConfig: buttonBlock, component: ButtonBlock },
-  image: { type: "core", payloadConfig: imageBlock, component: ImageBlock },
-  separator: { type: "core", payloadConfig: separatorBlock, component: SeparatorBlock },
-  accordion: { type: "core", payloadConfig: accordionBlock, component: AccordionBlock },
+function buildRegistry(): Record<string, RegistryEntry> {
+  const registry: Record<string, RegistryEntry> = {};
+  for (const [key, config] of Object.entries(BLOCK_CONFIGS)) {
+    const component = COMPONENT_MAP[key];
+    if (!component) continue;
+    registry[key] = { ...config, component };
+  }
+  return registry;
+}
+
+const COMPONENT_MAP: Record<string, BlockComponent> = {
+  grid: GridBlock,
+  column: ColumnBlock,
+  text: TextBlock,
+  button: ButtonBlock,
+  image: ImageBlock,
+  separator: SeparatorBlock,
+  accordion: AccordionBlock,
+  hero_section: HeroSection,
+  pricing_table: PricingTable,
+  contact_form: ContactForm,
+  schedule_grid: ScheduleGrid,
 };
 
-export const CORE_BLOCK_TYPES: ReadonlySet<string> = new Set(
-  Object.values(BLOCK_REGISTRY)
-    .filter((e) => e.type === "core")
-    .map((e) => e.payloadConfig.slug),
-);
-
-export function isRegisteredBlock(blockType: string): boolean {
-  return blockType in BLOCK_REGISTRY;
-}
-
-export function isCoreBlock(blockType: string): boolean {
-  const entry = BLOCK_REGISTRY[blockType];
-  return entry !== undefined && entry.type === "core";
-}
+export const BLOCK_REGISTRY: Record<string, RegistryEntry> = buildRegistry();
 
 export function getBlockComponent(blockType: string): BlockComponent | null {
   const entry = BLOCK_REGISTRY[blockType];
@@ -55,5 +55,17 @@ export function getBlockComponent(blockType: string): BlockComponent | null {
 }
 
 export function getAllBlockConfigs(): Block[] {
-  return Object.values(BLOCK_REGISTRY).map((e) => e.payloadConfig);
+  return Object.values(BLOCK_CONFIGS).map((e) => e.payloadConfig);
 }
+
+export function getCustomBlockKeys(): string[] {
+  return Object.entries(BLOCK_CONFIGS)
+    .filter(([, e]) => e.type === "custom")
+    .map(([key]) => key);
+}
+
+export function getCustomBlockEntries(): [string, RegistryEntry][] {
+  return Object.entries(BLOCK_REGISTRY).filter(([, e]) => e.type === "custom");
+}
+
+export { isRegisteredBlock, isCoreBlock, CORE_BLOCK_TYPES } from "./block-configs";

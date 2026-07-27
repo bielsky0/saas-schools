@@ -5,3 +5,7 @@ export { buttonBlock, ButtonBlock } from "./button";
 export { imageBlock, ImageBlock } from "./image";
 export { separatorBlock, SeparatorBlock } from "./separator";
 export { accordionBlock, AccordionBlock } from "./accordion";
+export { heroSectionBlock, HeroSection } from "./hero-section";
+export { pricingTableBlock, PricingTable } from "./pricing-table";
+export { contactFormBlock, ContactForm } from "./contact-form";
+export { scheduleGridBlock, ScheduleGrid } from "./schedule-grid";

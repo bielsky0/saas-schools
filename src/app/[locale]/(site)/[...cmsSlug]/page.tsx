@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
 import { servedOrganization } from "@/features/organizations/served-org";
 import { getPage } from "@/features/cms/data";
@@ -15,11 +16,27 @@ import { withTenant } from "@/lib/db/tenant";
  */
 export const dynamic = "force-dynamic";
 
-export default async function CmsPage({
-  params,
-}: {
+type CmsPageProps = {
   params: Promise<{ cmsSlug: string[] }>;
-}) {
+};
+
+export async function generateMetadata({ params }: CmsPageProps): Promise<Metadata> {
+  const org = await servedOrganization();
+  if (!org) return {};
+
+  const { cmsSlug } = await params;
+  const slug = cmsSlug.join("/");
+
+  const page = await withTenant(org.id, (tx) => getPage(tx, org.id, slug));
+  if (!page) return {};
+
+  return {
+    title: page.title,
+    description: (page as Record<string, unknown>).seoDescription as string ?? undefined,
+  };
+}
+
+export default async function CmsPage({ params }: CmsPageProps) {
   const org = await servedOrganization();
   if (!org) notFound();
 

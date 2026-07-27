@@ -1,5 +1,7 @@
 import { and, eq } from "drizzle-orm";
 
+import { withSystemBypass } from "@/lib/db/system";
+
 import type { TenantDb } from "@/lib/db/tenant";
 import { tenantBlockAccess as tenantBlockAccessTable } from "@/lib/db/schema/cms-tenant-block-access";
 
@@ -65,4 +67,24 @@ export async function revokeBlock(
     )
     .returning({ id: tenantBlockAccessTable.id });
   return !!row;
+}
+
+export type GrantRow = {
+  organizationId: string;
+  blockKey: string;
+  grantedAt: Date;
+  grantedByUserId: string;
+};
+
+export async function listAllGrants(): Promise<GrantRow[]> {
+  return withSystemBypass("cms-blocks list all grants", async (tx) => {
+    return tx
+      .select({
+        organizationId: tenantBlockAccessTable.organizationId,
+        blockKey: tenantBlockAccessTable.blockKey,
+        grantedAt: tenantBlockAccessTable.grantedAt,
+        grantedByUserId: tenantBlockAccessTable.grantedByUserId,
+      })
+      .from(tenantBlockAccessTable);
+  });
 }
