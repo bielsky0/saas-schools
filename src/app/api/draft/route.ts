@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 import { env } from "@/lib/env/server";
 import { requireOrgPermission } from "@/features/organizations/context";
+import { buildTenantOriginUrl } from "@/features/cms/preview-url";
 
 /**
  * Enable Next.js Draft Mode for CMS Live Preview (Faza 30e).
@@ -14,6 +15,10 @@ import { requireOrgPermission } from "@/features/organizations/context";
  *
  * RBAC is checked HERE at cookie-issuance time, NOT in the renderer. See
  * [...cmsSlug]/page.tsx for the rationale.
+ *
+ * The redirect URL is built from the Host header (not `request.url`) to
+ * preserve the tenant subdomain — `request.url` may be normalised to the
+ * server's listening address and lose it.
  */
 export async function GET(request: Request): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
@@ -31,6 +36,10 @@ export async function GET(request: Request): Promise<NextResponse> {
   const draft = await draftMode();
   draft.enable();
 
-  const redirectUrl = new URL(`/${slug}`, request.url);
-  return NextResponse.redirect(redirectUrl);
+  const host = request.headers.get("host") || "";
+  const redirectTo = buildTenantOriginUrl(host, `/${slug}`);
+  if (!redirectTo) {
+    return NextResponse.json({ error: "Not a tenant request" }, { status: 400 });
+  }
+  return NextResponse.redirect(redirectTo);
 }

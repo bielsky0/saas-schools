@@ -6,7 +6,12 @@ import { gridColumnsClass, gapClass } from "./style-dictionary";
 export function buildGridBlock(availableBlocks: Block[]): Block {
   return {
     slug: "grid",
-    admin: { group: "Layout" },
+    admin: {
+      group: "Layout",
+      components: {
+        Label: "/src/features/cms/admin/block-row-label#RowLabel",
+      },
+    },
     fields: [
       {
         name: "columns",
@@ -34,11 +39,17 @@ export function buildGridBlock(availableBlocks: Block[]): Block {
             name: "blocks",
             type: "blocks",
             blocks: availableBlocks,
+            admin: {
+              components: {
+                Field:
+                  "/src/features/cms/components/drawer-blocks-field.client#DrawerBlocksField",
+              },
+            },
           },
         ],
       },
     ],
-  };
+  } as Block;
 }
 
 type GridBlockProps = {

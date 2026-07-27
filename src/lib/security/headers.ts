@@ -22,8 +22,9 @@ export const STATIC_SECURITY_HEADERS = Object.freeze({
   // how an uploaded "image" gets served back as an executable script.
   "X-Content-Type-Options": "nosniff",
   // Legacy companion to CSP's frame-ancestors, for browsers predating CSP Level
-  // 2. DENY rather than SAMEORIGIN: nothing here is designed to be framed.
-  "X-Frame-Options": "DENY",
+  // 2. SAMEORIGIN allows the Payload admin panel Live Preview to embed the
+  // tenant page in an iframe — both live on the same origin (§admin/live-preview).
+  "X-Frame-Options": "SAMEORIGIN",
   // Full URL same-origin, bare origin cross-origin, nothing when downgrading to
   // http. Keeps the one-time tokens this app puts in query strings (invitation,
   // unsubscribe, password reset, email verification) out of third-party referer

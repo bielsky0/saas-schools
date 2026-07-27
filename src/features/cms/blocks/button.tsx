@@ -2,9 +2,14 @@ import type { Block } from "payload";
 
 import { buttonSizeClass, buttonVariantClass } from "./style-dictionary";
 
-export const buttonBlock: Block = {
+export const buttonBlock = {
   slug: "button",
-  admin: { group: "Treść" },
+  admin: {
+    group: "Treść",
+    components: {
+      Label: "/src/features/cms/admin/block-row-label#RowLabel",
+    },
+  },
   fields: [
     {
       name: "label",
@@ -37,7 +42,7 @@ export const buttonBlock: Block = {
       defaultValue: "medium",
     },
   ],
-};
+} as Block;
 
 type ButtonBlockProps = {
   label: string;

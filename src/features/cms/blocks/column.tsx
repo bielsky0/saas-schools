@@ -4,7 +4,12 @@ import type React from "react";
 export function buildColumnBlock(availableBlocks: Block[]): Block {
   return {
     slug: "column",
-    admin: { group: "Layout" },
+    admin: {
+      group: "Layout",
+      components: {
+        Label: "/src/features/cms/admin/block-row-label#RowLabel",
+      },
+    },
     fields: [
       {
         name: "blocks",
@@ -12,7 +17,7 @@ export function buildColumnBlock(availableBlocks: Block[]): Block {
         blocks: availableBlocks,
       },
     ],
-  };
+  } as Block;
 }
 
 type ColumnBlockProps = {

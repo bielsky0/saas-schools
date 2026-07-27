@@ -2,9 +2,14 @@ import type { Block } from "payload";
 
 import { CMS_LEXICAL_EDITOR } from "../lexical-editor"
 
-export const textBlock: Block = {
+export const textBlock = {
   slug: "text",
-  admin: { group: "Treść" },
+  admin: {
+    group: "Treść",
+    components: {
+      Label: "/src/features/cms/admin/block-row-label#RowLabel",
+    },
+  },
   fields: [
     {
       name: "content",
@@ -13,7 +18,7 @@ export const textBlock: Block = {
       editor: CMS_LEXICAL_EDITOR,
     },
   ],
-};
+} as Block;
 
 type TextBlockProps = {
   content: unknown;

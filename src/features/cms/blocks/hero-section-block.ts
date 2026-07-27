@@ -1,9 +1,14 @@
 import type { Block } from "payload";
 
-export const heroSectionBlock: Block = {
+export const heroSectionBlock = {
   slug: "hero_section",
   labels: { singular: "Hero Section", plural: "Hero Sections" },
-  admin: { group: "Sekcje" },
+  admin: {
+    group: "Sekcje",
+    components: {
+      Label: "/src/features/cms/admin/block-row-label#RowLabel",
+    },
+  },
   fields: [
     {
       name: "title",
@@ -38,4 +43,4 @@ export const heroSectionBlock: Block = {
       defaultValue: "center",
     },
   ],
-};
+} as Block;

@@ -162,10 +162,13 @@ export function buildCsp(nonce: string): string {
     // Forms may only submit same-origin. Hosted checkout is reached by REDIRECT
     // (spec 5.3), not by cross-origin form POST, so this does not constrain it.
     `form-action 'self'`,
-    // Clickjacking: the modern counterpart to X-Frame-Options: DENY.
-    `frame-ancestors 'none'`,
-    // No frames at all today; state it rather than leaving it to default-src.
-    `frame-src 'none'`,
+    // Clickjacking: the modern counterpart to X-Frame-Options: SAMEORIGIN.
+    // 'self' allows the Payload admin panel Live Preview to embed the tenant
+    // page in an iframe — both live on the same origin (§admin/live-preview).
+    `frame-ancestors 'self'`,
+    // 'self' allows the Payload admin panel Live Preview to load the page in
+    // an iframe — both live on the same origin (§admin/live-preview).
+    `frame-src 'self'`,
     /*
      * Only when the app is actually SERVED over https — and that condition is
      * not paranoia, it is a bug this cost real time to find.

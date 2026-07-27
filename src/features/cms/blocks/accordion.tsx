@@ -2,9 +2,14 @@ import type { Block } from "payload";
 
 import { CMS_LEXICAL_EDITOR } from "../lexical-editor"
 
-export const accordionBlock: Block = {
+export const accordionBlock = {
   slug: "accordion",
-  admin: { group: "Treść" },
+  admin: {
+    group: "Treść",
+    components: {
+      Label: "/src/features/cms/admin/block-row-label#RowLabel",
+    },
+  },
   fields: [
     {
       name: "items",
@@ -24,7 +29,7 @@ export const accordionBlock: Block = {
       ],
     },
   ],
-};
+} as Block;
 
 type AccordionItem = {
   title: string;

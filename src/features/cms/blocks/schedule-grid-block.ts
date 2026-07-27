@@ -1,9 +1,14 @@
 import type { Block } from "payload";
 
-export const scheduleGridBlock: Block = {
+export const scheduleGridBlock = {
   slug: "schedule_grid",
   labels: { singular: "Schedule Grid", plural: "Schedule Grids" },
-  admin: { group: "Sekcje" },
+  admin: {
+    group: "Sekcje",
+    components: {
+      Label: "/src/features/cms/admin/block-row-label#RowLabel",
+    },
+  },
   fields: [
     {
       name: "title",
@@ -26,5 +31,5 @@ export const scheduleGridBlock: Block = {
       max: 50,
     },
   ],
-};
+} as Block;
 

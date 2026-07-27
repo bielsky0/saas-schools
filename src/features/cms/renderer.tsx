@@ -11,7 +11,7 @@ async function getRichText(): Promise<ComponentType<{ data: unknown }>> {
   if (!_richText) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mod: any = await import("@payloadcms/richtext-lexical/react");
-    _richText = (mod.LexicalRenderer ?? mod.default) as ComponentType<{ data: unknown }>;
+    _richText = mod.RichText as ComponentType<{ data: unknown }>;
   }
   return _richText;
 }

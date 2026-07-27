@@ -1,9 +1,14 @@
 import type { Block } from "payload";
 
-export const pricingTableBlock: Block = {
+export const pricingTableBlock = {
   slug: "pricing_table",
   labels: { singular: "Pricing Table", plural: "Pricing Tables" },
-  admin: { group: "Sekcje" },
+  admin: {
+    group: "Sekcje",
+    components: {
+      Label: "/src/features/cms/admin/block-row-label#RowLabel",
+    },
+  },
   fields: [
     {
       name: "title",
@@ -49,4 +54,4 @@ export const pricingTableBlock: Block = {
       ],
     },
   ],
-};
+} as Block;

@@ -6,6 +6,10 @@ import { Pool } from "pg";
 
 import { env } from "@/lib/env/server";
 
+
+
+import { buildPreviewUrl } from "./preview-url";
+
 import { pagesCollection } from "./collections/pages";
 import { mediaCollection } from "./collections/media";
 import { themeCollection } from "./collections/theme";
@@ -67,7 +71,16 @@ export default buildConfig({
     meta: {
       titleSuffix: " — Langlion CMS",
     },
+    livePreview: {
+      url: ({ data, req }) => {
+        const host = req.headers.get("host") || "";
+        const slug = (data.slug as string) || "";
+        return buildPreviewUrl(host, slug);
+      },
+      collections: ["pages"],
+    },
     components: {
+      Nav: "/src/features/cms/admin/components/nav#AdminNav",
       graphics: {
         Logo: "/src/features/cms/admin/components/logo#AdminLogo",
         Icon: "/src/features/cms/admin/components/icon#AdminIcon",

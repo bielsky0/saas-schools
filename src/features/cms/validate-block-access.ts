@@ -39,7 +39,7 @@ export function validateBlockAccess(
       }
 
       if (!CORE_BLOCK_TYPES.has(blockType) && !grantedKeys.has(blockType)) {
-        errors.push(`Block "${blockType}" requires a grant`);
+        errors.push(`Blok "${blockType}" wymaga dodatkowego dostępu. Skontaktuj się z administratorem platformy.`);
         continue;
       }
 

@@ -1,9 +1,14 @@
 import type { Block } from "payload";
 
-export const contactFormBlock: Block = {
+export const contactFormBlock = {
   slug: "contact_form",
   labels: { singular: "Contact Form", plural: "Contact Forms" },
-  admin: { group: "Sekcje" },
+  admin: {
+    group: "Sekcje",
+    components: {
+      Label: "/src/features/cms/admin/block-row-label#RowLabel",
+    },
+  },
   fields: [
     {
       name: "title",
@@ -32,4 +37,4 @@ export const contactFormBlock: Block = {
       },
     },
   ],
-};
+} as Block;

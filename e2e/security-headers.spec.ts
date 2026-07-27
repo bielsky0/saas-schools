@@ -91,7 +91,7 @@ test("CSP is nonced, default-deny, and never allows inline script", async ({ req
   expect(csp).toContain("object-src 'none'");
   expect(csp).toContain("base-uri 'self'");
   expect(csp).toContain("form-action 'self'");
-  expect(csp).toContain("frame-ancestors 'none'");
+  expect(csp).toContain("frame-ancestors 'self'");
 
   /*
    * The load-bearing assertion of this file. 'unsafe-inline' or 'unsafe-eval' in

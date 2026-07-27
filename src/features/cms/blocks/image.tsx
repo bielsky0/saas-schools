@@ -1,8 +1,13 @@
 import type { Block } from "payload";
 
-export const imageBlock: Block = {
+export const imageBlock = {
   slug: "image",
-  admin: { group: "Treść" },
+  admin: {
+    group: "Treść",
+    components: {
+      Label: "/src/features/cms/admin/block-row-label#RowLabel",
+    },
+  },
   fields: [
     {
       name: "media",
@@ -19,7 +24,7 @@ export const imageBlock: Block = {
       type: "text",
     },
   ],
-};
+} as Block;
 
 type ImageBlockProps = {
   alt?: string | null;

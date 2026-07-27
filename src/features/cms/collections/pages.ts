@@ -1,12 +1,13 @@
 import type { CollectionConfig } from "payload";
-import { sql } from "drizzle-orm";
-
-import { parseHost } from "@/lib/tenant-host";
+import { APIError } from "payload";
+import { eq } from "drizzle-orm";
 
 import { getAllBlockConfigs, isRegisteredBlock } from "../block-registry";
+import { buildPreviewUrl } from "../preview-url";
 import { validateBlockAccess } from "../validate-block-access";
 import { CORE_BLOCK_TYPES } from "../block-registry";
 import { setTenantContext } from "../tenant-context";
+import { tenantBlockAccess } from "@/lib/db/schema/cms-tenant-block-access";
 
 const ALL_BLOCKS = getAllBlockConfigs();
 
@@ -18,15 +19,9 @@ export const pagesCollection: CollectionConfig = {
     useAsTitle: "title",
     group: "CMS",
     preview: (doc, { req }) => {
-      // Lazy import to avoid t3-env validation at module load time (tests
-      // that import pagesCollection don't set up full server env).
-      const rootDomain = process.env.APP_ROOT_DOMAIN || "localhost";
-      const secret = process.env.PAYLOAD_DRAFT_SECRET || "";
       const host = req.headers.get("host") || "";
-      const parsed = parseHost(host, rootDomain);
-      if (parsed.kind !== "tenant") return null;
       const slug = (doc.slug as string) || "";
-      return `https://${parsed.subdomain}.${rootDomain}/api/draft?secret=${secret}&slug=${slug}`;
+      return buildPreviewUrl(host, slug);
     },
   },
   versions: { drafts: true },
@@ -80,24 +75,31 @@ export const pagesCollection: CollectionConfig = {
         const orgId = (data as Record<string, unknown>)?.organizationId as string | undefined;
         if (!orgId) return;
 
-        // Query tenant_block_access via drizzle
+        // Query tenant_block_access via drizzle ORM (not raw SQL — Payload's
+        // drizzle wrapper doesn't reliably expose result.rows from execute())
         const payloadReq = req as unknown as { payload?: { db?: { drizzle: object } } };
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const drizzleHandle = payloadReq.payload?.db?.drizzle as any;
         if (!drizzleHandle) return;
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const rows: any = await drizzleHandle.execute(
-          sql`SELECT block_key FROM tenant_block_access WHERE organization_id = ${orgId}`,
-        );
+        const blockRows: any = await drizzleHandle
+          .select({ blockKey: tenantBlockAccess.blockKey })
+          .from(tenantBlockAccess)
+          .where(eq(tenantBlockAccess.organizationId, orgId));
 
         const grantedKeys = new Set(
-          (rows as unknown as { blockKey: string }[]).map((r) => r.blockKey),
+          (blockRows as { blockKey: string }[]).map((r) => r.blockKey),
         );
 
-        const result = validateBlockAccess(blocks, grantedKeys);
-        if (!result.valid) {
-          throw new Error(result.errors.join("; "));
+        const accessResult = validateBlockAccess(blocks, grantedKeys);
+        if (!accessResult.valid) {
+          throw new APIError(
+            accessResult.errors.join("; "),
+            400,
+            null,
+            true,
+          );
         }
       },
     ],
