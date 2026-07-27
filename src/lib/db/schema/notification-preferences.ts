@@ -22,6 +22,7 @@ export const notificationPreference = pgTable(
     recipientId: text("recipient_id")
       .notNull()
       .default(sql`''`),
+    smsEnabled: boolean("sms_enabled").notNull().default(true),
     emailEnabled: boolean("email_enabled").notNull().default(true),
     eventType: text("event_type").references(() => notificationEventType.code, {
       onDelete: "set null",

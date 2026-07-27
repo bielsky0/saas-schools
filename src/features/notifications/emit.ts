@@ -3,9 +3,10 @@ import { and, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import type { JobWriter } from "@/lib/adapters/jobs";
 import { enqueueEmail } from "@/features/emails/send";
+import { enqueueJob } from "@/features/jobs/enqueue";
 import { enqueueNotification } from "@/features/notifications/send";
 import type { TemplateName } from "@/lib/adapters/email";
-import { notificationEventType, notificationPreference } from "@/lib/db/schema";
+import { client, notificationEventType, notificationPreference } from "@/lib/db/schema";
 
 export type DomainNotificationRecipient =
   | { kind: "staff"; userId: string; email: string; name?: string; locale: string }
@@ -36,7 +37,7 @@ async function readEventType(eventType: string) {
 async function readPreference(
   eventType: string,
   recipient: DomainNotificationRecipient,
-): Promise<{ inAppEnabled: boolean; emailEnabled: boolean }> {
+): Promise<{ inAppEnabled: boolean; emailEnabled: boolean; smsEnabled: boolean }> {
   const recipientType = recipient.kind === "staff" ? "staff" : "client";
   const recipientId = recipient.kind === "staff" ? recipient.userId : recipient.clientId;
 
@@ -44,6 +45,7 @@ async function readPreference(
     .select({
       inAppEnabled: notificationPreference.inAppEnabled,
       emailEnabled: notificationPreference.emailEnabled,
+      smsEnabled: notificationPreference.smsEnabled,
     })
     .from(notificationPreference)
     .where(
@@ -55,7 +57,16 @@ async function readPreference(
     )
     .limit(1);
 
-  return row ?? { inAppEnabled: true, emailEnabled: true };
+  return row ?? { inAppEnabled: true, emailEnabled: true, smsEnabled: true };
+}
+
+async function resolveClientPhone(clientId: string): Promise<string | null> {
+  const [row] = await db
+    .select({ phone: client.phone })
+    .from(client)
+    .where(eq(client.id, clientId))
+    .limit(1);
+  return row?.phone ?? null;
 }
 
 const EMAIL_TEMPLATE_MAP: Record<string, TemplateName> = {
@@ -110,7 +121,13 @@ export async function emitDomainNotification(
       eventType.defaultChannels.includes("in_app") &&
       (eventType.isOverridable ? prefs.inAppEnabled : true);
 
-    if (!useEmail && !useInApp) continue;
+    const useSms =
+      eventType.defaultChannels.includes("sms") &&
+      (eventType.isOverridable ? prefs.smsEnabled : true);
+
+    if (!useEmail && !useInApp && !useSms) continue;
+
+    const channelsSent: string[] = [];
 
     if (useEmail) {
       await enqueueEmail(
@@ -120,6 +137,20 @@ export async function emitDomainNotification(
         { to: recipient.email, name: recipient.name, locale: recipient.locale as any },
         { dedupeKey: `email:${input.dedupeBasis}:${recipient.email.toLowerCase()}` },
       );
+      channelsSent.push("email");
+    }
+
+    if (useSms && recipient.kind === "client") {
+      const phone = await resolveClientPhone(recipient.clientId);
+      if (phone) {
+        await enqueueJob(
+          writer,
+          "sms.send",
+          { phone, body: input.params.message as string ?? "" },
+          { dedupeKey: `sms:${input.dedupeBasis}:${phone}` },
+        );
+        channelsSent.push("sms");
+      }
     }
 
     if (useInApp) {
@@ -141,7 +172,7 @@ export async function emitDomainNotification(
           recipientType: recipient.kind,
           recipientId,
           eventType: input.eventType,
-          channelSent: ["in_app"],
+          channelSent: channelsSent,
         },
         { dedupeKey: `notif:${input.dedupeBasis}:${recipient.kind}:${recipientId}` },
       );

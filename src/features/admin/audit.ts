@@ -346,6 +346,12 @@ export const AUDIT_ACTIONS = [
   "waitlist.converted",
   "waitlist.offer_expired",
   "waitlist.removed_by_admin",
+  // Faza 35 — SMS / broadcast (plan faza-33-36.md §35).
+  //
+  // `broadcast.sent` — each send logged with recipient_count and channel in metadata.
+  // `sms_credit.topup` — organization SMS credit refill.
+  "broadcast.sent",
+  "sms_credit.topup",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -413,7 +419,10 @@ export type AuditTargetType =
   // Faza 32 — Custom domains
   | "custom_domain"
   // Faza 33 — Waitlist
-  | "waitlist_entry";
+  | "waitlist_entry"
+  // Faza 35 — SMS / broadcast
+  | "broadcast_message"
+  | "organization_sms_credit";
 
 /**
  * WHO acted, as a kind — §6.4's actor model. A different question from WHICH

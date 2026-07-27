@@ -226,6 +226,9 @@ export const env = createEnv({
     //   server action refuses, and the switcher/CTAs are gone. Existing org rows
     //   are retained and untouched — just unreachable from the tenant UI.
     MULTI_TENANCY_MODE: z.enum(["required", "optional", "disabled"]).default("required"),
+    SMS_PROVIDER: z.enum(["log", "smsapi"]).default("log"),
+    SMSAPI_API_KEY: z.string().optional(),
+    SMSAPI_SENDER_NAME: z.string().optional(),
   },
   // Server vars are read straight from process.env in the Node runtime.
   experimental__runtimeEnv: {},

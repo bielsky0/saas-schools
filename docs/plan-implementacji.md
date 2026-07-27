@@ -47,4 +47,5 @@ Ten plik jest nadal **jedynym trwałym źródłem prawdy o planie i postępie** 
 | **Fazy 30–32 — Website Builder + Overbooking + Custom Domains (plan przyszłości)** | [docs/plan/faza-30-32.md](plan/faza-30-32.md) | Faza 30-spike ✅ (2026-07-26), Faza 30a ✅ (2026-07-26), Faza 30b ✅ (2026-07-26), Faza 30c ✅ (2026-07-26), Faza 30d ✅ (2026-07-27), Faza 31 ✅ (2026-07-27), Faza 32 ✅ (2026-07-27) |
 | Faza 33 — Listy rezerwowe (waitlist)                                               | [docs/plan/faza-33-36.md](plan/faza-33-36.md)                                   | ✅ zakończona (2026-07-27) |
 | Faza 34 — Zajęcia online (link do spotkania)                                       | [docs/plan/faza-33-36.md](plan/faza-33-36.md)                                   | ✅ zakończona (2026-07-27) |
+| **Faza 35 — SMS i masowe wiadomości do grup (broadcast)**                          | [docs/plan/faza-33-36.md](plan/faza-33-36.md)                                   | ✅ zakończona (2026-07-27) |
 | Ryzyka i otwarte pytania                                                         | [docs/plan/ryzyka-i-otwarte-pytania.md](plan/ryzyka-i-otwarte-pytania.md)     |

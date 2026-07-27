@@ -12,6 +12,7 @@ import { refundsRecoverHandler } from "@/features/credits/refund-recover";
 import { pricingSyncSubscriptionHandler, pricingDeactivateExpiredHandler } from "@/features/pricing/handler";
 import { releaseExpiredPendingHandler } from "@/features/bookings/release-expired";
 import { waitlistExpireHandler } from "@/features/bookings/waitlist-expire";
+import { smsSendHandler } from "@/features/messaging/sms-handler";
 import { jobPruneHandler } from "./handler";
 
 /**
@@ -44,4 +45,5 @@ export const registry: JobRegistry = {
   "pricing.deactivate_expired_overrides": pricingDeactivateExpiredHandler,
   "bookings.release_expired_pending": releaseExpiredPendingHandler,
   "waitlist.expire_offers": waitlistExpireHandler,
+  "sms.send": smsSendHandler,
 };

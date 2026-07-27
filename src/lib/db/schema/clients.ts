@@ -39,6 +39,7 @@ export const client = pgTable(
     email: text("email").notNull(),
     phone: text("phone"),
     name: text("name"),
+    smsOptOut: boolean("sms_opt_out").notNull().default(false),
     isVerified: boolean("isVerified").notNull().default(false),
     passwordHash: text("password_hash"),
     passwordSetAt: timestamp("password_set_at"),

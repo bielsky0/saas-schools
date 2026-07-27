@@ -210,7 +210,17 @@ export type Permission =
   /** View and manage the waitlist queue for full sessions — view position,
    * manually remove an entry, reorder. Owner, Admin, Sekretariat — same
    * circle as `group_swap.approve` / `interest.manage` (§2.10). */
-  | "waitlist.manage";
+  | "waitlist.manage"
+  // ── Faza 35 — SMS / broadcast (plan faza-33-36.md §35) ──────────────
+  //
+  /** Send ad-hoc broadcast messages (SMS or email) to selected audiences.
+   * Owner, Admin, Reception — Reception handles desk-side communication
+   * with clients, the same extension of role as `credits.confirm_on_site`. */
+  | "messages.broadcast"
+  /** Top up and monitor the organization's SMS credit balance. Owner-only
+   * — a financial decision for the organization, same pattern as
+   * `billing_connect.manage` (§2.10 spec). */
+  | "sms_credit.manage";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -273,6 +283,8 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "cms.manage",
     "custom_domain.manage",
     "waitlist.manage",
+    "messages.broadcast",
+    "sms_credit.manage",
   ],
   // Admin manages people and settings, but NOT money.
   //
@@ -327,6 +339,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "lesson_log.manage",
     "cms.manage",
     "waitlist.manage",
+    "messages.broadcast",
   ],
   /**
    * The three langlion staff roles (§2.10).
@@ -378,6 +391,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "invoices.mark_issued",
     "athlete_health.view",
     "extra_fees.manage",
+    "messages.broadcast",
   ],
   trainer: [
     "organization.leave",

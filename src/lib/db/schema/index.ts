@@ -147,3 +147,5 @@ export * from "./cms-tenant-block-access";
 export * from "./contact-form-submissions";
 export * from "./custom-domains";
 export * from "./waitlist-entry";
+export * from "./broadcast-message";
+export * from "./organization-sms-credit";

@@ -68,7 +68,8 @@ export type JobName =
   | "pricing.sync_subscription_price"
   | "pricing.deactivate_expired_overrides"
   | "bookings.release_expired_pending"
-  | "waitlist.expire_offers";
+  | "waitlist.expire_offers"
+  | "sms.send";
 
 /**
  * `email.send`'s `template` is `string`, not the email adapter's `TemplateName`:
@@ -223,6 +224,11 @@ export interface JobPayloads {
    * next in line. Cron-shaped, no payload: the handler scans all tenants.
    */
   "waitlist.expire_offers": Record<string, never>;
+  "sms.send": {
+    phone: string;
+    body: string;
+    broadcastMessageId?: string;
+  };
 }
 
 export interface EnqueueOptions {
