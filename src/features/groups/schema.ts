@@ -67,6 +67,8 @@ export function createGroupTypeSchema(t: ValidationTranslator) {
       status: groupTypeStatus.default("scheduled"),
       /** Faza 26 (§2.40, EPIK 41) — this offer requires a qualification card for camp/colony. */
       requiresQualificationCard: z.boolean().default(false),
+      /** Faza 36 — marks this offer as a trial for conversion tracking. Purely descriptive. */
+      isTrialOffer: z.boolean().default(false),
       /** Faza 33 — enable waitlist queue for full sessions. Only valid for
        * Schedule-First / Availability-First engines (enforced in refine below). */
       waitlistEnabled: z.boolean().default(false),

@@ -48,4 +48,5 @@ Ten plik jest nadal **jedynym trwałym źródłem prawdy o planie i postępie** 
 | Faza 33 — Listy rezerwowe (waitlist)                                               | [docs/plan/faza-33-36.md](plan/faza-33-36.md)                                   | ✅ zakończona (2026-07-27) |
 | Faza 34 — Zajęcia online (link do spotkania)                                       | [docs/plan/faza-33-36.md](plan/faza-33-36.md)                                   | ✅ zakończona (2026-07-27) |
 | **Faza 35 — SMS i masowe wiadomości do grup (broadcast)**                          | [docs/plan/faza-33-36.md](plan/faza-33-36.md)                                   | ✅ zakończona (2026-07-27) |
+| **Faza 36 — Licznik konwersji trial → płatny per group_type**                      | [docs/plan/faza-33-36.md](plan/faza-33-36.md)                                   | ✅ zakończona (2026-07-27) |
 | Ryzyka i otwarte pytania                                                         | [docs/plan/ryzyka-i-otwarte-pytania.md](plan/ryzyka-i-otwarte-pytania.md)     |

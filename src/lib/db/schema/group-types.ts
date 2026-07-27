@@ -112,6 +112,11 @@ export const groupType = pgTable(
      * Availability-First engines — validated in the Zod schema/Server Action.
      */
     waitlistEnabled: boolean("waitlist_enabled").notNull().default(false),
+    /**
+     * Faza 36 (§2.34b) — marks this offer as a trial for conversion tracking.
+     * Purely descriptive, does NOT affect any booking/capacity/pricing logic.
+     */
+    isTrialOffer: boolean("is_trial_offer").notNull().default(false),
     defaultMeetingUrl: text("default_meeting_url"),
     /**
      * Default duration (minutes) and capacity for this group type (F17.5, EPIK 34).

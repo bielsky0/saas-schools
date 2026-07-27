@@ -929,6 +929,7 @@
       "status": "Status",
       "statusHint": "Oferty z harmonogramem pokazują kalendarz sesji. Zbieranie zainteresowania pokazuje formularz zgłoszenia.",
       "requiresQualificationCard": "Wymaga karty kwalifikacyjnej (obóz)",
+"isTrialOffer": "Oferta próbna (do śledzenia konwersji)",
       "submit": "Utwórz typ grupy",
       "submitting": "Tworzenie…",
       "save": "Zapisz zmiany",

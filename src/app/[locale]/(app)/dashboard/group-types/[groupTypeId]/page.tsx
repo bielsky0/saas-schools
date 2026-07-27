@@ -127,6 +127,7 @@ export default async function GroupTypeDetailPage({
               price: data.groupType.price,
               isNewClientOnly: data.groupType.isNewClientOnly,
               requiresQualificationCard: data.groupType.requiresQualificationCard,
+              isTrialOffer: data.groupType.isTrialOffer,
               defaultLocationId: data.groupType.defaultLocationId,
               defaultMeetingUrl: data.groupType.defaultMeetingUrl,
               policyDocumentId: data.groupType.policyDocumentId,

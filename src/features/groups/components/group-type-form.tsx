@@ -33,6 +33,7 @@ export type GroupTypeDefaults = {
   price: number;
   isNewClientOnly: boolean;
   requiresQualificationCard: boolean;
+  isTrialOffer: boolean;
   defaultLocationId: string | null;
   defaultMeetingUrl: string | null;
   policyDocumentId: string | null;
@@ -253,6 +254,16 @@ export function GroupTypeForm({
           className="accent-primary size-4"
         />
         {t("form.requiresQualificationCard")}
+      </label>
+
+      <label className="flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          name="isTrialOffer"
+          defaultChecked={defaults?.isTrialOffer ?? false}
+          className="accent-primary size-4"
+        />
+        {t("form.isTrialOffer")}
       </label>
 
       {policyDocuments ? (

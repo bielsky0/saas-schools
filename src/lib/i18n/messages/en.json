@@ -929,6 +929,7 @@
       "status": "Status",
       "statusHint": "Scheduled offers show a session calendar. Collecting interest shows a signup form instead.",
       "requiresQualificationCard": "Requires qualification card (camp)",
+"isTrialOffer": "Trial offer (for conversion tracking)",
       "submit": "Create group type",
       "submitting": "Creating…",
       "save": "Save changes",
