@@ -66,7 +66,8 @@ export type JobName =
   | "group_changes.expire"
   | "refunds.recover"
   | "pricing.sync_subscription_price"
-  | "pricing.deactivate_expired_overrides";
+  | "pricing.deactivate_expired_overrides"
+  | "bookings.release_expired_pending";
 
 /**
  * `email.send`'s `template` is `string`, not the email adapter's `TemplateName`:
@@ -211,6 +212,11 @@ export interface JobPayloads {
    * Runs daily via /api/cron/jobs. No payload — the handler scans all tenants.
    */
   "pricing.deactivate_expired_overrides": Record<string, never>;
+  /**
+   * F31 — Release seats held by `payment_pending` bookings older than 15 min.
+   * Cron-shaped, no payload: the handler scans all tenants.
+   */
+  "bookings.release_expired_pending": Record<string, never>;
 }
 
 export interface EnqueueOptions {

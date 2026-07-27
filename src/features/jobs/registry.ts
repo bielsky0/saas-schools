@@ -10,6 +10,7 @@ import { storagePurgeHandler } from "@/features/storage/purge";
 import { groupChangesExpireHandler } from "@/features/bookings/change-group-expire";
 import { refundsRecoverHandler } from "@/features/credits/refund-recover";
 import { pricingSyncSubscriptionHandler, pricingDeactivateExpiredHandler } from "@/features/pricing/handler";
+import { releaseExpiredPendingHandler } from "@/features/bookings/release-expired";
 import { jobPruneHandler } from "./handler";
 
 /**
@@ -40,4 +41,5 @@ export const registry: JobRegistry = {
   "refunds.recover": refundsRecoverHandler,
   "pricing.sync_subscription_price": pricingSyncSubscriptionHandler,
   "pricing.deactivate_expired_overrides": pricingDeactivateExpiredHandler,
+  "bookings.release_expired_pending": releaseExpiredPendingHandler,
 };

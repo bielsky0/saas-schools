@@ -113,6 +113,15 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   await jobs.enqueue(db, "pricing.deactivate_expired_overrides", {}, {
     dedupeKey: `pricing.deactivate_expired_overrides:${today}`,
   });
+  /*
+   * Release expired payment_pending bookings (Faza 31). Hourly, not daily — a
+   * missed run means a seat stays held for an extra day, which can cause genuine
+   * overbooking during peak hours. Uses thisHour to match the same dedupe cadence
+   * as ratelimit.prune.
+   */
+  await jobs.enqueue(db, "bookings.release_expired_pending", {}, {
+    dedupeKey: `bookings.release_expired_pending:${thisHour}`,
+  });
 
   const result = await jobs.drain(registry, { budgetMs: BATCH_BUDGET_MS });
   const stats = await jobStats();

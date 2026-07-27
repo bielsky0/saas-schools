@@ -205,6 +205,8 @@ export const AUDIT_ACTIONS = [
   "booking.cancel_admin",
   // Faza 16 — full reversal refund: cancels future bookings without issuing compensation credits.
   "booking.cancel_for_refund",
+  // F31 — Overbooking protection: system auto-cancels `payment_pending` bookings older than 15 min.
+  "booking.expire_pending",
   // Faza 15 — Group swap (EPIK 11) + credit transfer (US-7.5)
   "group_change.submit",
   "group_change.approve",
