@@ -112,6 +112,7 @@ export const groupType = pgTable(
      * Availability-First engines — validated in the Zod schema/Server Action.
      */
     waitlistEnabled: boolean("waitlist_enabled").notNull().default(false),
+    defaultMeetingUrl: text("default_meeting_url"),
     /**
      * Default duration (minutes) and capacity for this group type (F17.5, EPIK 34).
      *

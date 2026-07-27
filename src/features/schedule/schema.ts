@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import type { NamespaceTranslator } from "@/lib/i18n";
+import { isAllowedMeetingUrl } from "@/features/cms/blocks/href-validator";
 
 /**
  * Session validation (langlion §1.2, §2.2, EPIK 3).
@@ -33,6 +34,7 @@ export function updateSessionSchema(t: ValidationTranslator) {
         endTime: z.coerce.date().optional(),
         locationId: z.string().min(1).nullish(),
         capacity: z.coerce.number().int().positive(t("capacityInvalid")).optional(),
+        meetingUrl: z.union([z.string().url().refine(isAllowedMeetingUrl), z.null()]).optional(),
       })
       .refine((v) => !(v.startTime && v.endTime) || v.endTime > v.startTime, {
         message: t("endBeforeStart"),

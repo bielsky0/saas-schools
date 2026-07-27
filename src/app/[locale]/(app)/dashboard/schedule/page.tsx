@@ -157,6 +157,7 @@ export default async function SchedulePage({
                       startLocal={toLocalInput(row.startTime)}
                       endLocal={toLocalInput(row.endTime)}
                       locationId={row.locationId}
+                      meetingUrl={row.meetingUrl}
                       capacity={row.capacity}
                       locations={locations}
                     />

@@ -72,6 +72,7 @@ export const classSession = pgTable(
     /** Copied from the pattern at generation time; editable per session (US-14.4). */
     capacity: integer("capacity").notNull(),
     locationId: text("locationId"),
+    meetingUrl: text("meeting_url"),
     status: text("status").$type<"scheduled" | "cancelled">().notNull().default("scheduled"),
     generatedFromRecurrenceId: text("generatedFromRecurrenceId"),
     /**

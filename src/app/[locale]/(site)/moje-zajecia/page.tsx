@@ -1,6 +1,6 @@
 import { getLocale, getTranslations } from "next-intl/server";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui";
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui";
 import { CancelMyBookingButton } from "@/features/bookings/components/cancel-my-booking-button";
 import { getActiveBookingsForClient } from "@/features/bookings/data";
 import { resolveClientSession } from "@/features/client-auth/session";
@@ -83,6 +83,10 @@ export default async function MyBookingsPage() {
             <TableBody>
               {bookings.map((row) => {
                 const isPast = row.sessionStartTime < new Date();
+                const now = Date.now();
+                const meetingActive = row.meetingUrl
+                  && now >= row.sessionStartTime.getTime() - 15 * 60 * 1000
+                  && now <= row.sessionEndTime.getTime();
                 return (
                   <TableRow key={row.bookingId}>
                     <TableCell>
@@ -93,9 +97,22 @@ export default async function MyBookingsPage() {
                     </TableCell>
                     <TableCell>{row.paymentStatus}</TableCell>
                     <TableCell className="text-right">
-                      {!isPast ? (
-                        <CancelMyBookingButton bookingId={row.bookingId} />
-                      ) : null}
+                      <div className="flex flex-col items-end gap-2">
+                        {row.meetingUrl ? (
+                          <Button asChild size="sm" variant="outline" disabled={!meetingActive}>
+                            <a
+                              href={row.meetingUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {t("joinMeeting")}
+                            </a>
+                          </Button>
+                        ) : null}
+                        {!isPast ? (
+                          <CancelMyBookingButton bookingId={row.bookingId} />
+                        ) : null}
+                      </div>
                     </TableCell>
                   </TableRow>
                 );

@@ -95,6 +95,7 @@ export async function createGroupTypeAction(
     requiresQualificationCard: formData.get("requiresQualificationCard") === "on",
     waitlistEnabled: formData.get("waitlistEnabled") === "on",
     defaultLocationId: str(formData.get("defaultLocationId")) || undefined,
+    defaultMeetingUrl: str(formData.get("defaultMeetingUrl")) || null,
     policyDocumentId: str(formData.get("policyDocumentId")) || undefined,
     allowedPurchaseModes: strList(formData, "allowedPurchaseModes"),
     allowedBillingTypes: strList(formData, "allowedBillingTypes"),
@@ -131,6 +132,7 @@ export async function createGroupTypeAction(
           requiresQualificationCard: parsed.data.requiresQualificationCard,
           waitlistEnabled: parsed.data.waitlistEnabled,
           defaultLocationId: parsed.data.defaultLocationId ?? null,
+          defaultMeetingUrl: parsed.data.defaultMeetingUrl ?? null,
           policyDocumentId: parsed.data.policyDocumentId ?? null,
           allowedPurchaseModes: parsed.data.allowedPurchaseModes,
           allowedBillingTypes: parsed.data.allowedBillingTypes ?? null,
@@ -186,6 +188,7 @@ export async function updateGroupTypeAction(
     requiresQualificationCard: formData.get("requiresQualificationCard") === "on",
     waitlistEnabled: formData.get("waitlistEnabled") === "on",
     defaultLocationId: str(formData.get("defaultLocationId")) || undefined,
+    defaultMeetingUrl: str(formData.get("defaultMeetingUrl")) || null,
     policyDocumentId: str(formData.get("policyDocumentId")) || undefined,
     allowedPurchaseModes: strList(formData, "allowedPurchaseModes"),
     allowedBillingTypes: strList(formData, "allowedBillingTypes"),
@@ -246,13 +249,13 @@ export async function updateGroupTypeAction(
         requiresQualificationCard: parsed.data.requiresQualificationCard,
         waitlistEnabled: parsed.data.waitlistEnabled,
         defaultLocationId: parsed.data.defaultLocationId ?? null,
+        defaultMeetingUrl: parsed.data.defaultMeetingUrl ?? null,
         policyDocumentId: parsed.data.policyDocumentId ?? null,
         allowedPurchaseModes: parsed.data.allowedPurchaseModes,
         allowedBillingTypes: parsed.data.allowedBillingTypes ?? null,
         defaultDurationMinutes: parsed.data.defaultDurationMinutes ?? null,
         defaultCapacity: parsed.data.defaultCapacity ?? null,
       };
-
       await tx
         .update(groupType)
         .set({ ...after, updatedAt: new Date() })
@@ -349,6 +352,7 @@ export async function updateGroupTypeAction(
             "isNewClientOnly",
             "requiresQualificationCard",
             "defaultLocationId",
+            "defaultMeetingUrl",
             "policyDocumentId",
             "allowedPurchaseModes",
             "allowedBillingTypes",
@@ -426,6 +430,7 @@ export async function createRecurrenceAction(
         name: groupType.name,
         engine: groupType.engine,
         defaultLocationId: groupType.defaultLocationId,
+        defaultMeetingUrl: groupType.defaultMeetingUrl,
       })
       .from(groupType)
       .where(
@@ -493,6 +498,7 @@ export async function createRecurrenceAction(
       groupTypeId: parent.id,
       trainerId: parsed.data.trainerId ?? null,
       locationId: parsed.data.locationId ?? parent.defaultLocationId,
+      meetingUrl: parent.defaultMeetingUrl,
       capacity: parsed.data.capacity,
       dayOfWeek: parsed.data.dayOfWeek,
       startTime: parsed.data.startTime,
@@ -609,6 +615,7 @@ export async function updateRecurrenceAction(
         id: groupType.id,
         name: groupType.name,
         defaultLocationId: groupType.defaultLocationId,
+        defaultMeetingUrl: groupType.defaultMeetingUrl,
       })
       .from(groupType)
       .where(and(eq(groupType.id, before.groupTypeId), eq(groupType.organizationId, ctx.org.id)))
@@ -653,6 +660,7 @@ export async function updateRecurrenceAction(
         startTime: classSession.startTime,
         endTime: classSession.endTime,
         locationId: classSession.locationId,
+        meetingUrl: classSession.meetingUrl,
         isManuallyAdjusted: classSession.isManuallyAdjusted,
       })
       .from(classSession)
@@ -669,6 +677,7 @@ export async function updateRecurrenceAction(
       .for("update");
 
     const resolvedLocationId = parsed.data.locationId ?? parent.defaultLocationId;
+    const resolvedMeetingUrl = parent.defaultMeetingUrl;
 
     /**
      * The remaining season, RECOMPUTED from the new pattern rather than shifted
@@ -724,6 +733,7 @@ export async function updateRecurrenceAction(
               trainerId: parsed.data.trainerId ?? null,
               capacity: parsed.data.capacity,
               locationId: resolvedLocationId,
+              meetingUrl: resolvedMeetingUrl,
               updatedAt: now,
             })
             .where(

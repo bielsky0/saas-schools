@@ -282,6 +282,7 @@ export interface ClientBookingRow {
   groupTypeName: string;
   paymentStatus: "payment_pending" | "booked_offline" | "confirmed" | "cancelled" | "no_show";
   attendanceStatus: "unmarked" | "present" | "absent";
+  meetingUrl: string | null;
 }
 
 export async function getActiveBookingsForClient(
@@ -301,6 +302,7 @@ export async function getActiveBookingsForClient(
       groupTypeName: groupType.name,
       paymentStatus: booking.paymentStatus,
       attendanceStatus: booking.attendanceStatus,
+      meetingUrl: classSession.meetingUrl,
     })
     .from(booking)
     .innerJoin(

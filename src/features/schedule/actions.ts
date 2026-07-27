@@ -78,6 +78,7 @@ export async function updateSessionAction(
   const rawEnd = str(formData.get("endTime"));
   const rawLocation = str(formData.get("locationId"));
   const rawCapacity = str(formData.get("capacity"));
+  const rawMeetingUrl = str(formData.get("meetingUrl"));
 
   const parsed = updateSessionSchema(tv).safeParse({
     // Converted HERE, not by `z.coerce.date()`. The form posts a naive wall clock
@@ -93,6 +94,7 @@ export async function updateSessionAction(
     // mean different things to an admin who deliberately blanked the field.
     locationId: formData.has("locationId") ? rawLocation || null : undefined,
     capacity: rawCapacity || undefined,
+    meetingUrl: formData.has("meetingUrl") ? rawMeetingUrl || null : undefined,
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? t("errors.generic") };
@@ -100,7 +102,9 @@ export async function updateSessionAction(
 
   const actor = await resolveActor(ctx.session);
   const movedInTimeOrSpace =
-    parsed.data.startTime !== undefined || parsed.data.locationId !== undefined;
+    parsed.data.startTime !== undefined ||
+    parsed.data.locationId !== undefined ||
+    parsed.data.meetingUrl !== undefined;
 
   const doUpdate = async (tx: TenantDb, forceOverride: boolean) => {
     const [before] = await tx
@@ -127,6 +131,8 @@ export async function updateSessionAction(
       endTime: parsed.data.endTime ?? before.endTime,
       locationId:
         parsed.data.locationId === undefined ? before.locationId : parsed.data.locationId,
+      meetingUrl:
+        parsed.data.meetingUrl === undefined ? before.meetingUrl : parsed.data.meetingUrl,
       capacity: parsed.data.capacity ?? before.capacity,
       isManuallyAdjusted: before.isManuallyAdjusted || (movedInTimeOrSpace && !forceOverride),
     };
@@ -155,6 +161,7 @@ export async function updateSessionAction(
           "startTime",
           "endTime",
           "locationId",
+          "meetingUrl",
           "capacity",
           "isManuallyAdjusted",
         ]),

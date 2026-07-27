@@ -920,6 +920,8 @@
       "isNewClientOnly": "Priorytet dla nowych klientów",
       "defaultLocation": "Domyślna lokalizacja",
       "noLocation": "Brak domyślnej",
+      "defaultMeetingUrl": "Domyślny link do spotkania",
+      "meetingUrlHint": "Opcjonalnie. Domyślny link Zoom/Meet/Teams dla wszystkich sesji tego typu.",
       "policyDocument": "Regulamin",
       "noPolicy": "Brak regulaminu",
       "allowedPurchaseModes": "Tryby zakupu",
@@ -1099,7 +1101,9 @@
       "cancel": "Anuluj",
       "start": "Początek",
       "end": "Koniec",
-      "capacityHint": "Podniesienie to jedyny sposób przyjęcia dodatkowego uczestnika."
+      "capacityHint": "Podniesienie to jedyny sposób przyjęcia dodatkowego uczestnika.",
+      "meetingUrl": "Link do spotkania",
+      "meetingUrlHint": "Opcjonalnie. URL Zoom/Meet/Teams — aktywny 15 minut przed zajęciami."
     },
     "roster": "Uczestnicy",
     "substituteTrainer": "Zmień trenera",
@@ -1255,10 +1259,11 @@
       "generic": "Coś poszło nie tak. Spróbuj ponownie.",
       "interestAlreadyExists": "To dziecko jest już zapisane do tej oferty."
     },
-    "myBookings": "Moje zajęcia",
-    "noBookings": "Brak nadchodzących zajęć.",
-    "cancel": "Anuluj",
-    "cancelling": "Anulowanie…",
+  "joinMeeting": "Dołącz do spotkania",
+  "myBookings": "Moje zajęcia",
+  "noBookings": "Brak nadchodzących zajęć.",
+  "cancel": "Anuluj",
+  "cancelling": "Anulowanie…",
     "table": {
       "session": "Zajęcia",
       "status": "Status",
@@ -1389,6 +1394,7 @@
     "cancelBooking": "Anuluj rezerwację",
     "cancelling": "Anulowanie…",
     "bookingCancelled": "Rezerwacja anulowana.",
+    "joinMeeting": "Dołącz do spotkania",
     "table": {
       "participant": "Uczestnik",
       "payment": "Płatność",

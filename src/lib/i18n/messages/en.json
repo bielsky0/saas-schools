@@ -920,6 +920,8 @@
       "isNewClientOnly": "Prioritise new clients",
       "defaultLocation": "Default location",
       "noLocation": "No default",
+      "defaultMeetingUrl": "Default meeting link",
+      "meetingUrlHint": "Optional. Default Zoom/Meet/Teams link for all sessions of this type.",
       "policyDocument": "Policy document",
       "noPolicy": "No policy",
       "allowedPurchaseModes": "Purchase modes",
@@ -1099,7 +1101,9 @@
       "cancel": "Cancel",
       "start": "Start",
       "end": "End",
-      "capacityHint": "Raising this is the only way to admit an extra participant."
+      "capacityHint": "Raising this is the only way to admit an extra participant.",
+      "meetingUrl": "Meeting link",
+      "meetingUrlHint": "Optional. Zoom/Meet/Teams URL — active 15 minutes before the session."
     },
     "roster": "Roster",
     "substituteTrainer": "Change trainer",
@@ -1255,10 +1259,11 @@
       "generic": "Something went wrong. Please try again.",
       "interestAlreadyExists": "This child is already registered for this offer."
     },
-    "myBookings": "My bookings",
-    "noBookings": "No upcoming bookings.",
-    "cancel": "Cancel",
-    "cancelling": "Cancelling…",
+  "joinMeeting": "Join meeting",
+  "myBookings": "My bookings",
+  "noBookings": "No upcoming bookings.",
+  "cancel": "Cancel",
+  "cancelling": "Cancelling…",
     "table": {
       "session": "Session",
       "status": "Status",
@@ -1389,6 +1394,7 @@
     "cancelBooking": "Cancel booking",
     "cancelling": "Cancelling…",
     "bookingCancelled": "Booking cancelled.",
+    "joinMeeting": "Join meeting",
     "table": {
       "participant": "Participant",
       "payment": "Payment",

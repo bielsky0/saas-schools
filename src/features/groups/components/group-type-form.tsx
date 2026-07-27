@@ -34,6 +34,7 @@ export type GroupTypeDefaults = {
   isNewClientOnly: boolean;
   requiresQualificationCard: boolean;
   defaultLocationId: string | null;
+  defaultMeetingUrl: string | null;
   policyDocumentId: string | null;
   allowedPurchaseModes: string[];
   allowedBillingTypes: string[] | null;
@@ -184,6 +185,16 @@ export function GroupTypeForm({
             ))}
           </SelectContent>
         </Select>
+      </FormField>
+
+      <FormField label={t("form.defaultMeetingUrl")} htmlFor="gt-meeting-url" hint={t("form.meetingUrlHint")}>
+        <Input
+          id="gt-meeting-url"
+          name="defaultMeetingUrl"
+          type="url"
+          placeholder="https://meet.google.com/..."
+          defaultValue={defaults?.defaultMeetingUrl ?? ""}
+        />
       </FormField>
 
       <fieldset className="flex flex-col gap-2">

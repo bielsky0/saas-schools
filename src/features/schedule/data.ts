@@ -73,6 +73,7 @@ export async function listUpcomingSessions(
       capacity: classSession.capacity,
       status: classSession.status,
       isManuallyAdjusted: classSession.isManuallyAdjusted,
+      meetingUrl: classSession.meetingUrl,
       groupTypeId: classSession.groupTypeId,
       groupTypeName: groupType.name,
       trainerName: user.name,

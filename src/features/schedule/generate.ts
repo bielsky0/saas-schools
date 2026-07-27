@@ -82,6 +82,8 @@ export async function generateSessionsForRecurrence(
     trainerId: string | null;
     /** Already resolved through the pattern → group type fallback (§2.12). */
     locationId: string | null;
+    /** Copied from group_type.default_meeting_url at generation time (Faza 34). */
+    meetingUrl: string | null;
     capacity: number;
     dayOfWeek: number;
     startTime: string;
@@ -115,6 +117,7 @@ export async function generateSessionsForRecurrence(
             endTime: occurrence.endsAt,
             capacity: input.capacity,
             locationId: input.locationId,
+            meetingUrl: input.meetingUrl,
             generatedFromRecurrenceId: input.recurrenceId,
           })
           // §4.4. Targeted at the (recurrence, start) unique, so re-running a
@@ -217,6 +220,7 @@ export const sessionsGenerateHandler: JobHandler<"sessions.generate"> = async (r
         occurrencesCount: groupTypeRecurrence.occurrencesCount,
         isRecurring: groupTypeRecurrence.isRecurring,
         defaultLocationId: groupType.defaultLocationId,
+        defaultMeetingUrl: groupType.defaultMeetingUrl,
       })
       .from(groupTypeRecurrence)
       .innerJoin(
@@ -249,7 +253,10 @@ export const sessionsGenerateHandler: JobHandler<"sessions.generate"> = async (r
       // overrides the group type's default when set. Resolved HERE rather than
       // read back later, because `session.locationId` is a copy that then lives
       // its own life and stays editable per session (US-22.3).
+      // Meeting URL follows the same pattern but only two-step: group type →
+      // session, no pattern-level override.
       locationId: pattern.locationId ?? pattern.defaultLocationId,
+      meetingUrl: pattern.defaultMeetingUrl,
       capacity: pattern.capacity,
       dayOfWeek: pattern.dayOfWeek,
       startTime: pattern.startTime,

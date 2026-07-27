@@ -37,6 +37,7 @@ export function SessionEditForm({
   startLocal,
   endLocal,
   locationId,
+  meetingUrl,
   capacity,
   locations,
 }: {
@@ -45,6 +46,7 @@ export function SessionEditForm({
   startLocal: string;
   endLocal: string;
   locationId: string | null;
+  meetingUrl: string | null;
   capacity: number;
   locations: { id: string; name: string }[];
 }) {
@@ -74,6 +76,7 @@ export function SessionEditForm({
       startLocal={startLocal}
       endLocal={endLocal}
       locationId={locationId}
+      meetingUrl={meetingUrl}
       capacity={capacity}
       locations={locations}
       onCancel={() => setOpen(false)}
@@ -86,6 +89,7 @@ function SessionEditFields({
   startLocal,
   endLocal,
   locationId,
+  meetingUrl,
   capacity,
   locations,
   onCancel,
@@ -94,6 +98,7 @@ function SessionEditFields({
   startLocal: string;
   endLocal: string;
   locationId: string | null;
+  meetingUrl: string | null;
   capacity: number;
   locations: { id: string; name: string }[];
   onCancel: () => void;
@@ -171,6 +176,16 @@ function SessionEditFields({
           />
         </FormField>
       </div>
+
+      <FormField label={t("edit.meetingUrl")} htmlFor={id("meeting")} hint={t("edit.meetingUrlHint")}>
+        <Input
+          id={id("meeting")}
+          name="meetingUrl"
+          type="url"
+          placeholder="https://meet.google.com/..."
+          defaultValue={meetingUrl ?? ""}
+        />
+      </FormField>
 
       <div className="flex items-center gap-2">
         <Button type="submit" size="sm" disabled={pending}>

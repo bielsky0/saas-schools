@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import type { NamespaceTranslator } from "@/lib/i18n";
 import { SLUG_MAX, SLUG_MIN, SLUG_PATTERN } from "@/lib/validation";
+import { isAllowedMeetingUrl } from "@/features/cms/blocks/href-validator";
 
 /**
  * Group type and recurrence validation (langlion §1.2, §2.13, EPIK 2/23).
@@ -73,6 +74,7 @@ export function createGroupTypeSchema(t: ValidationTranslator) {
       price: z.coerce.number().int().nonnegative(t("priceInvalid")),
       isNewClientOnly: z.boolean().default(false),
       defaultLocationId: z.string().min(1).optional(),
+      defaultMeetingUrl: z.union([z.string().url().refine(isAllowedMeetingUrl), z.null()]).optional(),
       policyDocumentId: z.string().optional(),
       allowedPurchaseModes: z.array(purchaseMode).min(1, t("purchaseModesRequired")),
       allowedBillingTypes: z.array(billingType).optional(),

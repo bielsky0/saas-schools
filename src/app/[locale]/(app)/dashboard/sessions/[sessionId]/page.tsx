@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 
 import {
   Badge,
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -139,9 +140,26 @@ export default async function SessionRosterPage({
             {formatWhen.format(session.startTime)} · {org.timezone}
           </p>
         </div>
-        {session.status === "scheduled" && effectivePermissions.has("sessions.manage") ? (
-          <CancelSessionButton sessionId={sessionId} />
-        ) : null}
+        <div className="flex items-center gap-2">
+          {session.meetingUrl ? (
+            (() => {
+              const now = Date.now();
+              const meetingActive =
+                now >= session.startTime.getTime() - 15 * 60 * 1000
+                && now <= session.endTime.getTime();
+              return (
+                <Button asChild size="sm" variant="outline" disabled={!meetingActive}>
+                  <a href={session.meetingUrl} target="_blank" rel="noopener noreferrer">
+                    {t("joinMeeting")}
+                  </a>
+                </Button>
+              );
+            })()
+          ) : null}
+          {session.status === "scheduled" && effectivePermissions.has("sessions.manage") ? (
+            <CancelSessionButton sessionId={sessionId} />
+          ) : null}
+        </div>
       </div>
 
       {roster.length === 0 ? (
