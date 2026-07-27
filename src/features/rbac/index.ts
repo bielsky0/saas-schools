@@ -199,7 +199,12 @@ export type Permission =
    * (plan faza-30-32.md §30a). Jedno uprawnienie pokrywa tworzenie, edycję
    * I publikację. Można rozdzielić w przyszłości (dodać `cms.publish`) bez
    * migracji schematu. Owner + Admin tylko. */
-  | "cms.manage";
+  | "cms.manage"
+  // ── Faza 32 — Custom domains (plan faza-30-32.md §32) ──────────────
+  //
+  /** Connect a custom domain to the organization (owner-only, analogous to
+   * `billing_connect.manage` — affects platform infrastructure/reputation). */
+  | "custom_domain.manage";
 
 /**
  * role → permissions. Owner is a superset; Admin manages members; Member reads.
@@ -260,6 +265,7 @@ export const ROLE_PERMISSIONS: Record<Role, readonly Permission[]> = {
     "extra_fees.manage",
     "lesson_log.manage",
     "cms.manage",
+    "custom_domain.manage",
   ],
   // Admin manages people and settings, but NOT money.
   //

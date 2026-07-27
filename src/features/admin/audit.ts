@@ -335,6 +335,11 @@ export const AUDIT_ACTIONS = [
   "block.grant",
   "block.revoke",
   "theme.update",
+  // Faza 32 — Custom domains (plan faza-30-32.md §32).
+  "custom_domain.add",
+  "custom_domain.verify_success",
+  "custom_domain.verify_failure",
+  "custom_domain.remove",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -398,7 +403,9 @@ export type AuditTargetType =
   | "page"
   | "media"
   | "tenant_block_access"
-  | "theme";
+  | "theme"
+  // Faza 32 — Custom domains
+  | "custom_domain";
 
 /**
  * WHO acted, as a kind — §6.4's actor model. A different question from WHICH
