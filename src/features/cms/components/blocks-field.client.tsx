@@ -13,8 +13,10 @@ import {
   Mail,
   Minus,
   MousePointerClick,
+  Plus,
   Star,
   Tag,
+  Trash2,
   Type,
 } from "lucide-react"
 
@@ -34,21 +36,37 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import {
-  ConfirmationModal,
-  RenderFields,
-  useFormFields,
-  useForm,
-  useModal,
-  Button,
-} from "@payloadcms/ui"
+import { RenderFields, useFormFields, useForm } from "@payloadcms/ui"
 import type { BlocksFieldClientComponent, ClientBlock } from "payload"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/features/cms/admin/components/ui/button"
+import { Card, CardContent } from "@/features/cms/admin/components/ui/card"
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@/features/cms/admin/components/ui/alert-dialog"
+import {
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "@/features/cms/admin/components/ui/command"
 
 import { getBlockAccess } from "../get-granted-block-keys"
 
 const ICON_SIZE = 14
 
-const BLOCK_ICONS: Record<string, React.ComponentType<{ size?: number; style?: React.CSSProperties }>> = {
+const BLOCK_ICONS: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
   grid: LayoutGrid,
   column: Columns2,
   text: Type,
@@ -77,15 +95,15 @@ const BreadcrumbContext = createContext<BreadcrumbContextValue>({
 
 function Breadcrumb({ path, currentLabel }: { path: BreadcrumbEntry[]; currentLabel: string }) {
   return (
-    <span style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem", flexWrap: "wrap" }}>
+    <span className="inline-flex items-center gap-1 flex-wrap text-muted-foreground text-xs">
       {path.map((entry, i) => (
-        <span key={entry.slug} style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem" }}>
-          {i > 0 && <span style={{ margin: "0 0.125rem", opacity: 0.4 }}>›</span>}
-          <span style={{ color: "var(--theme-elevation-400)" }}>{entry.label}</span>
+        <span key={entry.slug} className="inline-flex items-center gap-1">
+          {i > 0 && <span className="mx-0.5 opacity-40">›</span>}
+          <span className="text-muted-foreground">{entry.label}</span>
         </span>
       ))}
-      {path.length > 0 && <span style={{ margin: "0 0.125rem", opacity: 0.4 }}>›</span>}
-      <span style={{ fontWeight: 600 }}>{currentLabel}</span>
+      {path.length > 0 && <span className="mx-0.5 opacity-40">›</span>}
+      <span className="font-semibold">{currentLabel}</span>
     </span>
   )
 }
@@ -99,37 +117,23 @@ function SortableRow({
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id })
 
-  const style: React.CSSProperties = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-    position: "relative",
-    zIndex: isDragging ? 1 : 0,
-  }
-
   return (
-    <div ref={setNodeRef} style={style}>
-      <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+    <div
+      ref={setNodeRef}
+      className={cn(isDragging ? "opacity-50" : "opacity-100", "relative")}
+      style={{ transform: CSS.Transform.toString(transform), transition }}
+    >
+      <div className="flex items-center gap-1">
         <button
           type="button"
           {...attributes}
           {...listeners}
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "grab",
-            padding: "0.25rem",
-            display: "flex",
-            alignItems: "center",
-            color: "var(--theme-elevation-400)",
-            flexShrink: 0,
-            touchAction: "none",
-          }}
+          className="bg-none border-none cursor-grab p-1 flex items-center text-muted-foreground shrink-0 touch-none rounded hover:bg-accent"
           aria-label="Drag to reorder"
         >
           <GripVertical size={14} />
         </button>
-        <div style={{ flex: 1 }}>{children}</div>
+        <div className="flex-1">{children}</div>
       </div>
     </div>
   )
@@ -141,6 +145,98 @@ function blockLabel(block: ClientBlock): string {
   return block.slug
 }
 
+function BlockCard({
+  row,
+  index,
+}: {
+  row: { id: string; blockType?: string }
+  index: number
+}) {
+  const ctx = useBlockCardContext()
+  const block = ctx.blocks.find((b) => b.slug === row.blockType)
+  const isActive = ctx.editingRowIndex === index
+  const isHidden = ctx.getDataByPath(`${ctx.path}.${index}.hidden`) as boolean | undefined
+  const IconComponent = block ? BLOCK_ICONS[block.slug] : undefined
+
+  return (
+    <Card
+      className={cn(
+        "cursor-pointer transition-colors",
+        isActive && "ring-2 ring-primary",
+        isHidden && "opacity-50",
+      )}
+      onClick={() => ctx.setEditingRowIndex(index)}
+    >
+      <div className="flex items-center gap-2 p-3">
+        {IconComponent && (
+          <IconComponent size={ICON_SIZE} className="shrink-0 opacity-50" />
+        )}
+        <span className="flex-1 font-medium text-sm">
+          {block ? blockLabel(block) : "Unknown"} #{index + 1}
+        </span>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="size-7"
+          onClick={(e) => {
+            e.stopPropagation()
+            const current = ctx.getDataByPath(`${ctx.path}.${index}.hidden`) as boolean | undefined
+            ctx.dispatchFields({
+              type: "UPDATE",
+              path: `${ctx.path}.${index}.hidden`,
+              value: !current,
+            } as any)
+          }}
+          aria-label="Toggle visibility"
+        >
+          {isHidden ? <Eye className="size-3.5" /> : <EyeOff className="size-3.5" />}
+        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="size-7 text-destructive hover:text-destructive"
+              onClick={(e) => e.stopPropagation()}
+              aria-label="Delete block"
+            >
+              <Trash2 className="size-3.5" />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Usuń blok</AlertDialogTitle>
+              <AlertDialogDescription>
+                Czy na pewno chcesz usunąć ten blok? Tej operacji nie można cofnąć.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Anuluj</AlertDialogCancel>
+              <AlertDialogAction onClick={() => ctx.removeFieldRow({ path: ctx.path, rowIndex: index })}>
+                Usuń
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+    </Card>
+  )
+}
+
+const BlockCardContext = createContext<{
+  path: string
+  blocks: ClientBlock[]
+  editingRowIndex: number | null
+  dispatchFields: (action: any) => void
+  getDataByPath: (path: string) => unknown
+  removeFieldRow: (args: { path: string; rowIndex: number }) => void
+  setEditingRowIndex: (i: number | null) => void
+}>(null as any)
+
+function useBlockCardContext() {
+  return useContext(BlockCardContext)
+}
+
 export const BlocksField: BlocksFieldClientComponent = (props) => {
   const { field, path, permissions, readOnly, schemaPath: schemaPathFromProps } = props
   const schemaPath = schemaPathFromProps ?? field.name
@@ -148,9 +244,7 @@ export const BlocksField: BlocksFieldClientComponent = (props) => {
 
   /* ── Hooks: must be called before any useCallback that references them ── */
   const [editingRowIndex, setEditingRowIndex] = useState<number | null>(null)
-  const [pendingDeleteIndex, setPendingDeleteIndex] = useState<number | null>(null)
-  const DELETE_MODAL_SLUG = `delete-block-${path.replace(/\./g, "-")}`
-  const { openModal, closeModal } = useModal()
+  const [addDialogOpen, setAddDialogOpen] = useState(false)
 
   const { addFieldRow, dispatchFields, getDataByPath, moveFieldRow, removeFieldRow } = useForm()
 
@@ -179,15 +273,7 @@ export const BlocksField: BlocksFieldClientComponent = (props) => {
 
   const fieldLabel = String(field.label ?? field.name)
 
-  /* ── Callbacks (hook return values are now in scope) ── */
-  const handleDeleteConfirm = useCallback(() => {
-    if (pendingDeleteIndex !== null) {
-      removeFieldRow({ path, rowIndex: pendingDeleteIndex })
-    }
-    setPendingDeleteIndex(null)
-    closeModal(DELETE_MODAL_SLUG)
-  }, [pendingDeleteIndex, removeFieldRow, path, closeModal, DELETE_MODAL_SLUG])
-
+  /* ── Sensors ── */
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
@@ -217,211 +303,110 @@ export const BlocksField: BlocksFieldClientComponent = (props) => {
     const fullPath = [...breadcrumbPath, { slug: editingBlock.slug, label: currentLabel }]
 
     return (
-      <div
-        className="field-type blocks-field"
-        style={{
-          border: "1px solid var(--theme-elevation-200)",
-          padding: "1rem",
-          borderRadius: "4px",
-        }}
-      >
-        <div
-          style={{
-            marginBottom: "0.75rem",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.25rem",
-            fontSize: "0.8125rem",
-            color: "var(--theme-elevation-500)",
-            flexWrap: "wrap",
-          }}
-        >
-          <button
-            type="button"
+      <Card className="field-type blocks-field">
+        <div className="flex items-center gap-1 text-xs text-muted-foreground flex-wrap p-4 pb-0">
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => setEditingRowIndex(null)}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              color: "var(--theme-elevation-400)",
-              padding: "0.125rem 0.25rem",
-              borderRadius: "3px",
-              fontSize: "0.8125rem",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.125rem",
-              marginRight: "0.25rem",
-            }}
+            className="mr-1"
           >
             ←
-          </button>
+          </Button>
           <Breadcrumb path={breadcrumbPath} currentLabel={currentLabel} />
         </div>
-        <BreadcrumbContext.Provider value={{ path: fullPath }}>
-          <RenderFields
-            fields={editingBlock.fields}
-            parentPath={`${path}.${editingRowIndex}`}
-            parentSchemaPath={`${schemaPath}${editingBlock.slug}`}
-            parentIndexPath={String(editingRowIndex)}
-            permissions={permissions ?? {}}
-            readOnly={readOnly}
-          />
-        </BreadcrumbContext.Provider>
-      </div>
+        <CardContent>
+          <BreadcrumbContext.Provider value={{ path: fullPath }}>
+            <RenderFields
+              fields={editingBlock.fields}
+              parentPath={`${path}.${editingRowIndex}`}
+              parentSchemaPath={`${schemaPath}${editingBlock.slug}`}
+              parentIndexPath={String(editingRowIndex)}
+              permissions={permissions ?? {}}
+              readOnly={readOnly}
+            />
+          </BreadcrumbContext.Provider>
+        </CardContent>
+      </Card>
     )
   }
 
   return (
-    <div
-      className="field-type blocks-field"
-      style={{
-        border: "1px solid var(--theme-elevation-200)",
-        padding: "1rem",
-        borderRadius: "4px",
-      }}
-    >
-      <header style={{ marginBottom: "0.75rem" }}>
-        <h3 style={{ margin: 0, fontWeight: 400, fontSize: "0.8125rem", textTransform: "uppercase", letterSpacing: "0.04em", color: "var(--theme-elevation-500)" }}>
-          <Breadcrumb path={breadcrumbPath} currentLabel={fieldLabel} />
-        </h3>
-      </header>
+    <Card className="field-type blocks-field">
+      <CardContent className="p-4">
+        <header className="mb-3">
+          <h3 className="m-0 font-normal text-xs uppercase tracking-wider text-muted-foreground">
+            <Breadcrumb path={breadcrumbPath} currentLabel={fieldLabel} />
+          </h3>
+        </header>
 
-      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-        <SortableContext items={rows.map((r) => r.id)} strategy={verticalListSortingStrategy}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-            {rows.length === 0 && (
-              <div
-                style={{
-                  padding: "1rem",
-                  textAlign: "center",
-                  color: "var(--theme-elevation-400)",
-                  fontSize: "0.875rem",
-                }}
-              >
-                No blocks added yet
+        <BlockCardContext.Provider value={{
+          path,
+          blocks,
+          editingRowIndex,
+          dispatchFields,
+          getDataByPath,
+          removeFieldRow,
+          setEditingRowIndex,
+        }}>
+          <DndContext id={`dnd-${path}`} sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext items={rows.map((r) => r.id)} strategy={verticalListSortingStrategy}>
+              <div className="flex flex-col gap-2">
+                {rows.map((row, i) => (
+                  <SortableRow key={row.id} id={row.id}>
+                    <BlockCard row={row} index={i} />
+                  </SortableRow>
+                ))}
               </div>
-            )}
-            {rows.map((row, i) => {
-              const block = blocks.find((b) => b.slug === row.blockType)
-              const isActive = editingRowIndex === i
-              const isHidden = getDataByPath(`${path}.${i}.hidden`) as boolean | undefined
-              const IconComponent = block ? BLOCK_ICONS[block.slug] : undefined
-              return (
-                <SortableRow key={row.id} id={row.id}>
-                  <div
-                    onClick={() => setEditingRowIndex(i)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                      padding: "0.5rem 0.5rem 0.5rem 0.25rem",
-                      background: isActive
-                        ? "var(--theme-elevation-100)"
-                        : isHidden
-                          ? "var(--theme-elevation-0)"
-                          : "var(--theme-elevation-50)",
-                      borderRadius: "4px",
-                      borderLeft: isActive
-                        ? "3px solid var(--brand-accent-600, var(--theme-elevation-500))"
-                        : "3px solid transparent",
-                      cursor: "pointer",
-                      opacity: isHidden ? 0.5 : 1,
-                      transition: "background 0.1s, border-color 0.1s, opacity 0.1s",
-                    }}
-                  >
-                    {IconComponent && (
-                      <IconComponent
-                        size={ICON_SIZE}
-                        style={{ flexShrink: 0, opacity: 0.5 }}
-                      />
-                    )}
-                    <span style={{ flex: 1, fontWeight: 500 }}>
-                      {block ? blockLabel(block) : "Unknown"} #{i + 1}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        const current = getDataByPath(`${path}.${i}.hidden`) as boolean | undefined
-                        dispatchFields({
-                          type: "UPDATE",
-                          path: `${path}.${i}.hidden`,
-                          value: !current,
-                        } as any)
-                      }}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        color: isHidden ? "var(--theme-elevation-600)" : "var(--theme-elevation-400)",
-                        padding: "0.125rem",
-                        lineHeight: 1,
-                        display: "flex",
-                        alignItems: "center",
-                      }}
-                      aria-label="Toggle visibility"
-                    >
-                      {isHidden ? <Eye size={14} /> : <EyeOff size={14} />}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setPendingDeleteIndex(i)
-                        openModal(DELETE_MODAL_SLUG)
-                      }}
-                      style={{
-                        background: "none",
-                        border: "none",
-                        cursor: "pointer",
-                        color: "var(--theme-error-500)",
-                        fontSize: "1rem",
-                        padding: "0.125rem",
-                        lineHeight: 1,
-                      }}
-                    >
-                      ✕
-                    </button>
-                  </div>
-                </SortableRow>
-              )
-            })}
-          </div>
-        </SortableContext>
-      </DndContext>
+            </SortableContext>
+          </DndContext>
+          {rows.length === 0 && (
+            <p className="py-4 text-center text-sm text-muted-foreground">
+              No blocks added yet
+            </p>
+          )}
+        </BlockCardContext.Provider>
 
-      {blocks.length > 0 && (
-        <div style={{ display: "flex", gap: "0.25rem", flexWrap: "wrap", marginTop: "0.75rem" }}>
-          {blocks.filter((b) => canAddBlock(b.slug)).map((block) => (
-            <Button
-              key={block.slug}
-              buttonStyle="icon-label"
-              icon="plus"
-              size="small"
-              onClick={() =>
-                addFieldRow({
-                  blockType: block.slug,
-                  path,
-                  rowIndex: rows.length,
-                  schemaPath,
-                })
-              }
-            >
-              Add {blockLabel(block)}
-            </Button>
-          ))}
+        <div className="mt-4">
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full gap-2"
+            onClick={() => setAddDialogOpen(true)}
+          >
+            <Plus className="size-4" />
+            Add Block
+          </Button>
+          <CommandDialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
+            <CommandInput placeholder="Search blocks..." />
+            <CommandList>
+              <CommandEmpty>No blocks found.</CommandEmpty>
+              <CommandGroup>
+                {blocks.filter((b) => canAddBlock(b.slug)).map((block) => {
+                  const Icon = BLOCK_ICONS[block.slug]
+                  return (
+                    <CommandItem
+                      key={block.slug}
+                      onSelect={() => {
+                        addFieldRow({
+                          blockType: block.slug,
+                          path,
+                          rowIndex: rows.length,
+                          schemaPath,
+                        })
+                        setAddDialogOpen(false)
+                      }}
+                    >
+                      {Icon && <Icon size={14} />}
+                      <span>{blockLabel(block)}</span>
+                    </CommandItem>
+                  )
+                })}
+              </CommandGroup>
+            </CommandList>
+          </CommandDialog>
         </div>
-      )}
-
-      <ConfirmationModal
-        modalSlug={DELETE_MODAL_SLUG}
-        heading="Usuń blok"
-        body="Czy na pewno chcesz usunąć ten blok? Tej operacji nie można cofnąć."
-        confirmLabel="Usuń"
-        cancelLabel="Anuluj"
-        onConfirm={handleDeleteConfirm}
-        onCancel={() => setPendingDeleteIndex(null)}
-      />
-    </div>
+      </CardContent>
+    </Card>
   )
 }

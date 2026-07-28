@@ -118,7 +118,7 @@ async function phaseMinus1() {
   const appSql = postgres(PG_URL);
   try {
     const l2 = await appSql`SELECT count(*)::int AS cnt FROM pg_stat_activity WHERE usename = current_user`;
-    const baseline = l2[0].cnt;
+    const baseline = l2[0]!.cnt;
     note("L2", `${baseline}`, "Baseline połączeń (sama aplikacja, postgres.js)");
   } finally {
     await appSql.end();
@@ -131,7 +131,7 @@ async function phaseMinus1() {
     const l3 = await payloadPool.query(
       `SELECT count(*)::int AS cnt FROM pg_stat_activity WHERE usename = current_user`,
     );
-    const combined = l3.rows[0].cnt;
+    const combined = l3.rows[0]!.cnt;
     note("L3", `${combined}`, `Z Payload pool max=3. Łącznie z app (~${appPoolSize}) = ok. ${appPoolSize + 3}`);
   } finally {
     await payloadPool.end();
@@ -164,10 +164,10 @@ async function phase0() {
       const r = await client.query(
         `SELECT nullif(current_setting('app.organization_id', true), '') AS val`,
       );
-      if (r.rows[0].val === "spike-test") {
+      if (r.rows[0]!.val === "spike-test") {
         pass("A0a-naive", "set_config → current_setting na tym samym połączeniu działa");
       } else {
-        fail("A0a-naive", `Oczekiwano 'spike-test', otrzymano '${r.rows[0].val}'`);
+        fail("A0a-naive", `Oczekiwano 'spike-test', otrzymano '${r.rows[0]!.val}'`);
       }
     } finally {
       client.release();
@@ -187,20 +187,20 @@ async function phase0() {
         `SELECT nullif(current_setting('app.organization_id', true), '') AS val`,
       );
       await client.query("COMMIT");
-      if (r1.rows[0].val === "spike-test-tx") {
+      if (r1.rows[0]!.val === "spike-test-tx") {
         pass("A0a-tx (wewnątrz)", "set_config przez beginTransaction działa");
       } else {
-        fail("A0a-tx (wewnątrz)", `Oczekiwano 'spike-test-tx', otrzymano '${r1.rows[0].val}'`);
+        fail("A0a-tx (wewnątrz)", `Oczekiwano 'spike-test-tx', otrzymano '${r1.rows[0]!.val}'`);
       }
 
       // After COMMIT — verify the setting is gone (txn-scoped)
       const r2 = await client.query(
         `SELECT nullif(current_setting('app.organization_id', true), '') AS val`,
       );
-      if (r2.rows[0].val === null || r2.rows[0].val === "") {
+      if (r2.rows[0]!.val === null || r2.rows[0]!.val === "") {
         pass("A0a-tx (po COMMIT)", "set_config nie wycieka poza transakcję");
       } else {
-        fail("A0a-tx (po COMMIT)", `Ustawienie przetrwało COMMIT: '${r2.rows[0].val}'`);
+        fail("A0a-tx (po COMMIT)", `Ustawienie przetrwało COMMIT: '${r2.rows[0]!.val}'`);
       }
     } finally {
       client.release();
@@ -222,8 +222,8 @@ async function phase0() {
   const appPg = postgres(PG_URL);
   const poolA3 = createPgPool(1);
   try {
-    const pidApp = (await appPg`SELECT pg_backend_pid() AS pid`)[0].pid;
-    const pidP = (await poolA3.query("SELECT pg_backend_pid() AS pid")).rows[0].pid;
+    const pidApp = (await appPg`SELECT pg_backend_pid() AS pid`)[0]!.pid;
+    const pidP = (await poolA3.query("SELECT pg_backend_pid() AS pid")).rows[0]!.pid;
     if (pidApp !== pidP) {
       pass("A3", `RÓŻNE: postgres.js PID=${pidApp}, pg PID=${pidP} (osobne pule, oczekiwane)`);
     } else {
@@ -258,7 +258,7 @@ async function phase0() {
   const poolA4 = createPgPool(1);
   try {
     const r = await poolA4.query("SELECT count(*)::int AS cnt FROM pg_tables WHERE schemaname='public'");
-    note("A4", "NIEFILTROWANE (oczekiwane)", `Gołe DQL: ${r.rows[0].cnt} tabel publicznych, brak filtra tenantowego`);
+    note("A4", "NIEFILTROWANE (oczekiwane)", `Gołe DQL: ${r.rows[0]!.cnt} tabel publicznych, brak filtra tenantowego`);
   } finally {
     await poolA4.end();
   }
@@ -286,7 +286,7 @@ async function phase1() {
     const r = await poolB1.query(
       `SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'pages_blocks') AS exists`,
     );
-    if (r.rows[0].exists) {
+    if (r.rows[0]!.exists) {
       note("B1", "osobne tabele", "pages_blocks istnieje — blocksAsJSON nie jest aktywny");
     } else {
       note("B1", "jsonb (oczekiwane)", "Brak pages_blocks — blocks jako jsonb");

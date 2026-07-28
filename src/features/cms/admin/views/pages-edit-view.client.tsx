@@ -6,18 +6,18 @@ import {
   Form,
   LeaveWithoutSaving,
   LivePreviewWindow,
-  RenderFields,
   SetDocumentStepNav,
   SetDocumentTitle,
   useConfig,
   useDocumentInfo,
   useEditDepth,
+  useForm,
+  useFormFields,
   useLivePreviewContext,
 } from "@payloadcms/ui"
-
-import { Button } from "@/features/cms/admin/components/ui/button"
 import { Input } from "@/features/cms/admin/components/ui/input"
-
+import { Textarea } from "@/features/cms/admin/components/ui/textarea"
+import { Label } from "@/features/cms/admin/components/ui/label"
 
 import type { DocumentViewClientProps } from "payload"
 
@@ -26,8 +26,47 @@ import { BlocksField } from "@/features/cms/components/blocks-field.client"
 import "../styles/admin-overrides.scss"
 import "../styles/tailwind.css"
 
-function filterMetaFields(fields: Array<{ name: string }> | undefined) {
-  return (fields ?? []).filter((f) => ["title", "slug"].includes(f.name))
+function MetaFields() {
+  const { dispatchFields, setModified } = useForm()
+  const formFields = useFormFields(([fields]) => fields)
+
+  const updateField = (path: string, value: string) => {
+    dispatchFields({ type: "UPDATE", path, value } as any)
+    setModified(true)
+  }
+
+  const titleValue = formFields?.title?.value as string | undefined
+  const slugValue = formFields?.slug?.value as string | undefined
+  const seoValue = formFields?.seoDescription?.value as string | undefined
+
+  return (
+    <div className="p-4 border-b border-border/50 space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="title">Title</Label>
+        <Input
+          id="title"
+          value={titleValue ?? ''}
+          onChange={(e) => updateField("title", e.target.value)}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="slug">Slug</Label>
+        <Input
+          id="slug"
+          value={slugValue ?? ''}
+          onChange={(e) => updateField("slug", e.target.value)}
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="seoDescription">SEO Description</Label>
+        <Textarea
+          id="seoDescription"
+          value={seoValue ?? ''}
+          onChange={(e) => updateField("seoDescription", e.target.value)}
+        />
+      </div>
+    </div>
+  )
 }
 
 export function PagesEditView(props: DocumentViewClientProps) {
@@ -61,7 +100,6 @@ export function PagesEditView(props: DocumentViewClientProps) {
 
   /* ── Collection field configs ── */
   const collectionConfig = getEntityConfig({ collectionSlug })
-  const metaFields = filterMetaFields(collectionConfig?.fields as Array<{ name: string }> | undefined)
   const blocksField = collectionConfig?.fields?.find(
     (f: any) => f.name === "blocks",
   ) as any
@@ -116,17 +154,7 @@ export function PagesEditView(props: DocumentViewClientProps) {
 
         <div className="flex flex-1 min-h-0">
           <aside className="w-96 min-w-80 shrink-0 overflow-y-auto border-r border-border flex flex-col">
-            {metaFields && metaFields.length > 0 && (
-              <div className="p-4 border-b border-border/50">
-                <RenderFields
-                  fields={metaFields as any}
-                  parentIndexPath=""
-                  parentPath=""
-                  parentSchemaPath={collectionSlug ?? ""}
-                  permissions={docPermissions?.fields}
-                />
-              </div>
-            )}
+            <MetaFields />
 
             <div className="flex-1 overflow-y-auto p-3">
               {blocksField && (

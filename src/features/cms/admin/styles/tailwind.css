@@ -12,6 +12,7 @@
  *   html[data-theme='dark'] { --color-*: ... }.
  */
 @import "tailwindcss" layer(utilities);
+@import "tw-animate-css";
 
 @theme inline {
   /*

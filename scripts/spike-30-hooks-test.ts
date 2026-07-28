@@ -452,7 +452,7 @@ async function main() {
   console.log("\n  [cleanup] Destroying Payload & removing tables...");
   // Use destroy() with timeout protection
   await Promise.race([
-    payload.db.destroy(),
+    payload.db.destroy?.(),
     new Promise((_, reject) => setTimeout(() => reject(new Error("destroy timeout")), 5000))
   ]).catch(() => console.log("  [cleanup] destroy may have timed out, continuing"));
   await cleanupPayloadTables();

@@ -72,8 +72,8 @@ export default buildConfig({
       titleSuffix: " — Langlion CMS",
     },
     livePreview: {
-      url: ({ data, req }) => {
-        const host = req.headers.get("host") || "";
+      url: ({ data, req }: { data: any; req?: any }) => {
+        const host = req?.headers?.get?.("host") || "";
         const slug = (data.slug as string) || "";
         return buildPreviewUrl(host, slug);
       },
