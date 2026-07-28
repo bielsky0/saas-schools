@@ -42,7 +42,7 @@ export function buildGridBlock(availableBlocks: Block[]): Block {
             admin: {
               components: {
                 Field:
-                  "/src/features/cms/components/drawer-blocks-field.client#DrawerBlocksField",
+                  "/src/features/cms/components/blocks-field.client#BlocksField",
               },
             },
           },

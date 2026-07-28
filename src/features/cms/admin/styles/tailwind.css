@@ -1,0 +1,54 @@
+/*
+ * Tailwind v4 entry point dla PagesEditView (i custom admin UI).
+ *
+ * Izolacja od reszty admina Payload:
+ * - `layer(utilities)` pomija Preflight/base reset. Bez tego Tailwind resetowalby
+ *   globalne style buttonow, inputow, naglowkow Payloada, powodujac regresje layoutu.
+ * - Plik importowany TYLKO w pages-edit-view.client.tsx  Next.js laduje go tylko
+ *   w chunku tego widoku, nie na innych stronach admina.
+ * - Dark mode: na razie brak. Payload nie definiuje --theme-elevation-* pod
+ *   [data-theme=dark], wiec shadcn komponenty maja te same kolory w obu trybach.
+ *   Dark mode zostanie dodany w osobnej turze przez blok
+ *   html[data-theme='dark'] { --color-*: ... }.
+ */
+@import "tailwindcss" layer(utilities);
+
+@theme inline {
+  /*
+   * B: referencje do istniejacych zmiennych Payload/brand z admin-overrides.scss.
+   * Dzieki var() zmiany w admin-overrides.scss automatycznie propaguja sie do shadcn.
+   */
+  --color-background: var(--theme-bg);
+  --color-foreground: var(--theme-text);
+  --color-primary: var(--brand-accent-600);
+  --color-primary-foreground: var(--theme-elevation-0);
+  --color-secondary: var(--theme-elevation-150);
+  --color-secondary-foreground: var(--theme-elevation-600);
+  --color-muted: var(--theme-elevation-100);
+  --color-muted-foreground: var(--theme-elevation-400);
+  --color-accent: var(--brand-accent-50);
+  --color-accent-foreground: var(--brand-accent-700);
+  --color-destructive: var(--theme-danger-500);
+  --color-destructive-foreground: var(--theme-danger-100);
+  --color-border: var(--theme-border-color);
+  --color-input: var(--theme-elevation-200);
+  --color-ring: var(--brand-accent);
+
+  /*
+   * F: fallback na najblizszy Payloadowy odpowiednik.
+   * Brak dedykowanego tokenu w admin-overrides.scss; uzywamy elevation jako podstawy.
+   */
+  --color-card: var(--theme-elevation-0);
+  --color-card-foreground: var(--theme-elevation-700);
+  --color-popover: var(--theme-elevation-50);
+  --color-popover-foreground: var(--theme-elevation-700);
+
+  /*
+   * A: reczne wartosci. Payload nie definiuje radius.
+   * Zaczepiamy sie o typowy shadcn radius (0.5rem).
+   */
+  --radius: 0.5rem;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+}

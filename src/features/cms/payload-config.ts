@@ -78,6 +78,10 @@ export default buildConfig({
         return buildPreviewUrl(host, slug);
       },
       collections: ["pages"],
+      breakpoints: [
+        { label: "Mobile", name: "mobile", width: 375, height: 667 },
+        { label: "Tablet", name: "tablet", width: 768, height: 1024 },
+      ],
     },
     components: {
       Nav: "/src/features/cms/admin/components/nav#AdminNav",
@@ -86,7 +90,7 @@ export default buildConfig({
         Icon: "/src/features/cms/admin/components/icon#AdminIcon",
       },
     },
-    css: "/src/features/cms/admin/styles/admin-overrides.scss",
+    // css: "/src/features/cms/admin/styles/admin-overrides.scss",
   },
   routes: {
     api: "/api/payload",

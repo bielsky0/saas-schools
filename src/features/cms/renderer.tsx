@@ -35,6 +35,9 @@ export function CmsRenderer({ blocks, depth = 0 }: RendererProps) {
         const b = block as Record<string, unknown>;
         const blockType = b.blockType as string | undefined;
 
+        // Skip hidden blocks (toggled via eye icon in the editor)
+        if (b.hidden === true) return null;
+
         if (!blockType || !isRegisteredBlock(blockType)) {
           return (
             <div key={index} className="border-destructive/30 bg-destructive/5 rounded-md border p-4 text-sm text-destructive">

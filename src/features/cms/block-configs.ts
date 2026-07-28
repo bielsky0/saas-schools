@@ -17,6 +17,7 @@
  */
 import type { Block } from "payload";
 
+import { withHiddenField } from "./blocks/utils";
 import { accordionBlock } from "./blocks/accordion";
 import { buttonBlock } from "./blocks/button";
 import { imageBlock } from "./blocks/image";
@@ -53,33 +54,33 @@ const columnBlock = buildColumnBlock(atomBlocks);
 const allBlocks = [...atomBlocks, gridBlock, columnBlock];
 
 export const BLOCK_CONFIGS: Record<string, BlockConfigEntry> = {
-  grid: { type: "core", payloadConfig: buildGridBlock(allBlocks) },
-  column: { type: "core", payloadConfig: buildColumnBlock(allBlocks) },
-  text: { type: "core", payloadConfig: textBlock },
-  button: { type: "core", payloadConfig: buttonBlock },
-  image: { type: "core", payloadConfig: imageBlock },
-  separator: { type: "core", payloadConfig: separatorBlock },
-  accordion: { type: "core", payloadConfig: accordionBlock },
+  grid: { type: "core", payloadConfig: withHiddenField(buildGridBlock(allBlocks)) },
+  column: { type: "core", payloadConfig: withHiddenField(buildColumnBlock(allBlocks)) },
+  text: { type: "core", payloadConfig: withHiddenField(textBlock) },
+  button: { type: "core", payloadConfig: withHiddenField(buttonBlock) },
+  image: { type: "core", payloadConfig: withHiddenField(imageBlock) },
+  separator: { type: "core", payloadConfig: withHiddenField(separatorBlock) },
+  accordion: { type: "core", payloadConfig: withHiddenField(accordionBlock) },
   // Custom blocks — require tenant_block_access grant
   hero_section: {
     type: "custom",
     featureKey: "block_hero_section",
-    payloadConfig: heroSectionBlock,
+    payloadConfig: withHiddenField(heroSectionBlock),
   },
   pricing_table: {
     type: "custom",
     featureKey: "block_pricing_table",
-    payloadConfig: pricingTableBlock,
+    payloadConfig: withHiddenField(pricingTableBlock),
   },
   contact_form: {
     type: "custom",
     featureKey: "block_contact_form",
-    payloadConfig: contactFormBlock,
+    payloadConfig: withHiddenField(contactFormBlock),
   },
   schedule_grid: {
     type: "custom",
     featureKey: "block_schedule_grid",
-    payloadConfig: scheduleGridBlock,
+    payloadConfig: withHiddenField(scheduleGridBlock),
   },
 };
 

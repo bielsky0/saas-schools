@@ -1,1 +1,1 @@
-export { default } from "./src/features/cms/payload-config.ts"
+export { default } from "./src/features/cms/payload-config"

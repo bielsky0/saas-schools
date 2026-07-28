@@ -15,6 +15,12 @@ export function buildColumnBlock(availableBlocks: Block[]): Block {
         name: "blocks",
         type: "blocks",
         blocks: availableBlocks,
+        admin: {
+          components: {
+            Field:
+              "/src/features/cms/components/blocks-field.client#BlocksField",
+          },
+        },
       },
     ],
   } as Block;

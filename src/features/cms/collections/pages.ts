@@ -23,6 +23,21 @@ export const pagesCollection: CollectionConfig = {
       const slug = (doc.slug as string) || "";
       return buildPreviewUrl(host, slug);
     },
+    components: {
+      edit: {
+        // beforeDocumentControls: [
+        //   "/src/features/cms/admin/components/page-switcher.client#PageSwitcher",
+        // ],
+      },
+      views: {
+        edit: {
+          default: {
+            Component:
+              "/src/features/cms/admin/views/pages-edit-view.client#PagesEditView",
+          },
+        },
+      },
+    },
   },
   versions: {
     drafts: {
