@@ -24,7 +24,13 @@ export const pagesCollection: CollectionConfig = {
       return buildPreviewUrl(host, slug);
     },
   },
-  versions: { drafts: true },
+  versions: {
+    drafts: {
+      autosave: {
+        interval: 375,
+      },
+    },
+  },
   access: {
     read: ({ req }) => {
       const orgId = (req as unknown as CmsReq).user?.organizationId;

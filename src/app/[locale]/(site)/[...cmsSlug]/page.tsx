@@ -1,4 +1,4 @@
-import { draftMode } from "next/headers";
+import { draftMode, headers } from "next/headers";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
@@ -6,6 +6,8 @@ import { servedOrganization } from "@/features/organizations/served-org";
 import { getPage } from "@/features/cms/data";
 import { CmsRenderer } from "@/features/cms/renderer";
 import { ThemeInjector } from "@/features/cms/components/theme-injector";
+import { RefreshRouteOnSave } from "@/features/cms/components/refresh-route-on-save.client";
+import { buildTenantOriginUrl } from "@/features/cms/preview-url";
 import { withTenant } from "@/lib/db/tenant";
 
 /**
@@ -49,15 +51,20 @@ export default async function CmsPage({ params }: CmsPageProps) {
   const { cmsSlug } = await params;
   const slug = cmsSlug.join("/");
 
-  const page = await withTenant(org.id, async (tx) => {
-    return getPage(tx, org.id, slug);
-  });
-
   const draft = await draftMode();
+  const page = await withTenant(org.id, (tx) =>
+    getPage(tx, org.id, slug, { draft: draft.isEnabled }),
+  );
+
   if (!page || (page.status !== "published" && !draft.isEnabled)) notFound();
+
+  const h = await headers();
+  const host = h.get("host") || "";
+  const serverURL = buildTenantOriginUrl(host, "") || `http://${host}`;
 
   return (
     <ThemeInjector organizationId={org.id}>
+      <RefreshRouteOnSave serverURL={serverURL} />
       <main className="mx-auto max-w-5xl px-4 py-8">
         <CmsRenderer blocks={page.blocks as unknown[]} />
       </main>

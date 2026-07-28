@@ -1,6 +1,8 @@
 import { sql } from "drizzle-orm";
+import { getPayload } from "payload";
 
 import type { TenantDb } from "@/lib/db/tenant";
+import config from "@/features/cms/payload-config";
 
 import { getBlockGrants } from "./tenant-block-access";
 
@@ -15,13 +17,46 @@ export type PageRow = {
   updatedAt: string;
 };
 
+async function getPageDraft(
+  organizationId: string,
+  slug: string,
+): Promise<PageRow | null> {
+  const payload = await getPayload({ config });
+  const result = await payload.find({
+    collection: "pages",
+    where: {
+      slug: { equals: slug },
+      organizationId: { equals: organizationId },
+    },
+    draft: true,
+    limit: 1,
+    depth: 0,
+    overrideAccess: true,
+  });
+  const doc = result.docs[0];
+  if (!doc) return null;
+  return {
+    id: String(doc.id),
+    title: (doc as any).title as string,
+    slug: (doc as any).slug as string,
+    status: (doc as any).status as "draft" | "published",
+    blocks: (doc as any).blocks,
+    organizationId: (doc as any).organizationId as string,
+    createdAt: (doc as any).createdAt as string,
+    updatedAt: (doc as any).updatedAt as string,
+  };
+}
+
 export async function getPage(
   tx: TenantDb,
   organizationId: string,
   slug: string,
+  options?: { draft?: boolean },
 ): Promise<PageRow | null> {
-  // Direct query on Payload's pages table using Drizzle.
-  // RLS (second line) is active via withTenant.
+  if (options?.draft) {
+    return getPageDraft(organizationId, slug);
+  }
+  // Public path: raw SQL on pages table (no draft — fast, no Payload overhead).
   const [row] = await tx.execute<PageRow>(
     sql`
       SELECT p.* FROM pages p

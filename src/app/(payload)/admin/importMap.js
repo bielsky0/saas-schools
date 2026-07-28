@@ -22,7 +22,7 @@ import { UnderlineFeatureClient as UnderlineFeatureClient_e70f5e05f09f93e00b997e
 import { BoldFeatureClient as BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { RowLabel as RowLabel_3954f7278cbf5313e151f507a0193b95 } from '../../../../src/features/cms/admin/block-row-label'
-import { DrawerBlocksField as DrawerBlocksField_460b56ecf2edb8e32d69cb308436648c } from '../../../../src/features/cms/components/drawer-blocks-field.client'
+import { DrawerBlocksField as DrawerBlocksField_47f9e0d253a5b8a3c8f5f629b3c68994 } from '../../../../src/features/cms/components/drawer-blocks-field.client'
 import { GroupTypePicker as GroupTypePicker_a179e2824a7101944106b148cb05bc12 } from '../../../../src/features/cms/components/group-type-picker.client'
 import { AdminNav as AdminNav_1bd732e69e370154c06e8ee387e43090 } from '../../../../src/features/cms/admin/components/nav'
 import { AdminIcon as AdminIcon_c542a6dbf0ad2d838910fb6ece3705a8 } from '../../../../src/features/cms/admin/components/icon'
@@ -55,7 +55,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BoldFeatureClient": BoldFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#ItalicFeatureClient": ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "/src/features/cms/admin/block-row-label#RowLabel": RowLabel_3954f7278cbf5313e151f507a0193b95,
-  "/src/features/cms/components/drawer-blocks-field.client#DrawerBlocksField": DrawerBlocksField_460b56ecf2edb8e32d69cb308436648c,
+  "/src/features/cms/components/drawer-blocks-field.client#DrawerBlocksField": DrawerBlocksField_47f9e0d253a5b8a3c8f5f629b3c68994,
   "/src/features/cms/components/group-type-picker.client#GroupTypePicker": GroupTypePicker_a179e2824a7101944106b148cb05bc12,
   "/src/features/cms/admin/components/nav#AdminNav": AdminNav_1bd732e69e370154c06e8ee387e43090,
   "/src/features/cms/admin/components/icon#AdminIcon": AdminIcon_c542a6dbf0ad2d838910fb6ece3705a8,

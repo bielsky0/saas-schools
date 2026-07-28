@@ -33,6 +33,8 @@
     "@modelcontextprotocol/sdk": "^1.26.0",
     "@next/mdx": "^16.2.10",
     "@payloadcms/db-postgres": "^3.86.0",
+    "@payloadcms/live-preview": "^3.86.0",
+    "@payloadcms/live-preview-react": "^3.86.0",
     "@payloadcms/next": "^3.86.0",
     "@payloadcms/plugin-cloud-storage": "^3.86.0",
     "@payloadcms/richtext-lexical": "^3.86.0",
