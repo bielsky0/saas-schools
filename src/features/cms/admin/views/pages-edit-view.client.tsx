@@ -36,6 +36,7 @@ export function PagesEditView(props: DocumentViewClientProps) {
   const docPermissions = (props as any).docPermissions
 
   /* ── Document context ── */
+  const docInfo = useDocumentInfo()
   const {
     apiURL,
     collectionSlug,
@@ -46,9 +47,9 @@ export function PagesEditView(props: DocumentViewClientProps) {
     isEditing,
     isInitializing,
     isTrashed,
-    locale,
-    permissions,
-  } = useDocumentInfo()
+  } = docInfo
+  const locale = (docInfo as any).locale as string | undefined
+  const permissions = (docInfo as any).permissions
   const {
     config: {
       routes: { admin: adminRoute },
@@ -62,7 +63,7 @@ export function PagesEditView(props: DocumentViewClientProps) {
   const collectionConfig = getEntityConfig({ collectionSlug })
   const metaFields = filterMetaFields(collectionConfig?.fields as Array<{ name: string }> | undefined)
   const blocksField = collectionConfig?.fields?.find(
-    (f) => f.name === "blocks",
+    (f: any) => f.name === "blocks",
   ) as any
 
   const useAsTitle = (collectionConfig as any)?.admin?.useAsTitle as string | undefined
@@ -89,10 +90,11 @@ export function PagesEditView(props: DocumentViewClientProps) {
         pluralLabel={pluralLabel}
         useAsTitle={useAsTitle}
       />
-      <SetDocumentTitle />
+      <SetDocumentTitle fallback={useAsTitle ?? "[Untitled]"} />
 
       <DocumentControls
           apiURL={apiURL ?? ""}
+          slug={collectionSlug ?? ""}
           BeforeDocumentControls={props.BeforeDocumentControls}
           customComponents={{
             PreviewButton: props.PreviewButton,

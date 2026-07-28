@@ -61,7 +61,7 @@ function extractLexicalPreview(content: unknown, maxLen = 40): string {
   return text
 }
 
-function RowIcon({ icon: Icon }: { icon: React.ComponentType<{ size?: number }> }) {
+function RowIcon({ icon: Icon }: { icon: React.ComponentType<{ size?: number; style?: React.CSSProperties }> }) {
   return <Icon size={ICON_SIZE} style={{ flexShrink: 0, opacity: 0.6 }} />
 }
 

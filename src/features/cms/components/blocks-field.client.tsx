@@ -48,7 +48,7 @@ import { getBlockAccess } from "../get-granted-block-keys"
 
 const ICON_SIZE = 14
 
-const BLOCK_ICONS: Record<string, React.ComponentType<{ size?: number }>> = {
+const BLOCK_ICONS: Record<string, React.ComponentType<{ size?: number; style?: React.CSSProperties }>> = {
   grid: LayoutGrid,
   column: Columns2,
   text: Type,
