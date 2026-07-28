@@ -1,5 +1,7 @@
 "use client"
 
+import { cn } from "@/lib/utils"
+
 import {
   ChevronsDownUp,
   Columns2,
@@ -16,7 +18,7 @@ import {
 
 import { useRowLabel } from "@payloadcms/ui"
 
-const ICON_SIZE = 16
+const ICON_SIZE = 14
 
 function isPlainObject(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null && !Array.isArray(v)
@@ -61,8 +63,8 @@ function extractLexicalPreview(content: unknown, maxLen = 40): string {
   return text
 }
 
-function RowIcon({ icon: Icon }: { icon: React.ComponentType<{ size?: number; style?: React.CSSProperties }> }) {
-  return <Icon size={ICON_SIZE} style={{ flexShrink: 0, opacity: 0.6 }} />
+function RowIcon({ icon: Icon }: { icon: React.ComponentType<{ size?: number; className?: string }> }) {
+  return <Icon size={ICON_SIZE} className="shrink-0 opacity-60" />
 }
 
 export function RowLabel() {
@@ -164,13 +166,7 @@ export function RowLabel() {
 
   return (
     <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "0.5rem",
-        opacity: isHidden ? 0.4 : 1,
-        textDecoration: isHidden ? "line-through" : "none",
-      }}
+      className={cn("inline-flex items-center gap-2", isHidden && "opacity-40 line-through")}
     >
       {icon && <RowIcon icon={icon} />}
       {content}

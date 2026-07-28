@@ -71,7 +71,9 @@
   --hover-bg: var(--brand-accent-700) !important;
 }
 
-/* ─── "Add Block" / "Add Cell" buttons ─── */
+/* ─── "Add Block" buttons (Payload-native — custom / nieusty u nas w blocks-field.client.tsx,
+ * ale nadal uywany przez Payloadowy natywny BlocksField wewntrz RenderFields
+ * podczas edycji pola bloku (np. cells w gridzie / blocks w columnie)) ─── */
 .blocks-field__drawer-toggler,
 .block-type-button {
   color: var(--brand-accent-600) !important;
