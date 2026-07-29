@@ -219,7 +219,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
           }
           const name = data?.name || "New Page";
-          const slug = data?.slug || slugify(name);
+          const slug = data?.slug ?? slugify(name);
           const newPage = await tx
             .insert(page)
             .values({
@@ -230,6 +230,7 @@ export async function POST(req: NextRequest) {
               parentId: data?.parent || null,
               blocks: [],
               status: "draft",
+              isHome: slug === "",
               createdByUserId: userId,
             })
             .returning();
@@ -253,14 +254,16 @@ export async function POST(req: NextRequest) {
               { status: 404 },
             );
           }
+          const newSlug = data.slug ?? existing.slug;
           const updated = await tx
             .update(page)
             .set({
               blocks: data.blocks ?? existing.blocks,
               title: data.name ?? existing.title,
-              slug: data.slug ?? existing.slug,
+              slug: newSlug,
               seo: data.seo ?? existing.seo,
               pageType: data.pageType ?? existing.pageType,
+              isHome: newSlug === "",
               updatedAt: new Date(),
             })
             .where(and(eq(page.id, data.id), eq(page.organizationId, organizationId)))
@@ -282,12 +285,14 @@ export async function POST(req: NextRequest) {
               { status: 404 },
             );
           }
+          const newSlug = data.slug ?? existing.slug;
           await tx
             .update(page)
             .set({
               title: data.name ?? existing.title,
-              slug: data.slug ?? existing.slug,
+              slug: newSlug,
               seo: data.seo ?? existing.seo,
+              isHome: newSlug === "",
               updatedAt: new Date(),
             })
             .where(and(eq(page.id, data.id), eq(page.organizationId, organizationId)));
@@ -421,7 +426,8 @@ export async function POST(req: NextRequest) {
           if (!userId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
           }
-          if (!data?.id) {
+          const pageId = data?.id ?? data?.ids?.[0];
+          if (!pageId) {
             return NextResponse.json(
               { error: "Missing page id" },
               { status: 400 },
@@ -435,7 +441,7 @@ export async function POST(req: NextRequest) {
               publishedByUserId: userId,
               updatedAt: new Date(),
             })
-            .where(and(eq(page.id, data.id), eq(page.organizationId, organizationId)))
+            .where(and(eq(page.id, pageId), eq(page.organizationId, organizationId)))
             .returning();
           if (!updated.length) {
             return NextResponse.json(

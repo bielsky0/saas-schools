@@ -256,6 +256,53 @@ function forward(
   return withCsp(response, nonce);
 }
 
+/**
+ * Rewrite to `/cms-page/{bare}` — the public CMS page route group
+ * (langlion Faza 38, D94).
+ *
+ * On tenant hosts, an unprefixed path like `/o-nas` must reach
+ * `(public)/cms-page/[[...slug]]` and NOT `[locale]`. A rewrite is required
+ * because:
+ *
+ *   - `[locale]` is a 1-segment dynamic route (`/o-nas` → locale = "o-nas").
+ *   - `(public)/[[...slug]]` is an optional catch-all (`/o-nas` → slug = ["o-nas"]).
+ *   - Next.js prefers named dynamic segments over catch-all segments, so
+ *     `[locale]` wins — and its layout immediately 404s via `!isLocale()`.
+ *
+ * Rewriting to `/cms-page/{bare}` (static prefix) gives the CMS catch-all
+ * priority over `[locale]` without changing the browser URL.
+ *
+ * ⚠️ Headers MUST mirror `forward()` exactly (CSP, nonce, org subdomain,
+ * locale, request id) — see the warning on that function for why the clone
+ * is load-bearing and the delete-before-set is required.
+ */
+function rewriteToPage(
+  request: NextRequest,
+  bare: string,
+  requestId: string,
+  nonce: string,
+  host: HostContext,
+  locale?: Locale,
+  rateHeaders?: Record<string, string>,
+): NextResponse {
+  const rewriteUrl = new URL(`/cms-page${bare}`, request.url);
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set(REQUEST_ID_HEADER, requestId);
+  requestHeaders.set(NONCE_HEADER, nonce);
+  requestHeaders.delete(ORG_SUBDOMAIN_HEADER);
+  requestHeaders.delete(LOCALE_HEADER);
+  if (host.kind === "tenant") requestHeaders.set(ORG_SUBDOMAIN_HEADER, host.subdomain);
+  if (locale) requestHeaders.set(LOCALE_HEADER, locale);
+  const response = NextResponse.rewrite(rewriteUrl, { request: { headers: requestHeaders } });
+  response.headers.set(REQUEST_ID_HEADER, requestId);
+  if (rateHeaders) {
+    for (const [name, value] of Object.entries(rateHeaders)) {
+      response.headers.set(name, value);
+    }
+  }
+  return withCsp(response, nonce);
+}
+
 /** Redirect, keeping the request id so the hop stays correlatable. */
 function redirectTo(url: URL, requestId: string, nonce: string): NextResponse {
   const response = NextResponse.redirect(url);
@@ -331,6 +378,7 @@ function apexUrl(request: NextRequest, pathname: string, search: string): URL {
 export async function proxy(request: NextRequest): Promise<NextResponse> {
   const { pathname, search } = request.nextUrl;
   const requestId = normalizeRequestId(request.headers.get(REQUEST_ID_HEADER));
+
   /*
    * A FRESH nonce per request (spec 22.1). Reusing one across requests would make
    * it guessable, which is the whole of its security value.
@@ -422,18 +470,24 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
     const pathLocale = localeFromPathname(pathname);
     if (!pathLocale) {
       /*
-       * On tenant hosts, /admin is the Payload CMS admin panel and lives at
-       * the bare path (no locale prefix). Payload handles its own i18n, so
-       * the proxy must not add a locale prefix here. Without this exception
-       * the locale redirect below would send /admin → /{locale}/admin, which
-       * would then match the super-admin route at [locale]/(admin)/admin/
-       * instead of (payload)/admin/[[...segments]].
-       *
-       * /editor (ChaiBuilder route group) has its own root layout and must
-       * also skip the locale prefix — it is a standalone route tree with
-       * independent CSS and auth, not a localized app page.
-       */
-      if ((host.kind === "tenant" && pathname.startsWith("/admin")) || pathname.startsWith("/editor")) {
+        * On tenant hosts, /admin is the Payload CMS admin panel and lives at
+        * the bare path (no locale prefix). Payload handles its own i18n, so
+        * the proxy must not add a locale prefix here. Without this exception
+        * the locale redirect below would send /admin → /{locale}/admin, which
+        * would then match the super-admin route at [locale]/(admin)/admin/
+        * instead of (payload)/admin/[[...segments]].
+        *
+        * /editor (ChaiBuilder route group) has its own root layout and must
+        * also skip the locale prefix — it is a standalone route tree with
+        * independent CSS and auth, not a localized app page.
+        *
+        * CMS pages on academy hosts (langlion §2.27). Because `NextResponse.rewrite`
+        * does not work in Next.js 16 + Turbopack, unprefixed tenant URLs now get
+        * a locale redirect (same as apex). The prefixed URL then reaches the
+        * framework directly, matching [locale]/(site)/[...cmsSlug] which already
+        * serves Drizzle-based CMS pages regardless of locale.
+        */
+      if (pathname.startsWith("/editor") || (host.kind === "tenant" && pathname.startsWith("/admin"))) {
         locale = negotiateLocale({ cookieLocale, acceptLanguage });
         bare = pathname;
       } else {
@@ -483,9 +537,15 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
   if (host.kind === "tenant") {
     const reserved = reservedPrefixOf(bare);
     if (!reserved) {
-      // Not a route the app router owns → this academy's CMS page. Forward and
-      // let the request layer resolve the tenant and the slug; an unknown
-      // academy or an unknown page both 404 there (D57).
+      /*
+        * Not a route the app router owns → this academy's CMS page.
+        *
+        * Because `NextResponse.rewrite` is broken in Next.js 16 + Turbopack,
+        * we FORWARD the request instead. By this point the URL already has a
+        * locale prefix (added by the unprefixed→prefixed redirect above), so
+        * the framework resolves [locale]/(site)/[...cmsSlug], which already
+        * serves Drizzle-based CMS pages via servedOrganization() + getPage().
+        */
       return forward(request, requestId, nonce, host, locale, rateHeaders);
     }
     if (reserved.stage === "apex") {

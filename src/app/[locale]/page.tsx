@@ -11,13 +11,16 @@ import { pageMetadata } from "@/features/content";
 import { JsonLd } from "@/features/content/components/json-ld";
 import { organizationJsonLd, webSiteJsonLd } from "@/features/content/jsonld";
 import { servedOrganization, servedSubdomain } from "@/features/organizations/served-org";
-import { getPage } from "@/features/cms/data";
-import { CmsRenderer } from "@/features/cms/renderer";
 import { ThemeInjector } from "@/features/cms/components/theme-injector";
+import { getHomePage, getPageBySlug } from "@/lib/page-service";
+import { TenantPageRenderer } from "@/features/cms/tenant-page-renderer.client";
 import { Link } from "@/lib/i18n/navigation";
 import { withTenant } from "@/lib/db/tenant";
 import { site } from "@/lib/site";
 import { orgsEnabled } from "@/lib/tenancy";
+
+import "@chaibuilder/sdk/styles";
+import "../(public)/public-output.css";
 
 const BYTES_PER_GB = 1024 ** 3;
 
@@ -131,16 +134,14 @@ export default async function Home() {
     if (!org) notFound();
 
     const page = await withTenant(org.id, async (tx) => {
-      return getPage(tx, org.id, "");
+      return (await getHomePage(tx, org.id)) ?? (await getPageBySlug(tx, org.id, "/"));
     });
 
     if (!page || page.status !== "published") notFound();
 
     return (
       <ThemeInjector organizationId={org.id}>
-        <main className="mx-auto max-w-5xl px-4 py-8">
-          <CmsRenderer blocks={page.blocks as unknown[]} />
-        </main>
+        <TenantPageRenderer blocks={page.blocks} />
       </ThemeInjector>
     );
   }

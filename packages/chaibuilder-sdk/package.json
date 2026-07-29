@@ -22,6 +22,7 @@
     "live": "tsc && vite build --config vite.config.live.ts",
     "live:serve": "cd live && npx http-server -p 8080",
     "build:editor-css": "tailwindcss -c '../../src/app/(builder)/editor/tailwind.config.ts' -i '../../src/app/(builder)/editor/builder.css' -o '../../src/app/(builder)/editor/builder-output.css' --minify",
+    "build:public-css": "tailwindcss -c '../../src/app/(public)/tailwind.config.ts' -i '../../src/app/(public)/public.css' -o '../../src/app/(public)/public-output.css' --minify",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:errors": "eslint . --ext ts,tsx --quiet --max-warnings 0",
     "lint:warnings": "eslint . --ext ts,tsx --min-warnings 1",

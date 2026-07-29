@@ -8,8 +8,9 @@
   },
   "scripts": {
     "build:editor-css": "pnpm --filter @chaibuilder/sdk build:editor-css",
-    "dev": "pnpm build:editor-css && next dev",
-    "build": "pnpm build:editor-css && next build",
+    "build:public-css": "pnpm --filter @chaibuilder/sdk build:public-css",
+    "dev": "pnpm build:editor-css && pnpm build:public-css && next dev",
+    "build": "pnpm build:editor-css && pnpm build:public-css && next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
