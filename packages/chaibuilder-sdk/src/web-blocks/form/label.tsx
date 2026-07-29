@@ -15,7 +15,7 @@ export const LabelBlock = (props: ChaiBlockComponentProps<LabelProps>) => {
   if (children) return React.createElement("label", labelProps, children);
   return React.createElement("label", {
     ...labelProps,
-    dangerouslySetInnerHTML: { __html: content },
+    dangerouslySetInnerHTML: { __html: content.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "") },
   });
 };
 const Config = {

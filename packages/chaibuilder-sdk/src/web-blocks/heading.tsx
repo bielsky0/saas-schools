@@ -17,7 +17,7 @@ const HeadingBlock = (props: ChaiBlockComponentProps<HeadingProps>) => {
   return React.createElement(tag, {
     ...styles,
     ...blockProps,
-    dangerouslySetInnerHTML: { __html: content },
+    dangerouslySetInnerHTML: { __html: content.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "") },
   });
 };
 

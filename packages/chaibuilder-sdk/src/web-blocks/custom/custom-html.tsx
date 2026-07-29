@@ -11,14 +11,14 @@ const CustomHTMLBlock = (props: ChaiBlockComponentProps<{ htmlCode: string; styl
       {inBuilder ? <div {...styles} className="absolute z-20 h-full w-full" /> : null}
       {React.createElement("div", {
         ...styles,
-        dangerouslySetInnerHTML: { __html: htmlCode.replace(/<script.*?>.*?<\/script>/g, "") },
+        dangerouslySetInnerHTML: { __html: htmlCode.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "") },
       })}
     </div>
   ) : (
     React.createElement("div", {
       ...blockProps,
       ...styles,
-      dangerouslySetInnerHTML: { __html: htmlCode },
+      dangerouslySetInnerHTML: { __html: htmlCode.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "") },
     })
   );
 };

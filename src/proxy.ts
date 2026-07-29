@@ -407,7 +407,7 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
   let locale: Locale;
   let bare: string;
 
-  if (pathname.startsWith("/api/")) {
+  if (pathname === "/api" || pathname.startsWith("/api/")) {
     /*
      * API routes are NOT locale-prefixed — they are not pages, and `/en/api/...`
      * would be a second URL for one endpoint. They still negotiate a locale, so a
@@ -428,8 +428,12 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
        * the locale redirect below would send /admin → /{locale}/admin, which
        * would then match the super-admin route at [locale]/(admin)/admin/
        * instead of (payload)/admin/[[...segments]].
+       *
+       * /editor (ChaiBuilder route group) has its own root layout and must
+       * also skip the locale prefix — it is a standalone route tree with
+       * independent CSS and auth, not a localized app page.
        */
-      if (host.kind === "tenant" && pathname.startsWith("/admin")) {
+      if ((host.kind === "tenant" && pathname.startsWith("/admin")) || pathname.startsWith("/editor")) {
         locale = negotiateLocale({ cookieLocale, acceptLanguage });
         bare = pathname;
       } else {

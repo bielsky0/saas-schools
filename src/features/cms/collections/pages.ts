@@ -26,9 +26,9 @@ export const pagesCollection: CollectionConfig = {
     components: {
       views: {
         edit: {
-          default: {
+          root: {
             Component:
-              "/src/features/cms/admin/views/pages-edit-view.client#PagesEditView",
+              "/src/features/cms/admin/views/pages-edit-view-root.client#PagesEditViewRoot",
           },
         },
       },

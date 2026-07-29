@@ -16,7 +16,7 @@ const SpanBlock = (props: ChaiBlockComponentProps<SpanProps>) => {
   return React.createElement(tag || "span", {
     ...styles,
     ...blockProps,
-    dangerouslySetInnerHTML: { __html: content || "" },
+    dangerouslySetInnerHTML: { __html: (content || "").replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "") },
   });
 };
 

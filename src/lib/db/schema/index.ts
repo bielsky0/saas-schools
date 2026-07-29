@@ -149,3 +149,4 @@ export * from "./custom-domains";
 export * from "./waitlist-entry";
 export * from "./broadcast-message";
 export * from "./organization-sms-credit";
+export * from "./pages";

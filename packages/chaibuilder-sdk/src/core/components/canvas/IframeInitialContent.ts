@@ -3,7 +3,6 @@ export const IframeInitialContent: string = `<!doctype html>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com/3.4.17?plugins=forms@0.5.9,typography@0.5.15,aspect-ratio@0.4.2"></script>
     <style>
       html { height: 100%; overflow:auto; }
       body { height: 100%; }

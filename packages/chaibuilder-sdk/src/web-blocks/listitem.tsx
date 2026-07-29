@@ -15,7 +15,7 @@ export const ListItemBlock = (props: ChaiBlockComponentProps<ListItemBlockProps>
     return React.createElement(tag || "li", {
       ...styles,
       ...blockProps,
-      dangerouslySetInnerHTML: { __html: content },
+      dangerouslySetInnerHTML: { __html: content.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "") },
     });
   }
   return React.createElement(tag || "li", { ...styles, ...blockProps }, children);

@@ -80,7 +80,7 @@ const TableCellBlock = (props: ChaiBlockComponentProps<TableCellProps>) => {
     return createElement("td", {
       ...blockProps,
       ...styles,
-      dangerouslySetInnerHTML: { __html: content },
+      dangerouslySetInnerHTML: { __html: content.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "") },
     });
   }
   return createElement("td", { ...blockProps, ...styles }, children);

@@ -20,6 +20,9 @@
 /.next/
 /out/
 
+# generated css
+src/app/(builder)/editor/builder-output.css
+
 # production
 /build
 

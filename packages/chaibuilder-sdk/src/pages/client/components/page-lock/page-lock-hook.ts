@@ -21,7 +21,15 @@ import {
 } from "./page-lock-utils";
 import type { RealtimeChannelAdapter } from "./realtime-adapter";
 
-const clientId: string = crypto.randomUUID();
+const clientId: string = (() => {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+  });
+})();
 let websocketTimeout: any = null;
 
 // Reconnection configuration constants

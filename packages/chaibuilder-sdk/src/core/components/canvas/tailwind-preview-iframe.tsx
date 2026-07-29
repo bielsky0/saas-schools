@@ -119,7 +119,7 @@ export const TailwindPreviewIframe = ({
     <ChaiFrame className={className} style={style} title={title} initialContent={initialContent}>
       <PreviewHeadTags />
       <div className="h-full p-4">
-        <div className={classes || undefined} dangerouslySetInnerHTML={{ __html: content }} />
+        <div className={classes || undefined} dangerouslySetInnerHTML={{ __html: content.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "") }} />
       </div>
     </ChaiFrame>
   );

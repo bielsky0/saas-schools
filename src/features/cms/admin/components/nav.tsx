@@ -11,11 +11,11 @@ export function AdminNav(props: ServerProps) {
     segments?.[0] === "collections" &&
     segments?.[1] === "pages"
 
-  // if (isPagesDocumentEdit) return null
+  // if (isPagesDocumentEdit) return <></>
 
   return (
     <div>
-      {/* <DefaultNav {...props} /> */}
+      {/* <DefaultNav {...props} /> */}s
     </div>
   )
 }

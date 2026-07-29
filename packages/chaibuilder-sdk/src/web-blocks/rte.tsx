@@ -13,7 +13,7 @@ const RichTextBlock = (props: ChaiBlockComponentProps<RichTextProps>) => {
 
   const forcedStyles = addForcedClasses(styles, "rte");
 
-  return <div {...blockProps} {...forcedStyles} dangerouslySetInnerHTML={{ __html: content }}></div>;
+  return <div {...blockProps} {...forcedStyles} dangerouslySetInnerHTML={{ __html: content.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "") }}></div>;
 };
 
 const Config = {

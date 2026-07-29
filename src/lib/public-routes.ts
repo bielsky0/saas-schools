@@ -97,6 +97,9 @@ export const PUBLIC_PAGE_ROUTES = {
    * belongs to the CMS module's own robots/sitemap handlers, which resolve a host.
    */
   "/zapisy": { prefix: true, indexable: false },
+
+  // ChaiBuilder visual editor — own root layout, own auth, own CSS
+  "/editor": { prefix: true, indexable: false },
 } satisfies Record<string, PublicPageRoute>;
 
 export type PublicPagePath = keyof typeof PUBLIC_PAGE_ROUTES;

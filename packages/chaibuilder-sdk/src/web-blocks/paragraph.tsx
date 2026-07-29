@@ -20,7 +20,7 @@ const ParagraphBlock = (props: ChaiBlockComponentProps<ParagraphProps>) => {
   return React.createElement("div", {
     ...forcedStyles,
     ...blockProps,
-    dangerouslySetInnerHTML: { __html: content },
+    dangerouslySetInnerHTML: { __html: content.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "") },
   });
 };
 

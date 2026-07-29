@@ -3,6 +3,7 @@ import { registerChaiBlockProps } from "~/runtime";
 import { ChaiBlockComponentProps } from "~/types/blocks";
 
 import { CodeIcon } from "@radix-ui/react-icons";
+import { useEffect, useRef } from "react";
 
 export type CustomScriptBlockProps = {
   scripts: string;
@@ -10,6 +11,32 @@ export type CustomScriptBlockProps = {
 
 const CustomScript = (props: ChaiBlockComponentProps<CustomScriptBlockProps>) => {
   const { scripts, inBuilder, blockProps } = props;
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (inBuilder || !scripts) return;
+    const container = containerRef.current;
+    if (!container) return;
+
+    const existingScripts = container.querySelectorAll("script");
+    existingScripts.forEach((s) => s.remove());
+
+    // Advanced feature: dynamically inject and execute custom scripts in preview/live mode.
+    // We parse the HTML string for <script> tags and recreate them as real DOM elements
+    // so the browser executes them. Plain dangerouslySetInnerHTML would NOT execute scripts.
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = scripts;
+    const scriptElements = tempDiv.querySelectorAll("script");
+    scriptElements.forEach((oldScript) => {
+      const newScript = document.createElement("script");
+      Array.from(oldScript.attributes).forEach((attr) =>
+        newScript.setAttribute(attr.name, attr.value),
+      );
+      newScript.textContent = oldScript.textContent;
+      container.appendChild(newScript);
+    });
+  }, [scripts, inBuilder]);
+
   if (inBuilder)
     return (
       <div {...blockProps}>
@@ -22,7 +49,7 @@ const CustomScript = (props: ChaiBlockComponentProps<CustomScriptBlockProps>) =>
         </div>
       </div>
     );
-  return <div dangerouslySetInnerHTML={{ __html: scripts }}></div>;
+  return <div ref={containerRef} />;
 };
 
 const Config = {

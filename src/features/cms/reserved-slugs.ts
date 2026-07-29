@@ -105,6 +105,7 @@ export const RESERVED_PATH_PREFIXES: Readonly<Record<string, PathStage>> = {
    * have the tenant branch bounce it back to the apex the moment it was issued.
    */
   dashboard: "both",
+  editor: "both",
   login: "both",
   logout: "both",
   signup: "both",
