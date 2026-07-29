@@ -71,5 +71,10 @@ export const themeCollection: CollectionConfig = {
       type: "text",
       required: true,
     },
+    {
+      name: "borderRadius",
+      type: "text",
+      required: true,
+    },
   ],
 };

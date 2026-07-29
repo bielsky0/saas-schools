@@ -36,15 +36,6 @@ export const createMediaSchema = z.object({
   altText: z.string().max(400).nullable().optional(),
 });
 
-export const createThemeSchema = z.object({
-  fontPrimary: z.string().min(1).max(100),
-  fontHeading: z.string().min(1).max(100),
-  colorPrimary: z.string().min(1).max(50),
-  colorSecondary: z.string().min(1).max(50),
-});
-
-export const updateThemeSchema = createThemeSchema.partial();
-
 export const grantBlockSchema = z.object({
   blockKey: z.string().min(1).max(100),
 });

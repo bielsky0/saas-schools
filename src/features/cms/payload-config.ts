@@ -169,6 +169,7 @@ export default buildConfig({
           await run(`ALTER TABLE "theme" ADD COLUMN IF NOT EXISTS "organization_id" TEXT NOT NULL DEFAULT '';`);
           await run(`ALTER TABLE "theme" ADD COLUMN IF NOT EXISTS "created_by_user_id" TEXT;`);
           await run(`ALTER TABLE "theme" ADD COLUMN IF NOT EXISTS "updated_by_user_id" TEXT;`);
+          await run(`ALTER TABLE "theme" ADD COLUMN IF NOT EXISTS "border_radius" TEXT NOT NULL DEFAULT '0.5rem';`);
           // payload_admin_users is non-tenant (no organization_id column). RLS on a
           // table without an isolation column provides zero security benefit — the
           // only policy was _system_bypass, which required app.bypass_rls = 'on' to

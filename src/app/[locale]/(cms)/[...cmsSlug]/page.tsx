@@ -9,6 +9,8 @@ import { buildTenantOriginUrl } from "@/features/cms/preview-url";
 import { withTenant } from "@/lib/db/tenant";
 import { getPageBySlug } from "@/lib/page-service";
 import { TenantPageRenderer } from "@/features/cms/tenant-page-renderer.client";
+import { getBlocksCss } from "@/features/cms/get-blocks-css";
+import { PageStyles } from "@/features/cms/components/page-styles.client";
 
 /**
  * An academy's public CMS page.
@@ -65,8 +67,11 @@ export default async function CmsPage({ params }: CmsPageProps) {
   const host = h.get("host") || "";
   const serverURL = buildTenantOriginUrl(host, "") || `http://${host}`;
 
+  const pageCss = await getBlocksCss(page.blocks);
+
   return (
     <ThemeInjector organizationId={org.id}>
+      <PageStyles css={pageCss} />
       <RefreshRouteOnSave serverURL={serverURL} />
       <TenantPageRenderer blocks={page.blocks} />
     </ThemeInjector>

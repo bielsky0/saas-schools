@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import "@/app/globals.css";
+
 import { resolveClientSession } from "@/features/client-auth/session";
 import { requireServedOrganization } from "@/features/organizations/served-org";
 import { ClientNotificationBell } from "@/features/notifications/components/client-notification-bell";

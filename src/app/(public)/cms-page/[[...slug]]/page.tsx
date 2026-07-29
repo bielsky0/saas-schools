@@ -3,8 +3,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { servedOrganization } from "@/features/organizations/served-org";
+import { ThemeInjector } from "@/features/cms/components/theme-injector";
 import { withTenant } from "@/lib/db/tenant";
 import { getPageBySlug, getHomePage } from "@/lib/page-service";
+import { getBlocksCss } from "@/features/cms/get-blocks-css";
+import { PageStyles } from "@/features/cms/components/page-styles.client";
 
 import { ClientPageRenderer } from "./client-page-renderer";
 
@@ -57,6 +60,8 @@ export default async function PublicPage({ params }: PublicPageProps) {
 
   if (!page || page.status !== "published") notFound();
 
+  const pageCss = await getBlocksCss(page.blocks);
+
   const pageProps: ChaiPageProps = {
     slug: slug || "/",
     pageType: page.pageType,
@@ -64,5 +69,10 @@ export default async function PublicPage({ params }: PublicPageProps) {
     pageLang: "en",
   };
 
-  return <ClientPageRenderer blocks={page.blocks} pageProps={pageProps} />;
+  return (
+    <ThemeInjector organizationId={org.id}>
+      <PageStyles css={pageCss} />
+      <ClientPageRenderer blocks={page.blocks} pageProps={pageProps} />
+    </ThemeInjector>
+  );
 }

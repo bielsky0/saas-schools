@@ -14,11 +14,14 @@ import { servedOrganization, servedSubdomain } from "@/features/organizations/se
 import { ThemeInjector } from "@/features/cms/components/theme-injector";
 import { getHomePage, getPageBySlug } from "@/lib/page-service";
 import { TenantPageRenderer } from "@/features/cms/tenant-page-renderer.client";
+import { getBlocksCss } from "@/features/cms/get-blocks-css";
+import { PageStyles } from "@/features/cms/components/page-styles.client";
 import { Link } from "@/lib/i18n/navigation";
 import { withTenant } from "@/lib/db/tenant";
 import { site } from "@/lib/site";
 import { orgsEnabled } from "@/lib/tenancy";
 
+import "@/app/globals.css";
 import "@chaibuilder/sdk/styles";
 import "../(public)/public-output.css";
 
@@ -139,8 +142,11 @@ export default async function Home() {
 
     if (!page || page.status !== "published") notFound();
 
+    const pageCss = await getBlocksCss(page.blocks);
+
     return (
       <ThemeInjector organizationId={org.id}>
+        <PageStyles css={pageCss} />
         <TenantPageRenderer blocks={page.blocks} />
       </ThemeInjector>
     );

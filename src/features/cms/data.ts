@@ -206,6 +206,7 @@ export type ThemeRow = {
   fontHeading: string;
   colorPrimary: string;
   colorSecondary: string;
+  borderRadius: string;
   organizationId: string;
 };
 
@@ -215,7 +216,15 @@ export async function getTheme(
 ): Promise<ThemeRow | null> {
   const [row] = await tx.execute<ThemeRow>(
     sql`
-      SELECT t.* FROM theme t
+      SELECT
+        t.id,
+        t.font_primary AS "fontPrimary",
+        t.font_heading AS "fontHeading",
+        t.color_primary AS "colorPrimary",
+        t.color_secondary AS "colorSecondary",
+        t.border_radius AS "borderRadius",
+        t.organization_id AS "organizationId"
+      FROM theme t
       WHERE t.organization_id = ${organizationId}
       LIMIT 1
     `,
@@ -223,29 +232,4 @@ export async function getTheme(
   return (row as ThemeRow) ?? null;
 }
 
-export async function upsertTheme(
-  tx: TenantDb,
-  input: {
-    organizationId: string;
-    fontPrimary: string;
-    fontHeading: string;
-    colorPrimary: string;
-    colorSecondary: string;
-    createdByUserId: string;
-  },
-): Promise<ThemeRow> {
-  const [row] = await tx.execute<ThemeRow>(
-    sql`
-      INSERT INTO theme (organization_id, font_primary, font_heading, color_primary, color_secondary, created_by_user_id)
-      VALUES (${input.organizationId}, ${input.fontPrimary}, ${input.fontHeading}, ${input.colorPrimary}, ${input.colorSecondary}, ${input.createdByUserId})
-      ON CONFLICT (organization_id) DO UPDATE SET
-        font_primary = EXCLUDED.font_primary,
-        font_heading = EXCLUDED.font_heading,
-        color_primary = EXCLUDED.color_primary,
-        color_secondary = EXCLUDED.color_secondary,
-        updated_by_user_id = ${input.createdByUserId}
-      RETURNING *
-    `,
-  );
-  return row as ThemeRow;
-}
+

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import "@/app/globals.css";
+
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SignOutButton } from "@/features/auth";
 import { NotificationBell } from "@/features/notifications";
