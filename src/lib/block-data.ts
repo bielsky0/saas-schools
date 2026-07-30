@@ -1,7 +1,8 @@
-import { and, eq, isNull } from "drizzle-orm";
+import { and, desc, eq, isNull } from "drizzle-orm";
 
 import type { TenantDb } from "@/lib/db/tenant";
 import { membership, user } from "@/lib/db/schema";
+import { page } from "@/lib/db/schema/pages";
 import { getGroupType } from "@/features/groups/data";
 import { listUpcomingSessions } from "@/features/schedule/data";
 import type { ChaiBlock } from "@chaibuilder/sdk/types";
@@ -89,6 +90,44 @@ export async function getTrainerForBlock(
         eq(membership.role, "trainer"),
         eq(membership.status, "active"),
         isNull(user.deletedAt),
+      ),
+    )
+    .limit(1);
+  return row ?? null;
+}
+
+export async function getBlogPosts(
+  tx: TenantDb,
+  orgId: string,
+  limit?: number,
+  offset?: number,
+) {
+  return tx.query.page.findMany({
+    where: and(
+      eq(page.organizationId, orgId),
+      eq(page.pageType, "blog_post"),
+      eq(page.status, "published"),
+    ),
+    orderBy: [desc(page.publishedAt)],
+    limit: limit ?? 10,
+    offset: offset ?? 0,
+  });
+}
+
+export async function getBlogPostBySlug(
+  tx: TenantDb,
+  orgId: string,
+  slug: string,
+) {
+  const [row] = await tx
+    .select()
+    .from(page)
+    .where(
+      and(
+        eq(page.organizationId, orgId),
+        eq(page.slug, slug),
+        eq(page.pageType, "blog_post"),
+        eq(page.status, "published"),
       ),
     )
     .limit(1);

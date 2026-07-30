@@ -12,6 +12,7 @@ export async function getPageBySlug(tx: TenantDb, organizationId: string, slug: 
         eq(page.organizationId, organizationId),
         eq(page.slug, slug),
         ne(page.status, "archived"),
+        ne(page.pageType, "blog_post"),
       ),
     )
     .limit(1);

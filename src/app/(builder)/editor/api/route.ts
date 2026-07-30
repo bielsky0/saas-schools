@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { page } from "@/lib/db/schema/pages";
 import { organization } from "@/lib/db/schema/organizations";
 import { withTenant, type TenantDb } from "@/lib/db/tenant";
+import { getBlogPostBySlug } from "@/lib/block-data";
 import { ORG_SUBDOMAIN_HEADER } from "@/lib/tenant-host";
 import { getOrgBySubdomain } from "@/features/organizations/data";
 import { slugify } from "@/features/organizations/slug";
@@ -39,7 +40,7 @@ async function listPages(tx: TenantDb, orgId: string) {
   return tx
     .select()
     .from(page)
-    .where(and(eq(page.organizationId, orgId), ne(page.pageType, "blog_post")))
+    .where(eq(page.organizationId, orgId))
     .orderBy(desc(page.createdAt));
 }
 
@@ -89,6 +90,7 @@ const defaultWebsiteSettings = {
 
 const pageTypes = [
   { key: "page", name: "Page", helpText: "", icon: "", hasSlug: true },
+  { key: "blog_post", name: "Blog Post", helpText: "", icon: "", hasSlug: true },
 ];
 
 const emptyListActions = new Set([
@@ -189,8 +191,30 @@ export async function POST(req: NextRequest) {
           });
         }
 
-        case "GET_BUILDER_PAGE_DATA":
-          return NextResponse.json({ global: {} });
+        case "GET_BUILDER_PAGE_DATA": {
+          const { pageType, pageProps } = data;
+          let blogData = null;
+
+          if (pageType === "blog_post" && pageProps?.slug) {
+            const slug = pageProps.slug.replace(/^\//, "");
+            const post = await getBlogPostBySlug(tx, organizationId, slug);
+            if (post) {
+              const seo = (post.seo ?? {}) as Record<string, string>;
+              blogData = {
+                title: post.title,
+                description: seo.description || "",
+                image: seo.ogImage || "",
+                url: `/${slug}`,
+                datePublished: post.publishedAt?.toISOString() ?? new Date().toISOString(),
+              };
+            }
+          }
+
+          return NextResponse.json({
+            global: {},
+            ...(blogData ? { blog: blogData } : {}),
+          });
+        }
 
         case "GET_PAGE_TYPES":
           return NextResponse.json(pageTypes);

@@ -8,6 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui";
 import { Link } from "@/lib/i18n/navigation";
 import { site } from "@/lib/site";
+import { servedOrganization } from "@/features/organizations/served-org";
 
 /**
  * Shared chrome for the public content pages (spec 7.3, 8).
@@ -36,6 +37,12 @@ const NAV = [
 ] as const;
 
 export default async function MarketingLayout({ children }: { children: ReactNode }) {
+  const org = await servedOrganization();
+
+  if (org) {
+    return <div className="flex min-h-dvh flex-col"><main className="flex-1">{children}</main></div>;
+  }
+
   const t = await getTranslations("nav");
 
   return (

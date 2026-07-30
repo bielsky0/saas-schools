@@ -14,35 +14,50 @@ import { blogPostingJsonLd, breadcrumbJsonLd } from "@/features/content/jsonld";
 import { pageMetadata } from "@/features/content/seo";
 import { CONTENT_LOCALE, getBlogPost, listBlogPosts } from "@/features/content/source";
 
-/**
- * A blog post (spec 8.2, 9.1).
- *
- * Server-rendered: the body is in the HTML, so it is readable with JavaScript
- * disabled and by a crawler that never runs any (verified by
- * e2e/content-no-js.spec.ts).
- */
+import { servedOrganization } from "@/features/organizations/served-org";
+import { withTenant } from "@/lib/db/tenant";
+import { getBlogPostBySlug, enrichBlocksWithData } from "@/lib/block-data";
+import { ThemeInjector } from "@/features/cms/components/theme-injector";
+import { TenantPageRenderer } from "@/features/cms/tenant-page-renderer.client";
+import { PageStyles } from "@/features/cms/components/page-styles.client";
+import { getBlocksCss } from "@/features/cms/get-blocks-css";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-/*
- * This does not prerender today — the root layout reads the session, so every
- * page is dynamic (see ARCHITECTURE.md). It is kept because it costs nothing and
- * is exactly what starts working the day someone enables cacheComponents.
- */
 export function generateStaticParams(): { slug: string }[] {
   return listBlogPosts().map((post) => ({ slug: post.slug }));
 }
 
-/** Published posts only: an unpublished slug must look like it does not exist. */
 function publishedPost(slug: string) {
   const entry = getBlogPost(slug);
   return entry && entry.meta.status === "published" ? entry : null;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const org = await servedOrganization();
   const { slug } = await params;
+
+  if (org) {
+    const post = await withTenant(org.id, (tx) =>
+      getBlogPostBySlug(tx, org.id, "/" + slug),
+    );
+    if (!post) return {};
+    const seo = (post.seo ?? {}) as {
+      title?: string;
+      description?: string;
+      ogImage?: string;
+      noIndex?: boolean;
+    };
+    return {
+      title: seo.title ?? post.title,
+      description: seo.description,
+      ...(seo.noIndex ? { robots: { index: false } as const } : {}),
+      openGraph: seo.ogImage ? { images: [seo.ogImage] } : undefined,
+    };
+  }
+
   const entry = publishedPost(slug);
   if (!entry) return {};
 
@@ -52,8 +67,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     description: meta.description,
     path: `/blog/${slug}`,
     locale: await getLocale(),
-    // The post's prose is English whatever locale is rendering the chrome, so
-    // `/pl/blog/x` declares `/en/blog/x` canonical instead of competing with it.
     contentLocale: CONTENT_LOCALE,
     type: "article",
     image: meta.coverImage ?? `/blog/${slug}/opengraph-image`,
@@ -65,7 +78,32 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
+  const org = await servedOrganization();
   const { slug } = await params;
+
+  if (org) {
+    const post = await withTenant(org.id, (tx) =>
+      getBlogPostBySlug(tx, org.id, "/" + slug),
+    );
+    if (!post || post.status !== "published") notFound();
+
+    const enrichedBlocks = await withTenant(org.id, (tx) =>
+      enrichBlocksWithData(tx, org.id, post.blocks),
+    );
+    const pageCss = await getBlocksCss(post.blocks);
+
+    return (
+      <ThemeInjector organizationId={org.id}>
+        <PageStyles css={pageCss} />
+        <TenantPageRenderer
+          blocks={enrichedBlocks}
+          slug={post.slug}
+          pageType={post.pageType}
+        />
+      </ThemeInjector>
+    );
+  }
+
   const locale = await getLocale();
   const entry = publishedPost(slug);
   if (!entry) notFound();

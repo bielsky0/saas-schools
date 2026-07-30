@@ -18,7 +18,7 @@ function VersionsListView() {
     return <div className="p-6 text-muted-foreground">Loading versions...</div>
   }
 
-  const baseUrl = apiURL.split("?")[0].replace(/\/\d+$/, "")
+  const baseUrl = apiURL.split("?")[0]!.replace(/\/\d+$/, "")
   const versionsUrl = `${baseUrl}/versions?where[parent][equals]=${id}&sort=-updatedAt&limit=20`
 
   const [{ data, isLoading }] = usePayloadAPI(versionsUrl)
@@ -66,12 +66,12 @@ function VersionsListView() {
 
 /* ── Minimal API JSON view ── */
 
-function ApiJsonView({ doc }: { doc: Data }) {
+function ApiJsonView({ doc }: { doc: Data | undefined }) {
   return (
     <div className="p-6">
       <h2 className="text-lg font-semibold mb-4">Document JSON</h2>
       <pre className="bg-muted p-4 rounded-md text-xs overflow-auto max-h-[calc(100vh-300px)] font-mono">
-        {JSON.stringify(doc, null, 2)}
+        {JSON.stringify(doc ?? {}, null, 2)}
       </pre>
     </div>
   )
@@ -151,7 +151,7 @@ export function PagesEditViewRoot(props: DocumentViewServerProps) {
 
       {/* ── Content ── */}
       <div className="flex-1 min-h-0">
-        {activeTab === "default" && <PagesEditView {...rest} />}
+        {activeTab === "default" && <PagesEditView {...rest} documentSubViewType={documentSubViewType} />}
         {activeTab === "versions" && <VersionsListView />}
         {activeTab === "api" && <ApiJsonView doc={data} />}
       </div>

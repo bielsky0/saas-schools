@@ -8,19 +8,18 @@ import { pageMetadata } from "@/features/content/seo";
 import { listBlogPosts } from "@/features/content/source";
 import { absoluteUrl, site } from "@/lib/site";
 
-/**
- * Blog index (spec 8.2).
- *
- * Only published posts appear, and that is guaranteed at the source rather than
- * here — `listBlogPosts()` cannot return a draft.
- */
+import { servedOrganization } from "@/features/organizations/served-org";
+import { withTenant } from "@/lib/db/tenant";
+import { getBlogPosts } from "@/lib/block-data";
+import { BlogList } from "@/features/cms/components/blog-list";
+import { ThemeInjector } from "@/features/cms/components/theme-injector";
 
-/**
- * `generateMetadata`, not a static `metadata` object: the canonical, hreflang and
- * og:locale all depend on which language is being served, and a static object
- * cannot see the `[locale]` segment.
- */
 export async function generateMetadata(): Promise<Metadata> {
+  const org = await servedOrganization();
+  if (org) {
+    return { title: "Blog" };
+  }
+
   return pageMetadata({
     title: "Blog",
     description: `Product updates, engineering notes and architecture decisions from the ${site.name} team.`,
@@ -29,7 +28,18 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-export default function BlogIndexPage() {
+export default async function BlogIndexPage() {
+  const org = await servedOrganization();
+
+  if (org) {
+    const posts = await withTenant(org.id, (tx) => getBlogPosts(tx, org.id));
+    return (
+      <ThemeInjector organizationId={org.id}>
+        <BlogList posts={posts} />
+      </ThemeInjector>
+    );
+  }
+
   const posts = listBlogPosts();
 
   return (

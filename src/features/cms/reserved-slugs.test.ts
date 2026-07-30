@@ -26,9 +26,9 @@ describe("reservedPrefixOf", () => {
     expect(result).toEqual({ prefix: "settings", stage: "apex" });
   });
 
-  it("blog is stage 'apex'", () => {
+  it("blog is stage 'tenant' (not 'apex') so it stays on tenant hosts", () => {
     const result = reservedPrefixOf("/blog/some-post");
-    expect(result).toEqual({ prefix: "blog", stage: "apex" });
+    expect(result).toEqual({ prefix: "blog", stage: "tenant" });
   });
 
   /* ─── unchanged tenant-only routes ─────────────────────────────────────── */

@@ -1,4 +1,4 @@
-import type { CollectionConfig } from "payload";
+import type { Block, CollectionConfig } from "payload";
 import { APIError } from "payload";
 import { eq } from "drizzle-orm";
 
@@ -9,7 +9,7 @@ import { CORE_BLOCK_TYPES } from "../block-registry";
 import { setTenantContext } from "../tenant-context";
 import { tenantBlockAccess } from "@/lib/db/schema/cms-tenant-block-access";
 
-const ALL_BLOCKS = getAllBlockConfigs();
+const ALL_BLOCKS = getAllBlockConfigs() as Block[];
 
 type CmsReq = { user?: { organizationId?: string } } & Record<string, unknown>;
 

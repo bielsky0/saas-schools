@@ -132,7 +132,7 @@ export const RESERVED_PATH_PREFIXES: Readonly<Record<string, PathStage>> = {
   settings: "apex",
   invitations: "apex",
   unsubscribe: "apex",
-  blog: "apex",
+  blog: "tenant",
   changelog: "apex",
   docs: "apex",
 };
