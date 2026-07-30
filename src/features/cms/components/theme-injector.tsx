@@ -2,6 +2,7 @@ import { getChaiThemeCssVariables } from "@chaibuilder/sdk/render";
 import type { ChaiTheme } from "@chaibuilder/sdk/types";
 import { withTenant } from "@/lib/db/tenant";
 import { getTheme } from "@/features/cms/theme-data";
+import { getActiveBuilderTheme } from "@/features/cms/builder-theme-data";
 
 const GOOGLE_FONTS: Record<string, string> = {
   Inter: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap",
@@ -55,6 +56,35 @@ type Props = {
 };
 
 export async function ThemeInjector({ organizationId, children }: Props) {
+  if (!organizationId) {
+    return <>{children}</>;
+  }
+
+  // 1. Try the builder theme (full ChaiTheme from JSONB)
+  const builderTheme = await withTenant(organizationId, async (tx) =>
+    getActiveBuilderTheme(tx, organizationId),
+  );
+
+  if (builderTheme) {
+    const cssVars = getChaiThemeCssVariables({ theme: builderTheme });
+    const forcedCss = `${cssVars}\n:root { --radius: ${builderTheme.borderRadius} !important; }`;
+
+    const fontUrls = [builderTheme.fontFamily.heading, builderTheme.fontFamily.body]
+      .filter((f) => f in GOOGLE_FONTS)
+      .map((f) => GOOGLE_FONTS[f]);
+
+    return (
+      <>
+        {fontUrls.map((url) => (
+          <link key={url} rel="stylesheet" href={url} />
+        ))}
+        <style dangerouslySetInnerHTML={{ __html: forcedCss }} />
+        {children}
+      </>
+    );
+  }
+
+  // 2. Fallback: Payload CMS theme table (legacy ThemeRow)
   const theme = await withTenant(organizationId, async (tx) =>
     getTheme(tx, organizationId),
   );

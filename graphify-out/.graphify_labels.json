@@ -701,5 +701,12 @@
   "699": "src/app/(builder)/editor/tailwind.config.ts",
   "700": "(public)/tailwind.config.ts",
   "701": "contact-form-actions.ts",
-  "702": "style-dictionary.test.ts"
+  "702": "style-dictionary.test.ts",
+  "703": "@types/lodash",
+  "704": "@types/node",
+  "705": "typescript",
+  "706": "@typescript-eslint/eslint-plugin",
+  "707": "vite",
+  "708": "vite-plugin-dts",
+  "709": "@vitejs/plugin-react-swc"
 }

@@ -10,6 +10,7 @@ import { getBlogPostBySlug } from "@/lib/block-data";
 import { ORG_SUBDOMAIN_HEADER } from "@/lib/tenant-host";
 import { getOrgBySubdomain } from "@/features/organizations/data";
 import { slugify } from "@/features/organizations/slug";
+import { getActiveBuilderTheme, upsertBuilderTheme } from "@/features/cms/builder-theme-data";
 
 // ── Response shape mapping ──────────────────────────────────────────────
 
@@ -155,8 +156,13 @@ export async function POST(req: NextRequest) {
             .where(eq(organization.id, organizationId))
             .limit(1);
 
+          const builderTheme = await getActiveBuilderTheme(tx, organizationId);
+          const websiteSettings = builderTheme
+            ? { ...defaultWebsiteSettings, theme: builderTheme }
+            : defaultWebsiteSettings;
+
           return NextResponse.json({
-            websiteSettings: defaultWebsiteSettings,
+            websiteSettings,
             websitePages: pages.map(toChaiPage),
             pageTypes,
             libraries: [],
@@ -166,8 +172,13 @@ export async function POST(req: NextRequest) {
         }
 
         case "GET_WEBSITE_SETTINGS":
-        case "GET_WEBSITE_DRAFT_SETTINGS":
-          return NextResponse.json(defaultWebsiteSettings);
+        case "GET_WEBSITE_DRAFT_SETTINGS": {
+          const builderTheme = await getActiveBuilderTheme(tx, organizationId);
+          const websiteSettings = builderTheme
+            ? { ...defaultWebsiteSettings, theme: builderTheme }
+            : defaultWebsiteSettings;
+          return NextResponse.json(websiteSettings);
+        }
 
         case "GET_DRAFT_PAGE": {
           if (!data?.id) {
@@ -503,8 +514,13 @@ export async function POST(req: NextRequest) {
         case "DELETE_PAGE_REVISION":
           return NextResponse.json({ success: true });
 
-        case "UPDATE_WEBSITE_FIELDS":
+        case "UPDATE_WEBSITE_FIELDS": {
+          const theme = data?.settings?.theme;
+          if (theme) {
+            await upsertBuilderTheme(tx, organizationId, theme, userId);
+          }
           return NextResponse.json({ success: true });
+        }
 
         case "ASK_AI":
         case "GENERATE_HTML_FROM_PROMPT":
