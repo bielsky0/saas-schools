@@ -527,6 +527,57 @@
       "createAccount": "Create account"
     }
   },
+  "sidebar": {
+    "mobile": {
+      "menu": "Menu"
+    },
+    "breadcrumbs": {
+      "dashboard": "Dashboard",
+      "groupTypes": "Group types",
+      "schedule": "Schedule",
+      "trainers": "Trainers",
+      "earnings": "Earnings",
+      "rates": "Rates",
+      "clients": "Clients",
+      "credits": "Credits",
+      "purchases": "Purchases",
+      "invoices": "Invoices",
+      "extraFees": "Extra fees",
+      "qualificationCards": "Qualification cards",
+      "locations": "Locations",
+      "policies": "Policies",
+      "import": "Import",
+      "sessions": "Sessions",
+      "settings": "Settings",
+      "audit": "Audit",
+      "billing": "Billing",
+      "members": "Members",
+      "permissions": "Permissions",
+      "files": "Files"
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "management": "Management",
+      "groupTypes": "Group types",
+      "schedule": "Schedule",
+      "trainers": "Trainers",
+      "clients": "Clients",
+      "credits": "Credits",
+      "qualificationCards": "Qualification cards",
+      "extraFees": "Extra fees",
+      "locations": "Locations",
+      "finances": "Finances",
+      "earnings": "Trainer earnings",
+      "purchases": "Credit purchases",
+      "invoices": "Invoices",
+      "admin": "Admin",
+      "settings": "Settings",
+      "audit": "Audit",
+      "members": "Members",
+      "files": "Files",
+      "cms": "CMS"
+    }
+  },
   "dashboard": {
     "meta": {
       "dashboard": "Dashboard",

@@ -9,6 +9,7 @@ import { NotificationBell } from "@/features/notifications";
 import { ensurePersonalAccount } from "@/features/organizations/data";
 import { servedOrganization } from "@/features/organizations/served-org";
 import { requireSession } from "@/lib/auth";
+import AcademyLayout from "@/components/academy-layout";
 
 /**
  * Authenticated app shell (spec 7.4). Wraps both the apex account surface and an
@@ -25,6 +26,9 @@ import { requireSession } from "@/lib/auth";
  * the academy's name on its host, the product name on the apex — because with
  * several academies open in several tabs, that is the question the header has to
  * answer.
+ *
+ * Faza 01 (wireframe): academy hosts get a sidebar layout; the apex keeps the
+ * simple header layout.
  */
 export default async function AppLayout({ children }: { children: ReactNode }) {
   const session = await requireSession("/dashboard");
@@ -33,13 +37,19 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   // also serves the apex, where having no academy is the normal case.
   const org = await servedOrganization();
 
+  // Academy host → sidebar layout
+  if (org) {
+    return <AcademyLayout>{children}</AcademyLayout>;
+  }
+
+  // Apex → simple header layout
   return (
     <div className="flex min-h-dvh flex-col">
       <header className="border-border bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40 border-b backdrop-blur">
         <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-3">
           <div className="flex min-w-0 items-center gap-3">
             <Link href="/dashboard" className="shrink-0 font-semibold">
-              {org ? org.name : "SaaS"}
+              SaaS
             </Link>
           </div>
           <div className="flex items-center gap-2">

@@ -527,6 +527,57 @@
       "createAccount": "Załóż konto"
     }
   },
+  "sidebar": {
+    "mobile": {
+      "menu": "Menu"
+    },
+    "breadcrumbs": {
+      "dashboard": "Panel",
+      "groupTypes": "Typy zajęć",
+      "schedule": "Harmonogram",
+      "trainers": "Trenerzy",
+      "earnings": "Zarobki",
+      "rates": "Stawki",
+      "clients": "Rodzice",
+      "credits": "Kredyty",
+      "purchases": "Zakupy",
+      "invoices": "Faktury",
+      "extraFees": "Opłaty dodatkowe",
+      "qualificationCards": "Karty kwalifikacyjne",
+      "locations": "Lokalizacje",
+      "policies": "Regulaminy",
+      "import": "Import",
+      "sessions": "Zajęcia",
+      "settings": "Ustawienia",
+      "audit": "Audyt",
+      "billing": "Płatności",
+      "members": "Członkowie",
+      "permissions": "Uprawnienia",
+      "files": "Pliki"
+    },
+    "nav": {
+      "dashboard": "Panel",
+      "management": "Zarządzanie",
+      "groupTypes": "Typy zajęć",
+      "schedule": "Harmonogram",
+      "trainers": "Trenerzy",
+      "clients": "Rodzice",
+      "credits": "Kredyty",
+      "qualificationCards": "Karty kwalifikacyjne",
+      "extraFees": "Opłaty dodatkowe",
+      "locations": "Lokalizacje",
+      "finances": "Finanse",
+      "earnings": "Zarobki trenerów",
+      "purchases": "Zakupy kredytów",
+      "invoices": "Faktury",
+      "admin": "Admin",
+      "settings": "Ustawienia",
+      "audit": "Audyt",
+      "members": "Członkowie",
+      "files": "Pliki",
+      "cms": "CMS"
+    }
+  },
   "dashboard": {
     "meta": {
       "dashboard": "Panel",

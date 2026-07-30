@@ -37,3 +37,18 @@ export {
 } from "./dropdown-menu";
 export { Pagination, PaginationLink } from "./pagination";
 export { Toaster, toast } from "./sonner";
+export {
+  Sheet,
+  SheetPortal,
+  SheetOverlay,
+  SheetTrigger,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetFooter,
+  SheetTitle,
+  SheetDescription,
+} from "./sheet";
+export { Avatar, AvatarImage, AvatarFallback } from "./avatar";
+export { Separator } from "./separator";
+export { Skeleton } from "./skeleton";
