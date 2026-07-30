@@ -1,7 +1,7 @@
 import { getChaiThemeCssVariables } from "@chaibuilder/sdk/render";
 import type { ChaiTheme } from "@chaibuilder/sdk/types";
 import { withTenant } from "@/lib/db/tenant";
-import { getTheme } from "@/features/cms/data";
+import { getTheme } from "@/features/cms/theme-data";
 
 const GOOGLE_FONTS: Record<string, string> = {
   Inter: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap",

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import type { NamespaceTranslator } from "@/lib/i18n";
 import { SLUG_MAX, SLUG_MIN, SLUG_PATTERN } from "@/lib/validation";
-import { isAllowedMeetingUrl } from "@/features/cms/blocks/href-validator";
+import { isAllowedMeetingUrl } from "@/features/cms/href-validator";
 
 /**
  * Group type and recurrence validation (langlion §1.2, §2.13, EPIK 2/23).

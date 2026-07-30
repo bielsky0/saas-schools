@@ -11,6 +11,7 @@ import { getPageBySlug } from "@/lib/page-service";
 import { TenantPageRenderer } from "@/features/cms/tenant-page-renderer.client";
 import { getBlocksCss } from "@/features/cms/get-blocks-css";
 import { PageStyles } from "@/features/cms/components/page-styles.client";
+import { enrichBlocksWithData } from "@/lib/block-data";
 
 /**
  * An academy's public CMS page.
@@ -63,6 +64,10 @@ export default async function CmsPage({ params }: CmsPageProps) {
   const page = await withTenant(org.id, (tx) => getPageBySlug(tx, org.id, slug));
   if (!page || page.status !== "published") notFound();
 
+  const enrichedBlocks = await withTenant(org.id, (tx) =>
+    enrichBlocksWithData(tx, org.id, page.blocks),
+  );
+
   const h = await headers();
   const host = h.get("host") || "";
   const serverURL = buildTenantOriginUrl(host, "") || `http://${host}`;
@@ -73,7 +78,11 @@ export default async function CmsPage({ params }: CmsPageProps) {
     <ThemeInjector organizationId={org.id}>
       <PageStyles css={pageCss} />
       <RefreshRouteOnSave serverURL={serverURL} />
-      <TenantPageRenderer blocks={page.blocks} />
+      <TenantPageRenderer
+        blocks={enrichedBlocks}
+        slug={page.slug}
+        pageType={page.pageType}
+      />
     </ThemeInjector>
   );
 }

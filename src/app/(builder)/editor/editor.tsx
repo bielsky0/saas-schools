@@ -1,10 +1,14 @@
 "use client";
 
 import { defaultChaiLibrary } from "@chaibuilder/sdk";
-import { registerChaiLibrary } from "@chaibuilder/sdk/runtime/client";
+import { registerChaiLibrary, registerChaiBlockSettingWidget } from "@chaibuilder/sdk/runtime/client";
 import "@chaibuilder/sdk/styles";
 import { loadWebBlocks } from "@chaibuilder/sdk/web-blocks";
 import dynamic from "next/dynamic";
+import "@/blocks";
+import { langlionLibrary } from "@/lib/blocks-library";
+import { GroupTypePickerWidget } from "@/blocks/widgets/group-type-picker";
+import { TrainerPickerWidget } from "@/blocks/widgets/trainer-picker";
 import { useCallback } from "react";
 
 const ChaiWebsiteBuilder = dynamic(
@@ -14,6 +18,9 @@ const ChaiWebsiteBuilder = dynamic(
 
 loadWebBlocks();
 registerChaiLibrary("chai-library", defaultChaiLibrary());
+registerChaiLibrary("langlion", langlionLibrary);
+registerChaiBlockSettingWidget("groupTypePicker", GroupTypePickerWidget);
+registerChaiBlockSettingWidget("trainerPicker", TrainerPickerWidget);
 
 const MOCK_ACCESS_TOKEN = "mock-token-for-visual-test";
 

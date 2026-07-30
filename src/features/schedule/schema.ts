@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import type { NamespaceTranslator } from "@/lib/i18n";
-import { isAllowedMeetingUrl } from "@/features/cms/blocks/href-validator";
+import { isAllowedMeetingUrl } from "@/features/cms/href-validator";
 
 /**
  * Session validation (langlion §1.2, §2.2, EPIK 3).

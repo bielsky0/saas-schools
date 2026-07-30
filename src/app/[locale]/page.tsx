@@ -16,6 +16,7 @@ import { getHomePage, getPageBySlug } from "@/lib/page-service";
 import { TenantPageRenderer } from "@/features/cms/tenant-page-renderer.client";
 import { getBlocksCss } from "@/features/cms/get-blocks-css";
 import { PageStyles } from "@/features/cms/components/page-styles.client";
+import { enrichBlocksWithData } from "@/lib/block-data";
 import { Link } from "@/lib/i18n/navigation";
 import { withTenant } from "@/lib/db/tenant";
 import { site } from "@/lib/site";
@@ -142,12 +143,20 @@ export default async function Home() {
 
     if (!page || page.status !== "published") notFound();
 
+    const enrichedBlocks = await withTenant(org.id, (tx) =>
+      enrichBlocksWithData(tx, org.id, page.blocks),
+    );
+
     const pageCss = await getBlocksCss(page.blocks);
 
     return (
       <ThemeInjector organizationId={org.id}>
         <PageStyles css={pageCss} />
-        <TenantPageRenderer blocks={page.blocks} />
+        <TenantPageRenderer
+          blocks={enrichedBlocks}
+          slug="/"
+          pageType={page.pageType}
+        />
       </ThemeInjector>
     );
   }
