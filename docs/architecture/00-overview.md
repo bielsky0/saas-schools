@@ -4,6 +4,8 @@
 - **Styling:** Tailwind CSS v4 + shadcn/ui-style primitives on Radix (`src/components/ui`),
   `@tailwindcss/typography` for long-form content
 - **Content:** MDX (`@next/mdx`) in the repo, one registry per collection (`src/content/`)
+- **CMS / Website Builder:** ChaiBuilder SDK (fork w `packages/chaibuilder-sdk/`) — edytor wizualny drag-and-drop dla tenantów
+- **Admin Panel (apex only):** Payload CMS — zarządzanie platformą, konfiguracja per-tenant, content writing
 - **Database:** PostgreSQL via Drizzle ORM, isolated behind `src/lib/db`
 - **Env:** validated with `@t3-oss/env-nextjs` + Zod, fail-fast at startup
 - **Package manager:** pnpm
@@ -32,8 +34,10 @@ src/
     emails/                §10 categories, suppression, the one send path
     onboarding/            §10.3 the day 0/3/7 sequence
     jobs/                  §12 handler registry, enqueue, drain triggers
+    cms/                   CMS admin & website builder (ChaiBuilder + Payload apex)
     content/               §8/§9 blog, docs, changelog, SEO
     plugins/               §18 optional add-ons
+  blocks/                  ChaiBuilder custom blocks (GroupTypeCard, UpcomingEvents, etc.)
   lib/                     Cross-cutting, non-feature code
     site.ts                §9 site identity (name, description, canonical base URL)
     logger.ts              §15.3 structured logging + request-id correlation

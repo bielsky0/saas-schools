@@ -2085,29 +2085,19 @@
     "semantic_hash": ""
   },
   "docs/ARCHITECTURE.md": {
-    "mtime": 1784659789.4440236,
-    "ast_hash": "2e1e34acbcda0462f30710ce4b9111cd",
-    "semantic_hash": "2e1e34acbcda0462f30710ce4b9111cd"
+    "mtime": 1785417169.178359,
+    "ast_hash": "7efb3e0ee882a83ada71374e2b2e1051",
+    "semantic_hash": ""
   },
   "docs/boilerplate-spec.md": {
     "mtime": 1784661470.2294114,
     "ast_hash": "d63631dae7f6f99a109182d4d94b0c34",
     "semantic_hash": "d63631dae7f6f99a109182d4d94b0c34"
   },
-  "docs/plan-implementacji.md": {
-    "mtime": 1785240925.229254,
-    "ast_hash": "f88530c09c2ab21954f256f93d1f9519",
-    "semantic_hash": ""
-  },
   "docs/specyfikacja-cms.md": {
-    "mtime": 1785163651.0015051,
-    "ast_hash": "a1dff99338a4e9b30627a8a392a4147f",
+    "mtime": 1785417176.6524394,
+    "ast_hash": "f32897deed588bf33c3212ab75029832",
     "semantic_hash": ""
-  },
-  "docs/specyfikacja.md": {
-    "mtime": 1784657909.5571613,
-    "ast_hash": "4a5aedeca7bcbe672316cb5275a1c33e",
-    "semantic_hash": "4a5aedeca7bcbe672316cb5275a1c33e"
   },
   "src/content/blog/designing-for-no-vendor-lock-in/content.mdx": {
     "mtime": 1784448542.654473,
@@ -2470,13 +2460,13 @@
     "semantic_hash": "8d4aae2855004991f6f7f57900815d20"
   },
   "AGENTS.md": {
-    "mtime": 1785313055.933629,
-    "ast_hash": "d346813ec57fd7ae496eee6d162f7d67",
+    "mtime": 1785417159.8880508,
+    "ast_hash": "ed6f034b3b38dca7bcffbe4815d0d604",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1784820434.6043918,
-    "ast_hash": "6e260c8c552961265f683b517202b65c",
+    "mtime": 1785417163.3707008,
+    "ast_hash": "c7dd1007c8d43afe8bf1022e125f639d",
     "semantic_hash": ""
   },
   "README.md": {
@@ -2488,41 +2478,6 @@
     "mtime": 1784471909.7111187,
     "ast_hash": "ecb8b6656be946112efceb035f5e159c",
     "semantic_hash": "ecb8b6656be946112efceb035f5e159c"
-  },
-  "docs/spec/00-kontekst.md": {
-    "mtime": 1784657872.9587598,
-    "ast_hash": "a225c47bd1e8bc16a39142753be43b7c",
-    "semantic_hash": "a225c47bd1e8bc16a39142753be43b7c"
-  },
-  "docs/spec/02-opis-funkcjonalnosci.md": {
-    "mtime": 1784659890.0925646,
-    "ast_hash": "475378a6e85073922e9f52225c38bf48",
-    "semantic_hash": "475378a6e85073922e9f52225c38bf48"
-  },
-  "docs/spec/04-tabela-porownawcza.md": {
-    "mtime": 1784657872.9666946,
-    "ast_hash": "d7af87633e76063a2ae5f746c03c0af3",
-    "semantic_hash": "d7af87633e76063a2ae5f746c03c0af3"
-  },
-  "docs/spec/05-kolejnosc-implementacji.md": {
-    "mtime": 1784657872.968657,
-    "ast_hash": "6bf6b63aec8a81a479a142188de4548b",
-    "semantic_hash": "6bf6b63aec8a81a479a142188de4548b"
-  },
-  "docs/spec/06-odlozone-poza-mvp.md": {
-    "mtime": 1784657872.9705849,
-    "ast_hash": "15d13a738b68e1d53b1e29fa610bf687",
-    "semantic_hash": "15d13a738b68e1d53b1e29fa610bf687"
-  },
-  "docs/spec/07-rozstrzygniete-decyzje.md": {
-    "mtime": 1784657872.9724784,
-    "ast_hash": "708ca986805f1cc0f8b0e39c0edb5f13",
-    "semantic_hash": "708ca986805f1cc0f8b0e39c0edb5f13"
-  },
-  "docs/spec/08-otwarte-punkty.md": {
-    "mtime": 1784657872.9745107,
-    "ast_hash": "07ce40b813fd1adc9164442f994c7a69",
-    "semantic_hash": "07ce40b813fd1adc9164442f994c7a69"
   },
   "pnpm-workspace.yaml": {
     "mtime": 1785311021.9265478,
@@ -2555,9 +2510,9 @@
     "semantic_hash": "a2760511c65806022ad20adf74370ff3"
   },
   "docs/architecture/00-overview.md": {
-    "mtime": 1784658739.1502,
-    "ast_hash": "0c7c514d25a4bd2e122d3694386c5ed9",
-    "semantic_hash": "0c7c514d25a4bd2e122d3694386c5ed9"
+    "mtime": 1785417146.3914735,
+    "ast_hash": "220cc132d2a797f3e28fcf7e3b571c24",
+    "semantic_hash": ""
   },
   "docs/architecture/jobs-and-webhooks.md": {
     "mtime": 1784658739.1507695,
@@ -2578,171 +2533,6 @@
     "mtime": 1784671349.8233418,
     "ast_hash": "72ddc34d713f36f0d9813fb09d0af524",
     "semantic_hash": ""
-  },
-  "docs/plan/00-rozstrzygniecia-i-audyt.md": {
-    "mtime": 1784658600.372084,
-    "ast_hash": "cb5876b6f79ad9875544218f8dd83ba6",
-    "semantic_hash": "cb5876b6f79ad9875544218f8dd83ba6"
-  },
-  "docs/plan/faza-0.md": {
-    "mtime": 1784658600.3721879,
-    "ast_hash": "925600b14a4d566845069709ba5187a8",
-    "semantic_hash": "925600b14a4d566845069709ba5187a8"
-  },
-  "docs/plan/faza-1.md": {
-    "mtime": 1784658600.372282,
-    "ast_hash": "ffb52de202ff95f26fa0f661bfd72c4a",
-    "semantic_hash": "ffb52de202ff95f26fa0f661bfd72c4a"
-  },
-  "docs/plan/faza-10.md": {
-    "mtime": 1784890566.4553847,
-    "ast_hash": "6a941be30b271905eccf0ed776022ec7",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-11.md": {
-    "mtime": 1784894766.9264667,
-    "ast_hash": "9579239cc231220e1afcd915da533d82",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-12.md": {
-    "mtime": 1784916166.423214,
-    "ast_hash": "0e53a3bf8a799bc6f97ea31e606d335c",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-13.md": {
-    "mtime": 1784918614.2386801,
-    "ast_hash": "a2943517417f9f54cb0b9084b036b2a9",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-14.md": {
-    "mtime": 1784923668.1686463,
-    "ast_hash": "386ecfc998584ea67ed636b428e8347f",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-15.md": {
-    "mtime": 1784927444.8185563,
-    "ast_hash": "024b2e7c0cdc87d7628f4f62663612e3",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-16.md": {
-    "mtime": 1784931468.4677446,
-    "ast_hash": "c57035ac87b3c8be1e02d0ebd4389fa7",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-17.5.md": {
-    "mtime": 1784938647.4504766,
-    "ast_hash": "5cfec82b5161c273e080fb3b3a2fee3e",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-17.md": {
-    "mtime": 1784936278.0466878,
-    "ast_hash": "d11a91df5197714431bead44778e4c1d",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-18.md": {
-    "mtime": 1784969566.923972,
-    "ast_hash": "e8bc0186a4e4473e66af6aba102d6e42",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-19.md": {
-    "mtime": 1784982744.0701501,
-    "ast_hash": "82c1ca128a512790cbbb57e545df4025",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-2.md": {
-    "mtime": 1784658600.372362,
-    "ast_hash": "2b539053387f30c37086ff26c671d535",
-    "semantic_hash": "2b539053387f30c37086ff26c671d535"
-  },
-  "docs/plan/faza-20.md": {
-    "mtime": 1784985906.7898996,
-    "ast_hash": "9b80b7ca1ec89470037c7e664bb7ea26",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-21.md": {
-    "mtime": 1784996149.4984734,
-    "ast_hash": "73657dd39a1b87009c1f081a63769f29",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-22-25.md": {
-    "mtime": 1785063545.1751375,
-    "ast_hash": "1f3592ab372e2aea48b2bb44c9bb8d55",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-26-28.md": {
-    "mtime": 1785073662.338002,
-    "ast_hash": "13e1cb7c4b542f4cf1f45f9166ba79f6",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-29.md": {
-    "mtime": 1785077676.3080006,
-    "ast_hash": "070916a0b40e7b9d9ce757dd0d269774",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-3.md": {
-    "mtime": 1784658600.3724642,
-    "ast_hash": "6fe77731ae4e10fd1d17efb8802798b5",
-    "semantic_hash": "6fe77731ae4e10fd1d17efb8802798b5"
-  },
-  "docs/plan/faza-4.5.md": {
-    "mtime": 1784658600.372638,
-    "ast_hash": "758a389c2308343e26b95222fbde3b08",
-    "semantic_hash": "758a389c2308343e26b95222fbde3b08"
-  },
-  "docs/plan/faza-4.6.md": {
-    "mtime": 1784658600.372725,
-    "ast_hash": "ae950984e14f769f59c5ca869c6be25e",
-    "semantic_hash": "ae950984e14f769f59c5ca869c6be25e"
-  },
-  "docs/plan/faza-4.md": {
-    "mtime": 1784658600.3725474,
-    "ast_hash": "23cab9193509be50d0550ca5f92b2a6d",
-    "semantic_hash": "23cab9193509be50d0550ca5f92b2a6d"
-  },
-  "docs/plan/faza-5.md": {
-    "mtime": 1784658600.3728182,
-    "ast_hash": "d08f7e093b5acaaeead71fd99f9ce9af",
-    "semantic_hash": "d08f7e093b5acaaeead71fd99f9ce9af"
-  },
-  "docs/plan/faza-6.md": {
-    "mtime": 1784817866.0160654,
-    "ast_hash": "d996458e7796baa2b217842968f846fb",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-7.md": {
-    "mtime": 1784821093.2877564,
-    "ast_hash": "132d109f658c0ffae6a25e7039ca6d8c",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-8.md": {
-    "mtime": 1784826252.4184186,
-    "ast_hash": "f25d8d7856bff6459d093e15fc591fd0",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-9.md": {
-    "mtime": 1784883583.681569,
-    "ast_hash": "5e704d41c7cbe896184fc4f12b18ce97",
-    "semantic_hash": ""
-  },
-  "docs/plan/ryzyka-i-otwarte-pytania.md": {
-    "mtime": 1785076203.0585842,
-    "ast_hash": "2a2281d8c5b9aee91b30aed1fddd8251",
-    "semantic_hash": ""
-  },
-  "docs/spec/02a-opis-funkcjonalnosci-cz1.md": {
-    "mtime": 1784659861.4062266,
-    "ast_hash": "2f98be5e3e14a2c1d32c2980972c74a3",
-    "semantic_hash": "2f98be5e3e14a2c1d32c2980972c74a3"
-  },
-  "docs/spec/02b-opis-funkcjonalnosci-cz2.md": {
-    "mtime": 1784659861.4096005,
-    "ast_hash": "387cd51e54c71d41507d89937f90bbdb",
-    "semantic_hash": "387cd51e54c71d41507d89937f90bbdb"
-  },
-  "docs/spec/02c-kryteria-akceptacji-epiki-1-20.md": {
-    "mtime": 1784659861.411912,
-    "ast_hash": "4d18fa8e3bf81037f3609bc891dc4ff6",
-    "semantic_hash": "4d18fa8e3bf81037f3609bc891dc4ff6"
   },
   "docs/architecture/reference-patterns/a-adaptery-i18n-zadania-dane-audyt.md": {
     "mtime": 1784661225.8901908,
@@ -2893,156 +2683,6 @@
     "mtime": 1784661399.9321833,
     "ast_hash": "16e3ba86f768766fa16542c928cb483c",
     "semantic_hash": "16e3ba86f768766fa16542c928cb483c"
-  },
-  "docs/spec/01-model-danych/01a-diagram-relacji.md": {
-    "mtime": 1784660731.1888912,
-    "ast_hash": "51bbb0fda6859c6cdb784f6070468681",
-    "semantic_hash": "51bbb0fda6859c6cdb784f6070468681"
-  },
-  "docs/spec/01-model-danych/01b-rdzen-organizacje-sesje-rezerwacje.md": {
-    "mtime": 1784660785.2776268,
-    "ast_hash": "f7d5040392e2022265a3d2376efd3ddd",
-    "semantic_hash": "f7d5040392e2022265a3d2376efd3ddd"
-  },
-  "docs/spec/01-model-danych/01c-kredyty-platnosci-stawki.md": {
-    "mtime": 1784660835.5877018,
-    "ast_hash": "a16b3e1faa7d2383070872fcf93872a8",
-    "semantic_hash": "a16b3e1faa7d2383070872fcf93872a8"
-  },
-  "docs/spec/01-model-danych/01d-regulaminy-powiadomienia-plany.md": {
-    "mtime": 1784660854.9417243,
-    "ast_hash": "1420185d0708e2b88b66a0c0df8da98b",
-    "semantic_hash": "1420185d0708e2b88b66a0c0df8da98b"
-  },
-  "docs/spec/01-model-danych/01e-funkcje-v17-v18.md": {
-    "mtime": 1784660909.2553332,
-    "ast_hash": "adbcd9c6502cf3560dd894c191ea2620",
-    "semantic_hash": "adbcd9c6502cf3560dd894c191ea2620"
-  },
-  "docs/spec/01-model-danych/01f-relacje-integralnosc.md": {
-    "mtime": 1784660979.5334775,
-    "ast_hash": "989be0c53195ae821591aa9a413c32f4",
-    "semantic_hash": "989be0c53195ae821591aa9a413c32f4"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-a-epik21-reasygnacja-trenerzy-sesje.md": {
-    "mtime": 1784661077.4033332,
-    "ast_hash": "6407b840ea9f10d1cf7d0ed3050be458",
-    "semantic_hash": "6407b840ea9f10d1cf7d0ed3050be458"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-b-epik22-lokalizacje.md": {
-    "mtime": 1784661031.185007,
-    "ast_hash": "25d0023d885f240181beaa0ae75c042f",
-    "semantic_hash": "25d0023d885f240181beaa0ae75c042f"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-c-epik23-tryby-zakupu-rozliczenia.md": {
-    "mtime": 1784661031.18508,
-    "ast_hash": "ddf6ab80531dfa5b8964f540c72d5f74",
-    "semantic_hash": "ddf6ab80531dfa5b8964f540c72d5f74"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-d-epik24-waluta-kwoty.md": {
-    "mtime": 1784661031.1851456,
-    "ast_hash": "da397e64029ba1c3ba86a4a6f0b39324",
-    "semantic_hash": "da397e64029ba1c3ba86a4a6f0b39324"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-e-epik25-nieudana-platnosc-subskrypcyjna.md": {
-    "mtime": 1784661031.185204,
-    "ast_hash": "0f2abb44abe3ddb2438223d740279bc0",
-    "semantic_hash": "0f2abb44abe3ddb2438223d740279bc0"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-f-epik26-notification-center.md": {
-    "mtime": 1784661031.185264,
-    "ast_hash": "2dea7656493d9d995eb541e8df06cb43",
-    "semantic_hash": "2dea7656493d9d995eb541e8df06cb43"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-g-epik27-faktury-dokumenty-sprzedazy.md": {
-    "mtime": 1784661031.185326,
-    "ast_hash": "3bfe4a66ca831c43a92bf9d83b04783a",
-    "semantic_hash": "3bfe4a66ca831c43a92bf9d83b04783a"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-h-epik28-regulaminy-akceptacje.md": {
-    "mtime": 1784661031.185383,
-    "ast_hash": "e5b12fe4af53fef46cd5a9d8f157994d",
-    "semantic_hash": "e5b12fe4af53fef46cd5a9d8f157994d"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-i-epik29-limity-planu-feature-gating.md": {
-    "mtime": 1784661077.367563,
-    "ast_hash": "1af1a8d8940b7f7d3adae3d1c6cb0744",
-    "semantic_hash": "1af1a8d8940b7f7d3adae3d1c6cb0744"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-j-epik30-stripe-connect-platnosci.md": {
-    "mtime": 1784661077.367448,
-    "ast_hash": "2a3faeb9d615201986983c80eec0dd02",
-    "semantic_hash": "2a3faeb9d615201986983c80eec0dd02"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-k-epik31-potwierdzanie-obecnosci.md": {
-    "mtime": 1784661031.1855652,
-    "ast_hash": "c4fcd26d3a4f68909d50d2876632ccfb",
-    "semantic_hash": "c4fcd26d3a4f68909d50d2876632ccfb"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-l-epik32-wynagrodzenia-trenerow.md": {
-    "mtime": 1784661031.1856508,
-    "ast_hash": "841ad345c4b8f52037b3be4093018549",
-    "semantic_hash": "841ad345c4b8f52037b3be4093018549"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-m-epik33-indywidualne-ceny-klienta.md": {
-    "mtime": 1784661031.1857321,
-    "ast_hash": "e11c537c53d7bffc5a3fffdc7a43ed26",
-    "semantic_hash": "e11c537c53d7bffc5a3fffdc7a43ed26"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-n-epik34-dyspozycyjnosc-trenerow.md": {
-    "mtime": 1784661031.185798,
-    "ast_hash": "6b2b613ad5721c7d74cd7c1e23775155",
-    "semantic_hash": "6b2b613ad5721c7d74cd7c1e23775155"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-o-epik35-e-dziennik-oceny-notatki.md": {
-    "mtime": 1784661077.367097,
-    "ast_hash": "43bc882fe3acd42df99ceec77ddd9287",
-    "semantic_hash": "43bc882fe3acd42df99ceec77ddd9287"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-p-epik36-zapisy-przed-harmonogramem.md": {
-    "mtime": 1784661031.185955,
-    "ast_hash": "317f34be8dee95de77d892f96ebd18e8",
-    "semantic_hash": "317f34be8dee95de77d892f96ebd18e8"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-q-epik37-profil-uczestnika-zdrowie-zgody.md": {
-    "mtime": 1784661031.1860232,
-    "ast_hash": "ebe99a5ca7c4ec5bc7bfb6e35a9fa2cd",
-    "semantic_hash": "ebe99a5ca7c4ec5bc7bfb6e35a9fa2cd"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-r-epik38-granularne-uprawnienia.md": {
-    "mtime": 1784661031.1860967,
-    "ast_hash": "a0a365267638b61c42a8a93fc9b68c59",
-    "semantic_hash": "a0a365267638b61c42a8a93fc9b68c59"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-s-epik39-import-masowy-onboarding.md": {
-    "mtime": 1784661031.1861694,
-    "ast_hash": "e60df208d471253bca7aee87617463e6",
-    "semantic_hash": "e60df208d471253bca7aee87617463e6"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-t-epik40-zapis-wielu-uczestnikow.md": {
-    "mtime": 1784661031.18623,
-    "ast_hash": "648323c92b9666782a02ff55b50af0be",
-    "semantic_hash": "648323c92b9666782a02ff55b50af0be"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-u-epik41-modul-obozow-karta-kwalifikacyjna.md": {
-    "mtime": 1784661031.1862829,
-    "ast_hash": "95c1ac0352be4e2b3a690e1697053a62",
-    "semantic_hash": "95c1ac0352be4e2b3a690e1697053a62"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-v-epik42-oplaty-dodatkowe-ad-hoc.md": {
-    "mtime": 1784661031.186334,
-    "ast_hash": "e15b4fb43a11b16d5758a790cda42e3e",
-    "semantic_hash": "e15b4fb43a11b16d5758a790cda42e3e"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-w-epik43-tematy-lekcji-prace-domowe.md": {
-    "mtime": 1784661077.367277,
-    "ast_hash": "e8d22a312d6d8a8d935e54a965e65c3d",
-    "semantic_hash": "e8d22a312d6d8a8d935e54a965e65c3d"
-  },
-  "docs/spec/02d-kryteria-akceptacji-epiki-21-44/02d-x-epik44-haslo-klienta-logowanie.md": {
-    "mtime": 1784661031.186442,
-    "ast_hash": "18f25b13f468c51e72493532e7f21f78",
-    "semantic_hash": "18f25b13f468c51e72493532e7f21f78"
   },
   ".opencode/opencode.json": {
     "mtime": 1784887173.6441073,
@@ -3527,11 +3167,6 @@
   "docs/boilerplate-spec/wszystko.md": {
     "mtime": 1784707609.524414,
     "ast_hash": "247cbcfa6812ab5c9ef49fe07674240c",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-5.5.md": {
-    "mtime": 1784671349.6915965,
-    "ast_hash": "a77ec9a67a5bc82c16dbbcb66d95f058",
     "semantic_hash": ""
   },
   "e2e/billing-connect-checkout.spec.ts": {
@@ -4404,11 +4039,6 @@
     "ast_hash": "2da9c46e0cb5d53311ca171ea3bb99af",
     "semantic_hash": ""
   },
-  "docs/spike-30/generated-schema.ts": {
-    "mtime": 1785081646.0831883,
-    "ast_hash": "d27c01a74a4d0668987495f225011839",
-    "semantic_hash": ""
-  },
   "e2e/cms-tenant-isolation.spec.ts": {
     "mtime": 1785085157.9885132,
     "ast_hash": "b265422e672a04bbdbff3e526e43894d",
@@ -4874,21 +4504,6 @@
     "ast_hash": "1146a717204bdcc8265ed48985e3d157",
     "semantic_hash": ""
   },
-  "docs/plan/faza-30-32.md": {
-    "mtime": 1785240925.2299683,
-    "ast_hash": "c81da39157ea5474a474e115158f11cb",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-33-36.md": {
-    "mtime": 1785146918.1269345,
-    "ast_hash": "8169dbf06bd6c4195938920b09db14b8",
-    "semantic_hash": ""
-  },
-  "docs/spike-30/raport.md": {
-    "mtime": 1785092741.6662076,
-    "ast_hash": "d13dfa0f31a5b3a7b63e1176ba570414",
-    "semantic_hash": ""
-  },
   "test.txt": {
     "mtime": 1785092418.9108136,
     "ast_hash": "4fcc82a88ee38e0aa16c17f512c685c9",
@@ -5032,11 +4647,6 @@
   "src/lib/db/migrations/0068_autosave_pages_v.sql": {
     "mtime": 1785222751.4178298,
     "ast_hash": "2e870f638a234717ba5ab43d151861da",
-    "semantic_hash": ""
-  },
-  "docs/plan/faza-30f.md": {
-    "mtime": 1785240925.2308855,
-    "ast_hash": "e48adacf602d29647d879b9e3dcf09e4",
     "semantic_hash": ""
   },
   "components.json": {
@@ -9389,11 +8999,6 @@
     "ast_hash": "9814e837366a36853fd416f97cac3aef",
     "semantic_hash": ""
   },
-  ".opencode/plans/pages-edit-view-tailwind-migration.md": {
-    "mtime": 1785240925.2274377,
-    "ast_hash": "5edafd0cb00b7102d93f98ee42bd00a0",
-    "semantic_hash": ""
-  },
   "packages/chaibuilder-sdk/.github/FUNDING.yml": {
     "mtime": 1785311019.036685,
     "ast_hash": "5a1a27d35e456f27be0a0bd154b5d88c",
@@ -10125,8 +9730,413 @@
     "semantic_hash": ""
   },
   "src/features/cms/builder-theme-data.ts": {
-    "mtime": 1785413886.615384,
-    "ast_hash": "072836b6f79e6f2623504318830f0cd9",
+    "mtime": 1785415781.975216,
+    "ast_hash": "8026e1cd91565dace464d8e950f6df02",
+    "semantic_hash": ""
+  },
+  "docs/archive/spike-30/generated-schema.ts": {
+    "mtime": 1785081646.0831883,
+    "ast_hash": "d27c01a74a4d0668987495f225011839",
+    "semantic_hash": ""
+  },
+  "docs/architecture/chaibuilder-cms.md": {
+    "mtime": 1785417125.3094537,
+    "ast_hash": "cbff8cfcd3e705226b0657a7de58279f",
+    "semantic_hash": ""
+  },
+  "docs/architecture/payload-apex.md": {
+    "mtime": 1785417134.896826,
+    "ast_hash": "d31cfe1bab4c23031c16150e696d03bb",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan-implementacji.md": {
+    "mtime": 1785240925.229254,
+    "ast_hash": "f88530c09c2ab21954f256f93d1f9519",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/00-rozstrzygniecia-i-audyt.md": {
+    "mtime": 1784658600.372084,
+    "ast_hash": "cb5876b6f79ad9875544218f8dd83ba6",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-0.md": {
+    "mtime": 1784658600.3721879,
+    "ast_hash": "925600b14a4d566845069709ba5187a8",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-1.md": {
+    "mtime": 1784658600.372282,
+    "ast_hash": "ffb52de202ff95f26fa0f661bfd72c4a",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-10.md": {
+    "mtime": 1784890566.4553847,
+    "ast_hash": "6a941be30b271905eccf0ed776022ec7",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-11.md": {
+    "mtime": 1784894766.9264667,
+    "ast_hash": "9579239cc231220e1afcd915da533d82",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-12.md": {
+    "mtime": 1784916166.423214,
+    "ast_hash": "0e53a3bf8a799bc6f97ea31e606d335c",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-13.md": {
+    "mtime": 1784918614.2386801,
+    "ast_hash": "a2943517417f9f54cb0b9084b036b2a9",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-14.md": {
+    "mtime": 1784923668.1686463,
+    "ast_hash": "386ecfc998584ea67ed636b428e8347f",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-15.md": {
+    "mtime": 1784927444.8185563,
+    "ast_hash": "024b2e7c0cdc87d7628f4f62663612e3",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-16.md": {
+    "mtime": 1784931468.4677446,
+    "ast_hash": "c57035ac87b3c8be1e02d0ebd4389fa7",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-17.5.md": {
+    "mtime": 1784938647.4504766,
+    "ast_hash": "5cfec82b5161c273e080fb3b3a2fee3e",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-17.md": {
+    "mtime": 1784936278.0466878,
+    "ast_hash": "d11a91df5197714431bead44778e4c1d",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-18.md": {
+    "mtime": 1784969566.923972,
+    "ast_hash": "e8bc0186a4e4473e66af6aba102d6e42",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-19.md": {
+    "mtime": 1784982744.0701501,
+    "ast_hash": "82c1ca128a512790cbbb57e545df4025",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-2.md": {
+    "mtime": 1784658600.372362,
+    "ast_hash": "2b539053387f30c37086ff26c671d535",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-20.md": {
+    "mtime": 1784985906.7898996,
+    "ast_hash": "9b80b7ca1ec89470037c7e664bb7ea26",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-21.md": {
+    "mtime": 1784996149.4984734,
+    "ast_hash": "73657dd39a1b87009c1f081a63769f29",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-22-25.md": {
+    "mtime": 1785063545.1751375,
+    "ast_hash": "1f3592ab372e2aea48b2bb44c9bb8d55",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-26-28.md": {
+    "mtime": 1785073662.338002,
+    "ast_hash": "13e1cb7c4b542f4cf1f45f9166ba79f6",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-29.md": {
+    "mtime": 1785077676.3080006,
+    "ast_hash": "070916a0b40e7b9d9ce757dd0d269774",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-3.md": {
+    "mtime": 1784658600.3724642,
+    "ast_hash": "6fe77731ae4e10fd1d17efb8802798b5",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-30-32.md": {
+    "mtime": 1785240925.2299683,
+    "ast_hash": "c81da39157ea5474a474e115158f11cb",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-30f.md": {
+    "mtime": 1785240925.2308855,
+    "ast_hash": "e48adacf602d29647d879b9e3dcf09e4",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-33-36.md": {
+    "mtime": 1785146918.1269345,
+    "ast_hash": "8169dbf06bd6c4195938920b09db14b8",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-4.5.md": {
+    "mtime": 1784658600.372638,
+    "ast_hash": "758a389c2308343e26b95222fbde3b08",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-4.6.md": {
+    "mtime": 1784658600.372725,
+    "ast_hash": "ae950984e14f769f59c5ca869c6be25e",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-4.md": {
+    "mtime": 1784658600.3725474,
+    "ast_hash": "23cab9193509be50d0550ca5f92b2a6d",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-5.5.md": {
+    "mtime": 1784671349.6915965,
+    "ast_hash": "a77ec9a67a5bc82c16dbbcb66d95f058",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-5.md": {
+    "mtime": 1784658600.3728182,
+    "ast_hash": "d08f7e093b5acaaeead71fd99f9ce9af",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-6.md": {
+    "mtime": 1784817866.0160654,
+    "ast_hash": "d996458e7796baa2b217842968f846fb",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-7.md": {
+    "mtime": 1784821093.2877564,
+    "ast_hash": "132d109f658c0ffae6a25e7039ca6d8c",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-8.md": {
+    "mtime": 1784826252.4184186,
+    "ast_hash": "f25d8d7856bff6459d093e15fc591fd0",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-9.md": {
+    "mtime": 1784883583.681569,
+    "ast_hash": "5e704d41c7cbe896184fc4f12b18ce97",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/ryzyka-i-otwarte-pytania.md": {
+    "mtime": 1785076203.0585842,
+    "ast_hash": "2a2281d8c5b9aee91b30aed1fddd8251",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/00-kontekst.md": {
+    "mtime": 1784657872.9587598,
+    "ast_hash": "a225c47bd1e8bc16a39142753be43b7c",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/01-model-danych/01a-diagram-relacji.md": {
+    "mtime": 1784660731.1888912,
+    "ast_hash": "51bbb0fda6859c6cdb784f6070468681",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/01-model-danych/01b-rdzen-organizacje-sesje-rezerwacje.md": {
+    "mtime": 1784660785.2776268,
+    "ast_hash": "f7d5040392e2022265a3d2376efd3ddd",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/01-model-danych/01c-kredyty-platnosci-stawki.md": {
+    "mtime": 1784660835.5877018,
+    "ast_hash": "a16b3e1faa7d2383070872fcf93872a8",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/01-model-danych/01d-regulaminy-powiadomienia-plany.md": {
+    "mtime": 1784660854.9417243,
+    "ast_hash": "1420185d0708e2b88b66a0c0df8da98b",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/01-model-danych/01e-funkcje-v17-v18.md": {
+    "mtime": 1784660909.2553332,
+    "ast_hash": "adbcd9c6502cf3560dd894c191ea2620",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/01-model-danych/01f-relacje-integralnosc.md": {
+    "mtime": 1784660979.5334775,
+    "ast_hash": "989be0c53195ae821591aa9a413c32f4",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02-opis-funkcjonalnosci.md": {
+    "mtime": 1784659890.0925646,
+    "ast_hash": "475378a6e85073922e9f52225c38bf48",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02a-opis-funkcjonalnosci-cz1.md": {
+    "mtime": 1784659861.4062266,
+    "ast_hash": "2f98be5e3e14a2c1d32c2980972c74a3",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02b-opis-funkcjonalnosci-cz2.md": {
+    "mtime": 1784659861.4096005,
+    "ast_hash": "387cd51e54c71d41507d89937f90bbdb",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02c-kryteria-akceptacji-epiki-1-20.md": {
+    "mtime": 1784659861.411912,
+    "ast_hash": "4d18fa8e3bf81037f3609bc891dc4ff6",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-a-epik21-reasygnacja-trenerzy-sesje.md": {
+    "mtime": 1784661077.4033332,
+    "ast_hash": "6407b840ea9f10d1cf7d0ed3050be458",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-b-epik22-lokalizacje.md": {
+    "mtime": 1784661031.185007,
+    "ast_hash": "25d0023d885f240181beaa0ae75c042f",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-c-epik23-tryby-zakupu-rozliczenia.md": {
+    "mtime": 1784661031.18508,
+    "ast_hash": "ddf6ab80531dfa5b8964f540c72d5f74",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-d-epik24-waluta-kwoty.md": {
+    "mtime": 1784661031.1851456,
+    "ast_hash": "da397e64029ba1c3ba86a4a6f0b39324",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-e-epik25-nieudana-platnosc-subskrypcyjna.md": {
+    "mtime": 1784661031.185204,
+    "ast_hash": "0f2abb44abe3ddb2438223d740279bc0",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-f-epik26-notification-center.md": {
+    "mtime": 1784661031.185264,
+    "ast_hash": "2dea7656493d9d995eb541e8df06cb43",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-g-epik27-faktury-dokumenty-sprzedazy.md": {
+    "mtime": 1784661031.185326,
+    "ast_hash": "3bfe4a66ca831c43a92bf9d83b04783a",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-h-epik28-regulaminy-akceptacje.md": {
+    "mtime": 1784661031.185383,
+    "ast_hash": "e5b12fe4af53fef46cd5a9d8f157994d",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-i-epik29-limity-planu-feature-gating.md": {
+    "mtime": 1784661077.367563,
+    "ast_hash": "1af1a8d8940b7f7d3adae3d1c6cb0744",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-j-epik30-stripe-connect-platnosci.md": {
+    "mtime": 1784661077.367448,
+    "ast_hash": "2a3faeb9d615201986983c80eec0dd02",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-k-epik31-potwierdzanie-obecnosci.md": {
+    "mtime": 1784661031.1855652,
+    "ast_hash": "c4fcd26d3a4f68909d50d2876632ccfb",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-l-epik32-wynagrodzenia-trenerow.md": {
+    "mtime": 1784661031.1856508,
+    "ast_hash": "841ad345c4b8f52037b3be4093018549",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-m-epik33-indywidualne-ceny-klienta.md": {
+    "mtime": 1784661031.1857321,
+    "ast_hash": "e11c537c53d7bffc5a3fffdc7a43ed26",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-n-epik34-dyspozycyjnosc-trenerow.md": {
+    "mtime": 1784661031.185798,
+    "ast_hash": "6b2b613ad5721c7d74cd7c1e23775155",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-o-epik35-e-dziennik-oceny-notatki.md": {
+    "mtime": 1784661077.367097,
+    "ast_hash": "43bc882fe3acd42df99ceec77ddd9287",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-p-epik36-zapisy-przed-harmonogramem.md": {
+    "mtime": 1784661031.185955,
+    "ast_hash": "317f34be8dee95de77d892f96ebd18e8",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-q-epik37-profil-uczestnika-zdrowie-zgody.md": {
+    "mtime": 1784661031.1860232,
+    "ast_hash": "ebe99a5ca7c4ec5bc7bfb6e35a9fa2cd",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-r-epik38-granularne-uprawnienia.md": {
+    "mtime": 1784661031.1860967,
+    "ast_hash": "a0a365267638b61c42a8a93fc9b68c59",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-s-epik39-import-masowy-onboarding.md": {
+    "mtime": 1784661031.1861694,
+    "ast_hash": "e60df208d471253bca7aee87617463e6",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-t-epik40-zapis-wielu-uczestnikow.md": {
+    "mtime": 1784661031.18623,
+    "ast_hash": "648323c92b9666782a02ff55b50af0be",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-u-epik41-modul-obozow-karta-kwalifikacyjna.md": {
+    "mtime": 1784661031.1862829,
+    "ast_hash": "95c1ac0352be4e2b3a690e1697053a62",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-v-epik42-oplaty-dodatkowe-ad-hoc.md": {
+    "mtime": 1784661031.186334,
+    "ast_hash": "e15b4fb43a11b16d5758a790cda42e3e",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-w-epik43-tematy-lekcji-prace-domowe.md": {
+    "mtime": 1784661077.367277,
+    "ast_hash": "e8d22a312d6d8a8d935e54a965e65c3d",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-x-epik44-haslo-klienta-logowanie.md": {
+    "mtime": 1784661031.186442,
+    "ast_hash": "18f25b13f468c51e72493532e7f21f78",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/04-tabela-porownawcza.md": {
+    "mtime": 1784657872.9666946,
+    "ast_hash": "d7af87633e76063a2ae5f746c03c0af3",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/05-kolejnosc-implementacji.md": {
+    "mtime": 1784657872.968657,
+    "ast_hash": "6bf6b63aec8a81a479a142188de4548b",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/06-odlozone-poza-mvp.md": {
+    "mtime": 1784657872.9705849,
+    "ast_hash": "15d13a738b68e1d53b1e29fa610bf687",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/07-rozstrzygniete-decyzje.md": {
+    "mtime": 1784657872.9724784,
+    "ast_hash": "708ca986805f1cc0f8b0e39c0edb5f13",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/08-otwarte-punkty.md": {
+    "mtime": 1784657872.9745107,
+    "ast_hash": "07ce40b813fd1adc9164442f994c7a69",
+    "semantic_hash": ""
+  },
+  "docs/archive/specyfikacja.md": {
+    "mtime": 1784657909.5571613,
+    "ast_hash": "4a5aedeca7bcbe672316cb5275a1c33e",
+    "semantic_hash": ""
+  },
+  "docs/archive/spike-30/raport.md": {
+    "mtime": 1785092741.6662076,
+    "ast_hash": "d13dfa0f31a5b3a7b63e1176ba570414",
+    "semantic_hash": ""
+  },
+  "docs/known-issues.md": {
+    "mtime": 1785417106.9922233,
+    "ast_hash": "b3b44725b6deca08519937178dc95bcd",
     "semantic_hash": ""
   }
 }
