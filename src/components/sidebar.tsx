@@ -22,6 +22,8 @@ import {
   Globe,
   Menu,
   MapPin,
+  BookOpen,
+  GitCompareArrows,
   type LucideIcon,
 } from "lucide-react"
 
@@ -51,6 +53,13 @@ const sections: NavSectionDef[] = [
   {
     links: [
       { href: "/dashboard", labelKey: "nav.dashboard", icon: LayoutDashboard },
+    ],
+  },
+  {
+    titleKey: "nav.trainerSection",
+    links: [
+      { href: "/dashboard/my-classes", labelKey: "nav.myClasses", icon: BookOpen, permission: "bookings.mark_attendance" },
+      { href: "/dashboard/group-change-requests", labelKey: "nav.groupChanges", icon: GitCompareArrows },
     ],
   },
   {

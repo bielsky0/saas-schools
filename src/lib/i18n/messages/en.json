@@ -553,10 +553,13 @@
       "billing": "Billing",
       "members": "Members",
       "permissions": "Permissions",
-      "files": "Files"
+      "files": "Files",
+      "myClasses": "My classes",
+      "groupChanges": "Change requests"
     },
     "nav": {
       "dashboard": "Dashboard",
+      "trainerSection": "Trainer",
       "management": "Management",
       "groupTypes": "Group types",
       "schedule": "Schedule",
@@ -575,7 +578,69 @@
       "audit": "Audit",
       "members": "Members",
       "files": "Files",
-      "cms": "CMS"
+      "cms": "CMS",
+      "myClasses": "My classes",
+      "groupChanges": "Change requests"
+    }
+  },
+  "trainer": {
+    "dashboard": {
+      "greeting": "Good morning, {name}",
+      "todayTitle": "Today's classes",
+      "noClassesToday": "No classes today.",
+      "upcomingTitle": "Upcoming (7 days)",
+      "noUpcoming": "No upcoming classes.",
+      "quickActions": "Quick actions",
+      "myAvailability": "My availability",
+      "myEarnings": "My earnings",
+      "myClasses": "My classes",
+      "groupChanges": "Change requests",
+      "leaveRequest": "Leave request",
+      "roster": "Roster",
+      "group": "Group",
+      "participants": "Participants"
+    },
+    "myClasses": {
+      "title": "My classes",
+      "upcoming": "Upcoming",
+      "past": "Past",
+      "all": "All",
+      "search": "Search by group name…",
+      "noClasses": "No classes found.",
+      "sessionOn": "{date} at {time}",
+      "group": "Group",
+      "participants": "Participants",
+      "rosterTitle": "Attendance",
+      "present": "Present",
+      "absent": "Absent",
+      "unmarked": "Unmarked",
+      "gradesTitle": "Grades",
+      "notesTitle": "Progress notes",
+      "topicTitle": "Lesson topic",
+      "topicPlaceholder": "Enter lesson topic…",
+      "topicBodyPlaceholder": "Additional notes…",
+      "homeworkTitle": "Homework",
+      "homeworkPlaceholder": "Homework description…",
+      "dueDate": "Due date (optional)",
+      "addHomework": "Add homework",
+      "markDone": "Done",
+      "markNotDone": "Not done",
+      "saveTopic": "Save topic"
+    },
+    "groupChanges": {
+      "title": "Change requests",
+      "client": "Client",
+      "from": "From",
+      "to": "To",
+      "targetDate": "Target date",
+      "status": "Status",
+      "submittedAt": "Submitted",
+      "noRequests": "No change requests for your classes.",
+      "all": "All",
+      "submitted": "Submitted",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "completed": "Completed"
     }
   },
   "dashboard": {

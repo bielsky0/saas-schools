@@ -27,9 +27,14 @@ import {
   user,
 } from "@/lib/db/schema";
 import { LeaveOrgButton } from "@/features/organizations/components/org-settings";
+import TrainerDashboard from "./trainer-dashboard";
 
 export default async function AcademyHome() {
   const { org, role, effectivePermissions } = await requireOrgAccess();
+
+  if (role === "trainer") {
+    return <TrainerDashboard />;
+  }
   const [t, tr, locale] = await Promise.all([
     getTranslations("dashboard.org"),
     getTranslations("organizations.roles"),

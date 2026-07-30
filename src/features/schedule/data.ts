@@ -56,7 +56,7 @@ export async function listSessionsBetween(
 export async function listUpcomingSessions(
   tx: TenantDb,
   organizationId: string,
-  options: { from?: Date; locationId?: string; limit?: number } = {},
+  options: { from?: Date; locationId?: string; trainerId?: string; limit?: number } = {},
 ) {
   const from = options.from ?? new Date();
   const filters = [
@@ -64,6 +64,7 @@ export async function listUpcomingSessions(
     gte(classSession.startTime, from),
   ];
   if (options.locationId) filters.push(eq(classSession.locationId, options.locationId));
+  if (options.trainerId) filters.push(eq(classSession.trainerId, options.trainerId));
 
   return tx
     .select({

@@ -553,10 +553,13 @@
       "billing": "Płatności",
       "members": "Członkowie",
       "permissions": "Uprawnienia",
-      "files": "Pliki"
+      "files": "Pliki",
+      "myClasses": "Moje zajęcia",
+      "groupChanges": "Prośby o zmianę"
     },
     "nav": {
       "dashboard": "Panel",
+      "trainerSection": "Trener",
       "management": "Zarządzanie",
       "groupTypes": "Typy zajęć",
       "schedule": "Harmonogram",
@@ -575,7 +578,69 @@
       "audit": "Audyt",
       "members": "Członkowie",
       "files": "Pliki",
-      "cms": "CMS"
+      "cms": "CMS",
+      "myClasses": "Moje zajęcia",
+      "groupChanges": "Prośby o zmianę"
+    }
+  },
+  "trainer": {
+    "dashboard": {
+      "greeting": "Dzień dobry, {name}",
+      "todayTitle": "Dzisiejsze zajęcia",
+      "noClassesToday": "Nie masz dziś żadnych zajęć.",
+      "upcomingTitle": "Nadchodzące (7 dni)",
+      "noUpcoming": "Brak nadchodzących zajęć.",
+      "quickActions": "Szybkie akcje",
+      "myAvailability": "Moja dostępność",
+      "myEarnings": "Moje zarobki",
+      "myClasses": "Moje zajęcia",
+      "groupChanges": "Prośby o zmianę",
+      "leaveRequest": "Wniosek urlopowy",
+      "roster": "Lista obecności",
+      "group": "Grupa",
+      "participants": "Uczestnicy"
+    },
+    "myClasses": {
+      "title": "Moje zajęcia",
+      "upcoming": "Nadchodzące",
+      "past": "Przeszłe",
+      "all": "Wszystkie",
+      "search": "Szukaj po nazwie grupy…",
+      "noClasses": "Nie znaleziono zajęć.",
+      "sessionOn": "{date} o {time}",
+      "group": "Grupa",
+      "participants": "Uczestnicy",
+      "rosterTitle": "Obecność",
+      "present": "Obecny",
+      "absent": "Nieobecny",
+      "unmarked": "Nieoznaczone",
+      "gradesTitle": "Oceny",
+      "notesTitle": "Notatki o postępach",
+      "topicTitle": "Temat lekcji",
+      "topicPlaceholder": "Wpisz temat lekcji…",
+      "topicBodyPlaceholder": "Dodatkowe notatki…",
+      "homeworkTitle": "Praca domowa",
+      "homeworkPlaceholder": "Opis zadania…",
+      "dueDate": "Termin (opcjonalnie)",
+      "addHomework": "Dodaj zadanie",
+      "markDone": "Zrobione",
+      "markNotDone": "Nie gotowe",
+      "saveTopic": "Zapisz temat"
+    },
+    "groupChanges": {
+      "title": "Prośby o zmianę grupy",
+      "client": "Klient",
+      "from": "Z",
+      "to": "Do",
+      "targetDate": "Data docelowa",
+      "status": "Status",
+      "submittedAt": "Zgłoszono",
+      "noRequests": "Brak próśb o zmianę dla Twoich zajęć.",
+      "all": "Wszystkie",
+      "submitted": "Zgłoszone",
+      "approved": "Zatwierdzone",
+      "rejected": "Odrzucone",
+      "completed": "Zakończone"
     }
   },
   "dashboard": {
