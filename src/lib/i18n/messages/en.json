@@ -608,7 +608,21 @@
       "rates": "Rates",
       "earnings": "Earnings",
       "import": "Import CSV",
-      "pages": "Pages"
+      "pages": "Pages",
+      "cards": {
+        "upcoming": "Upcoming sessions",
+        "noUpcoming": "No upcoming sessions.",
+        "viewSchedule": "View schedule",
+        "stats": "Statistics",
+        "clients": "Clients",
+        "groupTypes": "Group types",
+        "trainers": "Trainers",
+        "activity": "Recent activity",
+        "noActivity": "No recent activity.",
+        "viewAll": "View all",
+        "pending": "Pending",
+        "noPending": "No pending items."
+      }
     },
     "settings": {
       "heading": "Settings",
@@ -729,6 +743,40 @@
       "colCalculatedAmount": "Amount due",
       "colDuration": "Duration",
       "myEarnings": "My earnings"
+    },
+    "clients": {
+      "title": "Clients",
+      "subtitle": "All parents and guardians registered in this academy.",
+      "search": "Search by name or email...",
+      "searchLabel": "Search clients",
+      "empty": "No clients yet. Clients are added automatically on first sign-up.",
+      "emptySearch": "No clients match your search.",
+      "unverified": "Unverified",
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page} of {total}",
+      "columns": {
+        "client": "Client",
+        "email": "Email",
+        "phone": "Phone",
+        "children": "Children",
+        "bookings": "Active bookings",
+        "joined": "Joined"
+      },
+      "children": {
+        "title": "Children",
+        "empty": "No children registered.",
+        "name": "Name",
+        "age": "Age",
+        "bookings": "Active bookings"
+      },
+      "bookings": {
+        "title": "Active bookings",
+        "empty": "No active bookings.",
+        "athlete": "Athlete",
+        "date": "Date",
+        "status": "Status"
+      }
     }
   },
   "storage": {
@@ -1572,9 +1620,20 @@
   },
   "qualificationCards": {
     "page": {
-      "title": "Qualification card",
-      "subtitle": "Camp offer: {offerName}",
+      "title": "Qualification cards",
+      "subtitle": "Qualification cards overview.",
+      "empty": "No qualification cards yet.",
       "loginRequired": "Please sign in to fill the qualification card. Go to the booking page first."
+    },
+    "filterAll": "All",
+    "search": "Search by child name...",
+    "searchLabel": "Search qualification cards",
+    "emptySearch": "No cards match your search.",
+    "table": {
+      "athlete": "Athlete",
+      "camp": "Camp/Group",
+      "status": "Status",
+      "created": "Created"
     },
     "form": {
       "parentExplanation": "This section must be completed by the parent or legal guardian before the camp starts. All health information is treated as sensitive data under GDPR.",
@@ -1612,6 +1671,27 @@
   },
   "extraFees": {
     "title": "Additional fees",
+    "subtitle": "Manage one-time charges outside the credit system.",
+    "empty": "No extra fees yet.",
+    "filterAll": "All",
+    "saving": "Saving...",
+    "table": {
+      "client": "Client",
+      "athlete": "Athlete",
+      "description": "Description",
+      "amount": "Amount",
+      "status": "Status",
+      "method": "Method",
+      "created": "Created",
+      "actions": "Actions"
+    },
+    "form": {
+      "client": "Client",
+      "selectClient": "Select client...",
+      "description": "Description",
+      "amount": "Amount (minor units)",
+      "paymentMethod": "Payment method"
+    },
     "create": "Create additional fee",
     "bulkCreate": "Bulk create",
     "description": "Description",
@@ -1629,6 +1709,7 @@
     "confirmed": "Cash payment confirmed.",
     "invoiceRequested": "Invoice requested.",
     "invoiceMarked": "Invoice marked as issued.",
+    "confirm": "Confirm payment",
     "cancel": "Cancel fee",
     "payOnline": "Pay online",
     "confirmCash": "Confirm cash payment",

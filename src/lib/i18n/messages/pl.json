@@ -608,7 +608,21 @@
       "rates": "Stawki",
       "earnings": "Wynagrodzenia",
       "import": "Import CSV",
-      "pages": "Strony"
+      "pages": "Strony",
+      "cards": {
+        "upcoming": "Nadchodzące zajęcia",
+        "noUpcoming": "Brak nadchodzących zajęć.",
+        "viewSchedule": "Zobacz grafik",
+        "stats": "Statystyki",
+        "clients": "Klienci",
+        "groupTypes": "Typy grup",
+        "trainers": "Trenerzy",
+        "activity": "Ostatnia aktywność",
+        "noActivity": "Brak aktywności.",
+        "viewAll": "Zobacz wszystkie",
+        "pending": "Oczekujące",
+        "noPending": "Brak oczekujących spraw."
+      }
     },
     "settings": {
       "heading": "Ustawienia",
@@ -729,6 +743,40 @@
       "colCalculatedAmount": "Należność",
       "colDuration": "Czas trwania",
       "myEarnings": "Moje wynagrodzenie"
+    },
+    "clients": {
+      "title": "Rodzice i opiekunowie",
+      "subtitle": "Wszyscy rodzice i opiekunowie zarejestrowani w tej akademii.",
+      "search": "Szukaj po imieniu, nazwisku lub emailu...",
+      "searchLabel": "Szukaj klientów",
+      "empty": "Brak klientów. Klienci są dodawani automatycznie przy pierwszym zapisie na zajęcia.",
+      "emptySearch": "Brak klientów spełniających kryteria wyszukiwania.",
+      "unverified": "Niezweryfikowany",
+      "previous": "Poprzednia",
+      "next": "Następna",
+      "page": "Strona {page} z {total}",
+      "columns": {
+        "client": "Klient",
+        "email": "Email",
+        "phone": "Telefon",
+        "children": "Dzieci",
+        "bookings": "Aktywne rezerwacje",
+        "joined": "Data dodania"
+      },
+      "children": {
+        "title": "Dzieci",
+        "empty": "Brak zarejestrowanych dzieci.",
+        "name": "Imię",
+        "age": "Wiek",
+        "bookings": "Aktywne rezerwacje"
+      },
+      "bookings": {
+        "title": "Aktywne rezerwacje",
+        "empty": "Brak aktywnych rezerwacji.",
+        "athlete": "Uczestnik",
+        "date": "Data",
+        "status": "Status"
+      }
     }
   },
   "storage": {
@@ -1572,9 +1620,20 @@
   },
   "qualificationCards": {
     "page": {
-      "title": "Karta kwalifikacyjna",
-      "subtitle": "Oferta obozu: {offerName}",
+      "title": "Karty kwalifikacyjne",
+      "subtitle": "Przegląd kart kwalifikacyjnych uczestników.",
+      "empty": "Brak kart kwalifikacyjnych.",
       "loginRequired": "Zaloguj się, aby wypełnić kartę kwalifikacyjną. Najpierw przejdź na stronę zapisów."
+    },
+    "filterAll": "Wszystkie",
+    "search": "Szukaj po nazwisku dziecka...",
+    "searchLabel": "Szukaj kart kwalifikacyjnych",
+    "emptySearch": "Brak kart spełniających kryteria.",
+    "table": {
+      "athlete": "Uczestnik",
+      "camp": "Grupa/Obóz",
+      "status": "Status",
+      "created": "Data utworzenia"
     },
     "form": {
       "parentExplanation": "Tę sekcję musi wypełnić rodzic lub opiekun prawny przed rozpoczęciem obozu. Wszystkie dane zdrowotne są traktowane jako dane wrażliwe RODO.",
@@ -1612,6 +1671,27 @@
   },
   "extraFees": {
     "title": "Opłaty dodatkowe",
+    "subtitle": "Zarządzaj jednorazowymi opłatami poza systemem kredytów.",
+    "empty": "Brak opłat dodatkowych.",
+    "filterAll": "Wszystkie",
+    "saving": "Zapisywanie...",
+    "table": {
+      "client": "Klient",
+      "athlete": "Uczestnik",
+      "description": "Opis",
+      "amount": "Kwota",
+      "status": "Status",
+      "method": "Metoda",
+      "created": "Utworzono",
+      "actions": "Akcje"
+    },
+    "form": {
+      "client": "Klient",
+      "selectClient": "Wybierz klienta...",
+      "description": "Opis",
+      "amount": "Kwota (grosze)",
+      "paymentMethod": "Metoda płatności"
+    },
     "create": "Dodaj opłatę",
     "bulkCreate": "Dodaj zbiorczo",
     "description": "Opis",
@@ -1629,6 +1709,7 @@
     "confirmed": "Płatność gotówkowa potwierdzona.",
     "invoiceRequested": "Zgłoszono chęć faktury.",
     "invoiceMarked": "Faktura oznaczona jako wystawiona.",
+    "confirm": "Potwierdź płatność",
     "cancel": "Anuluj opłatę",
     "payOnline": "Zapłać online",
     "confirmCash": "Potwierdź gotówkę",
