@@ -2,279 +2,146 @@
 
 ## Cel
 
-Zbudowanie flow zamawiania lekcji indywidualnych przez klienta (rodzica) oraz panelu obsługi wniosków dla admina i trenera.
+Flow zamawiania lekcji indywidualnych przez klienta (rodzica) w modelu **slot-first** (EPIK 34, §2.32). Rodzic wybiera trenera i konkretny termin z wyliczonej dostępności — bez pośrednika w postaci "wniosku", który ktoś musiałby obsłużyć.
+
+## Zakres (po zawężeniu)
+
+Ten dokument opisuje **publiczny flow klienta** dla `slot_first`. Celowo wyłączone z fazy:
+
+- ❌ **Brak tabeli `individual_session_request`** — slot-first nie tworzy wniosków; rezerwuje termin bezpośrednio
+- ❌ **Brak dedykowanej strony zamówienia** — flow żyje na istniejącej stronie `/zapisy/{slug}`
+- ❌ **Brak publicznej strony trenera** — trener jest opcją w select, nie osobnym landingiem
+- ❌ **`availability_first`** niezmienione — nadal traktowane jak schedule-first
 
 ## Stan obecny
 
-### Co już istnieje (backend)
-- ✅ `slot_first` engine w `group_type` — tworzy sesję + booking w jednej transakcji
-- ✅ `createSlotFirstBookingAction()` w `src/features/bookings/slot-first.ts`
+### Co istnieje (backend)
+- ✅ `slot_first` engine w `group_type` — tworzy sesję + booking w jednej transakcji (admin side: `slot-first.ts`)
 - ✅ `trainer_availability` — okna dostępności trenerów
-- ✅ `computeAvailabilitySlots()` — wyliczanie wolnych slotów
+- ✅ `computeAvailabilitySlots()` — wyliczanie wolnych slotów (pure)
 - ✅ `eligibleTrainerIds` na `group_type` — którzy trenerzy mogą prowadzić
+- ✅ `defaultDurationMinutes` + `defaultLocationId` na `group_type`
 - ✅ `client_price_override` — indywidualne ceny
 
-### Czego brakuje
-- ❌ Encja "wniosku/zapytania" od klienta — nie ma gdzie zapisać "chcę lekcję indywidualną z trenerem X w terminie Y"
-- ❌ Strona klienta do zamawiania lekcji
-- ❌ Panel admina do obsługi wniosków (przypisz trenera → ustal cenę → potwierdź)
-- ❌ Widok trenera dla wniosków skierowanych do niego
+### Co dobudowano w tej fazie
+- ✅ Konfiguracja admina: `eligibleTrainerIds` (checkboxy trenerów) + `defaultDurationMinutes` w formularzu typu grupy
+- ✅ Publiczny `createSlotFirstBookingAction()` w `src/features/bookings/slot-first-public.ts`
+- ✅ Publiczna strona `/zapisy/{slug}` z branżowaniem po `engine === "slot_first"` i prefill `?trainerId=`
+- ✅ Powiadomienia: `booking-confirmed` (klient) + `slot-first-session-created` (trener)
 
 ---
 
-## Backend do zbudowania
+## Architektura flow slot-first
 
-### Nowa tabela: `individual_session_request`
+### Konfiguracja (admin)
+`GroupTypeForm` zyskuje dwa pola (`src/features/groups/components/group-type-form.tsx`):
 
-```sql
-CREATE TABLE individual_session_request (
-  id                    TEXT PRIMARY KEY DEFAULT gen_random_uuid(),
-  organizationId        TEXT NOT NULL REFERENCES organization(id) ON DELETE CASCADE,
-  clientId              TEXT NOT NULL,             -- rodzic składający wniosek
-  athleteId             TEXT NOT NULL,             -- dla którego dziecka
-  preferredTrainerId    TEXT REFERENCES "user"(id), -- preferowany trener (nullable)
-  preferredDate         DATE,                      -- preferowana data (nullable)
-  preferredTimeOfDay    TEXT,                      -- morning / afternoon / evening / any
-  goalDescription       TEXT,                      -- opis celu / oczekiwań
-  status                TEXT NOT NULL DEFAULT 'pending'
-                        CHECK (status IN ('pending','assigned','confirmed','rejected','cancelled')),
-  assignedTrainerId     TEXT REFERENCES "user"(id), -- trener przypisany przez admina
-  assignedPrice         INTEGER,                    -- cena ustalona przez admina (w groszach)
-  assignedDate          DATE,                       -- data sesji
-  assignedStartTime     TIME,                       -- godzina rozpoczęcia
-  assignedEndTime       TIME,                       -- godzina zakończenia
-  assignedSessionId     TEXT,                       -- ID sesji slot_first (po potwierdzeniu)
-  adminNotes            TEXT,                       -- notatki admina
-  rejectionReason       TEXT,
-  createdAt             TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updatedAt             TIMESTAMPTZ NOT NULL DEFAULT now(),
+1. **Dostępni trenerzy** (`eligibleTrainerIds`) — checkboxy aktywnych trenerów; puste = wszyscy trenerzy aktywnej organizacji
+2. **Domyślny czas trwania** (`defaultDurationMinutes`) — długość wyliczanych slotów; fallback 60 min
 
-  -- Kompozytowe FKi dla tenant isolation
-  CONSTRAINT isr_client_fk FOREIGN KEY (clientId, organizationId)
-    REFERENCES client(id, organizationId) ON DELETE CASCADE,
-  CONSTRAINT isr_athlete_fk FOREIGN KEY (athleteId, organizationId)
-    REFERENCES athlete(id, organizationId) ON DELETE CASCADE,
-  CONSTRAINT isr_trainer_fk FOREIGN KEY (assignedTrainerId)
-    REFERENCES "user"(id),
-  CONSTRAINT isr_session_fk FOREIGN KEY (assignedSessionId, organizationId)
-    REFERENCES class_session(id, organizationId) ON DELETE SET NULL,
+Pole zapisywane przez `createGroupTypeAction` / `updateGroupTypeAction` (`groups/actions.ts`, walidacja `strList(..., "eligibleTrainerIds")`; pusta lista zapisywana jako `null`).
 
-  UNIQUE(id, organizationId)
-);
+### Strona publiczna (`/zapisy/{slug}`)
+`src/app/[locale]/(site)/zapisy/[groupTypeSlug]/page.tsx`:
 
-CREATE INDEX isr_org_status_idx ON individual_session_request(organizationId, status);
-CREATE INDEX isr_trainer_idx ON individual_session_request(assignedTrainerId) WHERE assignedTrainerId IS NOT NULL;
-```
+1. `requireServedOrganization()` — ta sama straż co schedule-first
+2. Branża po `engine === "slot_first"` (przed zwykłym `EnrollmentFlow`)
+3. Lista trenerów: `listTrainers` przefiltrowana przez `eligibleTrainerIds` (puste = wszyscy)
+4. `listSlotFirstAvailability(tx, org.id, { trainerIds, defaultDurationMinutes, from, to, timeZone })` — slota per trener na miesiąc otwarcia
+5. `?trainerId=` — prefill honorowany tylko gdy trener jest w `eligibleTrainerIds`
+6. Renderuje `SlotFirstFlow`
 
-### Nowe funkcje backendowe
+### Flow UI (`src/features/bookings/components/slot-first-flow.tsx`)
+`SlotFirstFlow` — 3 kroki:
 
-**`src/features/bookings/individual-request-actions.ts`:**
+1. **Wybór trenera** — `<select>` z dostępnych trenerów; nawigacja po miesiącach (linki, proxy działa — F4.6)
+2. **Wybór slotu** — siatka przycisków `data-start-time="{dayKey}T{startsAt}"` z `computeAvailabilitySlots`
+3. **Potwierdzenie** — `VerifyStep` (OTP dla nowych rodziców) → `SlotFirstConfirmStep` (uczestnik, metoda płatności, zgody, polityka, karta kwalifikacyjna)
 
-- `submitIndividualRequest(data)` — klient składa wniosek
-  - Guard: `resolveClientSession()` — klient musi być zalogowany
-  - Walidacja: dziecko należy do tego klienta, preferowany trener jest w `eligibleTrainerIds` grupy
-  - Status początkowy: `pending`
+Wspólne kroki (`VerifyStep`, `SuccessStep`, policy/consents) są wyeksportowane z `enrollment-flow.tsx` i współdzielone.
 
-- `assignTrainer(requestId, trainerId, price?, date?, startTime?)` — admin przypisuje trenera
-  - Guard: `requireOrgPermission("group_types.manage")` — admin/owner
-  - Zmiana statusu: `pending` → `assigned`
-  - Walidacja: trener aktywny, w `eligibleTrainerIds`, ma dostępność w danym terminie
-  - Cena: jeśli nie podana → domyślnie z `group_type.price`, można override
+### Akcja (`src/features/bookings/slot-first-public.ts`)
+`createSlotFirstBookingAction(prev, formData)`:
 
-- `confirmRequest(requestId)` — admin potwierdza → tworzy sesję `slot_first` + booking
-  - Guard: `requireOrgPermission("sessions.manage")`
-  - Wywołuje wewnętrznie `createSlotFirstBookingAction()` z przypisanymi parametrami
-  - Status: `assigned` → `confirmed`
-  - Zapisuje `assignedSessionId` utworzonej sesji
-  - Jeśli `slot_first` się nie powiedzie (konflikt trenera) → rzuca błędem, wnioskodawca dostaje info
+1. `requireServedOrganization()` + `resolveClientSession(org.id)` — nieweryfikowany rodzic dostaje `errors.verifyFirst`
+2. Walidacja `createSlotFirstBookingSchema(t)` (rozszerza standardowy schema, ale **bez `sessionId`** — sesja jeszcze nie istnieje)
+3. W jednej transakcji `withTenant`:
+   - `getGroupTypeBySlug` + sprawdzenie `engine === "slot_first"`
+   - `getTrainer` + egzamin `eligibleTrainerIds`
+   - `wallClockToInstant(startTime, org.timezone)` — wall-clock slot (US-1.2)
+   - **Re-walidacja slotu**: `listAvailability` + `computeAvailabilitySlots` dla tego samego dnia lokalnego — slot musi być w wyniku
+   - Insert `class_session` (capacity 1, `defaultDurationMinutes`/60, `defaultLocationId`) + audyt
+   - `createBooking` — ten sam pojedynczy writer co schedule-first, bierze miejsce
+   - Powiadomienia **w transakcji** (outbox): `booking-confirmed` → klient, `slot-first-session-created` → trener
+4. Po commicie: przy `payment_pending` → `startConnectCheckout` (redirect do Stripe Checkout)
 
-- `rejectRequest(requestId, reason)` — admin odrzuca
-  - Guard: `requireOrgPermission("group_types.manage")`
-  - Wymagany powód
-  - Status: `pending` lub `assigned` → `rejected`
+**Konflikty** — ostatnie słowo ma EXCLUDE constraint `class_session_trainer_no_overlap_excl` (23P01): kolizja między re-walidacją a insertem staje się przyjaznym komunikatem `errors.trainerConflict`.
 
-- `cancelRequest(requestId)` — klient anuluje
-  - Guard: `resolveClientSession()` + własność wniosku
-  - Status: `pending` lub `assigned` → `cancelled`
-
-**`src/features/bookings/individual-request-data.ts`:**
-- `listIndividualRequests(filters)` — z filtrami: status, trainerId, clientId
-- `getIndividualRequest(id)` — szczegóły z relacjami (client, athlete, trainer, session)
-- `listPendingForTrainer(trainerId)` — wnioski przypisane do trenera
-
-### Walidacja
-
-**`src/features/bookings/individual-request-schema.ts`:**
-```ts
-export const submitIndividualRequestSchema = z.object({
-  athleteId: z.string().uuid(),
-  groupTypeId: z.string().uuid(),
-  preferredTrainerId: z.string().uuid().optional(),
-  preferredDate: z.coerce.date().optional(),
-  preferredTimeOfDay: z.enum(['morning','afternoon','evening','any']).optional(),
-  goalDescription: z.string().max(500).optional(),
-});
-
-export const assignTrainerSchema = z.object({
-  requestId: z.string().uuid(),
-  trainerId: z.string().uuid(),
-  price: z.number().int().positive().optional(),
-  date: z.coerce.date().optional(),
-  startTime: z.string().optional(), // format HH:mm
-});
-```
-
----
-
-## Frontend do zbudowania
-
-### 5a. Strona klienta: Zamów lekcję indywidualną (`/zamow-lekcje-indywidualna` lub `/zapisy/[slug]/indywidualna`)
-
-Dostępna z poziomu publicznej strony akademii `(site)`.
-
-**Flow krok po kroku:**
-
-1. **Wybór typu zajęć (group_type `slot_first`)**
-   - Lista dostępnych typów zajęć indywidualnych (engine = `slot_first`)
-   - Karta: nazwa, opis, cena, dostępni trenerzy
-
-2. **Wybór dziecka**
-   - Dropdown/Select z listą dzieci klienta (`listAthletes()`)
-   - Jeśli klient nie ma dzieci → komunikat "Dodaj dziecko w panelu"
-
-3. **Wybór preferencji**
-   - Preferowany trener (Select z `eligibleTrainerIds`, opcjonalnie)
-   - Preferowana data (DatePicker, opcjonalnie)
-   - Preferowana pora dnia (RadioGroup: rano / popołudnie / wieczór / dowolna)
-   - Opis celu/oczekiwań (Textarea, opcjonalnie)
-
-4. **Podsumowanie i wysłanie**
-   - Podgląd wszystkich wyborów
-   - Przycisk "Wyślij zapytanie"
-   - Toast/Sonner: "Wniosek został wysłany. Skontaktujemy się z Tobą."
-
-5. **Strona potwierdzenia**
-   - "Dziękujemy! Twoje zapytanie zostało przyjęte."
-   - "Administrator akademii skontaktuje się z Tobą w ciągu 24h."
-   - Link powrotu do `/moje-zajecia`
-
-### 5b. Panel admina: Wnioski o lekcje indywidualne (`/dashboard/individual-requests/`)
-
-**Lista wniosków:**
-- Tabs: "Nowe" (pending), "Przypisane" (assigned), "Zrealizowane" (confirmed), "Odrzucone" (rejected)
-- Tabela: Klient, Dziecko, Cel (skrócony), Preferencje, Status (badge), Data zgłoszenia
-- Badge z liczbą pending wniosków w sidebarze
-
-**Modal obsługi wniosku:**
-- Pełne dane wniosku
-- Sekcja "Przypisz trenera":
-  - Dropdown aktywnych trenerów (przefiltrowany po `eligibleTrainerIds`)
-  - Wybór daty (date picker)
-  - Wybór godziny (time picker lub select z dostępnych slotów)
-  - Sugerowana cena (z `group_type.price`) z możliwością override
-  - Przycisk "Przypisz" → status `assigned`
-- Sekcja "Potwierdź":
-  - Widoczna tylko dla statusu `assigned`
-  - Przycisk "Potwierdź i utwórz sesję" → tworzy `slot_first` + booking → status `confirmed`
-  - Wyświetla ID utworzonej sesji z linkiem
-- Przycisk "Odrzuć" (z wymaganym powodem)
-
-### 5c. Panel trenera: Wnioski do mnie (`/dashboard/individual-requests/` — filtrowane)
-
-- Trener widzi tylko wnioski gdzie `assignedTrainerId = self`
-- Tabela jak admina, ale bez przycisków akcji (tylko podgląd)
-- Statusy: "Przypisane do Ciebie" (assigned), "Zrealizowane" (confirmed)
-- Szczegóły wniosku w modalu (bez możliwości edycji)
-
-### Komponenty shadcn/ui
-- `RadioGroup` (z Fazy 0) — wybór pory dnia
-- `Calendar` (z Fazy 0) — date picker
-- `Tabs` (z Fazy 0) — filtrowanie
-- `Badge` (już istnieje)
-- `Select` (już istnieje)
-- `Dialog` / `Sheet` (już istnieje) — modal
-- `Skeleton` (z Fazy 0)
+### Powiadomienia
+- Migracja `0071_faza5_slot_first_notify.sql` — event types `booking-confirmed` + `slot-first-session-created`
+- Email: `booking-confirmed.tsx` (do rodzica), `slot-first-session-created.tsx` (do trenera), zarejestrowane w `contract.ts` + `templates/index.ts` + `emit.ts` + `categories.ts`
+- In-app: `notifications/types.ts` + klucze `notifications.types.*` w `pl.json`/`en.json`
 
 ---
 
 ## Definition of Done
 
 ### Backend
-- [ ] Tabela `individual_session_request` z migracją
-- [ ] `submitIndividualRequest` — klient może złożyć wniosek
-- [ ] `assignTrainer` — admin może przypisać trenera i cenę
-- [ ] `confirmRequest` — admin może potwierdzić → tworzy `slot_first` session + booking
-- [ ] `rejectRequest` — admin może odrzucić z powodem
-- [ ] `cancelRequest` — klient może anulować własny wniosek
-- [ ] Walidacja: dziecko należy do klienta, trener w eligible
-- [ ] RLS: dane izolowane per organizacja
+- [x] Konfiguracja admina: `eligibleTrainerIds` + `defaultDurationMinutes`
+- [x] `createSlotFirstBookingSchema` — bez `sessionId`
+- [x] `createSlotFirstBookingAction` — trainer eligibility, wall-clock slot, re-walidacja w transakcji
+- [x] `listSlotFirstAvailability` w `bookings/data.ts`
+- [x] Sesja (capacity 1) + booking w jednej transakcji
+- [x] Powiadomienia: `booking-confirmed` + `slot-first-session-created`
+- [x] Seeder e2e: `eligibleTrainerIds` + `availability` w `seed-langlion`
 
 ### Frontend
-- [ ] Klient: strona zamawiania lekcji z wieloetapowym formularzem
-- [ ] Klient: podgląd i potwierdzenie przed wysłaniem
-- [ ] Klient: strona potwierdzenia po wysłaniu
-- [ ] Admin: lista wniosków z filtrami po statusie
-- [ ] Admin: modal z pełną obsługą (przypisz → potwierdź → sesja)
-- [ ] Admin: badge z licznikiem pending w sidebarze
-- [ ] Trener: lista wniosków przypisanych do siebie
-- [ ] Wszystkie teksty w i18n
-- [ ] Loading/empty states
+- [x] `?trainerId=` prefill (tylko dla eligible trenerów)
+- [x] `SlotFirstFlow` — trener → slot → potwierdzenie
+- [x] Współdzielone kroki (OTP, success, policy/consents) z `enrollment-flow.tsx`
+- [x] Wszystkie teksty w i18n (`pl.json`/`en.json`)
+- [ ] Wizualny pass `SlotFirstFlow` (select styled bezpośrednio, `formatDay()`)
 
----
+### Testy
+- [x] Unit: `slot-first-schema.test.ts` (5 testów — brak `sessionId`, trainer/startTime/payment/participant)
+- [x] E2E: `langlion-slot-first.spec.ts` (happy path przez UI, `eligibleTrainerIds` ukrywa trenerów, brak slotu poza oknem)
+- [ ] E2E: forge submission nieosiągalnego slotu → `errors.slotUnavailable` (wymaga bezpośredniego wywołania akcji)
 
-## Testy
-
-### Unit (Vitest)
-- [ ] `submitIndividualRequest` — walidacja: dziecko należy do klienta
-- [ ] `submitIndividualRequest` — trener spoza eligible → błąd
-- [ ] `assignTrainer` — przypisanie trenera, ceny, daty
-- [ ] `confirmRequest` — tworzy sesję `slot_first` z poprawnymi parametrami
-- [ ] `confirmRequest` — konflikt trenera → błąd
-- [ ] `rejectRequest` — wymaga powodu
-- [ ] `cancelRequest` — tylko własny wniosek klienta
-
-### E2E (Playwright)
-- [ ] Klient: przechodzi przez cały flow zamawiania
-- [ ] Klient: wniosek pojawia się na liście admina jako pending
-- [ ] Admin: przypisuje trenera → status zmienia się na assigned
-- [ ] Admin: potwierdza → sesja utworzona, booking dodany
-- [ ] Admin: odrzuca → klient widzi powód odrzucenia
-- [ ] Trener: widzi tylko wnioski przypisane do siebie
-- [ ] RLS: klient z org A nie widzi wniosków z org B
-
-### Manualne QA
-- [ ] Formularz klienta działa na mobile
-- [ ] Date picker na mobile
-- [ ] Powiadomienie email do klienta po potwierdzeniu/odrzuceniu
-- [ ] Powiadomienie email do trenera po przypisaniu
-- [ ] Edge case: klient bez dzieci
-- [ ] Edge case: brak dostępnych trenerów
+### Powiadomienia
+- [x] Migracja event types
+- [x] Szablony email + i18n (PL/EN)
+- [x] In-app notifications types
 
 ---
 
 ## Zależności
 
-- **Faza 0** — komponenty shadcn/ui (RadioGroup, Calendar, Tabs, Skeleton)
-- **Faza 1** — sidebar z nawigacją
-- **Faza 3** — panel trenera (widok wniosków do mnie)
+- **Faza 5 admin** — `slot-first.ts` (create-owa strona, admin flow)
+- **F17.5** — `trainer_availability` + `computeAvailabilitySlots`
+- **F4/F5** — `createBooking` (pojedynczy writer), `payment-options.ts`, `VerifyStep`
+- **F21** — `resolveClientPrice`
+- **F24** — consents (`parseAthleteConsents`)
 
-## Pliki do utworzenia / zmiany
+## Pliki (zmiana / utworzenie)
 
 | Plik | Akcja |
 |------|-------|
-| `src/lib/db/schema/individual-session-requests.ts` | **Nowy** — tabela |
-| `src/lib/db/schema/index.ts` | **Zmiana** — eksport |
-| `src/lib/db/migrations/XXXX_individual_session_requests.sql` | **Nowy** — migracja |
-| `src/features/bookings/individual-request-schema.ts` | **Nowy** — Zod |
-| `src/features/bookings/individual-request-actions.ts` | **Nowy** — server actions |
-| `src/features/bookings/individual-request-data.ts` | **Nowy** — dane |
-| `src/app/[locale]/(site)/zamow-lekcje/page.tsx` | **Nowy** — strona klienta |
-| `src/app/[locale]/(site)/zamow-lekcje/order-form.tsx` | **Nowy** — formularz |
-| `src/app/[locale]/(app)/dashboard/individual-requests/page.tsx` | **Nowy** — panel admina |
-| `src/app/[locale]/(app)/dashboard/individual-requests/request-modal.tsx` | **Nowy** — modal obsługi |
-| `messages/pl.json` | Nowe klucze |
-| `messages/en.json` | Nowe klucze |
+| `src/features/bookings/slot-first-public.ts` | **Nowy** — publiczna akcja slot-first |
+| `src/features/bookings/components/slot-first-flow.tsx` | **Nowy** — flow UI |
+| `src/features/bookings/slot-first-schema.test.ts` | **Nowy** — testy walidacji |
+| `src/features/bookings/schema.ts` | **Zmiana** — `createSlotFirstBookingSchema` |
+| `src/features/bookings/data.ts` | **Zmiana** — `listSlotFirstAvailability` |
+| `src/features/bookings/components/enrollment-flow.tsx` | **Zmiana** — export współdzielonych kroków |
+| `src/app/[locale]/(site)/zapisy/[groupTypeSlug]/page.tsx` | **Zmiana** — branch `slot_first` + prefill |
+| `src/features/groups/components/group-type-form.tsx` | **Zmiana** — pola admina |
+| `src/features/groups/actions.ts`, `src/features/groups/schema.ts` | **Zmiana** — walidacja/persystencja |
+| `src/lib/db/migrations/0071_faza5_slot_first_notify.sql` | **Nowy** — event types |
+| `src/lib/adapters/email/{contract.ts, templates/*}` | **Zmiana** — szablony email |
+| `src/features/emails/categories.ts`, `src/features/notifications/{emit,types}.ts` | **Zmiana** — rejestracja |
+| `src/lib/i18n/messages/{pl,en}.json` | **Zmiana** — klucze |
+| `src/app/api/dev/seed-langlion/route.ts` | **Zmiana** — `eligibleTrainerIds` + `availability` w seederze |
+| `e2e/langlion-slot-first.spec.ts` | **Nowy** — testy e2e |
 
 ## Szacowany nakład
 
-4–5 dni — nowa tabela, pełny backend, dwie ścieżki frontendu (klient + admin + trener), testy E2E.
+~2–3 dni — brak nowej tabeli i paneli admina; flow klienta na istniejącej stronie rezerwacji + powiadomienia.

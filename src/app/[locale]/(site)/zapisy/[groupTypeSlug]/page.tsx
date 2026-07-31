@@ -3,9 +3,10 @@ import { getTranslations } from "next-intl/server";
 import { and, eq, isNull } from "drizzle-orm";
 
 import { buildMonthGrid, defaultMonth } from "@/features/bookings/calendar";
-import { listSessionAvailability } from "@/features/bookings/data";
+import { listSessionAvailability, listSlotFirstAvailability } from "@/features/bookings/data";
 import { paymentOptionsFor, type PackageTeaser } from "@/features/bookings/payment-options";
 import { EnrollmentFlow } from "@/features/bookings/components/enrollment-flow";
+import { SlotFirstFlow } from "@/features/bookings/components/slot-first-flow";
 import { resolveClientSession } from "@/features/client-auth/session";
 import { listAthletes } from "@/features/clients/data";
 import { getActiveConsentsForSignup } from "@/features/consents/data";
@@ -13,6 +14,7 @@ import { getGroupTypeBySlug } from "@/features/groups/data";
 import { getActivePolicyForGroupType, getLatestAcceptanceForClientGroupType } from "@/features/policies/data";
 import { resolveClientPrice } from "@/features/pricing/resolve";
 import { requireServedOrganization } from "@/features/organizations/served-org";
+import { listTrainers } from "@/features/trainers/data";
 import { InterestSignupForm } from "@/features/interest-signups/components/interest-signup-form";
 import { creditType, productTemplate } from "@/lib/db/schema";
 import { withTenant } from "@/lib/db/tenant";
@@ -46,11 +48,11 @@ export default async function EnrollmentPage({
   searchParams,
 }: {
   params: Promise<{ groupTypeSlug: string }>;
-  searchParams: Promise<{ m?: string }>;
+  searchParams: Promise<{ m?: string; trainerId?: string }>;
 }) {
   const org = await requireServedOrganization();
   const { groupTypeSlug } = await params;
-  const { m } = await searchParams;
+  const { m, trainerId } = await searchParams;
 
   const t = await getTranslations("enrollment");
 
@@ -203,6 +205,135 @@ export default async function EnrollmentPage({
     );
   }
 
+  // Faza 5, §2.32 — slot-first offers have no session calendar to browse; the
+  // parent picks a trainer and a time from computed availability instead.
+  if (groupType.engine === "slot_first") {
+    if (paymentView.kind !== "options") {
+      return (
+        <main>
+          <h1 className="text-2xl font-semibold">{t("title", { name: groupType.name })}</h1>
+          {groupType.description ? (
+            <div className="text-muted-foreground mt-2 whitespace-pre-line">
+              {groupType.description}
+            </div>
+          ) : null}
+          <EnrollmentFlow
+            groupTypeSlug={groupTypeSlug}
+            groupTypeName={groupType.name}
+            price={groupType.price}
+            discountedPrice={discountedPrice ?? undefined}
+            currency={org.currency}
+            isNewClientOnly={groupType.isNewClientOnly}
+            requiresQualificationCard={groupType.requiresQualificationCard}
+            paymentView={paymentView}
+            month=""
+            prevMonth=""
+            nextMonth=""
+            grid={[]}
+            recognized={
+              recognized
+                ? {
+                    email: recognized.email,
+                    name: recognized.name,
+                    athletes: [],
+                  }
+                : null
+            }
+            policyDocument={null}
+            consentDocuments={[]}
+          />
+        </main>
+      );
+    }
+
+    const slotFirst = await withTenant(org.id, async (tx) => {
+      // Eligible trainers: `eligibleTrainerIds` when the academy set any,
+      // otherwise every active trainer (§1.2). The `?trainerId=` prefill is
+      // honoured only when it names an eligible trainer.
+      const all = await listTrainers(tx, org.id);
+      const eligible =
+        groupType.eligibleTrainerIds && groupType.eligibleTrainerIds.length > 0
+          ? all.filter((tr) => groupType.eligibleTrainerIds!.includes(tr.userId))
+          : all;
+      const eligibleIds = eligible.map((tr) => tr.userId);
+
+      const now = new Date();
+      const opening = m ?? defaultMonthForSlotFirst(eligibleIds, groupType, org.timezone, now);
+      const range = monthRangeInZone(opening, org.timezone);
+
+      const availability = await listSlotFirstAvailability(tx, org.id, {
+        trainerIds: eligibleIds,
+        defaultDurationMinutes: groupType.defaultDurationMinutes ?? 60,
+        from: range.from,
+        to: range.to,
+        timeZone: org.timezone,
+      });
+
+      return {
+        trainers: eligible.map((tr) => ({ id: tr.userId, name: tr.name ?? tr.email })),
+        availability,
+        month: opening,
+        validTrainerId: trainerId && eligibleIds.includes(trainerId) ? trainerId : undefined,
+      };
+    });
+
+    return (
+      <main>
+        <h1 className="text-2xl font-semibold">{t("title", { name: groupType.name })}</h1>
+        {groupType.description ? (
+          <div className="text-muted-foreground mt-2 whitespace-pre-line">
+            {groupType.description}
+          </div>
+        ) : null}
+
+        <SlotFirstFlow
+          groupTypeSlug={groupTypeSlug}
+          groupTypeName={groupType.name}
+          price={groupType.price}
+          discountedPrice={discountedPrice ?? undefined}
+          currency={org.currency}
+          isNewClientOnly={groupType.isNewClientOnly}
+          requiresQualificationCard={groupType.requiresQualificationCard}
+          methods={paymentView.methods}
+          trainers={slotFirst.trainers}
+          availability={slotFirst.availability}
+          defaultTrainerId={slotFirst.validTrainerId}
+          month={slotFirst.month}
+          prevMonth={shiftMonth(slotFirst.month, -1)}
+          nextMonth={shiftMonth(slotFirst.month, 1)}
+          recognized={
+            recognized
+              ? {
+                  email: recognized.email,
+                  name: recognized.name,
+                  athletes: athletes.map((a) => ({ id: a.id, name: a.name })),
+                }
+              : null
+          }
+          policyDocument={
+            policyDocument
+              ? {
+                  id: policyDocument.id,
+                  name: policyDocument.name,
+                  version: policyDocument.version,
+                  fileId: policyDocument.file_id,
+                  requireReacceptance:
+                    latestAcceptance !== null &&
+                    policyDocument.version > latestAcceptance.policyDocumentVersion,
+                }
+              : null
+          }
+          consentDocuments={consentDocuments.map((d) => ({
+            id: d.id,
+            name: d.name,
+            version: d.version,
+            fileId: d.file_id,
+          }))}
+        />
+      </main>
+    );
+  }
+
   return (
     <main>
       <h1 className="text-2xl font-semibold">{t("title", { name: groupType.name })}</h1>
@@ -241,7 +372,8 @@ export default async function EnrollmentPage({
                 name: policyDocument.name,
                 version: policyDocument.version,
                 fileId: policyDocument.file_id,
-                requireReacceptance: latestAcceptance !== null &&
+                requireReacceptance:
+                  latestAcceptance !== null &&
                   policyDocument.version > latestAcceptance.policyDocumentVersion,
               }
             : null
@@ -259,6 +391,20 @@ export default async function EnrollmentPage({
 
 /** The current `YYYY-MM` in the academy's zone — the seed for the upcoming-window probe. */
 function defaultMonthSeed(now: Date, timeZone: string): string {
+  return todayMonthWith(now, timeZone);
+}
+
+/**
+ * The month a slot-first offer opens on. No probe of upcoming sessions (there is
+ * no session calendar to scan): trainers publish `trainer_availability` windows
+ * continuously, so the flow opens on the current month and the parent navigates.
+ */
+function defaultMonthForSlotFirst(
+  _eligibleTrainerIds: string[],
+  _groupType: { defaultDurationMinutes: number | null },
+  timeZone: string,
+  now: Date,
+): string {
   return todayMonthWith(now, timeZone);
 }
 

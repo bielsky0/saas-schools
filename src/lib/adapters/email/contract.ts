@@ -64,7 +64,12 @@ export type TemplateName =
   | "homework-assigned"
   // Faza 29a — Client password changed (EPIK 44, spec v19).
   // Security notification: NOT suppressible, fires on reset only (not initial set).
-  | "client-password-changed";
+  | "client-password-changed"
+  // Faza 5 — Slot-first individual sessions (EPIK 34, §2.32).
+  // `booking-confirmed` — potwierdzenie utworzenia rezerwacji (klient).
+  // `slot-first-session-created` — nowa sesja przypisana do trenera.
+  | "booking-confirmed"
+  | "slot-first-session-created";
 // `magic-link` lands with spec 2.2, which is not implemented yet.
 
 /**
@@ -208,6 +213,22 @@ export interface TemplateProps {
   // Security notification, is_overridable=false. Triggers only on reset (F29b),
   // not on initial set from the booking confirmation screen.
   "client-password-changed": { orgName: string };
+  // Faza 5 — Slot-first individual sessions (EPIK 34, §2.32).
+  "booking-confirmed": {
+    orgName: string;
+    athleteName: string;
+    groupTypeName: string;
+    trainerName: string;
+    sessionDate: string;
+    sessionTime: string;
+  };
+  "slot-first-session-created": {
+    orgName: string;
+    athleteName: string;
+    groupTypeName: string;
+    sessionDate: string;
+    sessionTime: string;
+  };
 }
 
 /** Loose payload shape for callers that resolve the template at runtime. */

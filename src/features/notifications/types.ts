@@ -30,6 +30,9 @@ export const NOTIFICATION_TYPES = [
   // ── Faza 28 — Lesson topics and homework (EPIK 43, §2.42) ───────────
   "lesson_topic_added",           // do klienta — nowy temat lekcji
   "homework_assigned",            // do klienta — nowa praca domowa
+  // ── Faza 5 — Slot-first individual sessions (EPIK 34, §2.32) ─────────
+  "booking-confirmed",            // do klienta — potwierdzenie rezerwacji
+  "slot-first-session-created",   // do trenera — nowa sesja przypisana
 ] as const;
 
 export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
@@ -63,6 +66,8 @@ export const NOTIFICATION_META: Record<NotificationType, { suppressible: boolean
   "credit-transfer-completed": { suppressible: true },
   "lesson_topic_added": { suppressible: true },
   "homework_assigned": { suppressible: true },
+  "booking-confirmed": { suppressible: true },
+  "slot-first-session-created": { suppressible: true },
 };
 
 export function isNotificationType(value: string): value is NotificationType {

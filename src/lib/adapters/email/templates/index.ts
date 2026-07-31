@@ -25,6 +25,11 @@ import { RefundConfirmed, refundConfirmedSubject } from "./refund-confirmed";
 import { LessonTopicAdded, lessonTopicAddedSubject } from "./lesson-topic-added";
 import { HomeworkAssigned, homeworkAssignedSubject } from "./homework-assigned";
 import { ClientPasswordChanged, clientPasswordChangedSubject } from "./client-password-changed";
+import { BookingConfirmed, bookingConfirmedSubject } from "./booking-confirmed";
+import {
+  SlotFirstSessionCreated,
+  slotFirstSessionCreatedSubject,
+} from "./slot-first-session-created";
 
 /**
  * Template registry (spec 10.2 — component templates, HTML + plain-text).
@@ -126,6 +131,15 @@ const templates: { [N in TemplateName]: TemplateDef<N> } = {
   "client-password-changed": {
     subject: clientPasswordChangedSubject,
     component: ClientPasswordChanged,
+  },
+  // Faza 5 — Slot-first individual sessions (EPIK 34, §2.32)
+  "booking-confirmed": {
+    subject: bookingConfirmedSubject,
+    component: BookingConfirmed,
+  },
+  "slot-first-session-created": {
+    subject: slotFirstSessionCreatedSubject,
+    component: SlotFirstSessionCreated,
   },
 };
 

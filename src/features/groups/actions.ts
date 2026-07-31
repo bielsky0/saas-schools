@@ -102,6 +102,7 @@ export async function createGroupTypeAction(
     allowedBillingTypes: strList(formData, "allowedBillingTypes"),
     defaultDurationMinutes: str(formData.get("defaultDurationMinutes")) || undefined,
     defaultCapacity: str(formData.get("defaultCapacity")) || undefined,
+    eligibleTrainerIds: strList(formData, "eligibleTrainerIds"),
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? t("errors.generic") };
@@ -140,6 +141,10 @@ export async function createGroupTypeAction(
           allowedBillingTypes: parsed.data.allowedBillingTypes ?? null,
           defaultDurationMinutes: parsed.data.defaultDurationMinutes ?? null,
           defaultCapacity: parsed.data.defaultCapacity ?? null,
+          eligibleTrainerIds:
+            (parsed.data.eligibleTrainerIds?.length ?? 0) > 0
+              ? parsed.data.eligibleTrainerIds
+              : null,
         })
         .returning({ id: groupType.id });
 
@@ -197,6 +202,7 @@ export async function updateGroupTypeAction(
     allowedBillingTypes: strList(formData, "allowedBillingTypes"),
     defaultDurationMinutes: str(formData.get("defaultDurationMinutes")) || undefined,
     defaultCapacity: str(formData.get("defaultCapacity")) || undefined,
+    eligibleTrainerIds: strList(formData, "eligibleTrainerIds"),
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? t("errors.generic") };
@@ -258,6 +264,8 @@ export async function updateGroupTypeAction(
         allowedBillingTypes: parsed.data.allowedBillingTypes ?? null,
         defaultDurationMinutes: parsed.data.defaultDurationMinutes ?? null,
         defaultCapacity: parsed.data.defaultCapacity ?? null,
+        eligibleTrainerIds:
+          (parsed.data.eligibleTrainerIds?.length ?? 0) > 0 ? parsed.data.eligibleTrainerIds : null,
       };
       await tx
         .update(groupType)
@@ -359,6 +367,9 @@ export async function updateGroupTypeAction(
             "policyDocumentId",
             "allowedPurchaseModes",
             "allowedBillingTypes",
+            "defaultDurationMinutes",
+            "defaultCapacity",
+            "eligibleTrainerIds",
           ]),
         }),
       });

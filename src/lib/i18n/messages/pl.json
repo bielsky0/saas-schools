@@ -164,6 +164,18 @@
       "preview": "Hasło do Twojego konta w akademii zostało zmienione.",
       "heading": "Hasło zmienione",
       "body": "Hasło do Twojego konta w {orgName} zostało zmienione. Jeśli to nie Ty, skontaktuj się natychmiast z akademią."
+    },
+    "booking-confirmed": {
+      "subject": "Rezerwacja potwierdzona — {orgName}",
+      "preview": "Twoja rezerwacja w {orgName} została potwierdzona.",
+      "heading": "Rezerwacja potwierdzona",
+      "body": "Zapisano {athleteName} na zajęcia {groupTypeName} z trenerem {trainerName} ({sessionDate} {sessionTime})."
+    },
+    "slot-first-session-created": {
+      "subject": "Nowa sesja — {orgName}",
+      "preview": "Przypisano Ci nową sesję w {orgName}.",
+      "heading": "Nowa sesja",
+      "body": "Przypisano Ci sesję {groupTypeName} ({sessionDate} {sessionTime}) dla {athleteName}."
     }
   },
   "auth": {
@@ -994,6 +1006,14 @@
       "client-password-changed": {
         "title": "Hasło zmienione",
         "body": "Twoje hasło zostało zmienione."
+      },
+      "booking-confirmed": {
+        "title": "Rezerwacja potwierdzona",
+        "body": "Zapisano {athleteName} na {groupTypeName} z trenerem {trainerName} ({sessionDate} o {sessionTime})."
+      },
+      "slot-first-session-created": {
+        "title": "Nowa sesja",
+        "body": "Przypisano Ci sesję {groupTypeName} ({sessionDate} o {sessionTime}) dla {athleteName}."
       }
     },
     "preferences": {
@@ -1137,6 +1157,10 @@
       "statusHint": "Oferty z harmonogramem pokazują kalendarz sesji. Zbieranie zainteresowania pokazuje formularz zgłoszenia.",
       "requiresQualificationCard": "Wymaga karty kwalifikacyjnej (obóz)",
       "isTrialOffer": "Oferta próbna (do śledzenia konwersji)",
+      "eligibleTrainerIds": "Dostępni trenerzy",
+      "eligibleTrainerIdsHint": "Puste = każdy aktywny trener akademii może prowadzić te zajęcia. Wybierz konkretnych, aby ograniczyć wybór.",
+      "defaultDurationMinutes": "Czas trwania zajęć (min)",
+      "defaultDurationMinutesHint": "Slot-First: długość tworzonych na żywo sesji. Domyślnie 60 min.",
       "submit": "Utwórz typ grupy",
       "submitting": "Tworzenie…",
       "save": "Zapisz zmiany",
@@ -1351,7 +1375,9 @@
     "validation": {
       "athleteRequired": "Wybierz uczestnika.",
       "athleteNameMin": "Imię uczestnika musi mieć co najmniej 2 znaki.",
-      "participantsRequired": "Dodaj co najmniej jednego uczestnika."
+      "participantsRequired": "Dodaj co najmniej jednego uczestnika.",
+      "trainerRequired": "Wybierz trenera.",
+      "startTimeRequired": "Wybierz termin zajęć."
     }
   },
   "enrollment": {
@@ -1448,6 +1474,11 @@
       "remove": "Usuń",
       "childLabel": "Dziecko {n}"
     },
+    "slotFirst": {
+      "chooseTrainer": "Wybierz trenera",
+      "noTrainers": "Brak dostępnych trenerów — skontaktuj się z akademią.",
+      "noSlots": "Brak wolnych terminów w tym miesiącu."
+    },
     "done": {
       "booked": "Rezerwacja utworzona.",
       "bookedOffline": "Zapłać na miejscu przed zajęciami.",
@@ -1468,6 +1499,8 @@
       "policyNotAccepted": "Wymagana jest akceptacja regulaminu.",
       "consentRequired": "Wymagana jest akceptacja wszystkich zgód.",
       "qualificationCardRequired": "Przed zapisem na ten obóz wymagane jest wypełnienie karty kwalifikacyjnej.",
+      "trainerNotEligible": "Ten trener nie prowadzi zajęć w tej ofercie.",
+      "slotUnavailable": "Ten termin jest już niedostępny — wybierz inny.",
       "generic": "Coś poszło nie tak. Spróbuj ponownie.",
       "interestAlreadyExists": "To dziecko jest już zapisane do tej oferty."
     },

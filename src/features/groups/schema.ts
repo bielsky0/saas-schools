@@ -82,6 +82,8 @@ export function createGroupTypeSchema(t: ValidationTranslator) {
       allowedBillingTypes: z.array(billingType).optional(),
       defaultDurationMinutes: z.coerce.number().int().positive(t("defaultDurationInvalid")).optional(),
       defaultCapacity: z.coerce.number().int().positive(t("defaultCapacityInvalid")).optional(),
+      /** Empty/absent = every active trainer is eligible (§1.2). */
+      eligibleTrainerIds: z.array(z.string()).optional(),
     })
     .refine(
       (v) =>

@@ -99,6 +99,9 @@ const EMAIL_TEMPLATE_MAP: Record<string, TemplateName> = {
   "homework_assigned": "homework-assigned",
   // ── Faza 29a — Client password changed (EPIK 44, spec v19) ────────────
   "client_password_changed": "client-password-changed",
+  // ── Faza 5 — Slot-first individual sessions (EPIK 34, §2.32) ──────────
+  "booking-confirmed": "booking-confirmed",
+  "slot-first-session-created": "slot-first-session-created",
 };
 
 const EVENT_TYPES_WITH_EMAIL = new Set(Object.keys(EMAIL_TEMPLATE_MAP));

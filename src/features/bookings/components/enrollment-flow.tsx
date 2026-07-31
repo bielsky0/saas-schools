@@ -27,6 +27,8 @@ type Recognized = {
   athletes: { id: string; name: string }[];
 };
 
+export type { Recognized as EnrollmentRecognized };
+
 export interface ConsentDocumentProp {
   id: string;
   name: string;
@@ -41,7 +43,6 @@ export interface PolicyDocumentProp {
   fileId: string;
   requireReacceptance: boolean;
 }
-
 export interface EnrollmentFlowProps {
   groupTypeSlug: string;
   groupTypeName: string;
@@ -252,7 +253,7 @@ function Bookable({
  * explicit `isVerified` gate at that path OR add the same defense to every
  * endpoint that trusts session == identity.
  */
-function SuccessStep({ message }: { message: string }) {
+export function SuccessStep({ message }: { message: string }) {
   const t = useTranslations("enrollment");
   const [busy, setBusy] = useState(false);
   const [password, setPassword] = useState("");
@@ -455,7 +456,7 @@ function cellClass(cell: CalendarDay, selectedDay: string | null): string {
   return `${base} font-medium ${selected}`;
 }
 
-function VerifyStep({ onVerified }: { onVerified: () => void }) {
+export function VerifyStep({ onVerified }: { onVerified: () => void }) {
   const t = useTranslations("enrollment");
   const [phase, setPhase] = useState<"contact" | "otp">("contact");
   const [email, setEmail] = useState("");
@@ -779,7 +780,7 @@ function ConfirmStep({
   );
 }
 
-function Notice({ children }: { children: React.ReactNode }) {
+export function Notice({ children }: { children: React.ReactNode }) {
   return (
     <Alert className="mt-6">
       <AlertDescription>{children}</AlertDescription>
@@ -826,11 +827,11 @@ function PackageSection({
   );
 }
 
-function FieldError({ children }: { children: React.ReactNode }) {
+export function FieldError({ children }: { children: React.ReactNode }) {
   return <p className="text-destructive text-sm">{children}</p>;
 }
 
-function ViewDocumentLink({ fileId }: { fileId: string }) {
+export function ViewDocumentLink({ fileId }: { fileId: string }) {
   const t = useTranslations("enrollment");
   const [busy, setBusy] = useState(false);
 

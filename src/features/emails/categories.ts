@@ -87,6 +87,10 @@ export const TEMPLATE_CATEGORY: Record<TemplateName, EmailCategory> = {
   "homework-assigned": "transactional",
   // Faza 29a — Password changed. Security notification, is_overridable=false.
   "client-password-changed": "transactional",
+  // Faza 5 — Slot-first individual sessions. Transactional: klient musi wiedzieć
+  // o potwierdzeniu rezerwacji, a trener o nowej sesji.
+  "booking-confirmed": "transactional",
+  "slot-first-session-created": "transactional",
 };
 
 export function categoryFor(template: TemplateName): EmailCategory {

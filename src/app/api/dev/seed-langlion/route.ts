@@ -16,6 +16,7 @@ import {
   location,
   policyDocument,
   productTemplate,
+  trainerAvailability,
 } from "@/lib/db/schema";
 import { env } from "@/lib/env/server";
 import { constraintOf, sqlStateOf } from "../sql-error";
@@ -70,6 +71,8 @@ type Body = {
     allowedBillingTypes?: ("one_time" | "recurring")[];
     isNewClientOnly?: boolean;
     requiresQualificationCard?: boolean;
+    /** Slot-first only (Faza 5): restrict which trainers can take these sessions. */
+    eligibleTrainerIds?: string[];
   };
   /** Set the price on an EXISTING offer, to prove `price_snapshot` is frozen (US-4.6). */
   setGroupTypePrice?: { groupTypeId: string; price: number };
@@ -87,6 +90,17 @@ type Body = {
   client?: { email: string; name?: string; isVerified?: boolean };
   athletes?: { name: string; age?: number }[];
   bookings?: { sessionIndex: number; athleteIndex: number; paymentStatus?: string }[];
+  /**
+   * Trainer weekly availability windows (F17.5, slot-first Faza 5).
+   * `dayOfWeek` 0=Monday … 6=Sunday, times as `HH:MM`.
+   */
+  availability?: {
+    trainerId: string;
+    dayOfWeek: number;
+    startTime: string;
+    endTime: string;
+    isActive?: boolean;
+  }[];
   /**
    * The 1:1 `credit_type` for `groupTypeId` (Faza 6) — needed to exercise
    * `confirmCashPayment`, which has no path to create one itself
@@ -167,6 +181,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             allowedBillingTypes: body.groupType.allowedBillingTypes ?? null,
             isNewClientOnly: body.groupType.isNewClientOnly ?? false,
             requiresQualificationCard: body.groupType.requiresQualificationCard ?? false,
+            eligibleTrainerIds:
+              body.groupType.eligibleTrainerIds && body.groupType.eligibleTrainerIds.length > 0
+                ? body.groupType.eligibleTrainerIds
+                : null,
             defaultLocationId: locationId,
           })
           .returning({ id: groupType.id });
@@ -224,6 +242,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           })
           .returning({ id: classSession.id });
         sessionIds.push(row!.id);
+      }
+
+      for (const w of body.availability ?? []) {
+        await tx.insert(trainerAvailability).values({
+          organizationId: orgId,
+          trainerId: w.trainerId,
+          dayOfWeek: w.dayOfWeek,
+          startTime: w.startTime,
+          endTime: w.endTime,
+          isActive: w.isActive ?? true,
+        });
       }
 
       let clientId: string | null = null;

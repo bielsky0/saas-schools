@@ -40,6 +40,10 @@ export type GroupTypeDefaults = {
   allowedPurchaseModes: string[];
   allowedBillingTypes: string[] | null;
   status: string;
+  /** Which trainers may teach this offer (empty/absent = all active trainers). */
+  eligibleTrainerIds: string[] | null;
+  /** Slot slicing for the slot-first engine (`computeAvailabilitySlots`). */
+  defaultDurationMinutes: number | null;
 };
 
 /**
@@ -64,10 +68,12 @@ export type GroupTypeDefaults = {
 export function GroupTypeForm({
   locations,
   policyDocuments,
+  trainers,
   defaults,
 }: {
   locations: { id: string; name: string }[];
   policyDocuments?: { id: string; name: string; version: number }[];
+  trainers?: { id: string; label: string }[];
   defaults?: GroupTypeDefaults;
 }) {
   const t = useTranslations("groups");
@@ -235,6 +241,45 @@ export function GroupTypeForm({
           ))}
         </div>
       </fieldset>
+
+      {trainers && trainers.length > 0 ? (
+        <fieldset className="flex flex-col gap-2">
+          <legend className="text-sm font-medium">{t("form.eligibleTrainerIds")}</legend>
+          <p className="text-muted-foreground text-xs">{t("form.eligibleTrainerIdsHint")}</p>
+          <div className="flex flex-wrap gap-4">
+            {trainers.map((trainer) => (
+              <label key={trainer.id} className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  name="eligibleTrainerIds"
+                  value={trainer.id}
+                  defaultChecked={defaults?.eligibleTrainerIds?.includes(trainer.id) ?? false}
+                  className="accent-primary size-4"
+                />
+                {trainer.label}
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      ) : null}
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <FormField
+          label={t("form.defaultDurationMinutes")}
+          htmlFor="gt-duration"
+          hint={t("form.defaultDurationMinutesHint")}
+        >
+          <Input
+            id="gt-duration"
+            name="defaultDurationMinutes"
+            type="number"
+            min={5}
+            step={5}
+            defaultValue={defaults?.defaultDurationMinutes ?? ""}
+            placeholder="60"
+          />
+        </FormField>
+      </div>
 
       <label className="flex items-center gap-2 text-sm">
         <input

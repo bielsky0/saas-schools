@@ -161,9 +161,21 @@
     },
     "client-password-changed": {
       "subject": "Your password was changed — {orgName}",
-      "preview": "Your academy account password was changed.",
+      "preview": "The password for your academy account was changed.",
       "heading": "Password changed",
-      "body": "Your password for your {orgName} account was changed. If this was not you, contact the academy immediately."
+      "body": "The password for your {orgName} account was changed. If this wasn't you, contact the academy immediately."
+    },
+    "booking-confirmed": {
+      "subject": "Booking confirmed — {orgName}",
+      "preview": "Your booking at {orgName} was confirmed.",
+      "heading": "Booking confirmed",
+      "body": "{athleteName} is booked for {groupTypeName} with trainer {trainerName} ({sessionDate} {sessionTime})."
+    },
+    "slot-first-session-created": {
+      "subject": "New session — {orgName}",
+      "preview": "A new session was assigned to you at {orgName}.",
+      "heading": "New session",
+      "body": "You have been assigned a {groupTypeName} session ({sessionDate} {sessionTime}) for {athleteName}."
     }
   },
   "auth": {
@@ -994,6 +1006,14 @@
       "client-password-changed": {
         "title": "Password changed",
         "body": "Your password has been changed."
+      },
+      "booking-confirmed": {
+        "title": "Booking confirmed",
+        "body": "{athleteName} is booked for {groupTypeName} with trainer {trainerName} ({sessionDate} at {sessionTime})."
+      },
+      "slot-first-session-created": {
+        "title": "New session",
+        "body": "You have been assigned a {groupTypeName} session ({sessionDate} at {sessionTime}) for {athleteName}."
       }
     },
     "preferences": {
@@ -1136,7 +1156,11 @@
       "status": "Status",
       "statusHint": "Scheduled offers show a session calendar. Collecting interest shows a signup form instead.",
       "requiresQualificationCard": "Requires qualification card (camp)",
-      "isTrialOffer": "Trial offer (for conversion tracking)",
+      "isTrialOffer": "Trial offer (to track conversion)",
+      "eligibleTrainerIds": "Available trainers",
+      "eligibleTrainerIdsHint": "Empty = any active academy trainer can teach this offer. Select specific ones to limit the choice.",
+      "defaultDurationMinutes": "Session length (min)",
+      "defaultDurationMinutesHint": "Slot-First: length of sessions created on the fly. Defaults to 60 min.",
       "submit": "Create group type",
       "submitting": "Creating…",
       "save": "Save changes",
@@ -1351,7 +1375,9 @@
     "validation": {
       "athleteRequired": "Choose a participant.",
       "athleteNameMin": "Participant name must be at least 2 characters.",
-      "participantsRequired": "Add one or more participants."
+      "participantsRequired": "Add one or more participants.",
+      "trainerRequired": "Choose a trainer.",
+      "startTimeRequired": "Choose a class time."
     }
   },
   "enrollment": {
@@ -1448,6 +1474,11 @@
       "remove": "Remove",
       "childLabel": "Child {n}"
     },
+    "slotFirst": {
+      "chooseTrainer": "Choose a trainer",
+      "noTrainers": "No trainers available — contact the academy.",
+      "noSlots": "No open times this month."
+    },
     "done": {
       "booked": "Booking created.",
       "bookedOffline": "Pay on site before the class.",
@@ -1468,6 +1499,8 @@
       "policyNotAccepted": "You must accept the policy to proceed.",
       "consentRequired": "You must accept all required consents to proceed.",
       "qualificationCardRequired": "You must complete the qualification card before booking this camp.",
+      "trainerNotEligible": "This trainer does not teach this offer.",
+      "slotUnavailable": "That time is no longer available — choose another.",
       "generic": "Something went wrong. Please try again.",
       "interestAlreadyExists": "This child is already registered for this offer."
     },

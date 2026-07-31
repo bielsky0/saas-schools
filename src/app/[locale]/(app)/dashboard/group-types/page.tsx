@@ -19,6 +19,7 @@ import { requireOrgPermission } from "@/features/organizations/context";
 import { listGroupTypes } from "@/features/groups/data";
 import { listLocations } from "@/features/locations/data";
 import { listPolicyDocuments } from "@/features/policies/data";
+import { listTrainers } from "@/features/trainers/data";
 import { GroupTypeForm } from "@/features/groups/components/group-type-form";
 import { withTenant } from "@/lib/db/tenant";
 
@@ -34,10 +35,11 @@ export default async function GroupTypesPage() {
   const { org } = await requireOrgPermission("group_types.manage");
   const t = await getTranslations("groups");
 
-  const { groupTypes, locations, policyDocuments } = await withTenant(org.id, async (tx) => ({
+  const { groupTypes, locations, policyDocuments, trainers } = await withTenant(org.id, async (tx) => ({
     groupTypes: await listGroupTypes(tx, org.id),
     locations: await listLocations(tx, org.id),
     policyDocuments: await listPolicyDocuments(tx, org.id),
+    trainers: await listTrainers(tx, org.id),
   }));
 
   return (
@@ -98,7 +100,14 @@ export default async function GroupTypesPage() {
           <CardTitle className="text-sm">{t("form.createTitle")}</CardTitle>
         </CardHeader>
         <CardContent>
-          <GroupTypeForm locations={locations} policyDocuments={policyDocuments} />
+          <GroupTypeForm
+            locations={locations}
+            policyDocuments={policyDocuments}
+            trainers={trainers.map((trainer) => ({
+              id: trainer.userId,
+              label: trainer.name ? `${trainer.name} (${trainer.email})` : trainer.email,
+            }))}
+          />
         </CardContent>
       </Card>
     </div>

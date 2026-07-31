@@ -107,3 +107,24 @@ export function createBookingManySchema(t: ValidationTranslator) {
 export type PriceSnapshot = z.infer<typeof priceSnapshot>;
 export type CreateBookingValues = z.infer<ReturnType<typeof createBookingSchema>>;
 export type CreateBookingManyValues = z.infer<ReturnType<typeof createBookingManySchema>>;
+
+/**
+ * Public slot-first enrollment (Faza 5, EPIK 34, §2.32).
+ *
+ * Same envelope as `createBookingSchema`, but the session does not exist yet —
+ * the parent picks a trainer and a local `startTime` from the computed
+ * availability, and the booking action creates the `class_session` on the fly
+ * before taking the seat. `startTime` is a wall-clock `YYYY-MM-DDTHH:mm` value
+ * resolved in the academy's zone (US-1.2), so it is validated as a string here
+ * and converted by the action with `wallClockToInstant`.
+ */
+export function createSlotFirstBookingSchema(t: ValidationTranslator) {
+  return createBookingSchema(t)
+    .omit({ sessionId: true })
+    .extend({
+      trainerId: z.string().min(1, t("trainerRequired")),
+      startTime: z.string().min(1, t("startTimeRequired")),
+    });
+}
+
+export type CreateSlotFirstBookingValues = z.infer<ReturnType<typeof createSlotFirstBookingSchema>>;

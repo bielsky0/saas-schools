@@ -2,6 +2,11 @@ import { and, count, eq, gte, lt, ne, sql } from "drizzle-orm";
 
 import type { TenantDb } from "@/lib/db/tenant";
 import { athlete, booking, classSession, groupType, location } from "@/lib/db/schema";
+import { listAvailability } from "@/features/trainers/availability-data";
+import {
+  computeAvailabilitySlots,
+  type ComputedSlot,
+} from "@/features/trainers/availability-slots";
 
 /**
  * Booking data access (langlion §1.2, §2.3, §5.2).
@@ -153,6 +158,91 @@ export async function listSessionAvailability(
       location.name,
     )
     .orderBy(classSession.startTime);
+}
+
+/** One trainer's bookable slots as the slot-first flow sees them (Faza 5, §2.32). */
+export interface TrainerSlotAvailability {
+  trainerId: string;
+  slots: ComputedSlot[];
+}
+
+/**
+ * Slot-first availability: the open slots for one or more trainers over a date
+ * range, computed by `computeAvailabilitySlots` from the trainer's ACTIVE
+ * `trainer_availability` windows with existing `class_session`s subtracted
+ * (Faza 5, EPIK 34, US-1.2).
+ *
+ * Used by the public `/zapisy/{slug}` page to render the trainer → slot picker,
+ * and re-run inside `createSlotFirstBookingAction` to re-validate the chosen
+ * slot server-side. Reading `listAvailability` (active windows) here AND in the
+ * action is deliberate: the page shows what the trainer published, and the
+ * action refuses anything that is not in that same recomputed set — the two
+ * never share a cached copy that could drift.
+ *
+ * @param trainerIds  Empty = every active trainer of the academy.
+ */
+export async function listSlotFirstAvailability(
+  tx: TenantDb,
+  organizationId: string,
+  params: {
+    trainerIds: string[];
+    defaultDurationMinutes: number;
+    from: Date;
+    to: Date;
+    timeZone: string;
+  },
+): Promise<TrainerSlotAvailability[]> {
+  const windows = await listAvailability(tx, organizationId);
+  const activeWindows = windows.filter((w) => w.isActive);
+
+  const conditions = [
+    eq(classSession.organizationId, organizationId),
+    eq(classSession.status, "scheduled"),
+    gte(classSession.startTime, params.from),
+    lt(classSession.startTime, params.to),
+  ];
+  if (params.trainerIds.length > 0) {
+    conditions.push(sql`${classSession.trainerId} = any(${params.trainerIds})`);
+  }
+  const sessions = await tx
+    .select({
+      startTime: classSession.startTime,
+      endTime: classSession.endTime,
+      trainerId: classSession.trainerId,
+    })
+    .from(classSession)
+    .where(and(...conditions));
+
+  const sessionsByTrainer = new Map<string, { startTime: Date; endTime: Date }[]>();
+  for (const s of sessions) {
+    if (!s.trainerId) continue;
+    const list = sessionsByTrainer.get(s.trainerId) ?? [];
+    list.push({ startTime: s.startTime, endTime: s.endTime });
+    sessionsByTrainer.set(s.trainerId, list);
+  }
+
+  const trainers =
+    params.trainerIds.length > 0
+      ? params.trainerIds
+      : [...new Set(windows.map((w) => w.trainerId))];
+
+  const result: TrainerSlotAvailability[] = [];
+  for (const trainerId of trainers) {
+    const trainerWindows = activeWindows
+      .filter((w) => w.trainerId === trainerId)
+      .map((w) => ({ dayOfWeek: w.dayOfWeek, startTime: w.startTime, endTime: w.endTime }));
+    const slots = computeAvailabilitySlots({
+      windows: trainerWindows,
+      existingSessions: sessionsByTrainer.get(trainerId) ?? [],
+      defaultDurationMinutes: params.defaultDurationMinutes,
+      dateFrom: params.from,
+      dateTo: params.to,
+      timeZone: params.timeZone,
+    });
+    result.push({ trainerId, slots });
+  }
+
+  return result;
 }
 
 /** Every booking (any status) for one athlete. */

@@ -116,6 +116,7 @@ export default async function GroupTypeDetailPage({
           <GroupTypeForm
             locations={data.locations}
             policyDocuments={data.policyDocuments}
+            trainers={trainers}
             defaults={{
               id: data.groupType.id,
               name: data.groupType.name,
@@ -133,6 +134,8 @@ export default async function GroupTypeDetailPage({
               policyDocumentId: data.groupType.policyDocumentId,
               allowedPurchaseModes: data.groupType.allowedPurchaseModes,
               allowedBillingTypes: data.groupType.allowedBillingTypes,
+              eligibleTrainerIds: data.groupType.eligibleTrainerIds,
+              defaultDurationMinutes: data.groupType.defaultDurationMinutes,
             }}
           />
         </CardContent>
@@ -243,7 +246,7 @@ export default async function GroupTypeDetailPage({
           label: `${s.startTime.toLocaleString()} — ${s.locationName ?? ""} (${s.activeCount}/${s.capacity})`,
         }))}
       />
-
+ 
     </div>
   );
 }
