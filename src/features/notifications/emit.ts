@@ -102,6 +102,12 @@ const EMAIL_TEMPLATE_MAP: Record<string, TemplateName> = {
   // ── Faza 5 — Slot-first individual sessions (EPIK 34, §2.32) ──────────
   "booking-confirmed": "booking-confirmed",
   "slot-first-session-created": "slot-first-session-created",
+  // ── Faza 6 — Client notification settings (EPIK 44) ───────────────────
+  "session-reminder": "session-reminder",
+  "session-rescheduled": "session-rescheduled",
+  "invoice-available": "invoice-available",
+  "individual-session-rejected": "individual-session-rejected",
+  "qualification-card-reminder": "qualification-card-reminder",
 };
 
 const EVENT_TYPES_WITH_EMAIL = new Set(Object.keys(EMAIL_TEMPLATE_MAP));

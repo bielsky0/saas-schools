@@ -30,6 +30,17 @@ import {
   SlotFirstSessionCreated,
   slotFirstSessionCreatedSubject,
 } from "./slot-first-session-created";
+import { SessionReminder, sessionReminderSubject } from "./session-reminder";
+import { SessionRescheduled, sessionRescheduledSubject } from "./session-rescheduled";
+import { InvoiceAvailable, invoiceAvailableSubject } from "./invoice-available";
+import {
+  IndividualSessionRejected,
+  individualSessionRejectedSubject,
+} from "./individual-session-rejected";
+import {
+  QualificationCardReminder,
+  qualificationCardReminderSubject,
+} from "./qualification-card-reminder";
 
 /**
  * Template registry (spec 10.2 — component templates, HTML + plain-text).
@@ -140,6 +151,18 @@ const templates: { [N in TemplateName]: TemplateDef<N> } = {
   "slot-first-session-created": {
     subject: slotFirstSessionCreatedSubject,
     component: SlotFirstSessionCreated,
+  },
+  // Faza 6 — Client notification settings (EPIK 44).
+  "session-reminder": { subject: sessionReminderSubject, component: SessionReminder },
+  "session-rescheduled": { subject: sessionRescheduledSubject, component: SessionRescheduled },
+  "invoice-available": { subject: invoiceAvailableSubject, component: InvoiceAvailable },
+  "individual-session-rejected": {
+    subject: individualSessionRejectedSubject,
+    component: IndividualSessionRejected,
+  },
+  "qualification-card-reminder": {
+    subject: qualificationCardReminderSubject,
+    component: QualificationCardReminder,
   },
 };
 

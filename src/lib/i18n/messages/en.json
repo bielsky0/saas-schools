@@ -176,6 +176,36 @@
       "preview": "A new session was assigned to you at {orgName}.",
       "heading": "New session",
       "body": "You have been assigned a {groupTypeName} session ({sessionDate} {sessionTime}) for {athleteName}."
+    },
+    "session-reminder": {
+      "subject": "Reminder — {groupTypeName} on {sessionDate}",
+      "preview": "Your child has a class coming up at {orgName}.",
+      "heading": "Upcoming class",
+      "body": "{athleteName} has {groupTypeName} on {sessionDate} at {sessionTime}."
+    },
+    "session-rescheduled": {
+      "subject": "Class rescheduled — {orgName}",
+      "preview": "A class your child attends was moved.",
+      "heading": "Class rescheduled",
+      "body": "The {groupTypeName} class for {athleteName} has been moved to {sessionDate} at {sessionTime}."
+    },
+    "invoice-available": {
+      "subject": "Invoice available — {orgName}",
+      "preview": "Your invoice is ready at {orgName}.",
+      "heading": "Invoice available",
+      "body": "The invoice {invoiceLabel} for your purchase at {orgName} is now available."
+    },
+    "individual-session-rejected": {
+      "subject": "Individual lesson declined — {orgName}",
+      "preview": "An individual lesson request was declined.",
+      "heading": "Lesson request declined",
+      "body": "The individual lesson request for {athleteName} ({groupTypeName}, trainer {trainerName}) was declined."
+    },
+    "qualification-card-reminder": {
+      "subject": "Qualification card needed — {orgName}",
+      "preview": "A qualification card is still required.",
+      "heading": "Qualification card needed",
+      "body": "A qualification card is still required for {athleteName} to attend {groupTypeName} at {orgName}."
     }
   },
   "auth": {
@@ -1014,6 +1044,70 @@
       "slot-first-session-created": {
         "title": "New session",
         "body": "You have been assigned a {groupTypeName} session ({sessionDate} at {sessionTime}) for {athleteName}."
+      },
+      "password-reset": {
+        "title": "Password reset",
+        "body": "Your password has been reset."
+      },
+      "group-change-submitted": {
+        "title": "Group change submitted",
+        "body": "A group change request has been submitted."
+      },
+      "group-change-rejected": {
+        "title": "Group change rejected",
+        "body": "Your group change request was rejected."
+      },
+      "group-change-pending-payment": {
+        "title": "Payment needed",
+        "body": "Your group change requires an additional payment."
+      },
+      "group-change-expired": {
+        "title": "Group change expired",
+        "body": "Your group change request expired."
+      },
+      "group-change-cancelled": {
+        "title": "Group change cancelled",
+        "body": "Your group change request was cancelled."
+      },
+      "group-change-completed": {
+        "title": "Group change completed",
+        "body": "Your child has been moved to the new group."
+      },
+      "credit-transfer-submitted": {
+        "title": "Credit transfer submitted",
+        "body": "A credit transfer request has been submitted."
+      },
+      "credit-transfer-completed": {
+        "title": "Credit transfer completed",
+        "body": "Credits have been transferred."
+      },
+      "lesson_topic_added": {
+        "title": "New lesson topic",
+        "body": "A new topic was recorded for the session on {sessionDate}."
+      },
+      "homework_assigned": {
+        "title": "Homework assigned",
+        "body": "New homework assigned for {sessionDate}."
+      },
+      "session-reminder": {
+        "title": "Upcoming class",
+        "body": "{athleteName} has {groupTypeName} on {sessionDate} at {sessionTime}."
+      },
+      "session-rescheduled": {
+        "title": "Class rescheduled",
+        "body": "The {groupTypeName} class for {athleteName} moved to {sessionDate} at {sessionTime}."
+      },
+      "invoice-available": {
+        "title": "Invoice available",
+        "body": "An invoice for your purchase is ready."
+      },
+      "individual-session-rejected": {
+        "title": "Lesson request declined",
+        "body": "The individual lesson request for {athleteName} was declined."
+      },
+      "qualification-card-reminder": {
+        "title": "Qualification card needed",
+        "body": "A qualification card is still required for {athleteName} ({groupTypeName})."
       }
     },
     "preferences": {
@@ -1036,12 +1130,56 @@
         "refund-confirmed": "Refund confirmations",
         "credit-expiring-soon": "Credit expiry warnings",
         "group-change-approved": "Group change approvals",
-        "client-password-changed": "Password change alerts"
+        "client-password-changed": "Password change alerts",
+        "client-otp": "Login codes",
+        "password-reset": "Password resets",
+        "group-change-submitted": "Group change submissions",
+        "group-change-rejected": "Group change rejections",
+        "group-change-pending-payment": "Group change payment reminders",
+        "group-change-expired": "Group change expiry alerts",
+        "group-change-cancelled": "Group change cancellations",
+        "group-change-completed": "Group change completions",
+        "credit-transfer-submitted": "Credit transfer submissions",
+        "credit-transfer-completed": "Credit transfer completions",
+        "lesson_topic_added": "Lesson topics",
+        "homework_assigned": "Homework assignments",
+        "booking-confirmed": "Booking confirmations",
+        "slot-first-session-created": "New session assignments",
+        "session-reminder": "Session reminders",
+        "session-rescheduled": "Rescheduled sessions",
+        "invoice-available": "Invoice availability",
+        "individual-session-rejected": "Individual lesson rejections",
+        "qualification-card-reminder": "Qualification card reminders"
       },
       "locked": "Always on",
       "save": "Save",
       "saving": "Saving…",
       "saved": "Preferences saved.",
+      "error": "Something went wrong. Please try again."
+    },
+    "clientPreferences": {
+      "categories": {
+        "bookings": "Bookings and classes",
+        "payments": "Payments and credits",
+        "requests": "Requests and changes",
+        "cards": "Qualification cards"
+      },
+      "types": {
+        "session-reminder": "Reminders about upcoming classes",
+        "session-rescheduled": "Class rescheduled",
+        "session-cancelled": "Class cancelled",
+        "booking-confirmed": "Booking confirmation",
+        "credit-expiring-soon": "Credits about to expire",
+        "subscription-confirmed": "Payment confirmation",
+        "invoice-available": "Invoice available",
+        "group-change-approved": "Group change approved",
+        "group-change-rejected": "Group change rejected",
+        "individual-session-rejected": "Individual lesson declined",
+        "qualification-card-reminder": "Qualification card reminder"
+      },
+      "save": "Save settings",
+      "saving": "Saving…",
+      "saved": "Notification settings have been saved.",
       "error": "Something went wrong. Please try again."
     }
   },
@@ -1543,6 +1681,18 @@
         "weak": "Password must be at least 8 characters, with a letter and a digit.",
         "generic": "Could not save password. Try again."
       }
+    },
+    "greeting": "Welcome, {name}",
+    "settings": "Settings",
+    "browseOffer": "Browse the offer",
+    "notificationSettings": "Notification settings",
+    "notificationSettingsSubheading": "Choose which notifications you receive from this academy.",
+    "steps": {
+      "of": "Step {current} of {total}",
+      "schedule": "Date & time",
+      "trainer": "Trainer",
+      "details": "Your details",
+      "confirm": "Confirmation"
     }
   },
   "credits": {
@@ -1618,7 +1768,8 @@
       "issuedAt": "Issued",
       "noPending": "No pending invoices.",
       "subtitle": "Manually mark credit purchase invoices as issued."
-    }
+    },
+    "validUntilLabel": "Valid until"
   },
   "staffPanel": {
     "title": "Sessions",

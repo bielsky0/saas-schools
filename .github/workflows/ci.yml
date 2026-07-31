@@ -131,6 +131,17 @@ jobs:
           CREATE EXTENSION IF NOT EXISTS btree_gist;
           SQL
 
+      # The Payload CMS track (./migrations/*.sql) creates tables the Drizzle
+      # journal depends on: 0068_autosave_pages_v needs `_pages_v`, created by
+      # 001-create-payload-tables.sql. It must run BEFORE db:migrate on a fresh
+      # DB. Applied in glob order; each file is idempotent (IF NOT EXISTS /
+      # DROP IF EXISTS).
+      - name: Apply Payload CMS migrations
+        run: |
+          for f in migrations/*.sql; do
+            PGPASSWORD=postgres psql -h localhost -U postgres -d e2e -v ON_ERROR_STOP=1 -q -f "$f"
+          done
+
       - name: Apply database migrations
         run: pnpm db:migrate
 

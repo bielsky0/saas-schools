@@ -308,7 +308,7 @@ export async function setClientPreference(
   await db
     .insert(notificationPreference)
     .values({
-      userId: "",
+      userId: null,
       type: eventType,
       recipientType: "client",
       recipientId: clientId,

@@ -1,433 +1,531 @@
 {
-  "version": "7",
-  "dialect": "postgresql",
-  "entries": [
-    {
-      "idx": 0,
-      "version": "7",
-      "when": 1784137246552,
-      "tag": "0000_init",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1784138742834,
-      "tag": "0001_last_bromley",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1784142632886,
-      "tag": "0002_steady_fabian_cortez",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1784195165047,
-      "tag": "0003_loud_sentinels",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1784212127522,
-      "tag": "0004_small_la_nuit",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1784232665135,
-      "tag": "0005_magical_stone_men",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1784293691402,
-      "tag": "0006_organic_dust",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1784313090462,
-      "tag": "0007_glossy_proemial_gods",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1784315476554,
-      "tag": "0008_harsh_kingpin",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "7",
-      "when": 1784352142421,
-      "tag": "0009_lumpy_big_bertha",
-      "breakpoints": true
-    },
-    {
-      "idx": 10,
-      "version": "7",
-      "when": 1784382146885,
-      "tag": "0010_minor_thunderball",
-      "breakpoints": true
-    },
-    {
-      "idx": 11,
-      "version": "7",
-      "when": 1784392807457,
-      "tag": "0011_sloppy_leopardon",
-      "breakpoints": true
-    },
-    {
-      "idx": 12,
-      "version": "7",
-      "when": 1784471432668,
-      "tag": "0012_grant_app_role",
-      "breakpoints": true
-    },
-    {
-      "idx": 13,
-      "version": "7",
-      "when": 1784471546701,
-      "tag": "0013_minor_vertigo",
-      "breakpoints": true
-    },
-    {
-      "idx": 14,
-      "version": "7",
-      "when": 1784473132522,
-      "tag": "0014_lively_sumo",
-      "breakpoints": true
-    },
-    {
-      "idx": 15,
-      "version": "7",
-      "when": 1784473324626,
-      "tag": "0015_rls_langlion_core",
-      "breakpoints": true
-    },
-    {
-      "idx": 16,
-      "version": "7",
-      "when": 1784473325626,
-      "tag": "0016_rls_boilerplate_tenant",
-      "breakpoints": true
-    },
-    {
-      "idx": 17,
-      "version": "7",
-      "when": 1784559725626,
-      "tag": "0017_rls_billing",
-      "breakpoints": true
-    },
-    {
-      "idx": 18,
-      "version": "7",
-      "when": 1784559726626,
-      "tag": "0018_tricky_shatterstar",
-      "breakpoints": true
-    },
-    {
-      "idx": 19,
-      "version": "7",
-      "when": 1784559727626,
-      "tag": "0019_sudden_azazel",
-      "breakpoints": true
-    },
-    {
-      "idx": 20,
-      "version": "7",
-      "when": 1784559728626,
-      "tag": "0020_rls_client_auth",
-      "breakpoints": true
-    },
-    {
-      "idx": 21,
-      "version": "7",
-      "when": 1784559729626,
-      "tag": "0021_smiling_wolverine",
-      "breakpoints": true
-    },
-    {
-      "idx": 22,
-      "version": "7",
-      "when": 1784559730626,
-      "tag": "0022_rls_credits",
-      "breakpoints": true
-    },
-    {
-      "idx": 23,
-      "version": "7",
-      "when": 1784669026529,
-      "tag": "0023_green_madame_hydra",
-      "breakpoints": true
-    },
-    {
-      "idx": 24,
-      "version": "7",
-      "when": 1784669027529,
-      "tag": "0024_rls_staff_session_handoff",
-      "breakpoints": true
-    },
-    {
-      "idx": 25,
-      "version": "7",
-      "when": 1784675163810,
-      "tag": "0025_faza6_grade_book_attendance",
-      "breakpoints": true
-    },
-    {
-      "idx": 26,
-      "version": "7",
-      "when": 1784675164810,
-      "tag": "0026_rls_grade_book",
-      "breakpoints": true
-    },
-    {
-      "idx": 27,
-      "version": "7",
-      "when": 1784882193246,
-      "tag": "0028_faza9_plans_limits",
-      "breakpoints": true
-    },
-    {
-      "idx": 28,
-      "version": "7",
-      "when": 1784882193247,
-      "tag": "0029_faza9_plan_pricing_fields",
-      "breakpoints": true
-    },
-    {
-      "idx": 29,
-      "version": "7",
-      "when": 1784890404485,
-      "tag": "0030_far_james_howlett",
-      "breakpoints": true
-    },
-    {
-      "idx": 30,
-      "version": "7",
-      "when": 1784904377066,
-      "tag": "0031_minor_calypso",
-      "breakpoints": true
-    },
-    {
-      "idx": 31,
-      "version": "7",
-      "when": 1784922324716,
-      "tag": "0032_stale_cobalt_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 32,
-      "version": "7",
-      "when": 1784927247540,
-      "tag": "0032_sleepy_storm",
-      "breakpoints": true
-    },
-    {
-      "idx": 33,
-      "version": "7",
-      "when": 1785000000000,
-      "tag": "0033_faza16_refund_fields",
-      "breakpoints": true
-    },
-    {
-      "idx": 34,
-      "version": "7",
-      "when": 1785100000000,
-      "tag": "0034_faza17_policy_tables",
-      "breakpoints": true
-    },
-    {
-      "idx": 35,
-      "version": "7",
-      "when": 1785100000100,
-      "tag": "0035_rls_policy_tables",
-      "breakpoints": true
-    },
-    {
-      "idx": 36,
-      "version": "7",
-      "when": 1785200000000,
-      "tag": "0036_faza17_5_trainer_availability",
-      "breakpoints": true
-    },
-    {
-      "idx": 37,
-      "version": "7",
-      "when": 1785200000100,
-      "tag": "0037_rls_trainer_availability",
-      "breakpoints": true
-    },
-    {
-      "idx": 38,
-      "version": "7",
-      "when": 1785300000000,
-      "tag": "0038_faza18_force_override",
-      "breakpoints": true
-    },
-    {
-      "idx": 39,
-      "version": "7",
-      "when": 1785400000000,
-      "tag": "0039_faza19_invoice_fields",
-      "breakpoints": true
-    },
-    {
-      "idx": 40,
-      "version": "7",
-      "when": 1784985235439,
-      "tag": "0040_colossal_captain_universe",
-      "breakpoints": true
-    },
-    {
-      "idx": 41,
-      "version": "7",
-      "when": 1785500000000,
-      "tag": "0041_rls_trainer_rate",
-      "breakpoints": true
-    },
-    {
-      "idx": 42,
-      "version": "7",
-      "when": 1785600000000,
-      "tag": "0042_thankful_carlie_cooper",
-      "breakpoints": true
-    },
-    {
-      "idx": 43,
-      "version": "7",
-      "when": 1785600000100,
-      "tag": "0043_rls_client_price_override",
-      "breakpoints": true
-    },
-    {
-      "idx": 44,
-      "version": "7",
-      "when": 1784995668955,
-      "tag": "0044_faza21_subscription_item",
-      "breakpoints": true
-    },
-    {
-      "idx": 45,
-      "version": "7",
-      "when": 1785700000000,
-      "tag": "0045_faza22_interest_signup",
-      "breakpoints": true
-    },
-    {
-      "idx": 46,
-      "version": "7",
-      "when": 1785700000100,
-      "tag": "0046_rls_interest_signup",
-      "breakpoints": true
-    },
-    {
-      "idx": 47,
-      "version": "7",
-      "when": 1785800000000,
-      "tag": "0047_faza23_permission_override",
-      "breakpoints": true
-    },
-    {
-      "idx": 48,
-      "version": "7",
-      "when": 1785800000100,
-      "tag": "0048_rls_permission_override",
-      "breakpoints": true
-    },
-    {
-      "idx": 49,
-      "version": "7",
-      "when": 1785900000100,
-      "tag": "0049_faza24_athlete_profile_consents",
-      "breakpoints": true
-    },
-    {
-      "idx": 50,
-      "version": "7",
-      "when": 1785900000200,
-      "tag": "0050_rls_athlete_consents",
-      "breakpoints": true
-    },
-    {
-      "idx": 51,
-      "version": "7",
-      "when": 1786000000100,
-      "tag": "0051_faza26_qualification_card",
-      "breakpoints": true
-    },
-    {
-      "idx": 52,
-      "version": "7",
-      "when": 1786000000200,
-      "tag": "0052_rls_qualification_card",
-      "breakpoints": true
-    },
-    {
-      "idx": 53,
-      "version": "7",
-      "when": 1786100000100,
-      "tag": "0053_faza27_extra_fee",
-      "breakpoints": true
-    },
-    {
-      "idx": 54,
-      "version": "7",
-      "when": 1786100000200,
-      "tag": "0054_rls_extra_fee",
-      "breakpoints": true
-    },
-    {
-      "idx": 55,
-      "version": "7",
-      "when": 1786100000300,
-      "tag": "0055_faza28_lesson_log",
-      "breakpoints": true
-    },
-    {
-      "idx": 56,
-      "version": "7",
-      "when": 1786100000400,
-      "tag": "0056_rls_lesson_log",
-      "breakpoints": true
-    },
-    {
-      "idx": 57,
-      "version": "7",
-      "when": 1786100000500,
-      "tag": "0057_seed_lesson_notifications",
-      "breakpoints": true
-    },
-    {
-      "idx": 58,
-      "version": "7",
-      "when": 1786200000000,
-      "tag": "0058_password_hash",
-      "breakpoints": true
-    },
-    {
-      "idx": 59,
-      "version": "7",
-      "when": 1786200000001,
-      "tag": "0059_seed_password_notification",
-      "breakpoints": true
-    },
-    {
-      "idx": 60,
-      "version": "7",
-      "when": 1786300000000,
-      "tag": "0070_faza4_leave_requests",
-      "breakpoints": true
-    }
-  ]
+ "version": "7",
+ "dialect": "postgresql",
+ "entries": [
+  {
+   "idx": 0,
+   "version": "7",
+   "when": 1784137246552,
+   "tag": "0000_init",
+   "breakpoints": true
+  },
+  {
+   "idx": 1,
+   "version": "7",
+   "when": 1784138742834,
+   "tag": "0001_last_bromley",
+   "breakpoints": true
+  },
+  {
+   "idx": 2,
+   "version": "7",
+   "when": 1784142632886,
+   "tag": "0002_steady_fabian_cortez",
+   "breakpoints": true
+  },
+  {
+   "idx": 3,
+   "version": "7",
+   "when": 1784195165047,
+   "tag": "0003_loud_sentinels",
+   "breakpoints": true
+  },
+  {
+   "idx": 4,
+   "version": "7",
+   "when": 1784212127522,
+   "tag": "0004_small_la_nuit",
+   "breakpoints": true
+  },
+  {
+   "idx": 5,
+   "version": "7",
+   "when": 1784232665135,
+   "tag": "0005_magical_stone_men",
+   "breakpoints": true
+  },
+  {
+   "idx": 6,
+   "version": "7",
+   "when": 1784293691402,
+   "tag": "0006_organic_dust",
+   "breakpoints": true
+  },
+  {
+   "idx": 7,
+   "version": "7",
+   "when": 1784313090462,
+   "tag": "0007_glossy_proemial_gods",
+   "breakpoints": true
+  },
+  {
+   "idx": 8,
+   "version": "7",
+   "when": 1784315476554,
+   "tag": "0008_harsh_kingpin",
+   "breakpoints": true
+  },
+  {
+   "idx": 9,
+   "version": "7",
+   "when": 1784352142421,
+   "tag": "0009_lumpy_big_bertha",
+   "breakpoints": true
+  },
+  {
+   "idx": 10,
+   "version": "7",
+   "when": 1784382146885,
+   "tag": "0010_minor_thunderball",
+   "breakpoints": true
+  },
+  {
+   "idx": 11,
+   "version": "7",
+   "when": 1784392807457,
+   "tag": "0011_sloppy_leopardon",
+   "breakpoints": true
+  },
+  {
+   "idx": 12,
+   "version": "7",
+   "when": 1784471432668,
+   "tag": "0012_grant_app_role",
+   "breakpoints": true
+  },
+  {
+   "idx": 13,
+   "version": "7",
+   "when": 1784471546701,
+   "tag": "0013_minor_vertigo",
+   "breakpoints": true
+  },
+  {
+   "idx": 14,
+   "version": "7",
+   "when": 1784473132522,
+   "tag": "0014_lively_sumo",
+   "breakpoints": true
+  },
+  {
+   "idx": 15,
+   "version": "7",
+   "when": 1784473324626,
+   "tag": "0015_rls_langlion_core",
+   "breakpoints": true
+  },
+  {
+   "idx": 16,
+   "version": "7",
+   "when": 1784473325626,
+   "tag": "0016_rls_boilerplate_tenant",
+   "breakpoints": true
+  },
+  {
+   "idx": 17,
+   "version": "7",
+   "when": 1784559725626,
+   "tag": "0017_rls_billing",
+   "breakpoints": true
+  },
+  {
+   "idx": 18,
+   "version": "7",
+   "when": 1784559726626,
+   "tag": "0018_tricky_shatterstar",
+   "breakpoints": true
+  },
+  {
+   "idx": 19,
+   "version": "7",
+   "when": 1784559727626,
+   "tag": "0019_sudden_azazel",
+   "breakpoints": true
+  },
+  {
+   "idx": 20,
+   "version": "7",
+   "when": 1784559728626,
+   "tag": "0020_rls_client_auth",
+   "breakpoints": true
+  },
+  {
+   "idx": 21,
+   "version": "7",
+   "when": 1784559729626,
+   "tag": "0021_smiling_wolverine",
+   "breakpoints": true
+  },
+  {
+   "idx": 22,
+   "version": "7",
+   "when": 1784559730626,
+   "tag": "0022_rls_credits",
+   "breakpoints": true
+  },
+  {
+   "idx": 23,
+   "version": "7",
+   "when": 1784669026529,
+   "tag": "0023_green_madame_hydra",
+   "breakpoints": true
+  },
+  {
+   "idx": 24,
+   "version": "7",
+   "when": 1784669027529,
+   "tag": "0024_rls_staff_session_handoff",
+   "breakpoints": true
+  },
+  {
+   "idx": 25,
+   "version": "7",
+   "when": 1784675163810,
+   "tag": "0025_faza6_grade_book_attendance",
+   "breakpoints": true
+  },
+  {
+   "idx": 26,
+   "version": "7",
+   "when": 1784675164810,
+   "tag": "0026_rls_grade_book",
+   "breakpoints": true
+  },
+  {
+   "idx": 27,
+   "version": "7",
+   "when": 1784882193246,
+   "tag": "0028_faza9_plans_limits",
+   "breakpoints": true
+  },
+  {
+   "idx": 28,
+   "version": "7",
+   "when": 1784882193247,
+   "tag": "0029_faza9_plan_pricing_fields",
+   "breakpoints": true
+  },
+  {
+   "idx": 29,
+   "version": "7",
+   "when": 1784890404485,
+   "tag": "0030_far_james_howlett",
+   "breakpoints": true
+  },
+  {
+   "idx": 30,
+   "version": "7",
+   "when": 1784904377066,
+   "tag": "0031_minor_calypso",
+   "breakpoints": true
+  },
+  {
+   "idx": 31,
+   "version": "7",
+   "when": 1784922324716,
+   "tag": "0032_stale_cobalt_man",
+   "breakpoints": true
+  },
+  {
+   "idx": 32,
+   "version": "7",
+   "when": 1784927247540,
+   "tag": "0032_sleepy_storm",
+   "breakpoints": true
+  },
+  {
+   "idx": 33,
+   "version": "7",
+   "when": 1785000000000,
+   "tag": "0033_faza16_refund_fields",
+   "breakpoints": true
+  },
+  {
+   "idx": 34,
+   "version": "7",
+   "when": 1785100000000,
+   "tag": "0034_faza17_policy_tables",
+   "breakpoints": true
+  },
+  {
+   "idx": 35,
+   "version": "7",
+   "when": 1785100000100,
+   "tag": "0035_rls_policy_tables",
+   "breakpoints": true
+  },
+  {
+   "idx": 36,
+   "version": "7",
+   "when": 1785200000000,
+   "tag": "0036_faza17_5_trainer_availability",
+   "breakpoints": true
+  },
+  {
+   "idx": 37,
+   "version": "7",
+   "when": 1785200000100,
+   "tag": "0037_rls_trainer_availability",
+   "breakpoints": true
+  },
+  {
+   "idx": 38,
+   "version": "7",
+   "when": 1785300000000,
+   "tag": "0038_faza18_force_override",
+   "breakpoints": true
+  },
+  {
+   "idx": 39,
+   "version": "7",
+   "when": 1785400000000,
+   "tag": "0039_faza19_invoice_fields",
+   "breakpoints": true
+  },
+  {
+   "idx": 40,
+   "version": "7",
+   "when": 1784985235439,
+   "tag": "0040_colossal_captain_universe",
+   "breakpoints": true
+  },
+  {
+   "idx": 41,
+   "version": "7",
+   "when": 1785500000000,
+   "tag": "0041_rls_trainer_rate",
+   "breakpoints": true
+  },
+  {
+   "idx": 42,
+   "version": "7",
+   "when": 1785600000000,
+   "tag": "0042_thankful_carlie_cooper",
+   "breakpoints": true
+  },
+  {
+   "idx": 43,
+   "version": "7",
+   "when": 1785600000100,
+   "tag": "0043_rls_client_price_override",
+   "breakpoints": true
+  },
+  {
+   "idx": 44,
+   "version": "7",
+   "when": 1784995668955,
+   "tag": "0044_faza21_subscription_item",
+   "breakpoints": true
+  },
+  {
+   "idx": 45,
+   "version": "7",
+   "when": 1785700000000,
+   "tag": "0045_faza22_interest_signup",
+   "breakpoints": true
+  },
+  {
+   "idx": 46,
+   "version": "7",
+   "when": 1785700000100,
+   "tag": "0046_rls_interest_signup",
+   "breakpoints": true
+  },
+  {
+   "idx": 47,
+   "version": "7",
+   "when": 1785800000000,
+   "tag": "0047_faza23_permission_override",
+   "breakpoints": true
+  },
+  {
+   "idx": 48,
+   "version": "7",
+   "when": 1785800000100,
+   "tag": "0048_rls_permission_override",
+   "breakpoints": true
+  },
+  {
+   "idx": 49,
+   "version": "7",
+   "when": 1785900000100,
+   "tag": "0049_faza24_athlete_profile_consents",
+   "breakpoints": true
+  },
+  {
+   "idx": 50,
+   "version": "7",
+   "when": 1785900000200,
+   "tag": "0050_rls_athlete_consents",
+   "breakpoints": true
+  },
+  {
+   "idx": 51,
+   "version": "7",
+   "when": 1786000000100,
+   "tag": "0051_faza26_qualification_card",
+   "breakpoints": true
+  },
+  {
+   "idx": 52,
+   "version": "7",
+   "when": 1786000000200,
+   "tag": "0052_rls_qualification_card",
+   "breakpoints": true
+  },
+  {
+   "idx": 53,
+   "version": "7",
+   "when": 1786100000100,
+   "tag": "0053_faza27_extra_fee",
+   "breakpoints": true
+  },
+  {
+   "idx": 54,
+   "version": "7",
+   "when": 1786100000200,
+   "tag": "0054_rls_extra_fee",
+   "breakpoints": true
+  },
+  {
+   "idx": 55,
+   "version": "7",
+   "when": 1786100000300,
+   "tag": "0055_faza28_lesson_log",
+   "breakpoints": true
+  },
+  {
+   "idx": 56,
+   "version": "7",
+   "when": 1786100000400,
+   "tag": "0056_rls_lesson_log",
+   "breakpoints": true
+  },
+  {
+   "idx": 57,
+   "version": "7",
+   "when": 1786100000500,
+   "tag": "0057_seed_lesson_notifications",
+   "breakpoints": true
+  },
+  {
+   "idx": 58,
+   "version": "7",
+   "when": 1786200000000,
+   "tag": "0058_password_hash",
+   "breakpoints": true
+  },
+  {
+   "idx": 59,
+   "version": "7",
+   "when": 1786200000001,
+   "tag": "0059_seed_password_notification",
+   "breakpoints": true
+  },
+  {
+   "idx": 60,
+   "version": "7",
+   "when": 1786220000001,
+   "tag": "0061_faza32_custom_domains",
+   "breakpoints": true
+  },
+  {
+   "idx": 61,
+   "version": "7",
+   "when": 1786220000002,
+   "tag": "0062_faza32_custom_domains_rls",
+   "breakpoints": true
+  },
+  {
+   "idx": 62,
+   "version": "7",
+   "when": 1786220000003,
+   "tag": "0063_faza33_waitlist",
+   "breakpoints": true
+  },
+  {
+   "idx": 63,
+   "version": "7",
+   "when": 1786220000004,
+   "tag": "0064_faza34_meeting_url",
+   "breakpoints": true
+  },
+  {
+   "idx": 64,
+   "version": "7",
+   "when": 1786220000005,
+   "tag": "0065_faza35_sms_broadcast",
+   "breakpoints": true
+  },
+  {
+   "idx": 65,
+   "version": "7",
+   "when": 1786220000006,
+   "tag": "0066_faza35_sms_channels",
+   "breakpoints": true
+  },
+  {
+   "idx": 66,
+   "version": "7",
+   "when": 1786220000007,
+   "tag": "0067_faza36_trial_offer_flag",
+   "breakpoints": true
+  },
+  {
+   "idx": 67,
+   "version": "7",
+   "when": 1786220000008,
+   "tag": "0068_autosave_pages_v",
+   "breakpoints": true
+  },
+  {
+   "idx": 68,
+   "version": "7",
+   "when": 1786220000009,
+   "tag": "0069_faza38_page_table",
+   "breakpoints": true
+  },
+  {
+   "idx": 69,
+   "version": "7",
+   "when": 1786300000000,
+   "tag": "0070_faza4_leave_requests",
+   "breakpoints": true
+  },
+  {
+   "idx": 70,
+   "version": "7",
+   "when": 1786500000000,
+   "tag": "0071_faza5_slot_first_notify",
+   "breakpoints": true
+  },
+  {
+   "idx": 71,
+   "version": "7",
+   "when": 1786500000001,
+   "tag": "0072_faza6_client_event_types",
+   "breakpoints": true
+  },
+  {
+   "idx": 72,
+   "version": "7",
+   "when": 1786500000002,
+   "tag": "0073_faza6_client_pref_user_nullable",
+   "breakpoints": true
+  },
+  {
+   "idx": 73,
+   "version": "7",
+   "when": 1786500000003,
+   "tag": "0074_faza6_client_catalog_seed",
+   "breakpoints": true
+  },
+  {
+   "idx": 74,
+   "version": "7",
+   "when": 1786500000004,
+   "tag": "0075_faza6_client_pref_recipient_uq",
+   "breakpoints": true
+  }
+ ]
 }

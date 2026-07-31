@@ -176,6 +176,36 @@
       "preview": "Przypisano Ci nową sesję w {orgName}.",
       "heading": "Nowa sesja",
       "body": "Przypisano Ci sesję {groupTypeName} ({sessionDate} {sessionTime}) dla {athleteName}."
+    },
+    "session-reminder": {
+      "subject": "Przypomnienie — {groupTypeName} {sessionDate}",
+      "preview": "Twoje dziecko ma zbliżające się zajęcia w {orgName}.",
+      "heading": "Nadchodzące zajęcia",
+      "body": "{athleteName} ma {groupTypeName} {sessionDate} o {sessionTime}."
+    },
+    "session-rescheduled": {
+      "subject": "Zmiana terminu zajęć — {orgName}",
+      "preview": "Zmieniono termin zajęć, na które zapisane jest Twoje dziecko.",
+      "heading": "Zmiana terminu zajęć",
+      "body": "Zajęcia {groupTypeName} dla {athleteName} zostały przeniesione na {sessionDate} o {sessionTime}."
+    },
+    "invoice-available": {
+      "subject": "Faktura dostępna — {orgName}",
+      "preview": "Twoja faktura jest gotowa w {orgName}.",
+      "heading": "Faktura dostępna",
+      "body": "Faktura {invoiceLabel} za Twoje zakupy w {orgName} jest już dostępna."
+    },
+    "individual-session-rejected": {
+      "subject": "Lekcja indywidualna odrzucona — {orgName}",
+      "preview": "Wniosek o lekcję indywidualną został odrzucony.",
+      "heading": "Lekcja indywidualna odrzucona",
+      "body": "Wniosek o lekcję indywidualną dla {athleteName} ({groupTypeName}, trener {trainerName}) został odrzucony."
+    },
+    "qualification-card-reminder": {
+      "subject": "Karta kwalifikacyjna wymagana — {orgName}",
+      "preview": "Karta kwalifikacyjna jest nadal wymagana.",
+      "heading": "Karta kwalifikacyjna wymagana",
+      "body": "Karta kwalifikacyjna jest nadal wymagana, aby {athleteName} mógł/mogła uczestniczyć w {groupTypeName} w {orgName}."
     }
   },
   "auth": {
@@ -1014,6 +1044,70 @@
       "slot-first-session-created": {
         "title": "Nowa sesja",
         "body": "Przypisano Ci sesję {groupTypeName} ({sessionDate} o {sessionTime}) dla {athleteName}."
+      },
+      "password-reset": {
+        "title": "Reset hasła",
+        "body": "Twoje hasło zostało zresetowane."
+      },
+      "group-change-submitted": {
+        "title": "Złożono wniosek o zmianę grupy",
+        "body": "Złożono wniosek o zmianę grupy."
+      },
+      "group-change-rejected": {
+        "title": "Zmiana grupy odrzucona",
+        "body": "Twój wniosek o zmianę grupy został odrzucony."
+      },
+      "group-change-pending-payment": {
+        "title": "Wymagana dopłata",
+        "body": "Zmiana grupy wymaga dopłaty."
+      },
+      "group-change-expired": {
+        "title": "Zmiana grupy wygasła",
+        "body": "Twój wniosek o zmianę grupy wygasł."
+      },
+      "group-change-cancelled": {
+        "title": "Zmiana grupy anulowana",
+        "body": "Twój wniosek o zmianę grupy został anulowany."
+      },
+      "group-change-completed": {
+        "title": "Zmiana grupy zakończona",
+        "body": "Twoje dziecko zostało przeniesione do nowej grupy."
+      },
+      "credit-transfer-submitted": {
+        "title": "Złożono przeniesienie kredytów",
+        "body": "Złożono wniosek o przeniesienie kredytów."
+      },
+      "credit-transfer-completed": {
+        "title": "Przeniesienie kredytów zakończone",
+        "body": "Kredyty zostały przeniesione."
+      },
+      "lesson_topic_added": {
+        "title": "Nowy temat lekcji",
+        "body": "Zapisano nowy temat lekcji z {sessionDate}."
+      },
+      "homework_assigned": {
+        "title": "Nowa praca domowa",
+        "body": "Przypisano pracę domową za {sessionDate}."
+      },
+      "session-reminder": {
+        "title": "Nadchodzące zajęcia",
+        "body": "{athleteName} ma {groupTypeName} {sessionDate} o {sessionTime}."
+      },
+      "session-rescheduled": {
+        "title": "Zmiana terminu zajęć",
+        "body": "Zajęcia {groupTypeName} dla {athleteName} przeniesiono na {sessionDate} o {sessionTime}."
+      },
+      "invoice-available": {
+        "title": "Faktura dostępna",
+        "body": "Faktura za Twoje zakupy jest gotowa."
+      },
+      "individual-session-rejected": {
+        "title": "Lekcja indywidualna odrzucona",
+        "body": "Wniosek o lekcję indywidualną dla {athleteName} został odrzucony."
+      },
+      "qualification-card-reminder": {
+        "title": "Karta kwalifikacyjna wymagana",
+        "body": "Karta kwalifikacyjna jest nadal wymagana dla {athleteName} ({groupTypeName})."
       }
     },
     "preferences": {
@@ -1036,12 +1130,56 @@
         "refund-confirmed": "Potwierdzenia zwrotów",
         "credit-expiring-soon": "Ostrzeżenia o wygasających kredytach",
         "group-change-approved": "Zatwierdzenia zmiany grupy",
-        "client-password-changed": "Alerty o zmianie hasła"
+        "client-password-changed": "Alerty o zmianie hasła",
+        "client-otp": "Kody logowania",
+        "password-reset": "Resetowanie hasła",
+        "group-change-submitted": "Złożone wnioski o zmianę grupy",
+        "group-change-rejected": "Odrzucone zmiany grupy",
+        "group-change-pending-payment": "Przypomnienia o dopłacie",
+        "group-change-expired": "Wygasłe zmiany grupy",
+        "group-change-cancelled": "Anulowane zmiany grupy",
+        "group-change-completed": "Zakończone zmiany grupy",
+        "credit-transfer-submitted": "Złożone przeniesienia kredytów",
+        "credit-transfer-completed": "Zakończone przeniesienia kredytów",
+        "lesson_topic_added": "Tematy lekcji",
+        "homework_assigned": "Prace domowe",
+        "booking-confirmed": "Potwierdzenia rezerwacji",
+        "slot-first-session-created": "Nowe przypisane sesje",
+        "session-reminder": "Przypomnienia o zajęciach",
+        "session-rescheduled": "Zmiany terminów zajęć",
+        "invoice-available": "Dostępność faktur",
+        "individual-session-rejected": "Odrzucone lekcje indywidualne",
+        "qualification-card-reminder": "Przypomnienia o kartach kwalifikacyjnych"
       },
       "locked": "Zawsze włączone",
       "save": "Zapisz",
       "saving": "Zapisywanie…",
       "saved": "Zapisano preferencje.",
+      "error": "Coś poszło nie tak. Spróbuj ponownie."
+    },
+    "clientPreferences": {
+      "categories": {
+        "bookings": "Rezerwacje i zajęcia",
+        "payments": "Płatności i kredyty",
+        "requests": "Wnioski i zmiany",
+        "cards": "Karty kwalifikacyjne"
+      },
+      "types": {
+        "session-reminder": "Przypomnienie o zajęciach",
+        "session-rescheduled": "Zmiana terminu zajęć",
+        "session-cancelled": "Odwołanie zajęć",
+        "booking-confirmed": "Potwierdzenie zapisu",
+        "credit-expiring-soon": "Przypomnienie o wygasających kredytach",
+        "subscription-confirmed": "Potwierdzenie płatności",
+        "invoice-available": "Faktura dostępna",
+        "group-change-approved": "Zmiana grupy — zatwierdzona",
+        "group-change-rejected": "Zmiana grupy — odrzucona",
+        "individual-session-rejected": "Lekcja indywidualna — odrzucona",
+        "qualification-card-reminder": "Przypomnienie o karcie kwalifikacyjnej"
+      },
+      "save": "Zapisz ustawienia",
+      "saving": "Zapisywanie…",
+      "saved": "Ustawienia powiadomień zostały zapisane.",
       "error": "Coś poszło nie tak. Spróbuj ponownie."
     }
   },
@@ -1543,6 +1681,18 @@
         "weak": "Hasło musi mieć co najmniej 8 znaków, w tym literę i cyfrę.",
         "generic": "Nie udało się zapisać hasła. Spróbuj ponownie."
       }
+    },
+    "greeting": "Witaj, {name}",
+    "settings": "Ustawienia",
+    "browseOffer": "Przeglądaj ofertę",
+    "notificationSettings": "Ustawienia powiadomień",
+    "notificationSettingsSubheading": "Wybierz, jakie powiadomienia chcesz otrzymywać z tej akademii.",
+    "steps": {
+      "of": "Krok {current} z {total}",
+      "schedule": "Termin",
+      "trainer": "Trener",
+      "details": "Twoje dane",
+      "confirm": "Potwierdzenie"
     }
   },
   "credits": {
@@ -1618,7 +1768,8 @@
       "issuedAt": "Wystawiono",
       "noPending": "Brak oczekujących faktur.",
       "subtitle": "Ręcznie oznaczaj zakupy kredytowe jako sfakturowane."
-    }
+    },
+    "validUntilLabel": "Ważne do"
   },
   "staffPanel": {
     "title": "Sesje",

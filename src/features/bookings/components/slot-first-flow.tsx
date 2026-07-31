@@ -27,6 +27,7 @@ import {
   ViewDocumentLink,
   ConsentDocumentProp,
 } from "./enrollment-flow";
+import { EnrollmentSteps } from "./enrollment-steps";
 
 /**
  * Public slot-first enrollment (Faza 5, EPIK 34, §2.32).
@@ -106,6 +107,11 @@ export function SlotFirstFlow(props: SlotFirstFlowProps) {
 
   return (
     <div className="mt-6 space-y-6">
+      <EnrollmentSteps
+        current={!slot ? 1 : verified ? 3 : 2}
+        labels={[t("steps.trainer"), t("steps.details"), t("steps.confirm")]}
+      />
+
       <p className="text-lg font-medium">
         {props.discountedPrice != null && props.discountedPrice !== props.price ? (
           <>

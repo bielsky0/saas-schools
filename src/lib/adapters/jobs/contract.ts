@@ -69,7 +69,8 @@ export type JobName =
   | "pricing.deactivate_expired_overrides"
   | "bookings.release_expired_pending"
   | "waitlist.expire_offers"
-  | "sms.send";
+  | "sms.send"
+  | "bookings.remind_session";
 
 /**
  * `email.send`'s `template` is `string`, not the email adapter's `TemplateName`:
@@ -229,6 +230,14 @@ export interface JobPayloads {
     body: string;
     broadcastMessageId?: string;
   };
+  /**
+   * Faza 6 — Session reminder sweep (EPIK 44). Cron-shaped, no payload: the
+   * handler scans all tenants and reminds parents about sessions starting within
+   * the next reminder window. Idempotent via the `session-reminder:{bookingId}`
+   * dedupe key. CARRIES NO `organizationId`, like credits.expire: sessions start
+   * on their own clocks in every academy at once.
+   */
+  "bookings.remind_session": Record<string, never>;
 }
 
 export interface EnqueueOptions {

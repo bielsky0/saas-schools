@@ -10,9 +10,7 @@ export const notificationPreference = pgTable(
     id: text("id")
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
-    userId: text("userId")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+    userId: text("userId").references(() => user.id, { onDelete: "cascade" }),
     type: text("type").$type<string>().notNull(),
     inAppEnabled: boolean("inAppEnabled").notNull().default(true),
     createdAt: timestamp("createdAt").notNull().defaultNow(),
@@ -30,6 +28,11 @@ export const notificationPreference = pgTable(
   },
   (t) => [
     unique("notification_preference_user_type_uq").on(t.userId, t.type),
+    unique("notification_preference_recipient_event_uq").on(
+      t.recipientType,
+      t.recipientId,
+      t.eventType,
+    ),
     index("notification_preference_user_idx").on(t.userId),
   ],
 );

@@ -91,6 +91,16 @@ export const TEMPLATE_CATEGORY: Record<TemplateName, EmailCategory> = {
   // o potwierdzeniu rezerwacji, a trener o nowej sesji.
   "booking-confirmed": "transactional",
   "slot-first-session-created": "transactional",
+  // Faza 6 — Client notification settings (EPIK 44).
+  // `session-reminder` is product (suppressible): przypomnienie jest miłe, nie
+  // niezbędne — klient może je wyłączyć przez preferences.
+  "session-reminder": "product",
+  // Reszta jest transactional (unsuppressible email): o zmianie terminu, fakturze,
+  // odrzuceniu lekcji i brakującej karcie klient musi wiedzieć.
+  "session-rescheduled": "transactional",
+  "invoice-available": "transactional",
+  "individual-session-rejected": "transactional",
+  "qualification-card-reminder": "transactional",
 };
 
 export function categoryFor(template: TemplateName): EmailCategory {

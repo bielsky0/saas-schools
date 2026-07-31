@@ -53,3 +53,4 @@ export { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 export { Separator } from "./separator";
 export { Skeleton } from "./skeleton";
 export { Tabs, TabsList, TabsTrigger, TabsContent } from "./tabs";
+export { Switch } from "./switch";

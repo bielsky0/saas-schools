@@ -164,12 +164,17 @@ const eslintConfig = defineConfig([
    *        - `features/onboarding/data.ts` — `hasPaidSubscription` answers
    *          "is this person paying anywhere", joining membership across every
    *          org; the input is a user id, not an owner.
-   *        - `features/credits/expire.ts` (F4) — credits lapse on their own
-   *          clock in every academy at once, so the work list cannot name a
-   *          tenant. The bypass covers ONLY that read; each update re-enters
-   *          its rows' own organization, so WITH CHECK stays load-bearing
-   *          where a mix-up would destroy paid-for value. Same narrow shape
-   *          as `storage/purge.ts` above.
+    *        - `features/credits/expire.ts` (F4) — credits lapse on their own
+    *          clock in every academy at once, so the work list cannot name a
+    *          tenant. The bypass covers ONLY that read; each update re-enters
+    *          its rows' own organization, so WITH CHECK stays load-bearing
+    *          where a mix-up would destroy paid-for value. Same narrow shape
+    *          as `storage/purge.ts` above.
+    *        - `features/bookings/session-reminder.ts` (F6) — the reminder
+    *          sweep has the same shape as `credits/expire.ts`: sessions start
+    *          on their own clocks in every academy at once, so the work list
+    *          cannot name a tenant. The bypass covers ONLY that read; each
+    *          emit below re-enters the context of its rows' OWN organization.
    *        - `features/billing/cross-tenant.ts` (F1b) — a provider webhook
    *          learns which tenant an event belongs to by resolving its customer
    *          id; the owner is the OUTPUT of that lookup, so there is nothing
@@ -224,6 +229,7 @@ const eslintConfig = defineConfig([
       "src/features/billing/connect-webhooks.ts",
       "src/features/credits/expire.ts",
       "src/features/bookings/change-group-expire.ts",
+      "src/features/bookings/session-reminder.ts",
       "src/features/pricing/handler.ts",
     ],
     rules: {

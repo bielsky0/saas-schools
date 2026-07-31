@@ -20,6 +20,7 @@ import {
 import type { CalendarDay, CalendarSlot } from "../calendar";
 import type { PaymentOptionsView, PackageTeaser } from "../payment-options";
 import { createBookingManyAction, type CreateBookingManyState } from "../actions";
+import { EnrollmentSteps } from "./enrollment-steps";
 
 type Recognized = {
   email: string;
@@ -156,6 +157,11 @@ function Bookable({
 
   return (
     <div className="mt-6 space-y-6">
+      <EnrollmentSteps
+        current={!slot ? 1 : verified ? 3 : 2}
+        labels={[t("steps.schedule"), t("steps.details"), t("steps.confirm")]}
+      />
+
       <p className="text-lg font-medium">
         {discountedPrice != null && discountedPrice !== price ? (
           <>

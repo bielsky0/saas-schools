@@ -33,6 +33,12 @@ export const NOTIFICATION_TYPES = [
   // ── Faza 5 — Slot-first individual sessions (EPIK 34, §2.32) ─────────
   "booking-confirmed",            // do klienta — potwierdzenie rezerwacji
   "slot-first-session-created",   // do trenera — nowa sesja przypisana
+  // ── Faza 6 — Client notification settings (EPIK 44) ───────────────────
+  "session-reminder",             // do klienta — przypomnienie o nadchodzących zajęciach
+  "session-rescheduled",          // do klienta — zmiana terminu zajęć
+  "invoice-available",            // do klienta — faktura dostępna (reserved)
+  "individual-session-rejected",  // do klienta — lekcja indywidualna odrzucona (reserved)
+  "qualification-card-reminder",  // do klienta — brakująca karta kwalifikacyjna (reserved)
 ] as const;
 
 export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
@@ -68,6 +74,11 @@ export const NOTIFICATION_META: Record<NotificationType, { suppressible: boolean
   "homework_assigned": { suppressible: true },
   "booking-confirmed": { suppressible: true },
   "slot-first-session-created": { suppressible: true },
+  "session-reminder": { suppressible: true },
+  "session-rescheduled": { suppressible: true },
+  "invoice-available": { suppressible: true },
+  "individual-session-rejected": { suppressible: true },
+  "qualification-card-reminder": { suppressible: true },
 };
 
 export function isNotificationType(value: string): value is NotificationType {

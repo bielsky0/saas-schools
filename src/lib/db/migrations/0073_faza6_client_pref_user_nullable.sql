@@ -1,0 +1,16 @@
+--> HAND-WRITTEN (langlion plan Faza 6, EPIK 44).
+-->
+--> Client notification preferences are keyed on (recipient_type, recipient_id),
+--> and a parent has no `user` row — the client row is the identity. The sibling
+--> `notification` table already made `userId` nullable for exactly this reason
+--> (migration 0032, which generalized recipient columns onto both tables).
+--> `notification_preference.userId` was left NOT NULL, so writing a CLIENT
+--> preference had to either fabricate an empty id (FK violation) or create a
+--> user row per client. Drop NOT NULL to match `notification`, mirroring the
+--> staff rows that keep filling `userId` as before.
+-->
+--> Staff uniqueness (userId, type) is unaffected: Postgres treats NULLs as
+--> distinct, and client uniqueness is already enforced by the
+--> `notification_preference_recipient_event_uq` constraint on
+--> (recipient_type, recipient_id, event_type) — added with 0032.
+ALTER TABLE "notification_preference" ALTER COLUMN "userId" DROP NOT NULL;

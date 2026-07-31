@@ -69,7 +69,17 @@ export type TemplateName =
   // `booking-confirmed` — potwierdzenie utworzenia rezerwacji (klient).
   // `slot-first-session-created` — nowa sesja przypisana do trenera.
   | "booking-confirmed"
-  | "slot-first-session-created";
+  | "slot-first-session-created"
+  // Faza 6 — Client notification settings (EPIK 44).
+  // `session-reminder` — przypomnienie o nadchodzących zajęciach (job).
+  // `session-rescheduled` — zmiana terminu zajęć (rezerve, brak flow reschedule).
+  // Pozostałe trzy są reserved (F27/faktury, slot-first rejection, przypomnienie
+  // o karcie kwalifikacyjnej) — szablon + i18n istnieją, emisja dobudowana później.
+  | "session-reminder"
+  | "session-rescheduled"
+  | "invoice-available"
+  | "individual-session-rejected"
+  | "qualification-card-reminder";
 // `magic-link` lands with spec 2.2, which is not implemented yet.
 
 /**
@@ -228,6 +238,36 @@ export interface TemplateProps {
     groupTypeName: string;
     sessionDate: string;
     sessionTime: string;
+  };
+  // Faza 6 — Client notification settings (EPIK 44). These five all reach the
+  // parent, so they share the "your booking" props; the reserved ones reuse the
+  // same shape so their templates stay trivial to complete when emission lands.
+  "session-reminder": {
+    orgName: string;
+    athleteName: string;
+    groupTypeName: string;
+    sessionDate: string;
+    sessionTime: string;
+  };
+  "session-rescheduled": {
+    orgName: string;
+    athleteName: string;
+    groupTypeName: string;
+    sessionDate: string;
+    sessionTime: string;
+  };
+  "invoice-available": { orgName: string; invoiceLabel: string };
+  "individual-session-rejected": {
+    orgName: string;
+    athleteName: string;
+    groupTypeName: string;
+    trainerName: string;
+    reason?: string;
+  };
+  "qualification-card-reminder": {
+    orgName: string;
+    athleteName: string;
+    groupTypeName: string;
   };
 }
 
