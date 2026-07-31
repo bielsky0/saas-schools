@@ -60,6 +60,7 @@ const sections: NavSectionDef[] = [
     links: [
       { href: "/dashboard/my-classes", labelKey: "nav.myClasses", icon: BookOpen, permission: "bookings.mark_attendance" },
       { href: "/dashboard/group-change-requests", labelKey: "nav.groupChanges", icon: GitCompareArrows },
+      { href: "/dashboard/leave-requests", labelKey: "nav.leaveRequests", icon: CalendarDays },
     ],
   },
   {

@@ -136,6 +136,7 @@ export * from "./progress-notes";
 export * from "./group-change-requests";
 export * from "./trainer-availability";
 export * from "./trainer-rates";
+export * from "./leave-requests";
 export * from "./client-price-overrides";
 export * from "./interest-signups";
 export * from "./membership-permission-overrides";

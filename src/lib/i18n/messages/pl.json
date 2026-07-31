@@ -555,7 +555,8 @@
       "permissions": "Uprawnienia",
       "files": "Pliki",
       "myClasses": "Moje zajęcia",
-      "groupChanges": "Prośby o zmianę"
+      "groupChanges": "Prośby o zmianę",
+      "leaveRequests": "Wnioski urlopowe"
     },
     "nav": {
       "dashboard": "Panel",
@@ -580,7 +581,8 @@
       "files": "Pliki",
       "cms": "CMS",
       "myClasses": "Moje zajęcia",
-      "groupChanges": "Prośby o zmianę"
+      "groupChanges": "Prośby o zmianę",
+      "leaveRequests": "Wnioski urlopowe"
     }
   },
   "trainer": {
@@ -842,6 +844,46 @@
         "date": "Data",
         "status": "Status"
       }
+    },
+    "leaveRequests": {
+      "title": "Wnioski urlopowe",
+      "newRequest": "Nowy wniosek",
+      "all": "Wszystkie",
+      "pending": "Oczekujące",
+      "approved": "Zatwierdzone",
+      "rejected": "Odrzucone",
+      "cancelled": "Anulowane",
+      "trainer": "Trener",
+      "dates": "Daty",
+      "sessions": "Sesje",
+      "status": "Status",
+      "submittedAt": "Data złożenia",
+      "noRequests": "Brak wniosków urlopowych",
+      "view": "Szczegóły",
+      "requestDetails": "Szczegóły wniosku",
+      "startDate": "Data od",
+      "endDate": "Data do",
+      "reason": "Powód",
+      "substitute": "Zastępca",
+      "substituteOptional": "Zastępca (opcjonalnie)",
+      "selectSubstitute": "Wybierz zastępcę",
+      "rejectionReason": "Powód odrzucenia",
+      "reviewedAt": "Rozpatrzono",
+      "approve": "Zatwierdź",
+      "approving": "Zatwierdzanie...",
+      "reject": "Odrzuć",
+      "rejecting": "Odrzucanie...",
+      "cancel": "Anuluj",
+      "cancelRequest": "Anuluj wniosek",
+      "cancelling": "Anulowanie...",
+      "rejectConfirmTitle": "Odrzuć wniosek urlopowy",
+      "rejectConfirmDescription": "Podaj powód odrzucenia — będzie widoczny dla trenera.",
+      "rejectionReasonPlaceholder": "Np. brak zastępstwa w tym terminie...",
+      "optional": "opcjonalnie",
+      "reasonPlaceholder": "Np. urlop wypoczynkowy",
+      "summaryBeforeSubmit": "W tym okresie masz zaplanowane sesje. Po zatwierdzeniu urlopu sesje bez przypisanego zastępcy pozostaną bez trenera.",
+      "submit": "Złóż wniosek",
+      "submitting": "Wysyłanie..."
     }
   },
   "storage": {
@@ -1094,7 +1136,7 @@
       "status": "Status",
       "statusHint": "Oferty z harmonogramem pokazują kalendarz sesji. Zbieranie zainteresowania pokazuje formularz zgłoszenia.",
       "requiresQualificationCard": "Wymaga karty kwalifikacyjnej (obóz)",
-"isTrialOffer": "Oferta próbna (do śledzenia konwersji)",
+      "isTrialOffer": "Oferta próbna (do śledzenia konwersji)",
       "submit": "Utwórz typ grupy",
       "submitting": "Tworzenie…",
       "save": "Zapisz zmiany",
@@ -1293,7 +1335,11 @@
     "needsManualIntervention": "Wymaga ręcznej interwencji",
     "targetSession": "Sesja docelowa",
     "massMoveNoTargets": "Brak dostępnych sesji docelowych tego samego typu grupy.",
-    "trainerCollision": "Kolizja trenera"
+    "trainerCollision": "Kolizja trenera",
+    "leave": {
+      "substitute": "Zastępstwo",
+      "noTrainer": "Brak trenera!"
+    }
   },
   "clients": {
     "validation": {
@@ -1425,11 +1471,11 @@
       "generic": "Coś poszło nie tak. Spróbuj ponownie.",
       "interestAlreadyExists": "To dziecko jest już zapisane do tej oferty."
     },
-  "joinMeeting": "Dołącz do spotkania",
-  "myBookings": "Moje zajęcia",
-  "noBookings": "Brak nadchodzących zajęć.",
-  "cancel": "Anuluj",
-  "cancelling": "Anulowanie…",
+    "joinMeeting": "Dołącz do spotkania",
+    "myBookings": "Moje zajęcia",
+    "noBookings": "Brak nadchodzących zajęć.",
+    "cancel": "Anuluj",
+    "cancelling": "Anulowanie…",
     "table": {
       "session": "Zajęcia",
       "status": "Status",

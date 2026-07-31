@@ -14,6 +14,7 @@ import { Link } from "@/lib/i18n/navigation";
 import { requireOrgPermission } from "@/features/organizations/context";
 import { listLocations } from "@/features/locations/data";
 import { listUpcomingSessions } from "@/features/schedule/data";
+import { getActiveLeaves } from "@/features/trainers/leave-data";
 import { SessionEditForm } from "@/features/schedule/components/session-edit-form";
 import { withTenant } from "@/lib/db/tenant";
 
@@ -64,6 +65,13 @@ export default async function SchedulePage({
    * date; the parts are reassembled because `sv-SE` and friends differ on the
    * separator.
    */
+  // Build a set of trainerIds on leave for each session date
+  const activeLeaves = await withTenant(org.id, (tx) => getActiveLeaves(tx, org.id));
+  const trainerOnLeave = new Set(activeLeaves.map((l) => l.trainerId));
+  const hasSubstitute = new Set(
+    activeLeaves.filter((l) => l.substituteTrainerId).map((l) => l.trainerId),
+  );
+
   const toLocalInput = (instant: Date) => {
     const parts = new Intl.DateTimeFormat("en-CA", {
       timeZone: org.timezone,
@@ -128,7 +136,18 @@ export default async function SchedulePage({
                   {formatWhen.format(row.startTime)}
                 </TableCell>
                 <TableCell>{row.groupTypeName}</TableCell>
-                <TableCell>{row.trainerName || row.trainerEmail || t("noTrainer")}</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <span>{row.trainerName || row.trainerEmail || t("noTrainer")}</span>
+                    {row.trainerId && trainerOnLeave.has(row.trainerId) ? (
+                      hasSubstitute.has(row.trainerId) ? (
+                        <Badge variant="outline" className="text-xs">{t("leave.substitute")}</Badge>
+                      ) : (
+                        <Badge variant="destructive" className="text-xs">{t("leave.noTrainer")}</Badge>
+                      )
+                    ) : null}
+                  </div>
+                </TableCell>
                 <TableCell>{row.locationName ?? t("noLocation")}</TableCell>
                 <TableCell className="tabular-nums">{row.capacity}</TableCell>
                 <TableCell>
