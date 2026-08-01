@@ -12,6 +12,11 @@
       "label": "Język",
       "en": "English",
       "pl": "Polski"
+    },
+    "error": {
+      "unexpected": "Coś poszło nie tak",
+      "unexpectedBody": "Wystąpił nieoczekiwany błąd podczas ładowania tej strony.",
+      "retry": "Spróbuj ponownie"
     }
   },
   "emails": {
@@ -730,7 +735,26 @@
         "noActivity": "Brak aktywności.",
         "viewAll": "Zobacz wszystkie",
         "pending": "Oczekujące",
-        "noPending": "Brak oczekujących spraw."
+        "noPending": "Brak oczekujących spraw.",
+        "pendingLeave": "Wnioski urlopowe",
+        "pendingGroupChanges": "Zmiany grup",
+        "todaySessions": "Dzisiejsze zajęcia",
+        "allDone": "Wszystko ogarnięte ✓",
+        "quickActions": "Szybkie akcje",
+        "addGroupType": "Dodaj typ zajęć",
+        "addTrainer": "Dodaj trenera",
+        "inviteMember": "Zaproś członka"
+      },
+      "reception": {
+        "todayTitle": "Dzisiejsze zajęcia",
+        "noClassesToday": "Brak zajęć dziś.",
+        "noTrainer": "Brak trenera",
+        "quickActions": "Szybkie akcje",
+        "noActions": "Brak dostępnych akcji dla Twojej roli.",
+        "confirmCash": "Potwierdź płatność gotówką",
+        "sellPackage": "Sprzedaj pakiet",
+        "clients": "Klienci",
+        "extraFees": "Opłaty dodatkowe"
       }
     },
     "settings": {
@@ -847,6 +871,11 @@
       "earningsNoRateTitle": "Sesje bez stawki",
       "earningsNoRateDescription": "Te sesje kwalifikują się do raportu, ale nie mają rozstrzygniętej stawki — uzupełnij konfigurację.",
       "earningsEmpty": "Brak sesji w wybranym okresie.",
+      "earningsNoRateAdminTitle": "Niektórzy trenerzy nie mają ustawionych stawek",
+      "earningsNoRateAdminBody": "Zarobki mogą być niepełne, dopóki każdy trener nie ma stawki.",
+      "earningsNoRateAdminLink": "Ustaw stawki",
+      "earningsSelfNoRate": "Twoja stawka nie została jeszcze ustawiona. Skontaktuj się z administratorem.",
+      "noRateTooltip": "Brak stawki dla tego trenera",
       "colSessionDate": "Data",
       "colGroup": "Grupa",
       "colCalculatedAmount": "Należność",
@@ -1429,6 +1458,31 @@
     "subtitle": "Wygenerowane sesje, od najbliższej.",
     "empty": "Brak sesji w tym zakresie.",
     "updated": "Sesja zaktualizowana.",
+    "toggle": {
+      "list": "Lista",
+      "calendar": "Kalendarz"
+    },
+    "calendar": {
+      "prevMonth": "Poprzedni miesiąc",
+      "nextMonth": "Następny miesiąc",
+      "weekday": {
+        "mo": "Pn",
+        "tu": "Wt",
+        "we": "Śr",
+        "th": "Cz",
+        "fr": "Pt",
+        "sa": "So",
+        "su": "Nd"
+      },
+      "daySessions": "Zajęcia {date}",
+      "noSessions": "Brak zajęć tego dnia.",
+      "noTrainer": "Brak trenera",
+      "noTrainerBadge": "Brak trenera!",
+      "noLocation": "Brak lokalizacji",
+      "onLeave": "Urlop",
+      "leaveTitle": "Urlop: {trainers}",
+      "roster": "Lista obecności"
+    },
     "filter": {
       "location": "Lokalizacja",
       "all": "Wszystkie lokalizacje"

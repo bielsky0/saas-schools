@@ -56,13 +56,14 @@ export async function listSessionsBetween(
 export async function listUpcomingSessions(
   tx: TenantDb,
   organizationId: string,
-  options: { from?: Date; locationId?: string; trainerId?: string; limit?: number } = {},
+  options: { from?: Date; to?: Date; locationId?: string; trainerId?: string; limit?: number } = {},
 ) {
   const from = options.from ?? new Date();
   const filters = [
     eq(classSession.organizationId, organizationId),
     gte(classSession.startTime, from),
   ];
+  if (options.to) filters.push(lt(classSession.startTime, options.to));
   if (options.locationId) filters.push(eq(classSession.locationId, options.locationId));
   if (options.trainerId) filters.push(eq(classSession.trainerId, options.trainerId));
 

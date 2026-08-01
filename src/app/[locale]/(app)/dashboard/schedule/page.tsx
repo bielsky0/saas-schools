@@ -3,6 +3,9 @@ import { getLocale, getTranslations } from "next-intl/server";
 import {
   Badge,
   Button,
+  Tabs,
+  TabsList,
+  TabsTrigger,
   Table,
   TableBody,
   TableCell,
@@ -14,9 +17,11 @@ import { Link } from "@/lib/i18n/navigation";
 import { requireOrgPermission } from "@/features/organizations/context";
 import { listLocations } from "@/features/locations/data";
 import { listUpcomingSessions } from "@/features/schedule/data";
-import { getActiveLeaves } from "@/features/trainers/leave-data";
+import { getActiveLeaves, getLeavesOverlappingRange } from "@/features/trainers/leave-data";
+import { countActiveBookingsBySession } from "@/features/bookings/data";
 import { SessionEditForm } from "@/features/schedule/components/session-edit-form";
 import { withTenant } from "@/lib/db/tenant";
+import { CalendarView, type CalendarSessionRow } from "./calendar-view";
 
 /**
  * The staff schedule (langlion §2.12, US-22.5).
@@ -33,19 +38,49 @@ import { withTenant } from "@/lib/db/tenant";
  * country planning a Warsaw academy's season needs to see the hour the class
  * actually starts locally; US-1.2/AC2's per-viewer conversion is about the
  * client-facing pages, not this one.
+ *
+ * Faza 07 adds a List/Calendar toggle (also a query string param, same rule).
  */
 export default async function SchedulePage({
   searchParams,
 }: {
-  searchParams: Promise<{ location?: string }>;
+  searchParams: Promise<{
+    location?: string;
+    view?: "list" | "calendar";
+    month?: string;
+    day?: string;
+  }>;
 }) {
-  const { location: locationFilter } = await searchParams;
+  const { location: locationFilter, view, month, day } = await searchParams;
   const { org } = await requireOrgPermission("sessions.manage");
   const [t, locale] = await Promise.all([getTranslations("schedule"), getLocale()]);
+  const viewMode = view === "calendar" ? "calendar" : "list";
 
-  const { sessions, locations } = await withTenant(org.id, async (tx) => ({
+  // ── Calendar view data ────────────────────────────────────────────────────
+  // The month comes from the URL (`?month=YYYY-MM`, defaults to the current
+  // month in the academy's zone). Only the displayed month is fetched — a year of
+  // sessions is a real N+1 against the booking count otherwise.
+  const now = new Date();
+  const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const monthKey = /^\d{4}-\d{2}$/.test(month ?? "") ? month! : currentMonthKey;
+  const [yearNum, monthNum] = monthKey.split("-").map(Number) as [number, number];
+  const monthStart = new Date(Date.UTC(yearNum, monthNum - 1, 1));
+  const monthEnd = new Date(Date.UTC(yearNum, monthNum, 1));
+  // `day` is validated as a real date within the shown month before it is used;
+  // anything else just deselects (the calendar shows the month with no day open).
+  const dayKey = /^\d{4}-\d{2}-\d{2}$/.test(day ?? "") ? day! : null;
+  const dayIsInMonth = dayKey !== null && dayKey.startsWith(monthKey);
+
+  const { sessions, locations, activeLeaves, monthLeaves } = await withTenant(org.id, async (tx) => ({
     sessions: await listUpcomingSessions(tx, org.id, { locationId: locationFilter }),
     locations: await listLocations(tx, org.id),
+    activeLeaves: await getActiveLeaves(tx, org.id),
+    monthLeaves: await getLeavesOverlappingRange(
+      tx,
+      org.id,
+      `${monthKey}-01`,
+      `${monthKey}-31`,
+    ),
   }));
 
   const formatWhen = new Intl.DateTimeFormat(locale, {
@@ -66,7 +101,6 @@ export default async function SchedulePage({
    * separator.
    */
   // Build a set of trainerIds on leave for each session date
-  const activeLeaves = await withTenant(org.id, (tx) => getActiveLeaves(tx, org.id));
   const trainerOnLeave = new Set(activeLeaves.map((l) => l.trainerId));
   const hasSubstitute = new Set(
     activeLeaves.filter((l) => l.substituteTrainerId).map((l) => l.trainerId),
@@ -87,6 +121,34 @@ export default async function SchedulePage({
     return `${read("year")}-${read("month")}-${read("day")}T${read("hour")}:${read("minute")}`;
   };
 
+  // ── Calendar view data ────────────────────────────────────────────────────
+  const calendarSessions = viewMode === "calendar"
+    ? await withTenant(org.id, async (tx) => {
+        const monthSessions = await listUpcomingSessions(tx, org.id, {
+          from: monthStart,
+          to: monthEnd,
+        });
+        const counts = await countActiveBookingsBySession(
+          tx,
+          org.id,
+          monthSessions.map((s) => s.id),
+        );
+        const rows: CalendarSessionRow[] = monthSessions.map((s) => ({
+          id: s.id,
+          startTime: s.startTime,
+          capacity: s.capacity,
+          status: s.status,
+          trainerId: s.trainerId,
+          groupTypeName: s.groupTypeName,
+          trainerName: s.trainerName,
+          trainerEmail: s.trainerEmail,
+          locationName: s.locationName,
+          bookedCount: counts.get(s.id) ?? 0,
+        }));
+        return rows;
+      })
+    : [];
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-1">
@@ -96,96 +158,126 @@ export default async function SchedulePage({
         </p>
       </div>
 
-      {locations.length > 0 ? (
-        <nav className="flex flex-wrap items-center gap-2" aria-label={t("filter.location")}>
-          <Button asChild size="sm" variant={locationFilter ? "outline" : "secondary"}>
-            <Link href={`/dashboard/schedule`}>{t("filter.all")}</Link>
-          </Button>
-          {locations.map((row) => (
-            <Button
-              key={row.id}
-              asChild
-              size="sm"
-              variant={locationFilter === row.id ? "secondary" : "outline"}
+      <Tabs value={viewMode} className="w-fit">
+        <TabsList>
+          <TabsTrigger value="list" asChild>
+            <Link href={`/dashboard/schedule${locationFilter ? `?location=${locationFilter}` : ""}`}>
+              {t("toggle.list")}
+            </Link>
+          </TabsTrigger>
+          <TabsTrigger value="calendar" asChild>
+            <Link
+              href={`/dashboard/schedule?view=calendar${locationFilter ? `&location=${locationFilter}` : ""}`}
             >
-              <Link href={`/dashboard/schedule?location=${row.id}`}>{row.name}</Link>
-            </Button>
-          ))}
-        </nav>
-      ) : null}
+              {t("toggle.calendar")}
+            </Link>
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
 
-      {sessions.length === 0 ? (
-        <p className="text-muted-foreground text-sm">{t("empty")}</p>
+      {viewMode === "calendar" ? (
+        <CalendarView
+          year={yearNum}
+          month={monthNum}
+          orgTimezone={org.timezone}
+          sessions={calendarSessions}
+          leaves={monthLeaves}
+          selectedDay={dayIsInMonth ? dayKey : null}
+        />
       ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>{t("table.when")}</TableHead>
-              <TableHead>{t("table.groupType")}</TableHead>
-              <TableHead>{t("table.trainer")}</TableHead>
-              <TableHead>{t("table.location")}</TableHead>
-              <TableHead>{t("table.capacity")}</TableHead>
-              <TableHead>{t("table.status")}</TableHead>
-              <TableHead className="text-right">{t("table.actions")}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {sessions.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell className="font-medium whitespace-nowrap">
-                  {formatWhen.format(row.startTime)}
-                </TableCell>
-                <TableCell>{row.groupTypeName}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1">
-                    <span>{row.trainerName || row.trainerEmail || t("noTrainer")}</span>
-                    {row.trainerId && trainerOnLeave.has(row.trainerId) ? (
-                      hasSubstitute.has(row.trainerId) ? (
-                        <Badge variant="outline" className="text-xs">{t("leave.substitute")}</Badge>
-                      ) : (
-                        <Badge variant="destructive" className="text-xs">{t("leave.noTrainer")}</Badge>
-                      )
-                    ) : null}
-                  </div>
-                </TableCell>
-                <TableCell>{row.locationName ?? t("noLocation")}</TableCell>
-                <TableCell className="tabular-nums">{row.capacity}</TableCell>
-                <TableCell>
-                  <div className="flex flex-wrap items-center gap-1">
-                    <Badge variant={row.status === "cancelled" ? "warning" : "outline"}>
-                      {t(row.status === "cancelled" ? "status.cancelled" : "status.scheduled")}
-                    </Badge>
-                    {/*
-                      Visible because it changes what a later pattern edit will do
-                      to this row: a bulk update skips it (§3.4/AC8). An admin
-                      wondering why one week did not move needs this on screen,
-                      not in the audit trail.
-                    */}
-                    {row.isManuallyAdjusted ? (
-                      <Badge variant="outline">{t("manuallyAdjusted")}</Badge>
-                    ) : null}
-                  </div>
-                </TableCell>
-                <TableCell className="text-right align-top">
-                  <div className="flex flex-col items-end gap-2">
-                    <Button asChild size="sm" variant="outline">
-                      <Link href={`/dashboard/sessions/${row.id}`}>{t("roster")}</Link>
-                    </Button>
-                    <SessionEditForm
-                      sessionId={row.id}
-                      startLocal={toLocalInput(row.startTime)}
-                      endLocal={toLocalInput(row.endTime)}
-                      locationId={row.locationId}
-                      meetingUrl={row.meetingUrl}
-                      capacity={row.capacity}
-                      locations={locations}
-                    />
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <>
+          {locations.length > 0 ? (
+            <nav className="flex flex-wrap items-center gap-2" aria-label={t("filter.location")}>
+              <Button asChild size="sm" variant={locationFilter ? "outline" : "secondary"}>
+                <Link href={`/dashboard/schedule`}>{t("filter.all")}</Link>
+              </Button>
+              {locations.map((row) => (
+                <Button
+                  key={row.id}
+                  asChild
+                  size="sm"
+                  variant={locationFilter === row.id ? "secondary" : "outline"}
+                >
+                  <Link href={`/dashboard/schedule?location=${row.id}`}>{row.name}</Link>
+                </Button>
+              ))}
+            </nav>
+          ) : null}
+
+          {sessions.length === 0 ? (
+            <p className="text-muted-foreground text-sm">{t("empty")}</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t("table.when")}</TableHead>
+                  <TableHead>{t("table.groupType")}</TableHead>
+                  <TableHead>{t("table.trainer")}</TableHead>
+                  <TableHead>{t("table.location")}</TableHead>
+                  <TableHead>{t("table.capacity")}</TableHead>
+                  <TableHead>{t("table.status")}</TableHead>
+                  <TableHead className="text-right">{t("table.actions")}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {sessions.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell className="font-medium whitespace-nowrap">
+                      {formatWhen.format(row.startTime)}
+                    </TableCell>
+                    <TableCell>{row.groupTypeName}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <span>{row.trainerName || row.trainerEmail || t("noTrainer")}</span>
+                        {row.trainerId && trainerOnLeave.has(row.trainerId) ? (
+                          hasSubstitute.has(row.trainerId) ? (
+                            <Badge variant="outline" className="text-xs">{t("leave.substitute")}</Badge>
+                          ) : (
+                            <Badge variant="destructive" className="text-xs">{t("leave.noTrainer")}</Badge>
+                          )
+                        ) : null}
+                      </div>
+                    </TableCell>
+                    <TableCell>{row.locationName ?? t("noLocation")}</TableCell>
+                    <TableCell className="tabular-nums">{row.capacity}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap items-center gap-1">
+                        <Badge variant={row.status === "cancelled" ? "warning" : "outline"}>
+                          {t(row.status === "cancelled" ? "status.cancelled" : "status.scheduled")}
+                        </Badge>
+                        {/*
+                          Visible because it changes what a later pattern edit will do
+                          to this row: a bulk update skips it (§3.4/AC8). An admin
+                          wondering why one week did not move needs this on screen,
+                          not in the audit trail.
+                        */}
+                        {row.isManuallyAdjusted ? (
+                          <Badge variant="outline">{t("manuallyAdjusted")}</Badge>
+                        ) : null}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right align-top">
+                      <div className="flex flex-col items-end gap-2">
+                        <Button asChild size="sm" variant="outline">
+                          <Link href={`/dashboard/sessions/${row.id}`}>{t("roster")}</Link>
+                        </Button>
+                        <SessionEditForm
+                          sessionId={row.id}
+                          startLocal={toLocalInput(row.startTime)}
+                          endLocal={toLocalInput(row.endTime)}
+                          locationId={row.locationId}
+                          meetingUrl={row.meetingUrl}
+                          capacity={row.capacity}
+                          locations={locations}
+                        />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </>
       )}
     </div>
   );

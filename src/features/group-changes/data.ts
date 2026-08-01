@@ -2,7 +2,7 @@ import { and, desc, eq, or, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 import type { TenantDb } from "@/lib/db/tenant";
-import { booking, classSession, client, groupChangeRequest, groupType } from "@/lib/db/schema";
+import { booking, classSession, client, groupChangeRequest, groupType, type GroupChangeRequestStatus } from "@/lib/db/schema";
 
 export interface GroupChangeRequestRow {
   id: string;
@@ -70,4 +70,22 @@ export async function listGroupChangeRequestsForTrainer(
       ),
     )
     .orderBy(desc(groupChangeRequest.submittedAt));
+}
+
+/** Count of requests in a given status for the whole organization (dashboard pending card). */
+export async function countGroupChangeRequests(
+  tx: TenantDb,
+  organizationId: string,
+  status: GroupChangeRequestStatus,
+): Promise<number> {
+  const [row] = await tx
+    .select({ count: sql<number>`count(*)::int`.mapWith(Number) })
+    .from(groupChangeRequest)
+    .where(
+      and(
+        eq(groupChangeRequest.organizationId, organizationId),
+        eq(groupChangeRequest.status, status),
+      ),
+    );
+  return row?.count ?? 0;
 }

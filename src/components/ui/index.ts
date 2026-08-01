@@ -54,3 +54,4 @@ export { Separator } from "./separator";
 export { Skeleton } from "./skeleton";
 export { Tabs, TabsList, TabsTrigger, TabsContent } from "./tabs";
 export { Switch } from "./switch";
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "./tooltip";

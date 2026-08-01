@@ -12,7 +12,7 @@ export default async function AcademyLayout({
   const { org, effectivePermissions } = await requireOrgAccess()
 
   return (
-    <div className="flex min-h-dvh">
+    <div className="flex min-h-dvh flex-col md:flex-row">
       <Sidebar orgName={org.name} permissions={[...effectivePermissions]} />
       <div className="flex flex-1 flex-col">
         <Breadcrumbs />

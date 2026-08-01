@@ -12,6 +12,11 @@
       "label": "Language",
       "en": "English",
       "pl": "Polski"
+    },
+    "error": {
+      "unexpected": "Something went wrong",
+      "unexpectedBody": "An unexpected error occurred while loading this page.",
+      "retry": "Try again"
     }
   },
   "emails": {
@@ -726,11 +731,30 @@
         "clients": "Clients",
         "groupTypes": "Group types",
         "trainers": "Trainers",
+        "todaySessions": "Today's sessions",
         "activity": "Recent activity",
         "noActivity": "No recent activity.",
         "viewAll": "View all",
         "pending": "Pending",
-        "noPending": "No pending items."
+        "noPending": "No pending items.",
+        "pendingLeave": "Leave requests",
+        "pendingGroupChanges": "Group change requests",
+        "allDone": "All handled ✓",
+        "quickActions": "Quick actions",
+        "addGroupType": "Add group type",
+        "addTrainer": "Add trainer",
+        "inviteMember": "Invite member"
+      },
+      "reception": {
+        "todayTitle": "Today's classes",
+        "noClassesToday": "No classes today.",
+        "noTrainer": "No trainer",
+        "quickActions": "Quick actions",
+        "noActions": "No available actions for your role.",
+        "confirmCash": "Confirm cash payment",
+        "sellPackage": "Sell package",
+        "clients": "Clients",
+        "extraFees": "Extra fees"
       }
     },
     "settings": {
@@ -847,6 +871,11 @@
       "earningsNoRateTitle": "Sessions without a rate",
       "earningsNoRateDescription": "These sessions qualify for the report but have no rate configured — fill in the missing rates.",
       "earningsEmpty": "No sessions in the selected period.",
+      "earningsNoRateAdminTitle": "Some trainers have no rate set",
+      "earningsNoRateAdminBody": "Earnings may be incomplete until every trainer has a rate.",
+      "earningsNoRateAdminLink": "Set rates",
+      "earningsSelfNoRate": "Your rate has not been set yet. Contact the administrator.",
+      "noRateTooltip": "No rate configured for this trainer",
       "colSessionDate": "Date",
       "colGroup": "Group",
       "colCalculatedAmount": "Amount due",
@@ -1429,6 +1458,31 @@
     "subtitle": "Generated sessions, soonest first.",
     "empty": "No sessions in this range.",
     "updated": "Session updated.",
+    "toggle": {
+      "list": "List",
+      "calendar": "Calendar"
+    },
+    "calendar": {
+      "prevMonth": "Previous month",
+      "nextMonth": "Next month",
+      "weekday": {
+        "mo": "Mo",
+        "tu": "Tu",
+        "we": "We",
+        "th": "Th",
+        "fr": "Fr",
+        "sa": "Sa",
+        "su": "Su"
+      },
+      "daySessions": "Sessions on {date}",
+      "noSessions": "No sessions that day.",
+      "noTrainer": "No trainer",
+      "noTrainerBadge": "No trainer!",
+      "noLocation": "No location",
+      "onLeave": "On leave",
+      "leaveTitle": "On leave: {trainers}",
+      "roster": "Roster"
+    },
     "filter": {
       "location": "Location",
       "all": "All locations"

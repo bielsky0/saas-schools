@@ -3,18 +3,22 @@
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
 
-import { Badge, Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui";
+import { Badge, Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui";
 import { getEarningsReportAction } from "@/features/trainers/rate-actions";
 import type { EarningsReportData } from "@/features/trainers/rate-actions";
 
 interface Props {
   trainers: { id: string; name: string | null }[];
+  /** Trainer userIds with no rate row at all — flagged in the table + filter. */
+  trainersWithoutRate?: string[];
   /** If true, force-scope to the caller's own data — no trainer picker. */
   selfScope?: boolean;
 }
 
-export function EarningsReportClient({ trainers, selfScope }: Props) {
+export function EarningsReportClient({ trainers, trainersWithoutRate, selfScope }: Props) {
   const t = useTranslations("dashboard.trainers");
+  const missingRates = new Set(trainersWithoutRate ?? []);
+  const trainerNameById = new Map(trainers.map((tr) => [tr.id, tr.name ?? tr.id]));
   const [state, action, pending] = useActionState(
     async (_prev: EarningsReportData | null, formData: FormData) => {
       return getEarningsReportAction(formData);
@@ -45,7 +49,14 @@ export function EarningsReportClient({ trainers, selfScope }: Props) {
               <SelectContent>
                 {trainers.map((tr) => (
                   <SelectItem key={tr.id} value={tr.id}>
-                    {tr.name ?? tr.id}
+                    <span className="flex items-center gap-1.5">
+                      {tr.name ?? tr.id}
+                      {missingRates.has(tr.id) ? (
+                        <span aria-hidden title={t("noRateTooltip")} className="text-warning text-xs">
+                          ⚠
+                        </span>
+                      ) : null}
+                    </span>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -70,6 +81,7 @@ export function EarningsReportClient({ trainers, selfScope }: Props) {
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      {!selfScope ? <TableHead>{t("colTrainer")}</TableHead> : null}
                       <TableHead>{t("colSessionDate")}</TableHead>
                       <TableHead>{t("colGroup")}</TableHead>
                       <TableHead>{t("colDuration")}</TableHead>
@@ -80,6 +92,25 @@ export function EarningsReportClient({ trainers, selfScope }: Props) {
                   <TableBody>
                     {state.lines.map((line) => (
                       <TableRow key={line.sessionId}>
+                        {!selfScope ? (
+                          <TableCell>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger type="button" className="flex items-center gap-1.5">
+                                  {trainerNameById.get(line.trainerId) ?? line.trainerId}
+                                  {missingRates.has(line.trainerId) ? (
+                                    <span aria-hidden className="text-warning text-xs">
+                                      ⚠
+                                    </span>
+                                  ) : null}
+                                </TooltipTrigger>
+                                {missingRates.has(line.trainerId) ? (
+                                  <TooltipContent>{t("noRateTooltip")}</TooltipContent>
+                                ) : null}
+                              </Tooltip>
+                            </TooltipProvider>
+                          </TableCell>
+                        ) : null}
                         <TableCell>{line.startTime.toLocaleDateString()}</TableCell>
                         <TableCell>{line.groupTypeName}</TableCell>
                         <TableCell className="text-muted-foreground text-xs">
@@ -111,6 +142,7 @@ export function EarningsReportClient({ trainers, selfScope }: Props) {
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      {!selfScope ? <TableHead>{t("colTrainer")}</TableHead> : null}
                       <TableHead>{t("colSessionDate")}</TableHead>
                       <TableHead>{t("colGroup")}</TableHead>
                     </TableRow>
@@ -118,6 +150,11 @@ export function EarningsReportClient({ trainers, selfScope }: Props) {
                   <TableBody>
                     {state.noRateSessions.map((s) => (
                       <TableRow key={s.sessionId}>
+                        {!selfScope ? (
+                          <TableCell>
+                            {s.trainerName ?? trainerNameById.get(s.trainerId) ?? s.trainerId}
+                          </TableCell>
+                        ) : null}
                         <TableCell>{s.startTime.toLocaleDateString()}</TableCell>
                         <TableCell>{s.groupTypeName}</TableCell>
                       </TableRow>

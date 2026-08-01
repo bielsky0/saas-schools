@@ -1,8 +1,7 @@
-import { and, count, eq, gte } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import {
-  Badge,
   Button,
   Card,
   CardContent,
@@ -13,7 +12,7 @@ import { Link } from "@/lib/i18n/navigation";
 import { requireOrgAccess } from "@/features/organizations/context";
 import { withTenant } from "@/lib/db/tenant";
 import { listUpcomingSessions } from "@/features/schedule/data";
-import { booking, classSession } from "@/lib/db/schema";
+import { booking } from "@/lib/db/schema";
 
 export default async function TrainerDashboard() {
   const { session, org } = await requireOrgAccess();
@@ -38,6 +37,7 @@ export default async function TrainerDashboard() {
 
       const upcomingSessions = await listUpcomingSessions(tx, org.id, {
         from: todayEnd,
+        to: weekEnd,
         trainerId: session.user.id,
         limit: 20,
       });

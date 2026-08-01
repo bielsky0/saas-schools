@@ -1,4 +1,4 @@
-import { and, count, eq, gte, lt, ne, sql } from "drizzle-orm";
+import { and, count, eq, gte, inArray, lt, ne, sql } from "drizzle-orm";
 
 import type { TenantDb } from "@/lib/db/tenant";
 import { athlete, booking, classSession, groupType, location } from "@/lib/db/schema";
@@ -86,6 +86,39 @@ export async function countActiveBookingsForSession(
       ),
     );
   return row?.value ?? 0;
+}
+
+/**
+ * Active bookings per session in one organization — the fill levels the schedule
+ * calendar colours each day by (Faza 07, §7b).
+ *
+ * A single GROUP BY rather than `countActiveBookingsForSession` per session:
+ * for a month of sessions the per-row query is an N+1. The caller already holds
+ * the sessions with capacities; this returns the counts to pair them with.
+ */
+export async function countActiveBookingsBySession(
+  tx: TenantDb,
+  organizationId: string,
+  sessionIds: string[],
+): Promise<Map<string, number>> {
+  if (sessionIds.length === 0) return new Map();
+
+  const rows = await tx
+    .select({
+      sessionId: booking.sessionId,
+      value: count(),
+    })
+    .from(booking)
+    .where(
+      and(
+        eq(booking.organizationId, organizationId),
+        inArray(booking.sessionId, sessionIds),
+        ACTIVE_BOOKING_FILTER,
+      ),
+    )
+    .groupBy(booking.sessionId);
+
+  return new Map(rows.map((row) => [row.sessionId, row.value ?? 0]));
 }
 
 /** One bookable slot as the public enrollment calendar sees it. */

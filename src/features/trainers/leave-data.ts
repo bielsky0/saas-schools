@@ -173,3 +173,54 @@ export async function getActiveLeaves(
       ),
     );
 }
+
+/**
+ * Approved leaves overlapping a date range (inclusive), for the schedule
+ * calendar — unlike `getActiveLeaves` (one date), this returns every leave that
+ * touches the shown month so the calendar can gray whole spans out.
+ */
+export async function getLeavesOverlappingRange(
+  tx: TenantDb,
+  organizationId: string,
+  from: string,
+  to: string,
+) {
+  return tx
+    .select({
+      id: leaveRequest.id,
+      trainerId: leaveRequest.trainerId,
+      trainerName: user.name,
+      substituteTrainerId: leaveRequest.substituteTrainerId,
+      startDate: leaveRequest.startDate,
+      endDate: leaveRequest.endDate,
+    })
+    .from(leaveRequest)
+    .innerJoin(user, eq(leaveRequest.trainerId, user.id))
+    .where(
+      and(
+        eq(leaveRequest.organizationId, organizationId),
+        eq(leaveRequest.status, "approved"),
+        sql`${leaveRequest.startDate} <= ${to}`,
+        sql`${leaveRequest.endDate} >= ${from}`,
+      ),
+    )
+    .orderBy(asc(leaveRequest.startDate));
+}
+
+/** Count of leave requests in a given status for the whole organization. */
+export async function countLeaveRequests(
+  tx: TenantDb,
+  organizationId: string,
+  status: LeaveRequestStatus,
+): Promise<number> {
+  const [row] = await tx
+    .select({ count: sql<number>`count(*)::int`.mapWith(Number) })
+    .from(leaveRequest)
+    .where(
+      and(
+        eq(leaveRequest.organizationId, organizationId),
+        eq(leaveRequest.status, status),
+      ),
+    );
+  return row?.count ?? 0;
+}

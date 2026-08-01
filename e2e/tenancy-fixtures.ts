@@ -42,6 +42,7 @@ export const ORG_DEPENDENT_SPECS = [
   "emails-transactional",
   "invitation-accept",
   "langlion-credits",
+  "langlion-dashboard-polish",
   "langlion-schedule",
   "mcp",
   "notifications",
