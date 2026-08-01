@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { PagesTab } from "./pages-tab";
 import { SectionsTab } from "./sections-tab";
 import { ThemeTab } from "./theme-tab";
 
@@ -25,8 +26,10 @@ export const BuilderLeftPanel = () => {
             <ThemeTab />
           </Suspense>
         </TabsContent>
-        <TabsContent value="pages" className="px-4 py-4 text-sm text-muted-foreground">
-          {t("Coming soon")}...
+        <TabsContent value="pages" className="no-scrollbar h-full max-h-full overflow-y-auto px-3 py-2">
+          <Suspense fallback={<div>Loading...</div>}>
+            <PagesTab />
+          </Suspense>
         </TabsContent>
       </Tabs>
     </div>

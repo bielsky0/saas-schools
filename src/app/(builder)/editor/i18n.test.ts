@@ -76,6 +76,33 @@ const THEME_TAB_KEYS = [
   "Sections can override the background locally — the section name shows an overridden badge in the tree",
 ];
 
+const PAGES_TAB_KEYS = [
+  "Templates",
+  "System pages",
+  "Live",
+  "General",
+  "SEO",
+  "Access",
+  "Page name",
+  "Visible in menu",
+  "Indexed in Google",
+  "Search engine preview",
+  "SEO Title",
+  "SEO Description",
+  "Canonical URL",
+  "Publication status",
+  "This page is live on your website",
+  "This page is a draft",
+  "Password protected",
+  "Select a page to view its settings",
+  "Mark as template",
+  "Unmark as template",
+  "Add Page",
+  "Add new page to start",
+  "Empty List!",
+  "Search pages",
+];
+
 describe("Editor i18n (Faza 0.3)", () => {
   it("BuilderLayout keys exist in both en.json and pl.json", () => {
     for (const key of LAYOUT_KEYS) {
@@ -103,6 +130,14 @@ describe("Editor i18n (Faza 0.3)", () => {
 
   it("Theme tab (Faza 3) keys exist in en.json and are translated in pl.json", () => {
     for (const key of THEME_TAB_KEYS) {
+      expect(en, `en.json missing "${key}"`).toHaveProperty(key);
+      expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
+      expect(pl[key as keyof typeof pl]).toBeTruthy();
+    }
+  });
+
+  it("Pages tab (Faza 4) keys exist in en.json and are translated in pl.json", () => {
+    for (const key of PAGES_TAB_KEYS) {
       expect(en, `en.json missing "${key}"`).toHaveProperty(key);
       expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
       expect(pl[key as keyof typeof pl]).toBeTruthy();

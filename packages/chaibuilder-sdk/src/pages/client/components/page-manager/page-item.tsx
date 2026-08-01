@@ -191,7 +191,9 @@ const PageItem = ({
                 setDuplicatePage={(arg) => onClickAction("duplicate", arg)}
                 setAddEditPage={(arg) => onClickAction("edit", langPage || arg)}
                 setUnpublishPage={(arg) => onClickAction("unpublish", arg)}
-                setDeletePage={(arg) => onClickAction("delete", langPage || arg)}>
+                setDeletePage={(arg) => onClickAction("delete", langPage || arg)}
+                setMarkAsTemplate={(arg) => onClickAction("markAsTemplate", arg)}
+                setUnmarkAsTemplate={(arg) => onClickAction("unmarkAsTemplate", arg)}>
                 <div className="m-0 cursor-pointer rounded border border-transparent p-0.5 duration-100 hover:border-gray-400 hover:bg-white">
                   <MoreHorizontal className="h-4 w-4" onClick={(e) => e.stopPropagation()} />
                 </div>

@@ -1,4 +1,4 @@
-import { Suspense, useCallback, type MouseEvent } from "react";
+import { Suspense, useCallback, useEffect, type MouseEvent } from "react";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { AskAI } from "~/core/components/ask-ai-panel";
 import CanvasArea from "~/core/components/canvas/canvas-area";
@@ -6,17 +6,26 @@ import { isDevelopment } from "~/core/import-html/general";
 import { AddBlocksDialog } from "~/core/components/layout/add-blocks-dialog";
 import SettingsPanel from "~/core/components/settings/settings-panel";
 import { useBuilderProp } from "~/hooks/use-builder-prop";
+import { useSelectedBlock } from "~/hooks/use-selected-blockIds";
 import { useRightPanel } from "~/hooks/use-theme";
 import { useTopBarComponent } from "~/runtime/client";
 import { BuilderLeftPanel } from "./left-panel/builder-left-panel";
+import { PageSettings } from "./right-panel/page-settings";
 import { ThemeEditor } from "./theme/theme-editor";
 
 const DEFAULT_PANEL_WIDTH = 280;
 
 const BuilderLayout = () => {
   const TopBar = useTopBarComponent();
-  const [panel] = useRightPanel();
+  const [panel, setRightPanel] = useRightPanel();
   const htmlDir = useBuilderProp("htmlDir", "ltr");
+  const selectedBlock = useSelectedBlock();
+
+  useEffect(() => {
+    if (panel === "page" && selectedBlock) {
+      setRightPanel("block");
+    }
+  }, [panel, selectedBlock, setRightPanel]);
 
   const preventContextMenu = useCallback((e: MouseEvent<HTMLDivElement>) => {
     if (!isDevelopment()) e.preventDefault();
@@ -44,7 +53,7 @@ const BuilderLayout = () => {
               style={{ width: panel === "ai" ? 0 : DEFAULT_PANEL_WIDTH }}>
               <div className="no-scrollbar h-full max-h-full overflow-hidden p-3">
                 <Suspense fallback={<div>Loading...</div>}>
-                  {panel === "ai" ? <AskAI /> : panel === "theme" ? <ThemeEditor /> : <SettingsPanel />}
+                  {panel === "ai" ? <AskAI /> : panel === "theme" ? <ThemeEditor /> : panel === "page" ? <PageSettings /> : <SettingsPanel />}
                 </Suspense>
               </div>
             </div>
