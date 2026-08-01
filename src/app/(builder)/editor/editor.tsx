@@ -11,6 +11,7 @@ import "@/blocks";
 import { langlionLibrary } from "@/lib/blocks-library";
 import { GroupTypePickerWidget } from "@/blocks/widgets/group-type-picker";
 import { TrainerPickerWidget } from "@/blocks/widgets/trainer-picker";
+import plTranslations from "./pl.json";
 
 const ChaiWebsiteBuilder = dynamic(
   () => import("@chaibuilder/sdk/pages").then((mod) => mod.ChaiWebsiteBuilder),
@@ -46,8 +47,28 @@ function usePageTypeMap() {
   return pageTypeMap;
 }
 
+function useUiLocale() {
+  const [uiLocale, setUiLocale] = useState("pl");
+
+  useEffect(() => {
+    fetch("/editor/api", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "GET_WEBSITE_DATA", data: {} }),
+    })
+      .then((r) => r.json())
+      .then((data: { uiLocale?: string }) => {
+        if (data?.uiLocale) setUiLocale(data.uiLocale);
+      })
+      .catch(() => {});
+  }, []);
+
+  return uiLocale;
+}
+
 export default function Editor() {
   const pageTypeMap = usePageTypeMap();
+  const uiLocale = useUiLocale();
   const getAccessToken = useCallback(async () => MOCK_ACCESS_TOKEN, []);
 
   const getPreviewUrl = useCallback(
@@ -76,6 +97,8 @@ export default function Editor() {
         ai: true,
       }}
       currentUser={null}
+      locale={uiLocale}
+      translations={{ pl: plTranslations }}
       autoSave
       autoSaveActionsCount={5}
       getAccessToken={getAccessToken}

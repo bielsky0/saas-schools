@@ -167,6 +167,9 @@ export async function POST(req: NextRequest) {
             pageTypes,
             libraries: [],
             collections: [],
+            // UI locale for the editor chrome. Tenant-level default for now; a
+            // per-organization `locale` column should flow through here later.
+            uiLocale: "pl",
             settings: orgRow[0] ?? { name: "Akademia", currency: "PLN" },
           });
         }

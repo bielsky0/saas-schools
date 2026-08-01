@@ -592,8 +592,10 @@
   "590": "zod",
   "591": "dotenv",
   "592": "drizzle-kit",
+  "593": "react-wrap-balancer",
   "594": "@aws-sdk/client-s3",
   "595": "react-router-dom",
+  "596": "@tailwindcss/container-queries",
   "597": "source-map",
   "598": "@tanstack/eslint-plugin-query",
   "599": "@tanstack/react-query-devtools",
@@ -707,6 +709,7 @@
   "707": "pg",
   "708": "@radix-ui/react-accordion",
   "709": "@radix-ui/react-alert-dialog",
+  "710": "@tanstack/react-virtual",
   "711": "@radix-ui/react-label",
   "712": "@radix-ui/react-radio-group",
   "713": "@radix-ui/react-separator",
@@ -718,8 +721,13 @@
   "719": "tailwind-merge",
   "720": "concurrently",
   "721": "@radix-ui/react-separator",
+  "722": "@tiptap/extension-highlight",
   "723": "@radix-ui/react-use-controllable-state",
   "724": "drizzle-kit",
+  "725": "@tiptap/extension-ordered-list",
   "726": "@types/express",
-  "727": "vitest"
+  "727": "vitest",
+  "728": "@tiptap/extension-text-align",
+  "729": "autoprefixer",
+  "730": "pages/components/ui/textarea.tsx"
 }

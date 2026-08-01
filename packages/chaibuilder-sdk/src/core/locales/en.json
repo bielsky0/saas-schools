@@ -557,5 +557,19 @@
   "Enter key": "Enter key",
   "Add": "Add",
   "Save": "Save",
-  "Screen": "Screen"
+  "Screen": "Screen",
+
+  "Sections": "Sections",
+  "Pages": "Pages",
+  "Publish": "Publish",
+  "Unpublish": "Unpublish",
+  "Generate section": "Generate section",
+  "Search section or block": "Search section or block",
+  "Header": "Header",
+  "Template": "Template",
+  "Overridden": "Overridden",
+  "Content": "Content",
+  "Manual classes": "Manual classes",
+  "Active theme": "Active theme",
+  "Theme changes apply to all pages": "Theme changes apply to all pages"
 }

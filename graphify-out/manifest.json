@@ -6350,8 +6350,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/en.json": {
-    "mtime": 1785311019.1388578,
-    "ast_hash": "032f6f4b320b23800966109636089801",
+    "mtime": 1785581881.8973303,
+    "ast_hash": "4d6b8aadaf3587ba6df74864a6fc7764",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/load.ts": {
@@ -8700,13 +8700,13 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/api/route.ts": {
-    "mtime": 1785413903.2837405,
-    "ast_hash": "12ce956eca95d534cc794d572711e4b4",
+    "mtime": 1785581881.8977427,
+    "ast_hash": "05bf21c52a2dfd636a0dda85d71ea7fe",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/editor.tsx": {
-    "mtime": 1785580412.2105186,
-    "ast_hash": "8310d1541280cee867f6ab5613878341",
+    "mtime": 1785581881.8980176,
+    "ast_hash": "c8327e1cd96a788e50fd701060cf2f9e",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/layout.tsx": {
@@ -10555,8 +10555,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/builder-layout.tsx": {
-    "mtime": 1785580396.8742118,
-    "ast_hash": "ac86c9c69d6c8bfb99692fbbb03a79c9",
+    "mtime": 1785581881.8975422,
+    "ast_hash": "86f99348e41cc4554c9bcac91fb0bdf2",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/layout/index.ts": {
@@ -10570,8 +10570,18 @@
     "semantic_hash": ""
   },
   "docs/editor-spec-implementation-plan.md": {
-    "mtime": 1785580904.2476654,
-    "ast_hash": "77d12aeb0d7d064a67839dc0656a95b5",
+    "mtime": 1785581908.3808055,
+    "ast_hash": "c9bf97066dd24b486e80b014940b33c4",
+    "semantic_hash": ""
+  },
+  "src/app/(builder)/editor/i18n.test.ts": {
+    "mtime": 1785581799.116468,
+    "ast_hash": "f60ffc96f9694888b01385c9a0c43330",
+    "semantic_hash": ""
+  },
+  "src/app/(builder)/editor/pl.json": {
+    "mtime": 1785581767.3588517,
+    "ast_hash": "3b26dbd45de2ca4c46b7d52f73d5ae5b",
     "semantic_hash": ""
   }
 }

@@ -4990,8 +4990,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/package.json": {
-    "mtime": 1785329080.2209961,
-    "ast_hash": "3cf738e171f8dd30dde6bc317bec52b2",
+    "mtime": 1785580405.767967,
+    "ast_hash": "0edc9f841f67bd89b5d4885583e06b53",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/playwright.config.ts": {
@@ -7095,8 +7095,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/chaibuilder-pages.tsx": {
-    "mtime": 1785311019.164311,
-    "ast_hash": "4ea8cd476884386342a9b2c210edea37",
+    "mtime": 1785580371.4324682,
+    "ast_hash": "0fedc22705e16326abd461de5abe4d92",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/add-new-language-page.tsx": {
@@ -8425,8 +8425,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/types/common.ts": {
-    "mtime": 1785311019.2063737,
-    "ast_hash": "ec40efd467774acae5a1816320d76d27",
+    "mtime": 1785580368.6969774,
+    "ast_hash": "92b240881611f521766ed0fd8db775e8",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/types/index.ts": {
@@ -8685,8 +8685,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/vite.config.ts": {
-    "mtime": 1785325754.5252547,
-    "ast_hash": "46446522f9567447651076874d639147",
+    "mtime": 1785580402.222007,
+    "ast_hash": "5c5ccb4ff80819e261ff3cb7d05dfdf9",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/vitest.config.ts": {
@@ -8705,8 +8705,8 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/editor.tsx": {
-    "mtime": 1785398974.5659137,
-    "ast_hash": "fd54d25ca76c4adfc931aa388829aebf",
+    "mtime": 1785580412.2105186,
+    "ast_hash": "8310d1541280cee867f6ab5613878341",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/layout.tsx": {
@@ -10552,6 +10552,26 @@
   "src/components/ui/tooltip.tsx": {
     "mtime": 1785542700.569348,
     "ast_hash": "85d30b3088cec0a31929176709b73383",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/layouts/builder-layout.tsx": {
+    "mtime": 1785580396.8742118,
+    "ast_hash": "ac86c9c69d6c8bfb99692fbbb03a79c9",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/layout/index.ts": {
+    "mtime": 1785580430.3031454,
+    "ast_hash": "996187f6ca77d0081da42234f271b5eb",
+    "semantic_hash": ""
+  },
+  "docs/Wireframes buildera.html": {
+    "mtime": 1785577558.7756286,
+    "ast_hash": "be897d1a01dc015062dc1abd92b2a70d",
+    "semantic_hash": ""
+  },
+  "docs/editor-spec-implementation-plan.md": {
+    "mtime": 1785580904.2476654,
+    "ast_hash": "77d12aeb0d7d064a67839dc0656a95b5",
     "semantic_hash": ""
   }
 }
