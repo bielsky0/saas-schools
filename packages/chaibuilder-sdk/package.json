@@ -47,6 +47,11 @@
       "import": "./dist/pages.js",
       "require": "./dist/pages.cjs"
     },
+    "./pages/layout": {
+      "types": "./dist/layout.d.ts",
+      "import": "./dist/layout.js",
+      "require": "./dist/layout.cjs"
+    },
     "./actions": {
       "types": "./dist/actions.d.ts",
       "import": "./dist/actions.js",

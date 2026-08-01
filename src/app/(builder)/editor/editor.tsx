@@ -3,6 +3,7 @@
 import { defaultChaiLibrary } from "@chaibuilder/sdk";
 import { registerChaiLibrary, registerChaiBlockSettingWidget } from "@chaibuilder/sdk/runtime/client";
 import "@chaibuilder/sdk/styles";
+import { BuilderLayout } from "@chaibuilder/sdk/pages/layout";
 import { loadWebBlocks } from "@chaibuilder/sdk/web-blocks";
 import dynamic from "next/dynamic";
 import { useEffect, useCallback, useState } from "react";
@@ -69,6 +70,7 @@ export default function Editor() {
 
   return (
     <ChaiWebsiteBuilder
+      layout={BuilderLayout}
       flags={{
         dragAndDrop: true,
         ai: true,

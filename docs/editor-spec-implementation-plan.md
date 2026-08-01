@@ -26,10 +26,14 @@ Obecnie `editor.tsx:70` → `ChaiWebsiteBuilder` → `ChaiBuilderInner` (chaibui
 - Nowy layout: `packages/chaibuilder-sdk/src/pages/client/layouts/builder-layout.tsx` (default dla saas-school) + zachowanie starego `RootLayout` (core/layout/root-layout.tsx) nietkniętego.
 - W `editor.tsx` (app): `<ChaiWebsiteBuilder layout={BuilderLayout} … />` (import z nowego subpath exportu).
 
+> **POSTĘP (2026-08-01): ✅ Faza 0.1+0.2 scalone i zrobione.** Decyzja: 0.1 i 0.2 są atomowo sprzężone (subpath export musi istnieć zanim `editor.tsx` go zaimportuje), więc wykonane razem. BuilderLayout wystartował od razu z placeholderem 3 zakładek (Sekcje = `<Outline />`, Motyw/Strony = „wkrótce"). Pliki: `builder-layout.tsx`, entry `src/pages/layout/index.ts`, `vite.config.ts` (entry `layout`), `package.json` (exports `./pages/layout`), forward w `chaibuilder-pages.tsx:186`, `layout` w `Pick<ChaiBuilderEditorProps>` (`types/common.ts`), `editor.tsx` (app) `layout={BuilderLayout}`. **Odchyłka:** ścieżka RootLayout to `core/components/layout/root-layout.tsx` (nie `core/layout/…`). Zweryfikowano: build SDK OK, subpath rozwiązuje się, Playwright smoke przez `{sub}.localtest.me:3000/editor` → zakładki Sekcje/Motyw/Strony renderują się, stary icon-rail zniknął, bez nowych błędów JS. Uwaga: restart dev servera wymagany po zmianie `package.json` exports (Turbopack nie odświeża mapy bez restartu).
+
 ### Faza 0.2 — nowy export z SDK
 - `package.json` (fork): dodać subpath np. `"./pages/layout": { types: dist/layout.d.ts, import: dist/layout.js, … }`.
 - Vite build wielo-entry (`vite.config`) — dołożyć entry `layout` obok istniejących (`pages`, `runtime`, itd.). Zweryfikować w `vite.config.*`.
 - Eksport: `BuilderLayout`, ewentualnie składowe (topbar, panele, sheet mobile).
+
+> **POSTĘP (2026-08-01): ✅ zrobione razem z Faza 0.1** (atomowe). `vite.config.ts` entry `layout`, exports `./pages/layout` (`dist/layout.{js,cjs,d.ts}`).
 
 ### Faza 0.3 — i18n PL
 - SDK ma `~/core/locales/load` + `i18n.addResourceBundle` przez prop `translations`. Dodać bundle PL (`src/app/(builder)/editor/` lub w forku `~/core/locales/pl.json`) z kluczami nowych etykiet: `Sekcje`, `Motyw`, `Strony`, `Treść`, `Styl`, `Zaawansowane`, `Zapisano`, `Podgląd`, `Publikuj`, `Wygeneruj sekcję`, `Aktywny motyw`, `Zmiany motywu dotyczą wszystkich stron`, tokeny itd. Fallback EN dla brakujących.

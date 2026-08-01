@@ -66,6 +66,7 @@ export type ChaiWebsiteBuilderProps = {
   | "themePresets"
   | "flags"
   | "structureRules"
+  | "layout"
 >;
 
 export type ChaiPageProps<T = Record<string, any>> = {

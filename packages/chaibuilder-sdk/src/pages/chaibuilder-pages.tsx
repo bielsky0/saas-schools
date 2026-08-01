@@ -183,6 +183,7 @@ const ChaiBuilderInner = ({ ...props }: ChaiBuilderInnerProps) => {
         </Suspense>
       )}
       <ChaiBuilderEditor
+        layout={props.layout}
         siteWideUsage={siteWideUsage ?? {}}
         flags={props.flags ? { ...props.flags, librarySite: isLibrarySite } : { librarySite: isLibrarySite }}
         gotoPage={gotoPage}
