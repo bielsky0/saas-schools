@@ -34,6 +34,23 @@ const NEW_UI_KEYS = [
   "Data Binding",
 ];
 
+const SECTIONS_TAB_KEYS = [
+  "Add section",
+  "Generate section from description",
+  "Generate",
+  "Generating...",
+  "Describe the section you want to generate and add it to the page",
+  "e.g. A hero section with a headline, subheading and a call to action button",
+  "Feature under construction",
+  "Section generated",
+  "Footer",
+  "No sections",
+  "No sections found",
+  "This page is empty",
+  "Get started by adding your first block to begin building your page",
+  "Something went wrong",
+];
+
 describe("Editor i18n (Faza 0.3)", () => {
   it("BuilderLayout keys exist in both en.json and pl.json", () => {
     for (const key of LAYOUT_KEYS) {
@@ -45,6 +62,14 @@ describe("Editor i18n (Faza 0.3)", () => {
 
   it("new UI keys exist in en.json and are translated in pl.json", () => {
     for (const key of NEW_UI_KEYS) {
+      expect(en, `en.json missing "${key}"`).toHaveProperty(key);
+      expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
+      expect(pl[key as keyof typeof pl]).toBeTruthy();
+    }
+  });
+
+  it("Sections tab (Faza 2) keys exist in en.json and are translated in pl.json", () => {
+    for (const key of SECTIONS_TAB_KEYS) {
       expect(en, `en.json missing "${key}"`).toHaveProperty(key);
       expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
       expect(pl[key as keyof typeof pl]).toBeTruthy();

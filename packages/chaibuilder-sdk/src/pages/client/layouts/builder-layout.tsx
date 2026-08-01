@@ -1,8 +1,5 @@
 import { Suspense, useCallback, type MouseEvent } from "react";
-import { useTranslation } from "react-i18next";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { TooltipProvider } from "~/components/ui/tooltip";
-import { Outline } from "~/core/components";
 import { AskAI } from "~/core/components/ask-ai-panel";
 import CanvasArea from "~/core/components/canvas/canvas-area";
 import { isDevelopment } from "~/core/import-html/general";
@@ -12,6 +9,7 @@ import ThemeConfigPanel from "~/core/components/sidepanels/panels/theme-configur
 import { useBuilderProp } from "~/hooks/use-builder-prop";
 import { useRightPanel } from "~/hooks/use-theme";
 import { useTopBarComponent } from "~/runtime/client";
+import { BuilderLeftPanel } from "./left-panel/builder-left-panel";
 
 const DEFAULT_PANEL_WIDTH = 280;
 
@@ -19,7 +17,6 @@ const BuilderLayout = () => {
   const TopBar = useTopBarComponent();
   const [panel] = useRightPanel();
   const htmlDir = useBuilderProp("htmlDir", "ltr");
-  const { t } = useTranslation();
 
   const preventContextMenu = useCallback((e: MouseEvent<HTMLDivElement>) => {
     if (!isDevelopment()) e.preventDefault();
@@ -35,26 +32,7 @@ const BuilderLayout = () => {
             </Suspense>
           </div>
           <main className="relative flex h-[calc(100vh-56px)] max-w-full flex-1 flex-row">
-            <div className="flex h-full max-h-full w-[300px] flex-col border-r border-gray-200 bg-white text-gray-900">
-              <Tabs defaultValue="sections" className="flex h-full max-h-full flex-col">
-                <TabsList className="mx-3 mt-3 grid grid-cols-3">
-                  <TabsTrigger value="sections">{t("Sections")}</TabsTrigger>
-                  <TabsTrigger value="theme">{t("Theme")}</TabsTrigger>
-                  <TabsTrigger value="pages">{t("Pages")}</TabsTrigger>
-                </TabsList>
-                <TabsContent value="sections" className="no-scrollbar h-full max-h-full overflow-y-auto px-3 py-2">
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <Outline />
-                  </Suspense>
-                </TabsContent>
-                <TabsContent value="theme" className="px-4 py-4 text-sm text-muted-foreground">
-                  {t("Coming soon")}...
-                </TabsContent>
-                <TabsContent value="pages" className="px-4 py-4 text-sm text-muted-foreground">
-                  {t("Coming soon")}...
-                </TabsContent>
-              </Tabs>
-            </div>
+            <BuilderLeftPanel />
             <div id="canvas-container" className="flex h-full max-h-full flex-1 flex-col bg-slate-800/20">
               <Suspense>
                 <CanvasArea />
