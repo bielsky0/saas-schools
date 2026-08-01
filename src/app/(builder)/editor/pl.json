@@ -28,6 +28,22 @@
   "Manual classes": "Klasy ręczne",
   "Active theme": "Aktywny motyw",
   "Theme changes apply to all pages": "Zmiany motywu dotyczą wszystkich stron",
+  "Theme updated": "Motyw zaktualizowany",
+  "Basics": "PODSTAWY",
+  "Components": "KOMPONENTY",
+  "Brand": "MARKA",
+  "Spacing and width": "Odstępy i szerokość",
+  "Radius and shadows": "Zaokrąglenia i cienie",
+  "Buttons": "Przyciski",
+  "Form fields": "Pola formularzy",
+  "Course cards": "Karty kursów",
+  "Logo and favicon": "Logo i favicon",
+  "Icons": "Ikony",
+  "Change": "Zmień",
+  "Dark": "Ciemny",
+  "Light": "Jasny",
+  "Shadows coming soon": "Cienie wkrótce",
+  "Sections can override the background locally — the section name shows an overridden badge in the tree": "Sekcja może nadpisać tło lokalnie — wtedy przy jej nazwie w drzewie pojawia się znacznik „nadpisane\"",
 
   "Saved": "Zapisano",
   "Unsaved": "Niezapisano",
@@ -138,6 +154,5 @@
   "Dark mode": "Tryb ciemny",
   "Data Binding": "Wiązanie danych",
   "Are you sure you want to clear the whole canvas?": "Na pewno wyczyścić cały canvas?",
-  "Yes, Delete": "Tak, usuń",
-  "Coming soon": "Wkrótce"
+  "Yes, Delete": "Tak, usuń"
 }

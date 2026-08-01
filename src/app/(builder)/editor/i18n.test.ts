@@ -51,6 +51,31 @@ const SECTIONS_TAB_KEYS = [
   "Something went wrong",
 ];
 
+const THEME_TAB_KEYS = [
+  "Basics",
+  "Components",
+  "Brand",
+  "Colors",
+  "Typography",
+  "Spacing and width",
+  "Radius and shadows",
+  "Buttons",
+  "Form fields",
+  "Course cards",
+  "Logo and favicon",
+  "Icons",
+  "Change",
+  "Dark",
+  "Light",
+  "Select preset",
+  "Select font",
+  "Toggle dark mode",
+  "Border Radius",
+  "Theme updated",
+  "Shadows coming soon",
+  "Sections can override the background locally — the section name shows an overridden badge in the tree",
+];
+
 describe("Editor i18n (Faza 0.3)", () => {
   it("BuilderLayout keys exist in both en.json and pl.json", () => {
     for (const key of LAYOUT_KEYS) {
@@ -70,6 +95,14 @@ describe("Editor i18n (Faza 0.3)", () => {
 
   it("Sections tab (Faza 2) keys exist in en.json and are translated in pl.json", () => {
     for (const key of SECTIONS_TAB_KEYS) {
+      expect(en, `en.json missing "${key}"`).toHaveProperty(key);
+      expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
+      expect(pl[key as keyof typeof pl]).toBeTruthy();
+    }
+  });
+
+  it("Theme tab (Faza 3) keys exist in en.json and are translated in pl.json", () => {
+    for (const key of THEME_TAB_KEYS) {
       expect(en, `en.json missing "${key}"`).toHaveProperty(key);
       expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
       expect(pl[key as keyof typeof pl]).toBeTruthy();

@@ -5,11 +5,11 @@ import CanvasArea from "~/core/components/canvas/canvas-area";
 import { isDevelopment } from "~/core/import-html/general";
 import { AddBlocksDialog } from "~/core/components/layout/add-blocks-dialog";
 import SettingsPanel from "~/core/components/settings/settings-panel";
-import ThemeConfigPanel from "~/core/components/sidepanels/panels/theme-configuration/theme-config-panel";
 import { useBuilderProp } from "~/hooks/use-builder-prop";
 import { useRightPanel } from "~/hooks/use-theme";
 import { useTopBarComponent } from "~/runtime/client";
 import { BuilderLeftPanel } from "./left-panel/builder-left-panel";
+import { ThemeEditor } from "./theme/theme-editor";
 
 const DEFAULT_PANEL_WIDTH = 280;
 
@@ -44,7 +44,7 @@ const BuilderLayout = () => {
               style={{ width: panel === "ai" ? 0 : DEFAULT_PANEL_WIDTH }}>
               <div className="no-scrollbar h-full max-h-full overflow-hidden p-3">
                 <Suspense fallback={<div>Loading...</div>}>
-                  {panel === "ai" ? <AskAI /> : panel === "theme" ? <ThemeConfigPanel /> : <SettingsPanel />}
+                  {panel === "ai" ? <AskAI /> : panel === "theme" ? <ThemeEditor /> : <SettingsPanel />}
                 </Suspense>
               </div>
             </div>

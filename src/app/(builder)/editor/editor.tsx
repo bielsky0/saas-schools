@@ -95,6 +95,7 @@ export default function Editor() {
       flags={{
         dragAndDrop: true,
         ai: true,
+        darkMode: true,
       }}
       currentUser={null}
       locale={uiLocale}
