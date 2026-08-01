@@ -24,6 +24,14 @@ const NEW_UI_KEYS = [
   "Manual classes",
   "Active theme",
   "Theme changes apply to all pages",
+  "Draft",
+  "Save draft",
+  "Saving",
+  "Open live page",
+  "Open preview in new tab",
+  "Clear canvas",
+  "Dark mode",
+  "Data Binding",
 ];
 
 describe("Editor i18n (Faza 0.3)", () => {

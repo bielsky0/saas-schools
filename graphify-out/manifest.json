@@ -6350,8 +6350,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/en.json": {
-    "mtime": 1785581881.8973303,
-    "ast_hash": "4d6b8aadaf3587ba6df74864a6fc7764",
+    "mtime": 1785582972.2421963,
+    "ast_hash": "74a89f422aa6a4f7479fc98ef046f39d",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/load.ts": {
@@ -7095,8 +7095,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/chaibuilder-pages.tsx": {
-    "mtime": 1785580371.4324682,
-    "ast_hash": "0fedc22705e16326abd461de5abe4d92",
+    "mtime": 1785582960.6944559,
+    "ast_hash": "2bcbff2089d4328a0a23614e9c07e44c",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/add-new-language-page.tsx": {
@@ -7380,8 +7380,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/topbar-right.tsx": {
-    "mtime": 1785311019.1744707,
-    "ast_hash": "c698f2a8a337941d88abf31bbad08f8f",
+    "mtime": 1785582921.815828,
+    "ast_hash": "f8f87114805e41a898c250b0886f3366",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/ui/chai-command-list.tsx": {
@@ -10570,18 +10570,23 @@
     "semantic_hash": ""
   },
   "docs/editor-spec-implementation-plan.md": {
-    "mtime": 1785581908.3808055,
-    "ast_hash": "c9bf97066dd24b486e80b014940b33c4",
+    "mtime": 1785583544.6935987,
+    "ast_hash": "7e138d90cf6bdb04b4951c94635f56a5",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/i18n.test.ts": {
-    "mtime": 1785581799.116468,
-    "ast_hash": "f60ffc96f9694888b01385c9a0c43330",
+    "mtime": 1785582988.984597,
+    "ast_hash": "27703919f078dde4a3c051c91dccc822",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/pl.json": {
-    "mtime": 1785581767.3588517,
-    "ast_hash": "3b26dbd45de2ca4c46b7d52f73d5ae5b",
+    "mtime": 1785582984.9800224,
+    "ast_hash": "2ba5031893bf1f7e770f377eee3f854f",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/layouts/topbar/builder-top-bar.tsx": {
+    "mtime": 1785583016.181872,
+    "ast_hash": "204898cee11feab7ab0fe14aff73a597",
     "semantic_hash": ""
   }
 }

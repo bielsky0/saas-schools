@@ -45,7 +45,7 @@ const UnpublishedPartialsModal = lazy(
   () => import("~/pages/client/components/save-ui-blocks/unpublished-partials-modal"),
 );
 
-const PreviewButton = () => {
+export const PreviewButton = () => {
   const { t } = useTranslation();
   const { selectedLang, fallbackLang } = useLanguages();
   const getPreviewUrl = usePagesProp("getPreviewUrl", async (_slug: string) => _slug);
@@ -172,7 +172,7 @@ const SaveButton = () => {
   );
 };
 
-const PublishButton = () => {
+export const PublishButton = () => {
   const { t } = useTranslation();
   const { selectedLang } = useLanguages();
   const { data: activePage } = useCurrentActivePage();
@@ -361,7 +361,7 @@ const PublishButton = () => {
   );
 };
 
-const LiveLinkButton = () => {
+export const LiveLinkButton = () => {
   const { t } = useTranslation();
   const { data: currentPage } = usePrimaryPage();
   const fullUrl = useGetPageFullSlug();

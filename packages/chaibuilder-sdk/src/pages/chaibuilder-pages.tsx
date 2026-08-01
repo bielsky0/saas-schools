@@ -6,7 +6,7 @@ import { Loader } from "lucide-react";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { ChaiBuilderEditor } from "~/core/main";
-import { Topbar } from "~/pages/extensions/topbar";
+import { BuilderTopBar } from "~/pages/client/layouts/topbar/builder-top-bar";
 import { useAskAi } from "~/pages/hooks/ai/use-ask-ai";
 import { usePrimaryPage } from "~/pages/hooks/pages/use-current-page";
 import { useExtractPageBlocks } from "~/pages/hooks/pages/use-extract-page-blocks";
@@ -40,7 +40,7 @@ const PreviewWeb = lazy(() => import("./client/components/web-preview"));
 
 registerPagesFeatureFlags();
 loadWebBlocks();
-registerChaiTopBar(Topbar);
+registerChaiTopBar(BuilderTopBar);
 registerChaiPanels();
 registerChaiMediaManager(DigitalAssetManager as any);
 

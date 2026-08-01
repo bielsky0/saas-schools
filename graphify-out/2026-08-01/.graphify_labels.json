@@ -600,7 +600,6 @@
   "598": "@tanstack/eslint-plugin-query",
   "599": "@tanstack/react-query-devtools",
   "600": "ts-node",
-  "601": "typedoc-plugin-markdown",
   "602": "negotiator",
   "603": "@types/react-autosuggest",
   "604": "@typescript-eslint/parser",
@@ -721,13 +720,9 @@
   "719": "tailwind-merge",
   "720": "concurrently",
   "721": "@radix-ui/react-separator",
-  "722": "@tiptap/extension-highlight",
   "723": "@radix-ui/react-use-controllable-state",
   "724": "drizzle-kit",
   "725": "@tiptap/extension-ordered-list",
-  "726": "@types/express",
-  "727": "vitest",
   "728": "@tiptap/extension-text-align",
-  "729": "autoprefixer",
   "730": "pages/components/ui/textarea.tsx"
 }
