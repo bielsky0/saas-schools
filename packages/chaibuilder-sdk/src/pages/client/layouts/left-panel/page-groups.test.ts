@@ -61,6 +61,31 @@ describe("page-groups", () => {
     expect(groups[0]!.id).toBe("pages");
   });
 
+  it("filters out collection-managed page types (items and templates)", () => {
+    const collectionTypes = new Set(["blog_post", "blog_post_template", "course_entry", "course_template"]);
+    const groups = groupPages(
+      [
+        makePage({ id: "home" }),
+        makePage({ id: "post", pageType: "blog_post", name: "Wpis" }),
+        makePage({ id: "tpl", pageType: "blog_post_template", name: "Szablon" }),
+      ],
+      [],
+      collectionTypes,
+    );
+    expect(groups).toHaveLength(1);
+    expect(groups[0]!.id).toBe("pages");
+    expect(groups[0]!.pages.map((p) => p.id)).toEqual(["home"]);
+  });
+
+  it("keeps legacy template pages (MARK_AS_TEMPLATE) even when collections are present", () => {
+    const groups = groupPages(
+      [makePage({ id: "tpl", pageType: "template", name: "Hero" })],
+      [],
+      new Set(["blog_post", "blog_post_template"]),
+    );
+    expect(groups.map((g) => g.id)).toEqual(["templates"]);
+  });
+
   it("isTemplatePage flags template pageType", () => {
     expect(isTemplatePage(makePage({ pageType: "template" }))).toBe(true);
     expect(isTemplatePage(makePage({}))).toBe(false);

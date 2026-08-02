@@ -33,6 +33,7 @@ function toChaiPage(row: typeof page.$inferSelect) {
     lastSaved: row.updatedAt?.toISOString() ?? "",
     dynamic: false,
     online: row.status === "published",
+    status: row.status,
     seo: row.seo ?? {},
     app: row.organizationId,
     primaryPage: null,
@@ -130,6 +131,7 @@ async function buildCollections(tx: TenantDb, organizationId: string) {
     id: c.id,
     name: c.name,
     pageType: c.pageType,
+    templatePageType: c.templatePageType,
     postCount: countByType[c.pageType] ?? 0,
     templates: c.templates.map((t) => ({ id: t.id, name: t.name, layout: t.layout })),
   }));

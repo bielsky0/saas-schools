@@ -75,18 +75,18 @@ export const useCollections = () => useQuery({ queryKey: ["cms-collections"], qu
 
 ## 3. Definition of Done
 
-- [ ] Sekcja „SZABLONY (KOLEKCJE CMS)" renderuje się w Pages tab z danych `GET_COLLECTIONS`.
-- [ ] Kolekcje rozwijają się/zwijają (chevron), stan per kolekcja.
-- [ ] „Wszystkie wpisy (N)" → wywołuje `onOpenPosts` (modal w F3).
-- [ ] „Szablon: X" → wywołuje `onOpenTemplate` (edycja szablonu w F4).
-- [ ] Aktywny szablon ma wskaźnik w drzewie.
-- [ ] Strony w STRONY mają badge statusu (Live/Robocza/Ukryta).
-- [ ] Brak regresji dla istniejących akcji CRUD stron.
+- [x] Sekcja „SZABLONY (KOLEKCJE CMS)" renderuje się w Pages tab z danych `GET_COLLECTIONS`.
+- [x] Kolekcje rozwijają się/zwijają (chevron), stan per kolekcja (atom `expandedCollectionsState`).
+- [x] „Wszystkie wpisy (N)" → wywołuje `onOpenPosts` (modal w F3).
+- [x] „Szablon: X" → wywołuje `onOpenTemplate` (edycja szablonu w F4).
+- [ ] Aktywny szablon ma wskaźnik w drzewie. *(interfejs `activeTemplateId` gotowy; sygnał z `editorMode` w F4)*
+- [x] Strony w STRONY mają badge statusu (Live/Robocza/Ukryta).
+- [x] Brak regresji dla istniejących akcji CRUD stron. *(strony kolekcji odfiltrowane przez `collectionPageTypes`)*
 
 ## 4. Testy
 
 ### Manualne QA
-- [ ] Pusta organizacja (0 kolekcji) → sekcja SZABLONY nie renderuje się lub pokazuje stan pusty.
+- [x] Pusta organizacja (0 kolekcji) → sekcja SZABLONY nie renderuje się.
 - [ ] Kolekcja z 0 wpisów → „Wszystkie wpisy (0)".
 - [ ] Przełączanie zakładki Sekcje↔Strony zachowuje stan rozwinięcia kolekcji.
 - [ ] Search w Pages tab filtruje też wpisy kolekcji.

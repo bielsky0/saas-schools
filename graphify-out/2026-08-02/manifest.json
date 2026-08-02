@@ -8700,8 +8700,8 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/api/route.ts": {
-    "mtime": 1785615653.0543149,
-    "ast_hash": "19d8bbc4adf8ed8816a46aa7eb5bef99",
+    "mtime": 1785669036.8372822,
+    "ast_hash": "8ffcb11cc3a9e23c83b62644039aa119",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/editor.tsx": {
@@ -8985,8 +8985,8 @@
     "semantic_hash": ""
   },
   "src/lib/db/schema/pages.ts": {
-    "mtime": 1785321577.6192625,
-    "ast_hash": "d5a6bef76d0eca31673682353548272a",
+    "mtime": 1785669036.8378012,
+    "ast_hash": "386778a7ea5066ae2627aef5743e2e95",
     "semantic_hash": ""
   },
   "src/lib/page-service.ts": {
@@ -10772,6 +10772,66 @@
   "packages/chaibuilder-sdk/src/pages/client/components/page-lock/page-lock.test.ts": {
     "mtime": 1785665634.5254946,
     "ast_hash": "878fecb179df03f8b556030a9cebccd1",
+    "semantic_hash": ""
+  },
+  "src/lib/cms-collections.test.ts": {
+    "mtime": 1785668990.7926586,
+    "ast_hash": "55b103b701d840249ebd6e51f6144b54",
+    "semantic_hash": ""
+  },
+  "src/lib/cms-collections.ts": {
+    "mtime": 1785668723.1179738,
+    "ast_hash": "5b862748bb15b27f639608dea4fe2620",
+    "semantic_hash": ""
+  },
+  "src/lib/db/migrations/0076_blog_templates.sql": {
+    "mtime": 1785668714.1141899,
+    "ast_hash": "413cf399f5ad76fdcec9b97652e3bc6b",
+    "semantic_hash": ""
+  },
+  "docs/Blog i szablony.dc.html": {
+    "mtime": 1785666518.688811,
+    "ast_hash": "755064cb622712f98b86df565a41233a",
+    "semantic_hash": ""
+  },
+  "docs/blog-templates-cms/00-stan-obecny.md": {
+    "mtime": 1785669061.9738114,
+    "ast_hash": "2771d2cdd5a553a05a1d568539d67ff7",
+    "semantic_hash": ""
+  },
+  "docs/blog-templates-cms/01-backend.md": {
+    "mtime": 1785669079.70924,
+    "ast_hash": "eeeaee1552d47f46d668f6bc9feb0994",
+    "semantic_hash": ""
+  },
+  "docs/blog-templates-cms/02-left-panel.md": {
+    "mtime": 1785667679.4968398,
+    "ast_hash": "e0c5104074350648d7892729621b34f2",
+    "semantic_hash": ""
+  },
+  "docs/blog-templates-cms/03-modal.md": {
+    "mtime": 1785667695.434747,
+    "ast_hash": "08aa808a331841129e58220acb6eec52",
+    "semantic_hash": ""
+  },
+  "docs/blog-templates-cms/04-template-editing.md": {
+    "mtime": 1785667712.1181767,
+    "ast_hash": "838211587f71585a0d0cadad0858c5a2",
+    "semantic_hash": ""
+  },
+  "docs/blog-templates-cms/05-inline-editing.md": {
+    "mtime": 1785667729.4467494,
+    "ast_hash": "81e881cf87ee23bdc29f795e82db65c9",
+    "semantic_hash": ""
+  },
+  "docs/blog-templates-cms/06-integration.md": {
+    "mtime": 1785667745.7779267,
+    "ast_hash": "93abb2f0e50953f0d7b9e4b2a48c45c7",
+    "semantic_hash": ""
+  },
+  "docs/blog-templates-cms/README.md": {
+    "mtime": 1785669054.654619,
+    "ast_hash": "a5a259561e82494920f512a498832977",
     "semantic_hash": ""
   }
 }

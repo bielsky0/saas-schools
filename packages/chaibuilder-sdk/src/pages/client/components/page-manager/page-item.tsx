@@ -1,6 +1,7 @@
 import { find, get, isEmpty } from "lodash-es";
 import { ChevronRight, File, Hash, Lock, MoreHorizontal, Pencil, Plus, StarsIcon } from "lucide-react";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { PageActionsDropdown } from "~/pages/client/components/page-action-dropdown";
 import { usePageToUser } from "~/pages/client/components/page-lock/page-lock-hook";
 import { useUserId } from "~/pages/client/components/page-lock/page-lock-utils";
@@ -61,10 +62,24 @@ const PageIcon = ({ page, pageType }: { page: ChaiPage; pageType: any }) => {
 
 /**
  * PageStatus
- * @param isOnline - Boolean indicating if the page is online (published)
+ * Renders a short status badge: Live (published), Robocza (draft), Ukryta (archived).
+ * @param page - The ChaiPage node to render the status for
  */
-const PageStatus = ({ isOnline }: { isOnline: boolean }) => {
-  return <div className={`h-2 w-2 rounded-full ${isOnline ? "bg-green-300" : "bg-gray-300"}`} />;
+const PageStatus = ({ page }: { page: ChaiPage }) => {
+  const { t } = useTranslation();
+  let label: string;
+  let className: string;
+  if (page.status === "archived") {
+    label = t("Status archived");
+    className = "bg-gray-200 text-gray-600";
+  } else if (page.online) {
+    label = t("Status live");
+    className = "bg-green-100 text-green-700";
+  } else {
+    label = t("Status draft");
+    className = "bg-amber-100 text-amber-700";
+  }
+  return <span className={`shrink-0 rounded-full px-1.5 py-px text-[10px] font-medium ${className}`}>{label}</span>;
 };
 
 /**
@@ -147,7 +162,7 @@ const PageItem = ({
           onClick={() => !page.isPartialGroup && hasLangPage && onClickAction("select", page?.id)}
           className={containerClass}>
           <ExpandCollapse page={page} />
-          {!page.isPartialGroup && <PageStatus isOnline={langPage ? langPage.online : page.online} />}
+          {!page.isPartialGroup && <PageStatus page={page} />}
           {!page.isPartialGroup && <PageIcon page={page} pageType={pageType} />}
 
           <Tooltip content={pageName} side="top" showTooltip={pageName.length > 35}>

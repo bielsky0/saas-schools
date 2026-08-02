@@ -22,8 +22,17 @@ export const isTemplatePage = (page: ChaiPage): boolean => {
  * Templates are modeled as `pageType === "template"` (backend MARK_AS_TEMPLATE).
  * System pages only appear when a matching pageType with `isSystem` exists —
  * until the API sends one the group stays hidden.
+ *
+ * `collectionPageTypes` holds the page types managed by CMS collections
+ * (both the collection item type and its layout template type, e.g.
+ * `blog_post` / `blog_post_template`). Such pages are hidden from the tree —
+ * they are managed through the CMS collections section instead.
  */
-export const groupPages = (pages: ChaiPage[], pageTypes: ChaiPageType[] = []): PageGroup[] => {
+export const groupPages = (
+  pages: ChaiPage[],
+  pageTypes: ChaiPageType[] = [],
+  collectionPageTypes: Set<string> = new Set(),
+): PageGroup[] => {
   const systemKeys = new Set(pageTypes.filter(isSystemPageType).map((pageType) => pageType.key));
 
   const groups: PageGroup[] = [
@@ -33,6 +42,9 @@ export const groupPages = (pages: ChaiPage[], pageTypes: ChaiPageType[] = []): P
   ];
 
   for (const page of pages) {
+    if (collectionPageTypes.has(page.pageType)) {
+      continue;
+    }
     if (systemKeys.has(page.pageType)) {
       groups[2].pages.push(page);
     } else if (isTemplatePage(page)) {

@@ -1,16 +1,16 @@
 # Graph Report - saas-school  (2026-08-02)
 
 ## Corpus Check
-- 2095 files · ~1,161,172 words
+- 2097 files · ~1,162,084 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 10228 nodes · 26489 edges · 734 communities (426 shown, 308 thin omitted)
+- 10238 nodes · 26514 edges · 731 communities (422 shown, 309 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 281 edges (avg confidence: 0.77)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b9cf1385`
+- Built from commit: `7f387173`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -676,14 +676,11 @@
 - tailwind-merge
 - border-radius-input.tsx
 - @radix-ui/react-separator
-- text.tsx
 - @radix-ui/react-use-controllable-state
 - drizzle-kit
 - @tiptap/extension-ordered-list
-- empty-box.tsx
 - calendar-view.tsx
 - @tiptap/extension-text-align
-- @rjsf/validator-ajv8
 - canvas-confetti
 - @payloadcms/next
 
@@ -717,19 +714,19 @@
 - 3-file cycle: `packages/chaibuilder-sdk/src/core/components/chaibuilder-editor.tsx -> packages/chaibuilder-sdk/src/core/components/layout/root-layout.tsx -> packages/chaibuilder-sdk/src/core/components/index.ts -> packages/chaibuilder-sdk/src/core/components/chaibuilder-editor.tsx`
 - 3-file cycle: `packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/block-more-options.tsx -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/list-tree.tsx -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/block-more-options.tsx`
 - 3-file cycle: `packages/chaibuilder-sdk/src/atoms/builder.ts -> packages/chaibuilder-sdk/src/hooks/async-props/use-async-props.ts -> packages/chaibuilder-sdk/src/hooks/use-builder-prop.ts -> packages/chaibuilder-sdk/src/atoms/builder.ts`
-- 4-file cycle: `packages/chaibuilder-sdk/src/core/components/chaibuilder-editor.tsx -> packages/chaibuilder-sdk/src/hooks/use-key-event-watcher.ts -> packages/chaibuilder-sdk/src/hooks/use-remove-blocks.ts -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/chaibuilder-editor.tsx`
-- 4-file cycle: `packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/block-more-options.tsx -> packages/chaibuilder-sdk/src/hooks/use-remove-blocks.ts -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/list-tree.tsx -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/block-more-options.tsx`
-- 4-file cycle: `packages/chaibuilder-sdk/src/core/components/canvas/block-floating-actions.tsx -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/canvas/canvas-area.tsx -> packages/chaibuilder-sdk/src/core/components/canvas/static/static-canvas.tsx -> packages/chaibuilder-sdk/src/core/components/canvas/block-floating-actions.tsx`
-- 4-file cycle: `packages/chaibuilder-sdk/src/core/components/canvas/canvas-area.tsx -> packages/chaibuilder-sdk/src/core/components/canvas/static/static-canvas.tsx -> packages/chaibuilder-sdk/src/core/components/canvas/static/add-block-at-bottom.tsx -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/canvas/canvas-area.tsx`
-- 4-file cycle: `packages/chaibuilder-sdk/src/core/components/chaibuilder-editor.tsx -> packages/chaibuilder-sdk/src/core/components/layout/root-layout.tsx -> packages/chaibuilder-sdk/src/core/components/settings/settings-panel.tsx -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/chaibuilder-editor.tsx`
 - 4-file cycle: `packages/chaibuilder-sdk/src/core/components/chai-select.tsx -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/add-blocks/libraries-panel.tsx -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/add-blocks/libraries-select.tsx -> packages/chaibuilder-sdk/src/core/components/chai-select.tsx`
+- 4-file cycle: `packages/chaibuilder-sdk/src/core/components/chaibuilder-editor.tsx -> packages/chaibuilder-sdk/src/core/components/layout/root-layout.tsx -> packages/chaibuilder-sdk/src/core/components/settings/settings-panel.tsx -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/chaibuilder-editor.tsx`
+- 4-file cycle: `packages/chaibuilder-sdk/src/core/components/chaibuilder-editor.tsx -> packages/chaibuilder-sdk/src/hooks/use-key-event-watcher.ts -> packages/chaibuilder-sdk/src/hooks/use-remove-blocks.ts -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/chaibuilder-editor.tsx`
+- 4-file cycle: `packages/chaibuilder-sdk/src/core/components/canvas/canvas-area.tsx -> packages/chaibuilder-sdk/src/core/components/canvas/static/static-canvas.tsx -> packages/chaibuilder-sdk/src/core/components/canvas/static/add-block-at-bottom.tsx -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/canvas/canvas-area.tsx`
+- 4-file cycle: `packages/chaibuilder-sdk/src/core/components/canvas/block-floating-actions.tsx -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/canvas/canvas-area.tsx -> packages/chaibuilder-sdk/src/core/components/canvas/static/static-canvas.tsx -> packages/chaibuilder-sdk/src/core/components/canvas/block-floating-actions.tsx`
+- 4-file cycle: `packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/block-more-options.tsx -> packages/chaibuilder-sdk/src/hooks/use-remove-blocks.ts -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/list-tree.tsx -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/block-more-options.tsx`
 - 4-file cycle: `packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/block-more-options.tsx -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/list-tree.tsx -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/node.tsx -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/block-more-options.tsx`
 - 4-file cycle: `packages/chaibuilder-sdk/src/hooks/history/use-blocks-store-undoable-actions.ts -> packages/chaibuilder-sdk/src/hooks/history/use-undo-manager.ts -> packages/chaibuilder-sdk/src/hooks/use-save-page.ts -> packages/chaibuilder-sdk/src/hooks/use-get-page-data.ts -> packages/chaibuilder-sdk/src/hooks/history/use-blocks-store-undoable-actions.ts`
 - 4-file cycle: `packages/chaibuilder-sdk/src/runtime/font-helpers.ts -> packages/chaibuilder-sdk/src/runtime/index.ts -> packages/chaibuilder-sdk/src/runtime/v2/runtime/index.tsx -> packages/chaibuilder-sdk/src/runtime/fonts.ts -> packages/chaibuilder-sdk/src/runtime/font-helpers.ts`
+- 5-file cycle: `packages/chaibuilder-sdk/src/core/components/chai-select.tsx -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/add-blocks/add-blocks.tsx -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/add-blocks/libraries-panel.tsx -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/add-blocks/libraries-select.tsx -> packages/chaibuilder-sdk/src/core/components/chai-select.tsx`
+- 5-file cycle: `packages/chaibuilder-sdk/src/core/components/canvas/add-block-placements.tsx -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/canvas/canvas-area.tsx -> packages/chaibuilder-sdk/src/core/components/canvas/static/static-canvas.tsx -> packages/chaibuilder-sdk/src/core/components/canvas/block-floating-actions.tsx -> packages/chaibuilder-sdk/src/core/components/canvas/add-block-placements.tsx`
 - 5-file cycle: `packages/chaibuilder-sdk/src/core/components/canvas/block-floating-actions.tsx -> packages/chaibuilder-sdk/src/hooks/use-remove-blocks.ts -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/canvas/canvas-area.tsx -> packages/chaibuilder-sdk/src/core/components/canvas/static/static-canvas.tsx -> packages/chaibuilder-sdk/src/core/components/canvas/block-floating-actions.tsx`
 - 5-file cycle: `packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/block-more-options.tsx -> packages/chaibuilder-sdk/src/hooks/use-remove-blocks.ts -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/list-tree.tsx -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/node.tsx -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/block-more-options.tsx`
-- 5-file cycle: `packages/chaibuilder-sdk/src/core/components/canvas/add-block-placements.tsx -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/canvas/canvas-area.tsx -> packages/chaibuilder-sdk/src/core/components/canvas/static/static-canvas.tsx -> packages/chaibuilder-sdk/src/core/components/canvas/block-floating-actions.tsx -> packages/chaibuilder-sdk/src/core/components/canvas/add-block-placements.tsx`
-- 5-file cycle: `packages/chaibuilder-sdk/src/core/components/chai-select.tsx -> packages/chaibuilder-sdk/src/core/main/index.ts -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/add-blocks/add-blocks.tsx -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/add-blocks/libraries-panel.tsx -> packages/chaibuilder-sdk/src/core/components/sidepanels/panels/add-blocks/libraries-select.tsx -> packages/chaibuilder-sdk/src/core/components/chai-select.tsx`
 - 5-file cycle: `packages/chaibuilder-sdk/src/atoms/builder.ts -> packages/chaibuilder-sdk/src/hooks/async-props/use-async-props.ts -> packages/chaibuilder-sdk/src/hooks/use-update-blocks-props.ts -> packages/chaibuilder-sdk/src/hooks/use-languages.ts -> packages/chaibuilder-sdk/src/hooks/use-builder-prop.ts -> packages/chaibuilder-sdk/src/atoms/builder.ts`
 - 5-file cycle: `packages/chaibuilder-sdk/src/hooks/history/use-blocks-store-undoable-actions.ts -> packages/chaibuilder-sdk/src/hooks/history/use-undo-manager.ts -> packages/chaibuilder-sdk/src/hooks/use-save-page.ts -> packages/chaibuilder-sdk/src/hooks/partial-blocks/index.ts -> packages/chaibuilder-sdk/src/hooks/partial-blocks/use-watch-partial-blocks.ts -> packages/chaibuilder-sdk/src/hooks/history/use-blocks-store-undoable-actions.ts`
 
@@ -742,35 +739,35 @@
 - **Cosmetic UI gate vs mandatory backend enforcement pattern** — docs_boilerplate_spec_04_egzekwowanie_uprawnien, docs_boilerplate_spec_05_plan_based_rendering, docs_architecture_reference_patterns_c_feature_flag_pattern [INFERRED 0.85]
 - **Wspólny wzorzec adaptera nad zewnętrznym dostawcą (storage/S3-compatible) egzekwowany przez środowisko offline i backup** — docs_boilerplate_spec_21_storage_abstraction_layer, docs_boilerplate_spec_25_srodowisko_developerskie_offline_minio, docs_boilerplate_spec_27_backup_i_przywracanie_danych_per_organizacja_szyfrowanie [EXTRACTED 0.95]
 
-## Communities (734 total, 308 thin omitted)
+## Communities (731 total, 309 thin omitted)
 
 ### Community 0 - "Email Adapter & RFC Standards"
 Cohesion: 0.02
-Nodes (97): AdminLayout(), GradesSection(), RosterSection(), SessionData, NAV, EmptyState(), LocaleSwitcher(), isActive() (+89 more)
+Nodes (116): PlanLimitsCard(), ClientOption, GradesSection(), RosterSection(), SessionData, Breadcrumbs(), segmentLabels, DialogContent() (+108 more)
 
 ### Community 1 - "Email Unsubscribe & Categories"
 Cohesion: 0.10
-Nodes (40): RFC-2369, POST(), RFC-8058, CATEGORY_LABEL, generateMetadata(), RFC-8058, UnsubscribePage(), INVALID (+32 more)
+Nodes (39): RFC-2369, POST(), RFC-8058, CATEGORY_LABEL, generateMetadata(), RFC-8058, UnsubscribePage(), INVALID (+31 more)
 
 ### Community 2 - "Admin Auth & OAuth RFCs"
-Cohesion: 0.06
-Nodes (57): POST(), ToolName, POST(), baseHandler, handler, GET(), NotificationSettingsPage(), actorStore (+49 more)
+Cohesion: 0.05
+Nodes (41): NAV, LocaleSwitcher(), isActive(), NavLink(), NavLinkDef, NavSectionDef, sections, Sidebar() (+33 more)
 
 ### Community 3 - "Admin Panel Pages"
 Cohesion: 0.29
 Nodes (8): CreateHomeworkInput, createHomeworkSchema, HomeworkCompletionInput, homeworkCompletionSchema, LessonTopicInput, lessonTopicSchema, UpdateHomeworkInput, updateHomeworkSchema
 
 ### Community 4 - "Login & Password Reset Forms"
-Cohesion: 0.06
-Nodes (59): AcademyDirectory(), DashboardPage(), PersonalDashboard(), AppLayout(), OrgsLayout(), NewOrganizationPage(), AcceptInvitationPage(), hashToken() (+51 more)
+Cohesion: 0.04
+Nodes (102): GET(), POST(), ToolName, POST(), Body, EXCLUDED_TABLES, ownerColumns(), OwnerRef (+94 more)
 
 ### Community 5 - "Group/Location Admin Pages"
-Cohesion: 0.04
-Nodes (93): pageBlocksAtomsAtom, useDirectBlockDrag(), adjustSpacingInContentBlocks(), AsyncPropsWrapperProps, MayBeAsyncPropsWrapper(), getThemeFontsCSSImport(), getThemeFontsLinkMarkup(), ErrorFallback() (+85 more)
+Cohesion: 0.06
+Nodes (54): adjustSpacingInContentBlocks(), AsyncPropsWrapperProps, MayBeAsyncPropsWrapper(), ErrorFallback(), applyLanguage(), applyLimit(), getBlockRuntimeProps, getBlockTagAttributes() (+46 more)
 
 ### Community 6 - "Org Actions & Audit Recording"
-Cohesion: 0.23
-Nodes (16): RFC-5322, TemplateProps, ClientOtp(), clientOtpSubject(), TemplateDef, Invitation(), Button(), EmailLayout() (+8 more)
+Cohesion: 0.22
+Nodes (17): RFC-5322, TemplateProps, ClientOtp(), clientOtpSubject(), Invitation(), Button(), EmailLayout(), EmailTranslator (+9 more)
 
 ### Community 7 - "E2E Admin/Invite Helpers"
 Cohesion: 0.08
@@ -781,76 +778,76 @@ Cohesion: 0.05
 Nodes (26): Faza 0 — Fundament domeny: dokumenty + rdzeń modelu danych + infrastruktura RLS, Raport z realizacji Fazy 0 (2026-07-19) — referencja względem DoD, Faza 10 — ⚠️ Stripe Connect per organizacja (EPIK 30; Zasada #7), Faza 13 — Portfel klienta UI (§7.12), Faza 14 — ⚠️ Notification Center domenowy (EPIK 26; odejście #1), Faza 15 — Zmiana Grupy (swap) + przeniesienie kredytu między dziećmi, Faza 16 — Zwroty fiducjarne (EPIK 18), Kluczowe decyzje projektowe (+18 more)
 
 ### Community 9 - "Root Layout & Metadata"
-Cohesion: 0.04
-Nodes (79): Alert, AlertDescription, AlertTitle, alertVariants, Button, ButtonProps, DialogContent, DialogDescription (+71 more)
+Cohesion: 0.03
+Nodes (116): Alert, AlertDescription, AlertTitle, alertVariants, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription (+108 more)
 
 ### Community 10 - "Audit Trail Types"
-Cohesion: 0.05
-Nodes (48): POST(), submitSchema, adapterFor(), bodySchema, POST(), OTP_ISSUE_EMAIL_RULE, OTP_ISSUE_IP_RULE, OTP_VERIFY_EMAIL_RULE (+40 more)
+Cohesion: 0.08
+Nodes (29): adapterFor(), bodySchema, POST(), OTP_ISSUE_EMAIL_RULE, OTP_ISSUE_IP_RULE, OTP_VERIFY_EMAIL_RULE, OTP_VERIFY_IP_RULE, PASSWORD_LOGIN_EMAIL_RULE (+21 more)
 
 ### Community 11 - "E2E Billing/Stripe Fixtures"
 Cohesion: 0.08
 Nodes (23): seedAcademy(), uniqueSlug(), getLanglionState(), getVerificationLink(), loginToAcademy(), registerAndVerify(), wallClockIn(), loginAndLand() (+15 more)
 
 ### Community 12 - "Notification Preferences Actions"
-Cohesion: 0.08
-Nodes (42): Body, PaymentStatus, checkFeatureServer(), checkLimitServer(), checkLimit(), enqueueApproachingNotification(), enqueueLimitReachedNotification(), getEffectiveLimit() (+34 more)
+Cohesion: 0.06
+Nodes (60): Body, PaymentStatus, log, refundInitiateSchema, formatSessionDate(), log, sessionReminderHandler(), countGroupChangeRequests() (+52 more)
 
 ### Community 13 - "Dashboard & Billing Owner Resolution"
 Cohesion: 0.05
-Nodes (70): useLanguages(), addNewLangAtom, AddNewLangState, AddNewLanguagePage(), ChangeSlug(), countAllChildren(), DeletePage(), DynamicPageSelector() (+62 more)
+Nodes (74): addNewLangAtom, AddNewLangState, ChangeSlug(), DynamicPageSelector(), DeletePage, LangPanel(), UnpublishPage, NoLanguagePageContent() (+66 more)
 
 ### Community 14 - "Blog/Docs/Changelog Slugs"
-Cohesion: 0.10
-Nodes (26): BlogSlug, ChangelogSlug, CATEGORY_IDS, DOC_CATEGORIES, DocSlug, Author, AUTHOR_IDS, AuthorId (+18 more)
+Cohesion: 0.11
+Nodes (24): BlogSlug, ChangelogSlug, CATEGORY_IDS, DOC_CATEGORIES, DocSlug, Author, AUTHOR_IDS, AuthorId (+16 more)
 
 ### Community 15 - "Billing Event Types"
-Cohesion: 0.05
-Nodes (54): Body, POST(), Body, POST(), Body, POST(), Body, POST() (+46 more)
+Cohesion: 0.06
+Nodes (48): Body, POST(), ConnectPanelProps, BillingAdapter, BillingEvent, BillingEventBase, BillingEventType, BillingOperationErrorCode (+40 more)
 
 ### Community 16 - "UI Primitive Components"
 Cohesion: 0.03
-Nodes (80): ClientOverrideManager(), GrantForm(), GroupTypeOption, Labels, OverrideRow, ClientOption, ExtraFeeForm(), STATUS_COLORS (+72 more)
+Nodes (82): ClientOverrideManager(), GrantForm(), GroupTypeOption, Labels, OverrideRow, ExtraFeeForm(), ImportForm(), initial (+74 more)
 
 ### Community 17 - "TS Config & Node Modules"
 Cohesion: 0.06
 Nodes (31): packages, compilerOptions, allowJs, esModuleInterop, incremental, isolatedModules, jsx, lib (+23 more)
 
 ### Community 18 - "Client OTP Rules"
-Cohesion: 0.06
-Nodes (56): POST(), POST(), POST(), setPasswordSchema, POST(), POST(), POST(), Body (+48 more)
+Cohesion: 0.10
+Nodes (29): POST(), POST(), consumeOtp(), insertOtp(), markClientVerified(), registerFailedAttempt(), supersedeLiveOtps(), generateCode() (+21 more)
 
 ### Community 19 - "Credit Grant Admin Tools"
-Cohesion: 0.11
-Nodes (30): log, Member, POST(), toDnsLabel(), buildCollections(), defaultWebsiteSettings, emptyListActions, getPageById() (+22 more)
+Cohesion: 0.12
+Nodes (27): buildCollections(), defaultWebsiteSettings, emptyListActions, getPageById(), listPages(), pageTypes, POST(), toChaiPage() (+19 more)
 
 ### Community 20 - "Rate Limit Adapter Core"
-Cohesion: 0.10
-Nodes (37): CmsPage(), CmsPageProps, generateMetadata(), getOrg(), parseSlug(), BlogPostPage(), generateMetadata(), PageProps (+29 more)
+Cohesion: 0.13
+Nodes (29): CmsPage(), CmsPageProps, generateMetadata(), getOrg(), parseSlug(), BlogPostPage(), generateMetadata(), generateStaticParams() (+21 more)
 
 ### Community 21 - "Billing Notification Handlers"
-Cohesion: 0.03
-Nodes (133): GET(), GET(), GET(), GET(), GET(), Body, POST(), Body (+125 more)
+Cohesion: 0.27
+Nodes (8): POST(), getClientAcceptanceHistoryAction(), uploadNewPolicyVersionAction(), createPolicyDocument(), deactivatePolicyDocument(), getPolicyDocument(), listPolicyAcceptances(), createPolicyDocumentSchema
 
 ### Community 22 - "Client OTP Session Flow"
 Cohesion: 0.12
 Nodes (42): seedPendingBooking(), seedConnectOrg(), uniqueId(), seedBillingOrg(), BILLING_TABLES, BOILERPLATE_TABLES, EXCLUDED_TABLES, seedOrg() (+34 more)
 
 ### Community 23 - "Group Type & Recurrence Actions"
-Cohesion: 0.08
-Nodes (34): AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter(), AlertDialogHeader(), AlertDialogOverlay, AlertDialogTitle (+26 more)
+Cohesion: 0.03
+Nodes (101): POST(), POST(), POST(), setPasswordSchema, GET(), POST(), GET(), POST() (+93 more)
 
 ### Community 24 - "MCP Agent Tooling"
 Cohesion: 0.06
 Nodes (30): 2a. Lista rodziców/klientów (`/dashboard/clients/`), 2b. Opłaty dodatkowe — CRUD (`/dashboard/extra-fees/`), 2c. Karty kwalifikacyjne — rozbudowa (`/dashboard/qualification-cards/`), 2d. Dashboard home — karty statystyk, Backend (już istnieje), Backend (już istnieje), Backend (już istnieje), Backend (już istnieje) (+22 more)
 
 ### Community 25 - "Booking Creation Logic"
-Cohesion: 0.03
-Nodes (123): GET(), GET(), POST(), Body, POST(), reasonFor(), QualificationCardPage(), SiteLayout() (+115 more)
+Cohesion: 0.05
+Nodes (85): Body, POST(), reasonFor(), Body, CMS_TABLES, POST(), Body, GET() (+77 more)
 
 ### Community 26 - "Marketing Pages (Blog/Docs/Home)"
-Cohesion: 0.04
-Nodes (96): Body, GET(), POST(), POST(), AuditEntry, changed(), FieldChange, recordAudit() (+88 more)
+Cohesion: 0.02
+Nodes (197): GET(), GET(), GET(), GET(), GET(), GET(), GET(), ClientsPage() (+189 more)
 
 ### Community 27 - "E2E Job/Email Test Helpers"
 Cohesion: 0.07
@@ -858,11 +855,11 @@ Nodes (27): DatabaseSchema, enum_pages_status, enum__pages_v_version_status, Gen
 
 ### Community 28 - "Billing Panel Pages"
 Cohesion: 0.06
-Nodes (81): BuilderWithAccessCheck(), ChaiBuilderInner(), ChaiBuilderInnerProps, ChaiWebsiteBuilder(), DEFAULT_ROLES_AND_PERMISSIONS, DefaultChaiBuilder(), DigitalAssetManager, NoLanguagePageDialog (+73 more)
+Nodes (70): libraryBlocksAtom, useQuerySync(), PublishPages(), PublishPagesModalContent, AddSharedJsonLDDialogContent(), EditSharedJsonLDDialogContent(), SharedJsonLD(), UnmarkAsTemplate() (+62 more)
 
 ### Community 29 - "Public Page Routing"
-Cohesion: 0.11
-Nodes (29): robots(), localeFromPathname(), stripLocale(), disallowedPages(), Indexable, isMetadataImageRoute(), isPublicPage(), PublicPagePath (+21 more)
+Cohesion: 0.09
+Nodes (38): localeFromPathname(), stripLocale(), withLocale(), normalizeRequestId(), Indexable, isMetadataImageRoute(), isPublicPage(), PublicPagePath (+30 more)
 
 ### Community 30 - "Invoicing & Feature Gating"
 Cohesion: 0.08
@@ -873,8 +870,8 @@ Cohesion: 0.22
 Nodes (9): Bloki — admin.group + RowLabel, Branding — Root Components, Faza 30e — CMS: branding panelu + Live Preview, i18n, 🔑 Kluczowa decyzja bezpieczeństwa: Next.js Draft Mode, nie `?preview=true`, Live Preview — implementacja, Nowe/zmodyfikowane pliki, Rozstrzygnięcie: `status` vs `versions.drafts` (+1 more)
 
 ### Community 32 - "Trainer Availability Calendar UI"
-Cohesion: 0.06
-Nodes (56): defaultMonthForSlotFirst(), defaultMonthSeed(), EnrollmentPage(), todayMonth(), todayMonthWith(), AvailabilityRow, buildMonthGrid(), daysInMonth() (+48 more)
+Cohesion: 0.08
+Nodes (40): getVisibleSlug(), setHost(), AvailabilityRow, buildMonthGrid(), daysInMonth(), defaultMonth(), realDays(), row() (+32 more)
 
 ### Community 33 - "Booking & Client Queries"
 Cohesion: 0.17
@@ -882,23 +879,23 @@ Nodes (22): clientLogout(), clientSessionOf(), expireCodes(), issueAndReadCode()
 
 ### Community 34 - "Nav & Theme UI"
 Cohesion: 0.03
-Nodes (98): chaiBuilderPropsAtom, chaiExternalDataAtom, chaiPageExternalDataAtom, chaiRjsfFieldsAtom, chaiRjsfTemplatesAtom, chaiRjsfWidgetsAtom, userActionsCountAtom, dataBindingActiveAtom (+90 more)
+Nodes (87): chaiBuilderPropsAtom, chaiExternalDataAtom, chaiPageExternalDataAtom, chaiRjsfFieldsAtom, chaiRjsfTemplatesAtom, chaiRjsfWidgetsAtom, usePageExternalData(), userActionsCountAtom (+79 more)
 
 ### Community 35 - "Auth/Billing Core Tables"
-Cohesion: 0.04
-Nodes (62): ActionError, ChaiActionContext, CheckUserAccessResponse, CreatePageActionData, CreatePageActionResponse, DeleteLibraryItemActionData, DeleteLibraryItemActionResponse, DeletePageRevisionActionData (+54 more)
+Cohesion: 0.05
+Nodes (61): ActionError, ChaiActionContext, CheckUserAccessResponse, CreatePageActionData, CreatePageActionResponse, DeleteLibraryItemActionData, DeleteLibraryItemActionResponse, DeletePageRevisionActionData (+53 more)
 
 ### Community 36 - "Booking Domain Tables"
-Cohesion: 0.17
-Nodes (24): BlogIndexPage(), generateMetadata(), generateStaticParams(), ChangelogPage(), languageAlternates(), sitemap(), DocCategoryId, breadcrumbJsonLd() (+16 more)
+Cohesion: 0.15
+Nodes (13): ChangelogPage(), generateMetadata(), generateMetadata(), generateStaticParams(), PageProps, publishedDoc(), mdxElements, PostCard() (+5 more)
 
 ### Community 37 - "Tenant Isolation Probe Tooling"
 Cohesion: 0.06
 Nodes (30): 7a. Dashboard home — karty per rola, 7b. Harmonogram — widok kalendarza, 7c. Zarobki trenera — caveat o brakujących stawkach, 7d. Mobile responsive QA, 7e. Ogólne poprawki, Admin / Owner, Cel, Checklist per widok (+22 more)
 
 ### Community 38 - "File Ownership Records"
-Cohesion: 0.10
-Nodes (41): FormField(), FormMessage(), finishSignIn(), ForgotPasswordState, FormState, loginBlocked(), requestPasswordResetAction(), resetPasswordAction() (+33 more)
+Cohesion: 0.12
+Nodes (34): finishSignIn(), ForgotPasswordState, FormState, loginBlocked(), requestPasswordResetAction(), resetPasswordAction(), ResetPasswordState, safeCallbackUrl() (+26 more)
 
 ### Community 39 - "Data Model Relation Diagram"
 Cohesion: 0.08
@@ -909,36 +906,36 @@ Cohesion: 0.15
 Nodes (12): Akcje audytowe, Czego NIE dotykamy, Faza 34 — Zajęcia online (link do spotkania), Fazy 33–36 — Listy rezerwowe, Zajęcia online, SMS/Broadcast, Konwersja trial, Model danych, Pliki do modyfikacji, Pliki do utworzenia, Powiadomienie (opcjonalne, niski priorytet w tej fazie) (+4 more)
 
 ### Community 41 - "Blog/Changelog Sitemap Metadata"
-Cohesion: 0.14
-Nodes (23): TopicSection(), createHomeworkAction(), markHomeworkCompletionAction(), saveLessonTopicAction(), updateHomeworkAction(), HomeworkCompletionToggle(), initial, createHomework() (+15 more)
+Cohesion: 0.11
+Nodes (35): MyClassesPage(), SessionRosterPage(), AttendanceControls(), listRosterForSession(), GradeFieldForm(), getGradeForBookingField(), listGradeFieldsForGroupType(), listGradeFieldsForSession() (+27 more)
 
 ### Community 42 - "Group Type Creation Form"
-Cohesion: 0.09
-Nodes (56): Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, ImportHTML(), useQuerySync() (+48 more)
+Cohesion: 0.10
+Nodes (51): Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle, BlurContainer(), ActiveInAntherTabDialog() (+43 more)
 
 ### Community 43 - "Structured Logger Core"
-Cohesion: 0.04
-Nodes (66): SheetContent, SheetContentProps, SheetDescription, SheetFooter(), SheetOverlay, SheetTitle, sheetVariants, Skeleton() (+58 more)
+Cohesion: 0.08
+Nodes (32): SheetContent, SheetContentProps, SheetDescription, SheetFooter(), SheetHeader(), SheetOverlay, SheetTitle, sheetVariants (+24 more)
 
 ### Community 44 - "Checkout/Portal Input Schemas"
-Cohesion: 0.07
-Nodes (28): RFC-4647, Mailbox, t, CreateAthleteValues, RegisterClientValues, ValidationTranslator, AddProgressNoteValues, CreateGradeFieldValues (+20 more)
+Cohesion: 0.06
+Nodes (27): CreateBookingResult, CreateBookingManyValues, createBookingSchema(), CreateBookingValues, createSlotFirstBookingSchema(), CreateSlotFirstBookingValues, paymentMethod, paymentStatus (+19 more)
 
 ### Community 45 - "Background Job Admin API"
-Cohesion: 0.14
-Nodes (12): BLOCK_CONFIGS, BlockConfigEntry, CORE_BLOCK_TYPES, isCoreBlock(), isRegisteredBlock(), BLOCK_REGISTRY, getAllBlockConfigs(), ALL_BLOCKS (+4 more)
+Cohesion: 0.15
+Nodes (11): BLOCK_CONFIGS, BlockConfigEntry, CORE_BLOCK_TYPES, isCoreBlock(), isRegisteredBlock(), BLOCK_REGISTRY, getAllBlockConfigs(), ALL_BLOCKS (+3 more)
 
 ### Community 46 - "Login Page Metadata"
-Cohesion: 0.09
-Nodes (31): builderActivePageAtom, buildingBlocksAtom, destinationDropIndexAtom, globalBlocksAtom, hasStructureErrorsAtom, hasStructureWarningsAtom, structureErrorCountAtom, structureErrorsAtom (+23 more)
+Cohesion: 0.35
+Nodes (8): convertToBlocksTree(), getBlocksTree(), findNodeById(), flattenTree(), handleNewParentTextBlock(), handleOldParentTextBlock(), moveBlocksWithChildren(), moveNode()
 
 ### Community 47 - "Enrollment Booking Flow"
 Cohesion: 0.03
-Nodes (72): HoverCardContent, AttachmentsContext, LocalAttachmentsContext, PromptInput(), PromptInputActionAddAttachments(), PromptInputActionAddAttachmentsProps, PromptInputActionMenu(), PromptInputActionMenuContent() (+64 more)
+Nodes (69): AttachmentsContext, LocalAttachmentsContext, PromptInputActionAddAttachmentsProps, PromptInputActionMenuContentProps, PromptInputActionMenuItem(), PromptInputActionMenuItemProps, PromptInputActionMenuProps, PromptInputActionMenuTriggerProps (+61 more)
 
 ### Community 48 - "Storage Adapter Types"
-Cohesion: 0.06
-Nodes (35): activeLanguageAtom, activePanelAtom, addBlockModalOpenAtom, aiAssistantActiveAtom, canvasSettingsAtom, codeEditorHeightAtom, codeEditorOpenAtom, draggingFlagAtom (+27 more)
+Cohesion: 0.10
+Nodes (22): applyChaiDataBinding(), generateClassNames(), applyDesignTokens(), addPrefixToClasses(), convertToBlocks(), getMergedPartialBlocks(), removeAssetPrefix(), getBlocksTailwindCSS() (+14 more)
 
 ### Community 49 - "Client Password & OTP Session"
 Cohesion: 0.09
@@ -946,7 +943,7 @@ Nodes (22): DatabaseSchema, enum_pages_status, GeneratedDatabaseSchema, pages, p
 
 ### Community 50 - "Recurrence Form Selects"
 Cohesion: 0.06
-Nodes (41): ImportForm(), initial, ImportPage(), Alert(), AlertDescription(), AlertProps, AlertTitle(), alertVariants (+33 more)
+Nodes (44): Alert(), AlertDescription(), AlertProps, AlertTitle(), alertVariants, FormField(), CreateBookingManyState, CalendarDay (+36 more)
 
 ### Community 51 - "Storage & Onboarding Spec"
 Cohesion: 0.05
@@ -957,8 +954,8 @@ Cohesion: 0.09
 Nodes (21): Faza 0: tożsamość transakcji i połączenia, Faza -1: limit połączeń Supabase, Faza 1: schemat generowany przez Payload, Faza 2: access control Payloada — KLUCZOWA DLA BEZPIECZEŃSTWA ODCZYTÓW, Faza 3: storage, Faza 4: GraphQL API Payloada, Fidelity gap: lokalny Docker Postgres ≠ Supabase, Jawne asercje scope'u set_config i ryzyka (+13 more)
 
 ### Community 53 - "Attendance & Trainer Wages"
-Cohesion: 0.06
-Nodes (45): seed(), Body, CMS_TABLES, POST(), GET(), SYSTEM_ACTOR, log, refundInitiateAction() (+37 more)
+Cohesion: 0.07
+Nodes (35): ExtraFeeTabs(), STATUS_COLORS, STATUS_LABELS, STATUS_COLORS, QualificationCardsTabs(), CalendarLeaveRow, CalendarSessionRow, CalendarView() (+27 more)
 
 ### Community 54 - "RLS & Stripe Connect Decisions"
 Cohesion: 0.10
@@ -969,8 +966,8 @@ Cohesion: 0.10
 Nodes (20): 2.10 RBAC — uprawnienia domenowe, 2.11 Reasygnacja: offboarding trenera, substytucja, Mass Move Bookings, dezaktywacja Definicji, 2.12 Lokalizacje w grafiku, 2.13 Tryby zakupu i rozliczenia per typ grupy, 2.14 Waluta i kwoty pieniężne, 2.15 Nieudana płatność subskrypcyjna, 2.16 Notification Center — dedykowana encja domenowa, 2.17 Faktury i dokumenty sprzedaży — proces ręczny (+12 more)
 
 ### Community 56 - "Client Session Persistence"
-Cohesion: 0.32
-Nodes (5): convertAttributeName(), domToJsx(), formatHtml(), convertHtmlToJsx(), getExportedCoded()
+Cohesion: 0.12
+Nodes (22): HoverCardContent, BreakpointCard(), BreakpointCardProps, BreakpointItemType, Breakpoints(), DesktopIcon(), LaptopIcon(), MobileIcon() (+14 more)
 
 ### Community 57 - "Boilerplate Foundation Overview"
 Cohesion: 0.13
@@ -981,8 +978,8 @@ Cohesion: 0.11
 Nodes (18): Aktywne problemy, `db:migrate` nie zautomatyzowany przy deployu, `drizzle-kit push` niszczy RLS, E2E zależy od publicznego DNS, `FORCE ROW LEVEL SECURITY` + backfille, framer-motion vs motion — konflikt wersji, Known Issues & Technical Risks, Kolizje nazw eksportów w `schema/index.ts` (+10 more)
 
 ### Community 59 - "Consent/Policy Acceptance"
-Cohesion: 0.04
-Nodes (56): MyBookingsPage(), AuditActor, listClientPurchases(), MarkAttendanceInput, CancelBookingInput, cancelChangeRequest(), CancelChangeRequestInput, CANCELLABLE_STATUSES (+48 more)
+Cohesion: 0.21
+Nodes (8): EmptyState(), MyBookingsPage(), RequestInvoiceButton(), listClientPurchases(), CancelMyBookingButton(), listAvailableCredits(), listGradesForClient(), listProgressNotesForClient()
 
 ### Community 60 - "Availability & Interest Signup Engines"
 Cohesion: 0.12
@@ -990,7 +987,7 @@ Nodes (17): Akcje audytowe, Constraint 20 (nowy) — idempotencja zgłoszenia, C
 
 ### Community 61 - "E2E Booking/Location Helpers"
 Cohesion: 0.08
-Nodes (42): AdminAuditPage(), AdminOrganizationsPage(), AdminIndexPage(), AdminPlansPage(), AdminPlansClient(), AdminPlansClientProps, FEATURE_KEYS, FeatureRow() (+34 more)
+Nodes (41): AdminLayout(), AdminIndexPage(), AdminPlansPage(), AdminPlansClient(), AdminPlansClientProps, FEATURE_KEYS, FeatureRow(), formatFeatureKey() (+33 more)
 
 ### Community 62 - "Package Scripts"
 Cohesion: 0.11
@@ -998,7 +995,7 @@ Nodes (18): scripts, build, build:editor-css, build:public-css, db:down, db:gene
 
 ### Community 63 - "Billing Notification Application"
 Cohesion: 0.05
-Nodes (28): getChaiAction(), initChaiBuilderActionHandler(), DeleteAssetAction, DeleteAssetInput, DeleteAssetSchema, GetAssetAction, GetAssetInput, GetAssetSchema (+20 more)
+Nodes (26): getChaiAction(), UpsertLibraryItemAction, DeleteAssetAction, DeleteAssetInput, DeleteAssetSchema, GetAssetAction, GetAssetInput, GetAssetSchema (+18 more)
 
 ### Community 64 - "Dev Dependencies"
 Cohesion: 0.05
@@ -1013,20 +1010,20 @@ Cohesion: 0.08
 Nodes (23): 6a. Ustawienia powiadomień klienta (`/moje-konto/ustawienia` lub `/moje-zajecia/ustawienia`), 6b. Poprawki UI w istniejących widokach klienta, Backend (już istnieje), Cel, Co już istnieje, Czego brakuje, Definition of Done (całość Fazy 6), DoD (+15 more)
 
 ### Community 67 - "Billing Owner Listing Queries"
-Cohesion: 0.12
-Nodes (11): StylesProp(), ButtonProps, Component(), Config, Config, CustomHTMLBlockProps, Config, DividerBlockProps (+3 more)
+Cohesion: 0.09
+Nodes (15): MassMoveBookingsInput, MassMoveBookingsReport, MassMoveDifferentGroupTypeError, MassMoveSessionNotFoundError, MassMoveTargetCancelledError, MassMoveTargetPastError, MassMoveTargetSameAsSourceError, MoveBookingFailure (+7 more)
 
 ### Community 68 - "Org Consent & Impersonation UI"
-Cohesion: 0.22
-Nodes (19): formatReadableName(), hasInitializedPartialBlocksAtom, PartialBlockData, PartialBlocks(), partialBlocksDataAtom, partialBlocksAtom, partialBlocksListAtom, usePartialBlocksList() (+11 more)
+Cohesion: 0.19
+Nodes (20): PartialBlocksRenderer(), formatReadableName(), hasInitializedPartialBlocksAtom, PartialBlockData, PartialBlocks(), partialBlocksDataAtom, partialBlocksAtom, partialBlocksListAtom (+12 more)
 
 ### Community 69 - "Booking Calendar UI State"
-Cohesion: 0.09
-Nodes (17): DeleteOverrideButton(), initial, OrgSettingsPage(), ConfirmDialog(), DeactivateGroupTypeButton(), ActionState, initial, RevokeInviteButton() (+9 more)
+Cohesion: 0.13
+Nodes (10): DeleteOverrideButton(), initial, ConfirmDialog(), DeactivateGroupTypeButton(), initial, RevokeInviteButton(), MassReassignDialog(), TrainerOption (+2 more)
 
 ### Community 70 - "Onboarding Step Handler"
 Cohesion: 0.03
-Nodes (65): cheerio, @commitlint/cli, cors, docsify-cli, eslint-plugin-react-hooks, eslint-plugin-react-refresh, express, express-fileupload (+57 more)
+Nodes (65): cheerio, @commitlint/cli, cors, docsify-cli, @emotion/react, eslint-plugin-react-hooks, eslint-plugin-react-refresh, express (+57 more)
 
 ### Community 71 - "Project Principles & README"
 Cohesion: 0.12
@@ -1041,28 +1038,28 @@ Cohesion: 0.09
 Nodes (22): 3a. Dashboard trenera (`/dashboard/` z rolą trainer), 3b. Moje zajęcia (`/dashboard/my-classes/`), 3c. Wnioski o zmianę grupy — widok trenera (`/dashboard/group-change-requests/`), Backend (już istnieje), Backend (już istnieje), Backend (już istnieje), Cel, DoD (+14 more)
 
 ### Community 74 - "Trainer Reassignment & Notifications"
-Cohesion: 0.08
-Nodes (26): AcademyHome(), CreditsPage(), OrgFilesPage(), GroupChangeRequestsPage(), STATUS_VARIANTS, TrainerDashboard(), TrainersPage(), AcademyLayout() (+18 more)
+Cohesion: 0.18
+Nodes (16): wrapInsideContainer(), closestBlockProp(), getAIBlockProps(), getBlockDefaultProps(), getBlockFormSchemas(), getDefaultBlockProps(), getI18nBlockProps(), registerChaiBlock() (+8 more)
 
 ### Community 75 - "E2E Environment Config"
-Cohesion: 0.11
-Nodes (28): POST(), GET(), countrySchema, POST(), POST(), POST(), OrgBillingPage(), openBillingPortal() (+20 more)
+Cohesion: 0.23
+Nodes (15): POST(), countrySchema, POST(), POST(), POST(), isSupportedCountry(), setOrgCountry(), CheckoutInput (+7 more)
 
 ### Community 76 - "OTP Request/Verify Schemas"
 Cohesion: 0.03
-Nodes (21): ChaiBaseAction, CheckUserAccessAction, DeleteLibraryItemAction, DeletePageRevisionAction, GenerateHtmlFromPromptAction, GenerateSeoFieldAction, GetLibraryGroupsAction, GetLibraryItemAction (+13 more)
+Nodes (22): ChaiBaseAction, CheckUserAccessAction, DeleteLibraryItemAction, DeletePageRevisionAction, fieldRules, GenerateSeoFieldAction, GenerateSeoFieldActionData, GenerateSeoFieldActionResponse (+14 more)
 
 ### Community 77 - "Invitation Acceptance Flow"
-Cohesion: 0.18
-Nodes (18): POST(), GET(), EmailAdapter, Recipient, SendOptions, TemplateData, TemplateName, createEmailAdapter() (+10 more)
+Cohesion: 0.17
+Nodes (19): POST(), GET(), EmailAdapter, Recipient, SendOptions, TemplateData, TemplateName, createEmailAdapter() (+11 more)
 
 ### Community 78 - "client-auth/rate-limit.ts"
 Cohesion: 0.09
 Nodes (22): 1. Model danych, 2. Konfiguracja kolekcji CMS, 3. Nowe akcje API (`src/app/(builder)/editor/api/route.ts`), 4. Definition of Done, 5. Testy, 5a. Postęp i odchyłki (2026-08-02), 6. Pliki, 7. Szacowany nakład (+14 more)
 
 ### Community 79 - "Location Edit Forms"
-Cohesion: 0.04
-Nodes (76): usePageExternalData(), BlockSelectionHighlighter(), getElementByStyleId(), SelectedStylingBlocks(), ResizableCanvasWrapper(), DataBinding(), AdvancedPanel(), BlockSettings() (+68 more)
+Cohesion: 0.05
+Nodes (60): pageBlocksAtomsAtom, saveToLibraryModalAtom, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioItem, DropdownMenuSeparator (+52 more)
 
 ### Community 80 - "Host Parsing Utilities"
 Cohesion: 0.13
@@ -1101,8 +1098,8 @@ Cohesion: 0.17
 Nodes (11): Auth strategy, Izolacja, Kolekcje, Konfiguracja, media, pages, Payload CMS — tylko apex.pl, Routing (+3 more)
 
 ### Community 89 - "storage/schema.ts"
-Cohesion: 0.15
-Nodes (21): addDomainAction(), AddDomainState, removeDomainAction(), RemoveDomainState, verifyDomainAction(), VerifyDomainState, addDomain(), CustomDomainRow (+13 more)
+Cohesion: 0.14
+Nodes (20): GET(), AddDomainState, RemoveDomainState, VerifyDomainState, addDomain(), CustomDomainRow, dummyLookup(), findActiveDomain() (+12 more)
 
 ### Community 90 - "Recurrence Date Calculation"
 Cohesion: 0.08
@@ -1113,16 +1110,16 @@ Cohesion: 0.17
 Nodes (11): A. Schemat + migracja, B. RBAC, C. DAL, D. Akcje, E. UI, F. Audit trail, Faza 20 — Wynagrodzenia trenerów, wyłącznie informacyjne (EPIK 32, v15), G. i18n (+3 more)
 
 ### Community 92 - "V15-17 Entity Overrides"
-Cohesion: 0.05
-Nodes (53): Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, PopoverContent, NestedPathSelectorProps (+45 more)
+Cohesion: 0.07
+Nodes (34): AddNewLanguagePage(), AddNewLanguagePageContentForNoSlugPageProps, AddNewLanguagePageContentProps, AddNewLanguagePageProps, DialogFooterSectionProps, LanguageSelectProps, NameInputProps, SlugSectionProps (+26 more)
 
 ### Community 93 - "Payment & Plan Limit Epics"
-Cohesion: 0.07
-Nodes (56): clickCountAtom, lastClickTimeAtom, canvasIframeAtom, BlockStyleHighlight(), NOTE: this component is not used anymore, but keeping it for now. Might remove i, cleanupDragImage(), createCoreDragImage(), createLibraryDragImage() (+48 more)
+Cohesion: 0.06
+Nodes (58): clickCountAtom, lastClickTimeAtom, Skeleton(), CodeEditor, cleanupDragImage(), createCoreDragImage(), createLibraryDragImage(), createTextDragImage() (+50 more)
 
 ### Community 94 - "Booking Engines & Interest Signup"
 Cohesion: 0.07
-Nodes (34): Badge(), BadgeProps, badgeVariants, TabsContent, TabsList, TabsTrigger, CodeDisplay, ExportCodeModal() (+26 more)
+Nodes (33): previewUrlAtom, BuilderWithAccessCheck(), ChaiBuilderInner(), ChaiBuilderInnerProps, ChaiWebsiteBuilder(), DEFAULT_ROLES_AND_PERMISSIONS, DefaultChaiBuilder(), DigitalAssetManager (+25 more)
 
 ### Community 95 - "RBAC & Consent Epics (v17-18)"
 Cohesion: 0.18
@@ -1165,8 +1162,8 @@ Cohesion: 0.20
 Nodes (9): API, Architektura, Bloki, ChaiBuilder — Website Builder, Fork SDK, Konflikt wersji: framer-motion vs motion, Routing, Stack (+1 more)
 
 ### Community 105 - "Docs Search Index"
-Cohesion: 0.06
-Nodes (48): fetchOrganizationIdsContainingFile(), GET(), DELETE(), GET(), POST(), retentionCutoff(), buildKey(), cmsStorageAdapter() (+40 more)
+Cohesion: 0.18
+Nodes (20): fetchOrganizationIdsContainingFile(), GET(), OrgFilesPage(), buildKey(), cmsStorageAdapter(), ownerFromOrgId(), createFileRecord(), FileOwner (+12 more)
 
 ### Community 106 - "File Upload Presign Schema"
 Cohesion: 0.12
@@ -1197,8 +1194,8 @@ Cohesion: 0.25
 Nodes (8): Checklist testów, Deliverable, Faza 0: tożsamość transakcji i połączenia, Faza -1: limit połączeń Supabase (WYKONAJ PIERWSZE), Faza 1: schemat generowany przez Payload, Faza 2: access control Payloada — KRYTYCZNA (jedyna ochrona odczytów), Faza 30-spike — Weryfikacja architektury Payload CMS + izolacja tenantowa, Faza 3: storage (opcjonalny, tańszy teraz niż później)
 
 ### Community 114 - "Credit & Purchase Mode Entities"
-Cohesion: 0.06
-Nodes (62): AdminOrgDetailPage(), AdminUserDetailPage(), OrgAuditPage(), ActionState, deleteOrganizationAction(), deleteUserAction(), impersonateUserAction(), setSuperAdminAction() (+54 more)
+Cohesion: 0.05
+Nodes (66): AdminAuditPage(), AdminOrgDetailPage(), AdminOrganizationsPage(), AdminUsersPage(), AdminUserDetailPage(), OrgAuditPage(), ActionState, deleteOrganizationAction() (+58 more)
 
 ### Community 115 - "Booking Engine Variants"
 Cohesion: 0.29
@@ -1237,12 +1234,12 @@ Cohesion: 0.20
 Nodes (10): Czego NIE dotykamy, Definicja "konwersji" — do jawnego potwierdzenia, Faza 36 — Licznik konwersji trial → płatny per group_type, Model danych, Pliki do modyfikacji, Pliki do utworzenia, RBAC, Testy jednostkowe (+2 more)
 
 ### Community 125 - "purge.ts"
-Cohesion: 0.09
-Nodes (14): GetLibrariesAction, GetLibrariesActionData, GetLibrariesActionResponse, Library, GetWebsiteDataAction, GetWebsiteDataActionData, GetWebsiteDataActionResponse, NOTE: websitePagesAction fetches only primary pages (lang = "") (+6 more)
+Cohesion: 0.20
+Nodes (9): CreateReadUrlInput, CreateUploadInput, PresignedUpload, StorageAdapter, StorageError, StorageObject, createStorageAdapter(), noneStorageAdapter (+1 more)
 
 ### Community 126 - "CSP Builder"
-Cohesion: 0.05
-Nodes (58): presentBlocksAtom, builderStore, getCurrentBlocks(), ExportCodeModalContent(), ATTRIBUTES_TO_REMOVE, cleanNode(), CORE_BLOCKS, HimalayaNode (+50 more)
+Cohesion: 0.08
+Nodes (34): Conversation(), ConversationContent(), ConversationContentProps, ConversationEmptyState(), ConversationEmptyStateProps, ConversationProps, ConversationScrollButton(), ConversationScrollButtonProps (+26 more)
 
 ### Community 127 - "Background Job Cron Constraints"
 Cohesion: 0.40
@@ -1261,16 +1258,16 @@ Cohesion: 0.40
 Nodes (5): Take money / checkout pattern (customer mapping before session, webhook entitles), Checkout (hosted checkout, webhook is source of truth for activation), Customer Portal (hosted, synced via webhooks), Plany i ceny (plan config, single source of truth), Landing page (hero, features, dynamic pricing, SEO)
 
 ### Community 131 - "Deployment Config Patterns"
-Cohesion: 0.26
-Nodes (15): calculateEdgeZoneSize(), calculateElementZone(), calculatePlaceholderRect(), detectDropZone(), detectGapZone(), detectParentEdgeProximity(), DropZone, findClosestSiblingInRow() (+7 more)
+Cohesion: 0.15
+Nodes (25): calculateEdgeZoneSize(), calculateElementZone(), calculatePlaceholderRect(), detectDropZone(), detectGapZone(), detectParentEdgeProximity(), DropZone, findClosestSiblingInRow() (+17 more)
 
 ### Community 132 - "Force Override Booking Engine"
 Cohesion: 0.17
 Nodes (13): ACTIVE_BOOKING_FILTER, computeTrialConversion(), countAthletesForGroupType(), fetchNonTrialSessionIds(), getTrialConversionReport(), NonTrialBookingRow, SessionGtRow, ANOTHER_TRIAL_GT (+5 more)
 
 ### Community 133 - "Lesson Topics & Homework Phase"
-Cohesion: 0.12
-Nodes (14): generateMetadata(), generateMetadata(), LoginPage(), safeCallbackUrl(), generateMetadata(), generateMetadata(), generateMetadata(), generateMetadata() (+6 more)
+Cohesion: 0.09
+Nodes (29): generateMetadata(), generateMetadata(), LoginPage(), safeCallbackUrl(), BlogIndexPage(), generateMetadata(), generateMetadata(), PageProps (+21 more)
 
 ### Community 134 - "i18n Translation Patterns"
 Cohesion: 1.00
@@ -1293,8 +1290,8 @@ Cohesion: 0.12
 Nodes (15): Cel, Definition of Done, E2E (Playwright), Faza 0: Fundamenty — komponenty shadcn/ui, Gdzie zostaną zainstalowane, Komenda instalacji, Komponenty do doinstalowania (10 sztuk), Komponenty już istniejące w projekcie (nie do instalacji) (+7 more)
 
 ### Community 140 - "Community 140"
-Cohesion: 0.05
-Nodes (39): RFC-7591, RFC-8414, RFC-9728, blockedAdminSurface(), GET(), handler, POST(), Body (+31 more)
+Cohesion: 0.07
+Nodes (27): RFC-7591, RFC-8414, RFC-9728, blockedAdminSurface(), GET(), handler, POST(), GET (+19 more)
 
 ### Community 141 - "search.ts"
 Cohesion: 0.14
@@ -1305,8 +1302,8 @@ Cohesion: 0.11
 Nodes (18): ALLOWED_PROTOCOLS, isAllowedMeetingUrl(), isAllowedUrl(), MEETING_PROTOCOLS, safeHrefSchema(), isPlainObject(), sanitizeLexicalJson(), DATA_LINK_NODE (+10 more)
 
 ### Community 143 - "package-checkout-actions.ts"
-Cohesion: 0.10
-Nodes (24): DocsIndexPage(), generateMetadata(), PageProps, DocPage(), generateMetadata(), generateStaticParams(), PageProps, publishedDoc() (+16 more)
+Cohesion: 0.13
+Nodes (27): DocsIndexPage(), languageAlternates(), sitemap(), DocCategoryId, DocsNav(), DocsSearchForm(), DocsShell(), buildIndex() (+19 more)
 
 ### Community 147 - "Community 147"
 Cohesion: 0.33
@@ -1321,32 +1318,32 @@ Cohesion: 0.33
 Nodes (6): Czego NIE dotykamy, Faza 30d — CMS: bloki custom + SEO + sitemap, Files created (18 new, 3 modified), RBAC, Testy jednostkowe (nowe: 6 plików, 55 testów + istniejące 39 = 94 testów CMS), Zakres (zrealizowany)
 
 ### Community 150 - "Community 150"
-Cohesion: 0.27
-Nodes (10): GET(), buildPreviewUrl(), buildTenantOriginUrl(), buildTenantOrigin(), HostContext, isValidLabel(), LOOPBACK_HOSTS, normalizeHost() (+2 more)
+Cohesion: 0.16
+Nodes (12): usersCollection, betterAuthPayloadStrategy, AuthenticateArgs, callAuth(), makeHeaders(), mockGetSession, mockUpsert, HostContext (+4 more)
 
 ### Community 152 - "boilerplate-rls.spec.ts"
 Cohesion: 0.06
 Nodes (38): ChaiWebsiteBuilder, Editor(), useDevRole(), usePageTypeMap(), useUiLocale(), BookingButtonProps, Component(), Config (+30 more)
 
 ### Community 155 - "change-group-cancel.ts"
-Cohesion: 0.17
-Nodes (19): BlockCard(), ATTRIBUTE_MAP, findBlockById(), getAttrs(), getBlockProps(), getBlocksFromHTML(), getHeightAndWidthFromClass(), getSanitizedHTML() (+11 more)
+Cohesion: 0.22
+Nodes (15): ATTRIBUTE_MAP, findBlockById(), getAttrs(), getBlockProps(), getHeightAndWidthFromClass(), getSanitizedValue(), getStyles(), getSvgDimensions() (+7 more)
 
 ### Community 156 - "reserved-slugs.ts"
-Cohesion: 0.11
-Nodes (12): ActiveCancellationBlocksChangeRequestError, BookingAlreadyCancelledError, BookingNotFoundError, DuplicateChangeRequestError, SessionCancelledError, SessionNotFoundError, SourceSessionCancelledError, submitChangeRequest() (+4 more)
+Cohesion: 0.14
+Nodes (17): PromptInput(), PromptInputActionAddAttachments(), PromptInputActionMenu(), PromptInputActionMenuContent(), PromptInputActionMenuTrigger(), PromptInputAttachment(), PromptInputAttachments(), PromptInputButton() (+9 more)
 
 ### Community 157 - "Community 157"
-Cohesion: 0.09
-Nodes (45): saveToLibraryModalAtom, treeRefAtom, BlockMoreOptions(), DefaultCursor, placeholderStyle, close(), defaultShortcuts, open() (+37 more)
+Cohesion: 0.05
+Nodes (93): presentBlocksAtom, builderStore, getCurrentBlocks(), treeRefAtom, AddBlockDropdown(), BlockFloatingSelector(), useDirectBlockDrag(), KeyboardHandler() (+85 more)
 
 ### Community 158 - "Rozpoznanie istniejącego klienta (§6.1a)"
 Cohesion: 0.27
 Nodes (17): cleanup(), createPgPool(), createTenantTable(), fail(), generateRaport(), main(), note(), pass() (+9 more)
 
 ### Community 159 - "refund-actions.ts"
-Cohesion: 0.19
-Nodes (12): blocksContainerAtom, BrandingOptions, brandingOptionsAtom, useBrandingOptions(), getTailwindConfig(), SettingsWatcher(), BreakpointCardProps, BreakpointItemType (+4 more)
+Cohesion: 0.16
+Nodes (14): BRANDING_OPTIONS_DEFAULTS, MODIFIERS, blocksContainerAtom, BrandingOptions, brandingOptionsAtom, useBrandingOptions(), getTailwindConfig(), SettingsWatcher() (+6 more)
 
 ### Community 160 - "trainers/data.ts"
 Cohesion: 0.18
@@ -1365,44 +1362,40 @@ Cohesion: 0.18
 Nodes (5): getPage(), getPageDraft(), MediaRow, PageRow, ThemeRow
 
 ### Community 166 - "bookings/schema.ts"
-Cohesion: 0.08
-Nodes (13): createRealtimeAdapter(), realtimeChannel, CHANNEL_STATES, ChannelStatus, PresenceState, RealtimeAdapter, RealtimeChannelAdapter, RealtimeEventPayload (+5 more)
-
-### Community 167 - "Community 167"
-Cohesion: 0.11
-Nodes (6): CreatePageAction, DuplicatePageAction, MarkAsTemplateAction, PublishChangesAction, TakeOfflineAction, safeQuery()
+Cohesion: 0.09
+Nodes (11): createRealtimeAdapter(), realtimeChannel, CHANNEL_STATES, ChannelStatus, PresenceState, RealtimeAdapter, RealtimeChannelAdapter, RealtimeEventPayload (+3 more)
 
 ### Community 168 - "recurrence.ts"
-Cohesion: 0.08
-Nodes (28): MessageActionProps, MessageActions(), MessageActionsProps, MessageAttachment(), MessageAttachmentProps, MessageAttachments(), MessageAttachmentsProps, MessageBranch() (+20 more)
+Cohesion: 0.15
+Nodes (11): BlockStyleHighlight(), NOTE: this component is not used anymore, but keeping it for now. Might remove i, MemoizedEditor, RichTextEditor, WithBlockTextEditor, RichTextEditorField(), RichTextEditorFieldComp(), RTEModal (+3 more)
 
 ### Community 169 - "better-auth"
-Cohesion: 0.03
-Nodes (112): POST(), Body, GET(), Body, POST(), autoFillCredits(), AutoFillInput, AutoFillResult (+104 more)
+Cohesion: 0.02
+Nodes (117): AuditActor, AuditEntry, FieldChange, Writer, BookingNotFoundError, ForeignSessionError, MarkAttendanceInput, MarkAttendanceResult (+109 more)
 
 ### Community 170 - "Community 170"
-Cohesion: 0.09
-Nodes (15): DeletePageAction, DeletePageActionData, DeletePageActionResponse, GetRevisionPageAction, GetRevisionPageActionData, GetRevisionPageActionResponse, BlocksWithDesignTokens, GetSiteWideDataAction (+7 more)
+Cohesion: 0.05
+Nodes (29): DeletePageAction, DeletePageActionData, DeletePageActionResponse, GetDraftPageAction, GetDraftPageActionData, GetDraftPageActionResponse, GetLanguagePagesAction, GetLanguagePagesActionData (+21 more)
 
 ### Community 171 - "Community 171"
 Cohesion: 0.06
 Nodes (36): import, require, types, exports, ./actions, ./pages, ./pages/layout, ./render (+28 more)
 
 ### Community 172 - "tenant-host.ts"
-Cohesion: 0.09
-Nodes (26): CollectionListProps, Component(), Config, ServerProps, Sort, PaginationComponent(), PaginationConfig, registerCustomBlocks() (+18 more)
+Cohesion: 0.06
+Nodes (30): AiButton(), CollectionListProps, Component(), Config, ServerProps, Sort, PaginationComponent(), PaginationConfig (+22 more)
 
 ### Community 174 - "tenant-host.ts"
-Cohesion: 0.17
-Nodes (12): ChaiAsyncProp, ChaiClosestBlockProp, ChaiDataProviderArgs, ChaiBlockUiSchema, IconBlock(), addForcedClasses(), Config, ParagraphBlock() (+4 more)
+Cohesion: 0.16
+Nodes (6): AiPanelForDefaultLangProps, cleanHtmlResponse(), CORE_BLOCKS, extractHtmlFromResponse(), Message, AiPanelForOtherLangProps
 
 ### Community 175 - "Community 175"
 Cohesion: 0.06
 Nodes (35): compilerOptions, allowImportingTsExtensions, baseUrl, esModuleInterop, isolatedModules, jsx, lib, module (+27 more)
 
 ### Community 176 - "auth"
-Cohesion: 0.07
-Nodes (28): CommandDialog(), CommandSeparator, CommandShortcut(), ModelSelector(), ModelSelectorContent(), ModelSelectorContentProps, ModelSelectorDialogProps, ModelSelectorEmptyProps (+20 more)
+Cohesion: 0.08
+Nodes (27): CommandDialog(), CommandSeparator, ModelSelector(), ModelSelectorContent(), ModelSelectorContentProps, ModelSelectorDialogProps, ModelSelectorEmptyProps, ModelSelectorGroup() (+19 more)
 
 ### Community 177 - "tenant-host.ts"
 Cohesion: 0.19
@@ -1417,12 +1410,12 @@ Cohesion: 0.06
 Nodes (20): Home(), Code(), ChaiControlDefinition, CheckboxProps, ControlDefinition, ControlProps, InputProps, LinkProps (+12 more)
 
 ### Community 181 - "Community 181"
-Cohesion: 0.05
-Nodes (46): contextMenuAtom, ContextMenuState, ExpandCollapse(), PageLinkContextMenu(), PageLinkContextMenuProps, ExpandCollapse(), LanguageSelector(), LanguageSelectorProps (+38 more)
+Cohesion: 0.07
+Nodes (35): ExpandCollapse(), ExpandCollapse(), LanguageSelector(), LanguageSelectorProps, PageManagerSearchAndFilterProps, PageTypeSelector(), PageTypeSelectorProps, SearchInputProps (+27 more)
 
 ### Community 182 - "reserved-slugs.ts"
 Cohesion: 0.06
-Nodes (31): Clipboard, Hooks Reference, Selection, Styling, Theme, useAddClassesToBlocks, useBlockHighlight, useBuilderProp (+23 more)
+Nodes (33): Block Management, Canvas & Preview, Clipboard, Hooks Reference, Selection, Styling, Theme, useAddBlock (+25 more)
 
 ### Community 183 - "@aws-sdk/client-s3"
 Cohesion: 0.15
@@ -1454,11 +1447,11 @@ Nodes (3): Faza 4.6 — Migracja panelu personelu na hosty tenantów, Raport z r
 
 ### Community 190 - "security/rate-limit.ts"
 Cohesion: 0.04
-Nodes (49): RenderedEmail, BookingCancelled(), bookingCancelledSubject(), BookingConfirmed(), bookingConfirmedSubject(), ClientPasswordChanged(), clientPasswordChangedSubject(), GradeRecorded() (+41 more)
+Nodes (50): RenderedEmail, BookingCancelled(), bookingCancelledSubject(), BookingConfirmed(), bookingConfirmedSubject(), ClientPasswordChanged(), clientPasswordChangedSubject(), GradeRecorded() (+42 more)
 
 ### Community 192 - "trainers/actions.ts"
-Cohesion: 0.15
-Nodes (10): AskAIAction, AskAIActionData, ChaiAIChatHandler, DEFAULT_LANG_SYSTEM_PROMPT, getAskAiSystemPrompt(), getModelMultiplier(), logAiRequest(), logAiRequestError() (+2 more)
+Cohesion: 0.11
+Nodes (16): AskAIAction, AskAIActionData, ChaiAIChatHandler, DEFAULT_LANG_SYSTEM_PROMPT, getAskAiSystemPrompt(), getModelMultiplier(), logAiRequest(), logAiRequestError() (+8 more)
 
 ### Community 218 - "Community 218"
 Cohesion: 0.50
@@ -1470,7 +1463,7 @@ Nodes (7): Fazy 30–32 — Website Builder + Overbooking + Custom Domains, Prio
 
 ### Community 220 - "Community 220"
 Cohesion: 0.10
-Nodes (29): GET(), Body, EXCLUDED_TABLES, ownerColumns(), OwnerRef, POST(), PROBE_TABLES, ProbeTable (+21 more)
+Nodes (33): GET(), ensureBillingCustomer(), openBillingPortal(), returnUrl(), startCheckout(), BillingRecipients, ENTITLING_STATUSES, getActiveSubscriptionForOwner() (+25 more)
 
 ### Community 221 - "Community 221"
 Cohesion: 0.12
@@ -1481,20 +1474,20 @@ Cohesion: 0.15
 Nodes (12): Admin (owner), Graficzny plan faz, Istniejący backend (do użycia od razu), Klient (rodzic), Kluczowe pliki projektu (referencje), Kolejność rekomendowana, Mapowanie wireframe → faza, Nowy backend do zbudowania (+4 more)
 
 ### Community 223 - "Community 223"
-Cohesion: 0.08
-Nodes (35): Config, CustomScript(), CustomScriptBlockProps, Repeater(), RepeaterEmptyState(), RepeaterItem(), Column(), ColumnConfig (+27 more)
+Cohesion: 0.04
+Nodes (113): registerChaiBlockProps(), registerChaiBlockSchema(), StylesProp(), ChaiAsyncProp, ChaiBlockComponentProps, ChaiClosestBlockProp, ChaiDataProviderArgs, ChaiStyles (+105 more)
 
 ### Community 224 - "Community 224"
 Cohesion: 0.25
 Nodes (8): E2E_BILLING_ENV, E2E_HOST_ENV, E2E_RATE_LIMIT_ENV, E2E_STORAGE_ENV, E2E_TENANCY_ENV, ORG_DEPENDENT_SPECS, TENANCY_MODE, TenancyMode
 
 ### Community 238 - "Community 238"
-Cohesion: 0.17
-Nodes (9): submitLeaveRequestAction(), approveLeaveSchema, LeaveRequestNotFoundError, OverlappingLeaveError, PastDateError, rejectLeaveSchema, submitLeaveSchema, SubstituteSameAsTrainerError (+1 more)
+Cohesion: 0.18
+Nodes (8): approveLeaveSchema, LeaveRequestNotFoundError, OverlappingLeaveError, PastDateError, rejectLeaveSchema, submitLeaveSchema, SubstituteSameAsTrainerError, WrongStatusError
 
 ### Community 239 - "Community 239"
-Cohesion: 0.17
-Nodes (6): registerChaiBlockSchema(), ChaiBlockPropsSchema, ChaiBlockRJSFSchemas, Component(), Config, PartialBlockProps
+Cohesion: 0.20
+Nodes (8): getQueries(), darkModeAtom, MQ, TODO: implementation pending, selectedBlockAllClassesAtom, selectedBlockCurrentClassesAtom, selectedBlockAtom, styleStateAtom
 
 ### Community 251 - "Faza 30a — CMS: schemat Payloada + RLS + tenant_block_access"
 Cohesion: 0.12
@@ -1503,6 +1496,10 @@ Nodes (15): 1. Globalny stan `editorMode`, 2. Breadcrumb w topbarze, 3. Statusy 
 ### Community 252 - "wszystko.md"
 Cohesion: 0.11
 Nodes (17): 14.1 E2E (Playwright), 14.2 Jakość kodu, 14. Testy, 16.1 Wymagania, 16. Internacjonalizacja (i18n), 19.1 Wymagania, 19. Deployment, 20. Priorytetyzacja wdrożenia (rekomendacja) (+9 more)
+
+### Community 253 - "block-registry.ts"
+Cohesion: 0.10
+Nodes (3): SlugChangeHandler, PageTreeBuilder, Logger
 
 ### Community 254 - "credit-booking.test.ts"
 Cohesion: 0.18
@@ -1533,8 +1530,8 @@ Cohesion: 0.13
 Nodes (14): 1. Co już działa, 2. Czego brakuje (delta do zbudowania), 3. Ryzyka techniczne, 4. Referencje do kolejnych faz, API buildera, Bloki i biblioteka, Canvas i DND, Cel (+6 more)
 
 ### Community 261 - "Faza 36 — Licznik konwersji trial → płatny per group_type"
-Cohesion: 0.13
-Nodes (12): extractLexicalPreview(), isPlainObject(), RowLabel(), AdminIcon(), AdminLogo(), AdminNav(), PagesEditView(), PagesEditViewRoot() (+4 more)
+Cohesion: 0.29
+Nodes (7): POST(), submitSchema, CONTACT_FORM_EMAIL_RULE, CONTACT_FORM_IP_RULE, clientIp(), ipv6Prefix(), normalize()
 
 ### Community 262 - "18. Pluginy dodatkowe"
 Cohesion: 0.29
@@ -1641,15 +1638,15 @@ Cohesion: 0.44
 Nodes (8): applyRLS(), captured, cleanup(), _cpr, createTables(), HookCapture, main(), withPgPool()
 
 ### Community 298 - "next-intl"
-Cohesion: 0.20
-Nodes (17): getOnboardingUser(), hasPaidSubscription(), OnboardingUser, PAID_STATUSES, log, onboardingStepHandler(), stepPayloadSchema, ONBOARDING_STEPS (+9 more)
+Cohesion: 0.22
+Nodes (15): Mailbox, getOnboardingUser(), hasPaidSubscription(), OnboardingUser, PAID_STATUSES, log, onboardingStepHandler(), stepPayloadSchema (+7 more)
 
 ### Community 299 - "broadcast-actions.ts"
 Cohesion: 0.11
 Nodes (25): aiLogsRelations, appAssetsRelations, appFormSubmissionsRelations, appPagesOnlineRelations, appPagesRelations, appPagesRevisionsRelations, appsRelations, appUsersRelations (+17 more)
 
 ### Community 302 - "csp.ts"
-Cohesion: 0.21
+Cohesion: 0.20
 Nodes (18): BlockStyle(), BREAKPOINTS, canChangeClass(), CLASS_PREFIXES, EditOptionProps, getBreakpoint(), useCurrentClassByProperty(), COLOR_PROP (+10 more)
 
 ### Community 303 - "[...all]/route.ts"
@@ -1669,12 +1666,12 @@ Cohesion: 0.53
 Nodes (5): captured, cleanupPayloadTables(), HookCapture, main(), withPgPool()
 
 ### Community 312 - "client-login-panel.tsx"
-Cohesion: 0.13
-Nodes (20): CLASSES_LIST, BRANDING_OPTIONS_DEFAULTS, MODIFIERS, ClassDerivedObject, constructClassObject(), getModForCls(), getMqForCls(), getPropertyForClass() (+12 more)
+Cohesion: 0.16
+Nodes (18): CLASSES_LIST, ClassDerivedObject, constructClassObject(), getModForCls(), getMqForCls(), getPropertyForClass(), getPureClsName(), memoizedProps (+10 more)
 
 ### Community 313 - "enrollment-fixtures.ts"
-Cohesion: 0.15
-Nodes (12): ChaiStyles, PaginationProps, PaginationWrapper(), RepeaterConfig, RepeaterEmptyStateConfig, RepeaterEmptyStateProps, RepeaterItemConfig, RepeaterItemProps (+4 more)
+Cohesion: 0.27
+Nodes (8): getActiveBuilderTheme(), buildChaiTheme(), DEFAULT_THEME, GOOGLE_FONTS, Props, ThemeInjector(), getTheme(), ThemeRow
 
 ### Community 314 - "@mdx-js/loader"
 Cohesion: 0.14
@@ -1685,8 +1682,8 @@ Cohesion: 0.16
 Nodes (21): AICompleteCallback, AICompletionEvent, AIConfig, AIConfigContext, AIConfigProvider(), AIConfigProviderProps, AIErrorCallback, AIErrorEvent (+13 more)
 
 ### Community 321 - "@formatjs/intl-localematcher"
-Cohesion: 0.12
-Nodes (30): AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter(), AlertDialogHeader(), AlertDialogOverlay, AlertDialogTitle (+22 more)
+Cohesion: 0.24
+Nodes (9): TopLeftCorner(), PreviewButton(), usePagesProp(), useWebsocket(), useAccessToken(), useChaiFetch(), ChangePasswordModal(), createPasswordSchema() (+1 more)
 
 ### Community 324 - "main.tsx"
 Cohesion: 0.18
@@ -1702,7 +1699,7 @@ Nodes (23): @opennextjs/cloudflare, dependencies, @chaibuilder/sdk, date-fns, dr
 
 ### Community 327 - "@radix-ui/react-dropdown-menu"
 Cohesion: 0.09
-Nodes (23): devDependencies, autoprefixer, concurrently, eslint-config-next, postcss, tailwindcss, tsup, @types/lodash (+15 more)
+Nodes (23): devDependencies, autoprefixer, eslint-config-next, postcss, tailwindcss, tsup, @types/lodash, @types/node (+15 more)
 
 ### Community 328 - "package/package.json"
 Cohesion: 0.09
@@ -1713,8 +1710,8 @@ Cohesion: 0.29
 Nodes (7): Czego NIE dotykamy, Faza 30b — CMS: edytor stron + core bloki + renderer, Pliki utworzone, Pliki zmodyfikowane, RBAC, Testy jednostkowe, Zakres
 
 ### Community 330 - "registerChaiBlockProps"
-Cohesion: 0.13
-Nodes (17): registerChaiBlockProps(), BoxProps, Component(), Config, Config, IconBlockProps, EmptySlot(), EmptySlotProps (+9 more)
+Cohesion: 0.20
+Nodes (10): useBuilderProp, useCurrentPage, useHtmlToBlocks, useLanguages, usePermissions, usePubSub, useSavePage, useTranslation (+2 more)
 
 ### Community 331 - "icon.tsx"
 Cohesion: 0.21
@@ -1749,20 +1746,20 @@ Cohesion: 0.11
 Nodes (19): scripts, build, build:editor-css, build:public-css, dev, docs:serve, e2e, e2e:report (+11 more)
 
 ### Community 349 - "locale-switcher.tsx"
-Cohesion: 0.19
-Nodes (12): greetingArgs(), UnsubscribeFooter(), LIST_STYLE, OnboardingFeatures(), onboardingFeaturesSubject(), LIST_STYLE, OnboardingTips(), onboardingTipsSubject() (+4 more)
+Cohesion: 0.22
+Nodes (9): greetingArgs(), LIST_STYLE, OnboardingFeatures(), onboardingFeaturesSubject(), OnboardingTips(), PasswordReset(), VerifyEmail(), Welcome() (+1 more)
 
 ### Community 350 - "css-theme-parser.ts"
-Cohesion: 0.12
-Nodes (25): POST(), CssImportModal(), ColorFormat, colorFormatter(), formatHsl(), formatNumber(), toHex(), convertToPx() (+17 more)
+Cohesion: 0.11
+Nodes (24): POST(), initChaiBuilderActionHandler(), GenerateHtmlFromPromptAction, CssImportModal(), clearPreviousTheme(), setPreviousTheme(), ColorFormat, colorFormatter() (+16 more)
 
 ### Community 351 - "convert-brbitrary-to-tailwind-class.ts"
 Cohesion: 0.17
 Nodes (15): BORDER_WIDTH_PX_TO_TW_CLASS, MAX_WIDTH_TO_TW_CLASS, NUMBER_TO_COL_SPAN, PER_VALUE_TO_TW_CLASS, PX_VALUE_TO_TW_CLASS, REM_VALUE_TO_TW_CLASS, SUPPORTED_UNITS, convertArbitraryToTailwindClass() (+7 more)
 
 ### Community 352 - "billing-panel.tsx"
-Cohesion: 0.11
-Nodes (30): PersonalBillingPage(), CheckoutButton(), openProviderUrl(), PortalButton(), BillingPanel(), BillingOwner, getActiveSubscriptionForOwner(), getSubscriptionByProviderId() (+22 more)
+Cohesion: 0.23
+Nodes (13): checkFeatureServer(), checkLimitServer(), isPlanId(), Plan, PLAN_BY_PRICE_ID, PLAN_IDS, PLAN_LIST, PlanFeature (+5 more)
 
 ### Community 353 - "chaibuilder-sdk/components.json"
 Cohesion: 0.11
@@ -1778,11 +1775,11 @@ Nodes (11): getBlocksStyles(), assignNewIds(), extractPartialBlockIds(), getFull
 
 ### Community 358 - "chaibuilder-sdk/src/components/ui/select.tsx"
 Cohesion: 0.03
-Nodes (113): chaiDesignTokensAtom, SelectContent, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger (+105 more)
+Nodes (124): chaiDesignTokensAtom, lsThemeAtom, Badge(), BadgeProps, badgeVariants, SelectContent, SelectItem, SelectLabel (+116 more)
 
 ### Community 359 - "drag-and-drop-utils.ts"
-Cohesion: 0.06
-Nodes (43): POST(), findBillingCustomer(), applyPaymentEvent(), CustomerOwner, enqueuePaymentNotification(), enqueueSubscriptionNotification(), log, ownerOf() (+35 more)
+Cohesion: 0.02
+Nodes (122): POST(), authorized(), GET(), Body, POST(), Body, POST(), GET() (+114 more)
 
 ### Community 360 - "AI Configuration Context"
 Cohesion: 0.12
@@ -1805,20 +1802,20 @@ Cohesion: 0.12
 Nodes (16): exports, ./runtime, ./styles, ./types, ./web-blocks, import, require, types (+8 more)
 
 ### Community 366 - "StylesProp"
-Cohesion: 0.20
-Nodes (13): assignableRole, createOrgSchema(), CreateOrgValues, currencySchema(), invitableRole, InviteMemberValues, orgAuditListQuerySchema, slugSchema() (+5 more)
+Cohesion: 0.24
+Nodes (7): CollectionTreeGroup(), expandedCollectionsAtom, useExpandedCollections(), CmsCollectionVm, CmsTemplateVm, FilterOptions, SortOptions
 
 ### Community 367 - "section-groups.ts"
-Cohesion: 0.04
-Nodes (88): treeDSBlocks, DropdownMenuContent, DropdownMenuItem, ScrollArea, ScrollBar, SheetHeader(), AddBlockDropdown(), BlockActionProps (+80 more)
+Cohesion: 0.05
+Nodes (68): ScrollArea, ScrollBar, TabsContent, TabsList, TabsTrigger, AIUserPrompt(), BlockActionProps, BlockSelectionHighlighter() (+60 more)
 
 ### Community 370 - "peerDependenciesMeta"
 Cohesion: 0.13
 Nodes (15): optional, optional, optional, peerDependenciesMeta, ai, drizzle-orm, next, postgres (+7 more)
 
 ### Community 371 - "CLASSES_LIST.ts"
-Cohesion: 0.17
-Nodes (8): ReasoningContentProps, ReasoningContext, ReasoningContextValue, ReasoningProps, ReasoningTriggerProps, Shimmer, ShimmerComponent(), TextShimmerProps
+Cohesion: 0.47
+Nodes (8): eta, hasBindings(), isSimplePath(), renderBinding(), resolveBindingPath(), resolveExpressionIndex(), resolveStringBinding(), toEtaTemplate()
 
 ### Community 373 - "Quick Reference"
 Cohesion: 0.13
@@ -1857,12 +1854,12 @@ Cohesion: 0.18
 Nodes (5): ChangePasswordAction, ChaiUser, GetChaiUserAction, GetChaiUserInput, GetChaiUserSchema
 
 ### Community 384 - "runtime/index.ts"
-Cohesion: 0.07
-Nodes (23): authorized(), GET(), GET(), GET(), POST(), log, testConfig, dummyLookup() (+15 more)
+Cohesion: 0.24
+Nodes (7): baseHandler, handler, actorStore, McpActor, runWithMcpActor(), McpOrgAccess, McpOwner
 
 ### Community 385 - "ChaiBlockComponentProps"
-Cohesion: 0.23
-Nodes (7): geistMono, geistSans, generateMetadata(), RootLayout(), ThemeProvider(), JsonLd(), getNonce()
+Cohesion: 0.12
+Nodes (21): RFC-4647, geistMono, geistSans, generateMetadata(), RootLayout(), recipientLocale(), isLocale(), LOCALES (+13 more)
 
 ### Community 386 - "compilerOptions"
 Cohesion: 0.15
@@ -1885,8 +1882,8 @@ Cohesion: 0.17
 Nodes (11): AI Panel Callback Examples, Callback Types, Example 1: Basic Usage with Success/Error/Complete Callbacks, Example 2: Custom Models with Callbacks, Example 3: Unified Event Handler for All AI Events, Example 4: Analytics Tracking, Example 5: State Management with Callbacks, onAIEvent (+3 more)
 
 ### Community 392 - "hidden/table.tsx"
-Cohesion: 0.39
-Nodes (7): BORDER_RADIUS, FONT_SIZES, getClassValueAndUnit(), getMinWidthTwClassValue(), getTwClassValue(), getValueAndUnitForTWClass(), WIDTH_HEIGHT_VALUES
+Cohesion: 0.24
+Nodes (9): AdvanceChoices(), getUserInputValues(), BORDER_RADIUS, FONT_SIZES, getClassValueAndUnit(), getMinWidthTwClassValue(), getTwClassValue(), getValueAndUnitForTWClass() (+1 more)
 
 ### Community 393 - "API Documentation"
 Cohesion: 0.18
@@ -1902,7 +1899,7 @@ Nodes (10): createApp(), defaultTheme, dotenv, EXIT_CODES, { LANGUAGES }, postgr
 
 ### Community 396 - "ChaiAction"
 Cohesion: 0.06
-Nodes (32): GetBuilderPageDataAction, GetBuilderPageDataActionData, GetBuilderPageDataActionResponse, GetDraftPageAction, GetDraftPageActionData, GetDraftPageActionResponse, GetDynamicPagesAction, GetDynamicPagesActionData (+24 more)
+Nodes (36): GetBuilderPageDataAction, GetBuilderPageDataActionData, GetBuilderPageDataActionResponse, GetDynamicPagesAction, GetDynamicPagesActionData, GetDynamicPagesActionResponse, GetLibrariesAction, GetPageTypesAction (+28 more)
 
 ### Community 397 - "html-to-json.ts"
 Cohesion: 0.17
@@ -1929,12 +1926,12 @@ Cohesion: 0.31
 Nodes (9): eta, FORBIDDEN_PATTERNS, getChildKeys(), getTypeLabel(), SuggestionMeta, SuggestionOption, UserDataBinding(), UserDataBindingProps (+1 more)
 
 ### Community 403 - "pages/components/ui/command.tsx"
-Cohesion: 0.20
-Nodes (8): Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator, CommandShortcut()
+Cohesion: 0.36
+Nodes (7): DELETE(), GET(), POST(), storageErrorResponse(), createUpload(), getReadableFile(), removeFile()
 
 ### Community 404 - "pages/components/ui/dropdown-menu.tsx"
-Cohesion: 0.20
-Nodes (9): DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut(), DropdownMenuSubContent (+1 more)
+Cohesion: 0.24
+Nodes (7): NewOrganizationPage(), CreateOrgForm(), CURRENCIES, initialState, NativeSelect(), TIME_ZONES, local()
 
 ### Community 405 - "React Best Practices"
 Cohesion: 0.18
@@ -1977,8 +1974,8 @@ Cohesion: 0.25
 Nodes (7): SelectContent, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger
 
 ### Community 415 - "video.tsx"
-Cohesion: 0.29
-Nodes (6): Config, ControlsProp, getEmbedURL(), SupportedVideoSource(), VideoBlock(), VideoBlockProps
+Cohesion: 0.33
+Nodes (5): Config, ControlsProp, getEmbedURL(), SupportedVideoSource(), VideoBlockProps
 
 ### Community 416 - "5. Re-render Optimization"
 Cohesion: 0.25
@@ -2005,8 +2002,8 @@ Cohesion: 0.29
 Nodes (6): Acknowledgments, Chai Builder - Open Source React Website Builder, ✨ Features, 📦 Packages, 🤝 Support, 🎯 Use Cases
 
 ### Community 424 - "admin/components/ui/card.tsx"
-Cohesion: 0.29
-Nodes (5): BUBBLE_MENU_ICONS, BubbleMenuButton(), BubbleMenuButtonProps, BubbleMenuIconType, BubbleMenuProps
+Cohesion: 0.47
+Nodes (7): getFontStyles(), getThemeCustomFontFaceStyle(), getThemeFontFaceCSS(), getRegisteredFont(), registerChaiFont(), REGISTERED_FONTS, ChaiFont
 
 ### Community 425 - "tenant-payload.ts"
 Cohesion: 0.48
@@ -2029,12 +2026,8 @@ Cohesion: 0.40
 Nodes (5): formatTelephoneLink(), LinkBlock(), LinkConfig, LinkProps, Link()
 
 ### Community 430 - "StructureRuleRegistry"
-Cohesion: 0.20
-Nodes (9): 1. Cel, 2. Utrwalone decyzje, 3. Graficzny plan faz, 4. Mapowanie spec → faza, 5. Szacowany nakład, 6. Kluczowe pliki (referencje), 7. Postęp implementacji, Moduł bloga i szablonów CMS — plan implementacji (+1 more)
-
-### Community 433 - "form/input.tsx"
-Cohesion: 0.47
-Nodes (4): Config, getInputTypeAndAutocomplete(), InputBlock(), InputProps
+Cohesion: 0.18
+Nodes (10): 1. Cel, 2. Utrwalone decyzje, 3. Graficzny plan faz, 4. Mapowanie spec → faza, 5. Szacowany nakład, 6. Kluczowe pliki (referencje), 7. Postęp implementacji, Moduł bloga i szablonów CMS — plan implementacji (+2 more)
 
 ### Community 434 - "README.md — Next.js SaaS Boilerplate"
 Cohesion: 0.50
@@ -2085,16 +2078,16 @@ Cohesion: 0.40
 Nodes (4): Guidelines Source, How It Works, Usage, Web Interface Guidelines
 
 ### Community 448 - "[...all]/route.ts"
-Cohesion: 0.04
-Nodes (49): Checkbox, DropdownMenuShortcut(), Separator, Toggle, toggleVariants, TokenUsageSection(), TokenUsageSectionItem, TokenUsageSectionProps (+41 more)
+Cohesion: 0.03
+Nodes (89): Avatar, AvatarFallback, AvatarImage, Checkbox, Toggle, toggleVariants, BUBBLE_MENU_ICONS, BubbleMenuButton() (+81 more)
 
 ### Community 450 - "nextjs/package.json"
 Cohesion: 0.50
 Nodes (3): name, private, version
 
 ### Community 451 - "onboarding-features.tsx"
-Cohesion: 0.39
-Nodes (5): ConnectPanel(), ConnectPanelProps, NativeSelect(), statusText(), ConnectAccountStatus
+Cohesion: 0.43
+Nodes (6): FileUpload(), ALLOWED_CONTENT_TYPES, confirmInputSchema, PresignInput, presignInputSchema, VISIBILITIES
 
 ### Community 452 - "./actions/supabase"
 Cohesion: 0.50
@@ -2118,7 +2111,7 @@ Nodes (3): Deploy on Vercel, Getting Started, Learn More
 
 ### Community 457 - "./runtime"
 Cohesion: 0.29
-Nodes (7): Block Management, useAddBlock, useBlocksStore, useDuplicateBlocks, useRemoveBlocks, useReplaceBlock, useUpdateBlocksProps
+Nodes (6): BLOCK_1, BLOCK_2, BLOCK_2_1, BLOCK_2_2, BLOCK_2_ALL, BLOCK_3
 
 ### Community 458 - "availability-slots.ts"
 Cohesion: 0.50
@@ -2134,23 +2127,19 @@ Nodes (4): import, require, types, ./actions/supabase
 
 ### Community 463 - "radio.tsx"
 Cohesion: 0.03
-Nodes (85): PendingCard(), getClientByEmail(), getCustomBlockKeys(), getBlockAccess(), getBlockGrants(), grantBlock(), GrantRow, hasBlockGrant() (+77 more)
-
-### Community 474 - "canvas-confetti"
-Cohesion: 0.50
-Nodes (3): Avatar, AvatarFallback, AvatarImage
+Nodes (117): seed(), GET(), POST(), Body, GET(), POST(), GET(), Body (+109 more)
 
 ### Community 475 - "cheerio"
 Cohesion: 0.25
 Nodes (7): LAYOUT_KEYS, MOBILE_KEYS, NEW_UI_KEYS, PAGES_TAB_KEYS, RIGHT_PANEL_KEYS, SECTIONS_TAB_KEYS, THEME_TAB_KEYS
 
 ### Community 476 - "parser.ts"
-Cohesion: 0.22
-Nodes (14): importCsvAction(), importCsv(), ALL_HEADERS, colVal(), CsvImportError, CsvImportReport, CsvRow, CsvRowResult (+6 more)
+Cohesion: 0.21
+Nodes (15): upsertClient(), importCsvAction(), importCsv(), ALL_HEADERS, colVal(), CsvImportError, CsvImportReport, CsvRow (+7 more)
 
 ### Community 480 - "@dnd-kit/utilities"
 Cohesion: 0.05
-Nodes (32): TooltipContent, AdvanceChoices(), RangeOptionsType, BlockSettingsContext, getUserInputValues(), RepeaterBindingWidget(), previewUrlAtom, mockUsePageTypes (+24 more)
+Nodes (51): builderActivePageAtom, buildingBlocksAtom, destinationDropIndexAtom, globalBlocksAtom, hasStructureErrorsAtom, hasStructureWarningsAtom, structureErrorCountAtom, structureErrorsAtom (+43 more)
 
 ### Community 481 - "ai-panel-helper.ts"
 Cohesion: 0.50
@@ -2161,60 +2150,52 @@ Cohesion: 0.53
 Nodes (5): BlogList(), BlogPost, excerpt(), extractText(), formatDate()
 
 ### Community 483 - "express"
-Cohesion: 0.40
-Nodes (5): Canvas & Preview, useCanvasWidth, useCanvasZoom, usePreviewMode, useSelectedBreakpoints
+Cohesion: 0.53
+Nodes (4): currentPageAtom, useCurrentPage(), getBlockBuilderProps, useGetPageData()
 
 ### Community 531 - "@radix-ui/react-alert-dialog"
+Cohesion: 0.40
+Nodes (4): contextMenuAtom, ContextMenuState, PageLinkContextMenu(), PageLinkContextMenuProps
+
+### Community 576 - "admin/components/ui/card.tsx"
+Cohesion: 0.70
+Nodes (3): GET(), buildPreviewUrl(), buildTenantOriginUrl()
+
+### Community 579 - "admin/components/ui/dialog.tsx"
 Cohesion: 0.50
-Nodes (4): ./utils, import, require, types
+Nodes (4): ./web-blocks, import, require, types
 
 ### Community 581 - "CreatePageAction"
 Cohesion: 0.60
 Nodes (4): isPagePublished(), openPublishMenu(), publishButton(), unpublish()
 
-### Community 582 - "@tiptap/extension-text-style"
-Cohesion: 0.50
-Nodes (3): Config, RadioBlock(), RadioProps
-
-### Community 598 - "PromptInputSpeechButton"
-Cohesion: 0.50
-Nodes (3): getVisibleSlug(), setHost(), window()
-
-### Community 601 - "pages/components/ui/button.tsx"
-Cohesion: 0.50
-Nodes (3): Button, ButtonProps, buttonVariants
-
-### Community 715 - "form/textarea.tsx"
-Cohesion: 0.15
-Nodes (10): ChaiBlockComponentProps, Component(), Config, GlobalBlockProps, Config, TextAreaBlock(), TextAreaProps, Config (+2 more)
-
-### Community 726 - "empty-box.tsx"
-Cohesion: 0.50
-Nodes (3): Config, EmptyBox(), EmptyBoxProps
+### Community 594 - "StructureRuleRegistry"
+Cohesion: 0.07
+Nodes (37): CodeEditor(), sanitizeHTML(), QuickPrompts(), BlockSettings(), formDataWithSelectedLang(), JSONForm, JSONFormType, LANGUAGES (+29 more)
 
 ### Community 727 - "calendar-view.tsx"
-Cohesion: 0.06
-Nodes (72): ClientDetailPage(), ExtraFeeActions(), ExtraFeeTabs(), STATUS_TABS, TEACHING_ROLES, LeaveRequestList(), STATUS_COLORS, STATUS_LABELS (+64 more)
+Cohesion: 0.05
+Nodes (84): ClientDetailPage(), CreditsPage(), ExtraFeeActions(), STATUS_TABS, GroupTypeDetailPage(), TEACHING_ROLES, GroupTypesPage(), LocationsPage() (+76 more)
 
 ## Knowledge Gaps
-- **3234 isolated node(s):** `$schema`, `.opencode/plugins/graphify.js`, `semi`, `singleQuote`, `trailingComma` (+3229 more)
+- **3237 isolated node(s):** `$schema`, `.opencode/plugins/graphify.js`, `semi`, `singleQuote`, `trailingComma` (+3232 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **308 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **309 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `withTenant()` connect `Billing Notification Handlers` to `Admin Auth & OAuth RFCs`, `Login & Password Reset Forms`, `Audit Trail Types`, `Notification Preferences Actions`, `Community 140`, `UI Primitive Components`, `Client OTP Rules`, `Credit Grant Admin Tools`, `Rate Limit Adapter Core`, `Booking Creation Logic`, `Marketing Pages (Blog/Docs/Home)`, `Content`, `Trainer Availability Calendar UI`, `Booking Domain Tables`, `better-auth`, `Blog/Changelog Sitemap Metadata`, `Attendance & Trainer Wages`, `Consent/Policy Acceptance`, `Trainer Reassignment & Notifications`, `radio.tsx`, `calendar-view.tsx`, `storage/schema.ts`, `Community 220`, `parser.ts`, `billing-panel.tsx`, `Community 238`?**
-  _High betweenness centrality (0.080) - this node is a cross-community bridge._
-- **Why does `dependencies` connect `pg` to `next`, `concurrently`, `helper-fn.ts`, `clsx`, `date-fns`, `lucide-react`, `nanoid`, `@radix-ui/react-accordion`, `@radix-ui/react-context-menu`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-hover-card`, `@radix-ui/react-icons`, `@radix-ui/react-label`, `react-autosuggest`, `@radix-ui/react-navigation-menu`, `@radix-ui/react-popover`, `@radix-ui/react-scroll-area`, `admin/components/ui/sheet.tsx`, `@radix-ui/react-slot`, `@radix-ui/react-toast`, `@radix-ui/react-toggle`, `@radix-ui/react-tooltip`, `react-arborist`, `tailwindcss`, `admin/components/ui/select.tsx`, `react-diff-view`, `react-dropzone`, `react-error-boundary`, `react-filerobot-image-editor`, `@react-hookz/web`, `react-i18next`, `@rjsf/core`, `@rjsf/utils`, `sonner`, `streamdown`, `tailwind-merge`, `@tailwindcss/forms`, `@tailwindcss/line-clamp`, `@tailwindcss/typography`, `@tanstack/react-query`, `storage/schema.ts`, `@tiptap/extension-bubble-menu`, `@tiptap/extension-link`, `@tiptap/extension-placeholder`, `@tiptap/extension-underline`, `@tiptap/pm`, `@tiptap/react`, `@tiptap/starter-kit`, `tree-model`, `undo-manager`, `use-stick-to-bottom`, `zod`, `react-wrap-balancer`, `@tailwindcss/container-queries`, `@tanstack/react-virtual`, `border-radius-input.tsx`, `@radix-ui/react-separator`, `@radix-ui/react-use-controllable-state`, `@tiptap/extension-ordered-list`, `@tiptap/extension-text-align`, `@rjsf/validator-ajv8`, `canvas-confetti`, `chaibuilder-sdk/package.json`, `culori`, `flagged`, `fuse.js`, `jest-environment-jsdom`, `jotai`, `monaco-editor`, `@monaco-editor/react`, `motion`, `client-override-manager.tsx`, `@chaibuilder/sdk`, `cmdk`, `lucide-react`, `payload`, `@payloadcms/translations`, `@radix-ui/react-dialog`, `@radix-ui/react-popover`, `@radix-ui/react-tooltip`, `remark-gfm`?**
+- **Why does `dependencies` connect `pg` to `next`, `concurrently`, `helper-fn.ts`, `clsx`, `date-fns`, `lucide-react`, `nanoid`, `@radix-ui/react-accordion`, `@radix-ui/react-context-menu`, `@radix-ui/react-dropdown-menu`, `@radix-ui/react-hover-card`, `@radix-ui/react-icons`, `@radix-ui/react-label`, `react-autosuggest`, `@radix-ui/react-navigation-menu`, `@radix-ui/react-popover`, `@radix-ui/react-scroll-area`, `admin/components/ui/sheet.tsx`, `@radix-ui/react-slot`, `@radix-ui/react-toast`, `@radix-ui/react-toggle`, `@radix-ui/react-tooltip`, `react-arborist`, `tailwindcss`, `admin/components/ui/select.tsx`, `react-diff-view`, `react-dropzone`, `react-error-boundary`, `react-filerobot-image-editor`, `@react-hookz/web`, `react-i18next`, `@rjsf/core`, `@rjsf/utils`, `sonner`, `streamdown`, `tailwind-merge`, `@tailwindcss/forms`, `@tailwindcss/line-clamp`, `@tailwindcss/typography`, `@tanstack/react-query`, `storage/schema.ts`, `@tiptap/extension-bubble-menu`, `@tiptap/extension-link`, `@tiptap/extension-placeholder`, `@tiptap/extension-underline`, `@tiptap/pm`, `@tiptap/react`, `@tiptap/starter-kit`, `tree-model`, `undo-manager`, `use-stick-to-bottom`, `zod`, `react-wrap-balancer`, `@tailwindcss/container-queries`, `pages/components/ui/button.tsx`, `@tanstack/react-virtual`, `border-radius-input.tsx`, `@radix-ui/react-separator`, `@radix-ui/react-use-controllable-state`, `@tiptap/extension-ordered-list`, `@tiptap/extension-text-align`, `canvas-confetti`, `chaibuilder-sdk/package.json`, `culori`, `flagged`, `fuse.js`, `jest-environment-jsdom`, `jotai`, `monaco-editor`, `@monaco-editor/react`, `motion`, `client-override-manager.tsx`, `@chaibuilder/sdk`, `cmdk`, `lucide-react`, `payload`, `@payloadcms/translations`, `@radix-ui/react-dialog`, `@radix-ui/react-popover`, `@radix-ui/react-tooltip`, `remark-gfm`?**
   _High betweenness centrality (0.063) - this node is a cross-community bridge._
 - **Why does `moveBlocksWithChildren()` connect `Login Page Metadata` to `Nav & Theme UI`, `tree-model`?**
   _High betweenness centrality (0.062) - this node is a cross-community bridge._
+- **Why does `tree-model` connect `tree-model` to `pg`, `Login Page Metadata`?**
+  _High betweenness centrality (0.062) - this node is a cross-community bridge._
 - **What connects `$schema`, `.opencode/plugins/graphify.js`, `semi` to the rest of the system?**
-  _3234 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _3237 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Email Adapter & RFC Standards` be split into smaller, more focused modules?**
-  _Cohesion score 0.023349880492737635 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.021855345911949684 - nodes in this community are weakly interconnected._
 - **Should `Email Unsubscribe & Categories` be split into smaller, more focused modules?**
-  _Cohesion score 0.09653092006033183 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.0996078431372549 - nodes in this community are weakly interconnected._
 - **Should `Admin Auth & OAuth RFCs` be split into smaller, more focused modules?**
-  _Cohesion score 0.0625694187338023 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.051715309779825906 - nodes in this community are weakly interconnected._

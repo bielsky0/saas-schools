@@ -101,6 +101,11 @@ const PAGES_TAB_KEYS = [
   "Add new page to start",
   "Empty List!",
   "Search pages",
+  "CMS Collections",
+  "All posts",
+  "Status live",
+  "Status draft",
+  "Status archived",
 ];
 
 const RIGHT_PANEL_KEYS = [

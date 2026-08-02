@@ -7,12 +7,14 @@ import { useSelectedBlockIds } from "~/hooks/use-selected-blockIds";
 import { useSelectedStylingBlocks } from "~/hooks/use-selected-styling-blocks";
 import PageManagerSearchAndFilter from "~/pages/client/components/page-manager/page-manager-search-and-filter";
 import RenderPageItems from "~/pages/client/components/page-manager/render-page-items";
+import { useCollections } from "~/pages/hooks/pages/use-collections";
 import { useWebsitePrimaryPages } from "~/pages/hooks/pages/use-project-pages";
 import { usePageTypes } from "~/pages/hooks/project/use-page-types";
 import { useFallbackLang } from "~/pages/hooks/use-fallback-lang";
 import { useSearchParams } from "~/pages/hooks/utils/use-search-params";
 import { navigateToPage } from "~/pages/utils/navigation";
 import { buildPageTree, filterPagesBySearch } from "~/pages/utils/page-organization";
+import CollectionTreeGroup from "./collection-tree-group";
 import { groupPages } from "./page-groups";
 
 const AddNewPage = lazy(() => import("~/pages/client/components/add-new-page"));
@@ -33,6 +35,7 @@ export const PagesTab = () => {
   const { t } = useTranslation();
   const { data, isFetching } = useWebsitePrimaryPages();
   const { data: pageTypes } = usePageTypes();
+  const { data: collectionsData } = useCollections();
   const fallbackLang = useFallbackLang();
   const [queryParams, setQueryParams] = useSearchParams();
   const [, setRightPanel] = useRightPanel();
@@ -61,13 +64,22 @@ export const PagesTab = () => {
     return filtered;
   }, [data, search, selectedPageType]);
 
+  const collectionPageTypes = useMemo(() => {
+    const set = new Set<string>();
+    for (const collection of collectionsData || []) {
+      set.add(collection.pageType);
+      set.add(collection.templatePageType);
+    }
+    return set;
+  }, [collectionsData]);
+
   const groups = useMemo(
     () =>
-      groupPages(pages, pageTypes || []).map((group) => ({
+      groupPages(pages, pageTypes || [], collectionPageTypes).map((group) => ({
         ...group,
         tree: buildPageTree(group.pages),
       })),
-    [pages, pageTypes],
+    [pages, pageTypes, collectionPageTypes],
   );
 
   const changePage = useCallback(
@@ -113,6 +125,16 @@ export const PagesTab = () => {
     [changePage],
   );
 
+  // Faza 3: otwiera modal "Lista wpisów" dla danej kolekcji.
+  const handleOpenPosts = useCallback((collectionId: string) => {
+    console.warn(`[F3] Open posts modal for collection: ${collectionId}`);
+  }, []);
+
+  // Faza 4: przełącza w tryb edycji layoutu szablonu.
+  const handleOpenTemplate = useCallback((templateId: string, collectionId: string) => {
+    console.warn(`[F4] Open template editor for: ${templateId} in collection: ${collectionId}`);
+  }, []);
+
   return (
     <div className="flex h-full flex-col">
       <div className="shrink-0">
@@ -144,21 +166,36 @@ export const PagesTab = () => {
             <span className="font-light">{t("Add new page to start")}</span>
           </div>
         ) : (
-          groups.map((group) => (
-            <div key={group.id}>
-              <GroupHeader label={t(group.labelKey)} count={group.pages.length} />
-              <RenderPageItems
-                tier={0}
-                pages={group.tree}
-                pageTypes={pageTypes}
-                currentPage={currentPage || ""}
-                onClickAction={handleClickAction}
-                languagePages={{}}
-                selectedLanguage={fallbackLang}
-                showUntranslatedPages={false}
-              />
-            </div>
-          ))
+          <>
+            {groups.map((group) => (
+              <div key={group.id}>
+                <GroupHeader label={t(group.labelKey)} count={group.pages.length} />
+                <RenderPageItems
+                  tier={0}
+                  pages={group.tree}
+                  pageTypes={pageTypes}
+                  currentPage={currentPage || ""}
+                  onClickAction={handleClickAction}
+                  languagePages={{}}
+                  selectedLanguage={fallbackLang}
+                  showUntranslatedPages={false}
+                />
+              </div>
+            ))}
+            {collectionsData && !isEmpty(collectionsData) && (
+              <div key="collections">
+                <GroupHeader label={t("CMS Collections")} count={collectionsData.length} />
+                {collectionsData.map((collection) => (
+                  <CollectionTreeGroup
+                    key={collection.id}
+                    collection={collection}
+                    onOpenPosts={handleOpenPosts}
+                    onOpenTemplate={handleOpenTemplate}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
 

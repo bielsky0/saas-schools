@@ -92,7 +92,7 @@ Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewi
 |------|--------|------|--------------------|
 | F0 — Audyt | ✅ | 2026-08-02 | 9 plików zweryfikowanych — stan zgodny z dokumentacją |
 | F1 — Backend | ✅ | 2026-08-02 | **Brak FK** na `templateId` (patrz niżej); szablony-pages tworzone leniwie |
-| F2 — Lewy panel | ⬜ | — | — |
+| F2 — Lewy panel | ✅ | 2026-08-02 | `GET_COLLECTIONS` rozszerzony o `templatePageType`; `toChaiPage` zwraca `status` |
 | F3 — Modal | ⬜ | — | — |
 | F4 — Edycja szablonu | ⬜ | — | — |
 | F5 — Inline editing | ⬜ | — | — |
@@ -106,3 +106,10 @@ Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewi
    - Spójność wymuszamy na warstwie API: walidacja `templateId` przeciw `CMS_COLLECTIONS` w tej samej transakcji tenanta. Migracja dodaje zwykły indeks `page_template_id_idx`.
 2. **Szablon-strona identyfikowany przez `(organizationId, pageType = *_template, slug = klucz szablonu)`** — nie przez `page.id`. `GET_TEMPLATE_DATA` szuka takiej strony; gdy nie istnieje, zwraca `page: null` + domyślny config z `getDefaultTemplateConfig()`. `UPDATE_TEMPLATE` tworzy ją lazily.
 3. **Testy API** (`LIST_COLLECTION_ITEMS`, `CREATE_COLLECTION_ITEM`) — wyłącznie manualne QA (dotykają DB, poza zakresem Vitest). Vitest pokrywa config `CMS_COLLECTIONS` + czyste helpery.
+
+### Odchyłki F2
+
+1. **`GET_COLLECTIONS` rozszerzony o `templatePageType`.** Spec (02-left-panel.md) nie precyzował tego pola w odpowiedzi API, ale bez niego SDK nie potrafi odfiltrować stron-szablonów layoutu (`blog_post_template`, `course_template`) z drzewa stron. Dodano pole w `buildCollections()`.
+2. **`toChaiPage` zwraca teraz `status`** (`"draft" | "published" | "archived"`). Potrzebne do rozróżnienia badge'y „Robocza" (draft) od „Ukryta" (archived) — samo `online: boolean` nie wystarcza.
+3. **Dedykowane klucze i18n dla badge'ów statusu** (`Status live` / `Status draft` / `Status archived`) zamiast współdzielonych `"Live"` / `"Draft"`, bo te w `pl.json` mapują się na „Opublikowana" / „Wersja robocza" (kontekst prawego panelu) i nie pasują do krótkich badge'y w drzewie.
+4. **Callbacki `onOpenPosts` / `onOpenTemplate` to na razie stuby** (`console.warn`) — właściwa implementacja (modal F3, tryb szablonu F4) w kolejnych fazach. Interfejs komponentu `CollectionTreeGroup` już je udostępnia.
