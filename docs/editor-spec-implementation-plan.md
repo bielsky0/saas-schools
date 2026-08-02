@@ -242,6 +242,17 @@ MARKA
 - **E2E (app):** Playwright — sprawdzić czy istniejące testy edytora nie pękły; dodać smoke (open editor, switch tabs, select block, save).
 - **i18n PL:** pełny audyt brakujących kluczy (fallback EN).
 
+> **POSTĘP (2026-08-02): ✅ Faza 7 zrobiona.** Decyzje zatwierdzone przed startem: **bez testu page-lock E2E** (page lock nie ma widocznego UI poza topbarem; hook testowany unitowo); **E2E publish jako round-trip w osobnym pliku** (`editor-publish.spec.ts`) — strona seedowa wraca do baselineu (unpublished) na końcu, żeby test był powtarzalny na wspólnej bazie; **kontrast sprawdzany automatycznie** (test WCAG ≥3:1 dla tokenów chrome light+dark, nie manualnie).
+> **i18n:** znaleziony brak `Block` (singular) — fallback w `mobile-actions.tsx`/`mobile-bottom-sheet.tsx` — dodany do `en.json` + `pl.json`, `i18n.test.ts` rozszerzony (MOBILE_KEYS) — 9/9 ✅. Audyt 104 kluczy layouts → 104/104 pokryte w obu plikach.
+> **Testy SDK (+5 plików, +32 testy → 62 pliki/601 testów):**
+> - `hooks/__tests__/use-save-website-data.test.ts` (9): saveWebsiteData passthrough, re-entry guard (in-flight), saveTheme (hook value vs explicit), saveDesignTokens (atom store vs explicit), debounced saveTheme/saveDesignTokens (fake timery).
+> - `hooks/history/use-undo-manager.test.ts` (6): add/undo/redo/clear na stosie undo-manager (singleton `undoManager` czyszczony w beforeEach), `add` ustawia `UNSAVED`.
+> - `pages/client/components/page-lock/page-lock.test.ts` (10): `getPageToUser` (najstarszy user na stronę, filtrowanie pustych), `getMinOnlineAt` (+fallback 4h), `usePageLockStatus` (LOCKED/ACTIVE_IN_ANOTHER_TAB → isLocked, EDITING → isEditing, CHECKING → żadne, setPageStatus), `usePageLockMeta` get/set.
+> - `hooks/use-dark-mode.test.ts` (5): default false, toggle, persist do localStorage, odczyt na mount, współdzielenie przez atom.
+> - `hooks/theme-contrast.test.ts` (2): kontrast WCAG ≥3:1 dla par fg/bg `defaultThemeOptions` w wariancie light (0) i dark (1).
+> **E2E (app):** `editor-smoke.spec.ts` +2 testy (preview → popup `/api/preview?slug…`; dialog AI „Wygeneruj sekcję z opisu" → textarea → „Generuj" → stub „Funkcja w przygotowaniu" — `askAiCallBack` nie jest przekazywany przez app, więc stub jest deterministyczny); nowy `e2e/editor-publish.spec.ts` (round-trip publish/unpublish: normalizacja do unpublished przez dropdown „Cofnij publikację", publish → przycisk „Published" [EN fallback — `Published` nie ma w pl.json], ponowne cofnięcie do baselineu). Odchyłki: przycisk po publish pokazuje **„Published"** (fallback EN), nie „Opublikowana" — sprawdzone przez `isPagePublished` na dropdownie (tekst przycisku bywa „Publikuj" także przy opublikowanej stronie ze zmianami).
+> Zweryfikowano: build SDK OK (tsc + vite), 601 testów SDK ✅, i18n 9/9 ✅. **Do uruchomienia w środowisku z bazą:** E2E `editor-smoke` (8), `mobile-editor` (2), `editor-publish` (1) — wymagają pełnego builda + startu serwera (`pnpm build && pnpm start`), poza zakresem tej sesji. Kontrast ciemny `defaultThemeValues.muted: #929292` (kanwa tenanta) jest jaśniejszy niż typowe tła dark — token pre-existing, poza scope Fazy 7 (nie zmieniano).
+
 ---
 
 ## 11. Kolejność sesji (każda faza = osobna sesja)

@@ -10570,8 +10570,8 @@
     "semantic_hash": ""
   },
   "docs/editor-spec-implementation-plan.md": {
-    "mtime": 1785657857.821366,
-    "ast_hash": "015977b7ed24c315a9fcbdefd156c582",
+    "mtime": 1785660536.9702241,
+    "ast_hash": "b2ea26fc6b64ce7f0667c895e6a6655b",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/i18n.test.ts": {
@@ -10690,8 +10690,8 @@
     "semantic_hash": ""
   },
   "e2e/mobile-editor.spec.ts": {
-    "mtime": 1785660428.3751016,
-    "ast_hash": "ea94a237c0307fd1a1aa9c6edf2f2a91",
+    "mtime": 1785662538.1560514,
+    "ast_hash": "19298cdcf46ea546d3484fcff2f73f81",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/mobile/mobile-actions.tsx": {
@@ -10700,13 +10700,13 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/mobile/mobile-bottom-sheet.tsx": {
-    "mtime": 1785660384.8196368,
-    "ast_hash": "405102a89c3897b0492e56d4082baddd",
+    "mtime": 1785662152.1791334,
+    "ast_hash": "3dad5227977ad768b93e8721e78e0536",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/mobile/mobile-builder-layout.tsx": {
-    "mtime": 1785658979.4985976,
-    "ast_hash": "67bb6f38efdb00fb2d9c47540df545d8",
+    "mtime": 1785662314.9562204,
+    "ast_hash": "62d535926a65b6702b8f82462c7e19d4",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/mobile/mobile-menu.tsx": {

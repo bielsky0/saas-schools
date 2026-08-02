@@ -117,6 +117,7 @@ const RIGHT_PANEL_KEYS = [
 
 const MOBILE_KEYS = [
   "Back",
+  "Block",
   "Name",
   "Hide",
   "Delete section",

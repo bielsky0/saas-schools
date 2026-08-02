@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><style>body{margin:0;background:#f4f4f5;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;color:#0a0a0a}a{color:#1d4ed8}a:hover{color:#1e40af}input,textarea{font:inherit;color:inherit}</style></helmet>
+
+<div style="padding:28px 32px 44px;display:flex;flex-direction:column;gap:14px;align-items:center">
+
+<div style="width:1240px;display:flex;align-items:center;gap:12px">
+<div style="font-size:13px;font-weight:600">Moduł bloga i szablonów CMS</div>
+<div style="font-size:12px;color:#71717a">kolekcje w drzewie → modal listy wpisów → edycja szablonu (layout) albo edycja treści (wpis)</div>
+</div>
+
+<div style="width:1240px;background:#fff;border:1px solid #e4e4e7;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)">
+
+<div style="height:56px;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid #e4e4e7">
+<div style="width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#71717a">⇤</div>
+<div style="width:1px;height:20px;background:#e4e4e7;margin:0 2px"></div>
+<div style="display:flex;align-items:center;gap:6px;font-size:14px"><span style="font-weight:500">Szkoła XYZ</span><span style="color:#a1a1aa">/</span>
+<div style="display:flex;align-items:center;gap:6px;height:32px;padding:0 10px;border-radius:8px;background:#f4f4f5;font-size:13.5px">{{ crumbIcon }} {{ crumbName }}</div>
+</div>
+<div style="flex:1"></div>
+<div style="display:flex;align-items:center;gap:8px">
+<div style="display:flex;align-items:center;gap:6px;height:22px;padding:0 9px;border:1px solid #e4e4e7;border-radius:6px;font-size:12px;color:#52525b">{{ statusText }}</div>
+<div style="height:32px;display:flex;align-items:center;padding:0 14px;border:1px solid #e4e4e7;border-radius:8px;font-size:13.5px;font-weight:500;cursor:pointer" style-hover="background:#f4f4f5">Podgląd</div>
+<div onClick="{{ publish }}" style="height:32px;display:flex;align-items:center;padding:0 16px;border-radius:8px;background:#171717;color:#fff;font-size:13.5px;font-weight:500;cursor:pointer" style-hover="background:#3f3f46">{{ publishLabel }}</div>
+</div>
+</div>
+
+<div style="display:flex;height:720px">
+
+<div style="width:288px;border-right:1px solid #e4e4e7;display:flex;flex-direction:column;overflow:hidden">
+<div style="padding:12px 12px 10px">
+<div style="display:flex;gap:2px;padding:3px;background:#f4f4f5;border-radius:9px;font-size:13.5px">
+<div style="flex:1;text-align:center;padding:5px;border-radius:6px;color:#71717a;cursor:pointer">Sekcje</div>
+<div style="flex:1;text-align:center;padding:5px;border-radius:6px;color:#71717a;cursor:pointer">Motyw</div>
+<div style="flex:1;text-align:center;padding:5px;border-radius:6px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.06);font-weight:500">Strony</div>
+</div>
+</div>
+<div style="padding:0 12px 10px;display:flex;gap:8px">
+<div style="flex:1;height:36px;display:flex;align-items:center;gap:8px;padding:0 11px;border:1px solid #e4e4e7;border-radius:8px;font-size:13.5px;color:#a1a1aa">⌕ Szukaj strony</div>
+<div style="width:36px;height:36px;border-radius:8px;background:#171717;color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer">+</div>
+</div>
+
+<div style="flex:1;padding:0 8px 10px;overflow-y:auto">
+<div style="padding:4px 8px 6px;font-size:11.5px;font-weight:600;letter-spacing:.04em;color:#71717a">STRONY</div>
+<sc-for list="{{ pages }}" as="pg" hint-placeholder-count="4">
+<div onClick="{{ pg.select }}" style="display:flex;align-items:center;gap:10px;height:40px;padding:0 8px;border-radius:8px;font-size:13.5px;cursor:pointer" style-hover="background:#f4f4f5"><span style="color:#71717a">▤</span>{{ pg.name }}<span style="margin-left:auto;font-size:11px;color:#52525b;border:1px solid #e4e4e7;border-radius:6px;padding:1px 7px">{{ pg.status }}</span></div>
+</sc-for>
+
+<div style="padding:14px 8px 6px;font-size:11.5px;font-weight:600;letter-spacing:.04em;color:#71717a">SZABLONY (KOLEKCJE CMS)</div>
+<sc-for list="{{ collections }}" as="col" hint-placeholder-count="2">
+<div onClick="{{ col.toggle }}" style="display:flex;align-items:center;gap:8px;height:38px;padding:0 8px;border-radius:8px;font-size:13.5px;cursor:pointer" style-hover="background:#f4f4f5"><span style="color:#71717a;width:10px;font-size:11px">{{ col.chevron }}</span><span style="color:#71717a">⧉</span>{{ col.name }}<span style="margin-left:auto;font-size:11px;color:#71717a">{{ col.count }}</span></div>
+<sc-if value="{{ col.expanded }}" hint-placeholder-val="{{ true }}">
+<div style="margin-left:18px;padding-left:10px;border-left:1px solid #e4e4e7;display:flex;flex-direction:column;gap:1px">
+<div onClick="{{ col.openAll }}" style="display:flex;align-items:center;gap:8px;height:33px;padding:0 8px;border-radius:8px;font-size:13px;cursor:pointer" style-hover="background:#f4f4f5"><span style="color:#a1a1aa">▤</span>{{ col.allLabel }}<span style="margin-left:auto;color:#a1a1aa;font-size:11px">otwórz ⧉</span></div>
+<sc-for list="{{ col.templates }}" as="tpl" hint-placeholder-count="2">
+<div onClick="{{ tpl.open }}" style="display:flex;align-items:center;gap:8px;height:33px;padding:0 8px;border-radius:8px;font-size:13px;cursor:pointer" style-hover="background:#f4f4f5"><span style="color:#a1a1aa">◫</span>{{ tpl.name }}<span style="margin-left:auto;color:#1d4ed8">{{ tpl.trail }}</span></div>
+</sc-for>
+</div>
+</sc-if>
+</sc-for>
+
+<div style="padding:14px 8px 6px;font-size:11.5px;font-weight:600;letter-spacing:.04em;color:#71717a">SYSTEMOWE</div>
+<div style="display:flex;align-items:center;gap:10px;height:40px;padding:0 8px;border-radius:8px;font-size:13.5px;color:#3f3f46">⌸ Formularz zapisu</div>
+<div style="display:flex;align-items:center;gap:10px;height:40px;padding:0 8px;border-radius:8px;font-size:13.5px;color:#3f3f46">⚠ 404</div>
+</div>
+<div style="border-top:1px solid #e4e4e7;padding:10px 12px;font-size:12px;color:#71717a;line-height:1.45">Kliknij „Wszystkie wpisy”, aby otworzyć bazę postów bez opuszczania buildera.</div>
+</div>
+
+<div style="flex:1;background:#fafafa;display:flex;flex-direction:column;align-items:center;padding:20px;overflow-y:auto;position:relative">
+
+<sc-if value="{{ modePage }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;width:100%;max-width:640px;background:#fff;border:1px solid #e4e4e7;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)">
+<div style="height:46px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:16px;padding:0 18px;font-size:12px"><strong style="font-size:13px">Szkoła XYZ</strong><span style="color:#71717a">Kursy</span><span style="color:#71717a">Blog</span><span style="margin-left:auto;color:#71717a">⌕</span></div>
+<div style="padding:46px 30px;background:repeating-linear-gradient(135deg,#f4f2ee,#f4f2ee 8px,#ece9e3 8px,#ece9e3 16px);display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+<div style="font-size:24px;font-weight:700;max-width:420px;line-height:1.2">{{ pageTitle }}</div>
+<div style="font-size:13px;color:#52525b;max-width:360px">Zwykła podstrona — edytujesz ją sekcjami, tak jak dotychczas.</div>
+</div>
+<div style="padding:26px 20px;display:flex;flex-direction:column;gap:10px"><div style="height:9px;border-radius:4px;background:#ececef"></div><div style="height:9px;border-radius:4px;background:#ececef"></div><div style="height:9px;width:66%;border-radius:4px;background:#ececef"></div></div>
+</div>
+<div style="padding-top:12px;font-size:12px;color:#a1a1aa">tryb standardowej strony — dla porównania</div>
+</sc-if>
+
+<sc-if value="{{ modeTemplate }}" hint-placeholder-val="{{ true }}">
+<div style="flex:none;width:100%;max-width:640px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;font-size:12px;line-height:1.5;padding:8px 12px;border-radius:8px;margin-bottom:12px;box-sizing:border-box">◫ Edytujesz layout szablonu — zmiany zobaczy {{ tplAffected }}. Dane to placeholdery. Drag &amp; drop aktywny.</div>
+<div style="flex:none;width:100%;max-width:640px;background:#fff;border:1px solid #e4e4e7;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)">
+<div style="height:46px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:16px;padding:0 18px;font-size:12px"><strong style="font-size:13px">Szkoła XYZ</strong><span style="color:#71717a">Blog</span><span style="margin-left:auto;color:#71717a">⌕</span></div>
+<div style="display:flex;gap:14px;padding:20px 18px 26px">
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;min-width:0">
+<sc-for list="{{ tplBlocks }}" as="tb" hint-placeholder-count="5">
+<div onClick="{{ tb.select }}" style="position:relative;border:1px dashed #d4d4d8;border-radius:8px;padding:10px;cursor:pointer" style-hover="border-color:#1d4ed8">
+<div style="display:flex;align-items:center;gap:7px;font-size:10.5px;color:#71717a;padding-bottom:8px"><span style="color:#d4d4d8">⠿</span>{{ tb.label }}<span style="margin-left:auto;background:#eef2ff;color:#4338ca;border-radius:5px;padding:1px 6px">⛁ {{ tb.binding }}</span></div>
+<sc-if value="{{ tb.isImage }}" hint-placeholder-val="{{ false }}"><div style="height:110px;border-radius:6px;background:repeating-linear-gradient(135deg,#f4f2ee,#f4f2ee 8px,#e8e4dc 8px,#e8e4dc 16px)"></div></sc-if>
+<sc-if value="{{ tb.isTitle }}" hint-placeholder-val="{{ false }}"><div style="font-size:20px;font-weight:700;color:#3f3f46">Tytuł przykładowego wpisu</div><div style="font-size:11.5px;color:#a1a1aa;padding-top:5px">Anna Kowalska · 12.07.2026 · 4 min czytania</div></sc-if>
+<sc-if value="{{ tb.isText }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:6px"><div style="height:8px;border-radius:4px;background:#ececef"></div><div style="height:8px;border-radius:4px;background:#ececef"></div><div style="height:8px;width:72%;border-radius:4px;background:#ececef"></div></div></sc-if>
+<sc-if value="{{ tb.isSection }}" hint-placeholder-val="{{ false }}"><div style="height:62px;border-radius:6px;background:#f4f4f5;display:flex;align-items:center;justify-content:center;font-size:11.5px;color:#71717a;text-align:center;padding:0 10px">{{ tb.hint }}</div></sc-if>
+<sc-if value="{{ tb.selected }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:-1px;border:2px solid #1d4ed8;border-radius:8px;pointer-events:none"></div></sc-if>
+</div>
+</sc-for>
+<div style="display:flex;align-items:center;justify-content:center;gap:8px;height:38px;border:1px dashed #d4d4d8;border-radius:8px;font-size:12.5px;color:#52525b;cursor:pointer" style-hover="background:#fafafa">＋ Przeciągnij lub dodaj sekcję</div>
+</div>
+<sc-if value="{{ tplSidebar }}" hint-placeholder-val="{{ false }}">
+<div style="width:170px;flex:none;display:flex;flex-direction:column;gap:10px">
+<div style="border:1px dashed #d4d4d8;border-radius:8px;padding:10px"><div style="font-size:10.5px;color:#71717a;padding-bottom:8px">Sidebar · Kategorie</div><div style="height:56px;border-radius:6px;background:#f4f4f5"></div></div>
+<div style="border:1px dashed #d4d4d8;border-radius:8px;padding:10px"><div style="font-size:10.5px;color:#71717a;padding-bottom:8px">Sidebar · Popularne</div><div style="height:78px;border-radius:6px;background:#f4f4f5"></div></div>
+</div>
+</sc-if>
+</div>
+</div>
+<div style="padding-top:12px;font-size:12px;color:#a1a1aa">klikaj bloki — po prawej ustawisz układ i mapowanie danych</div>
+</sc-if>
+
+<sc-if value="{{ modePost }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;width:100%;max-width:640px;background:#fffbeb;border:1px solid #fde68a;color:#78350f;font-size:12px;line-height:1.5;padding:8px 12px;border-radius:8px;margin-bottom:12px;box-sizing:border-box">✎ Tryb edycji treści — układ zablokowany przez szablon „{{ postTplName }}”. Kliknij tekst i pisz.</div>
+<div style="flex:none;width:100%;max-width:640px;background:#fff;border:1px solid #e4e4e7;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)">
+<div style="height:46px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:16px;padding:0 18px;font-size:12px"><strong style="font-size:13px">Szkoła XYZ</strong><span style="color:#71717a">Blog</span><span style="margin-left:auto;color:#71717a">⌕</span></div>
+<div style="padding:22px 20px 30px;display:flex;flex-direction:column;gap:14px">
+<div style="height:130px;border-radius:8px;background:repeating-linear-gradient(135deg,#f4f2ee,#f4f2ee 8px,#e8e4dc 8px,#e8e4dc 16px);display:flex;align-items:center;justify-content:center;font-size:12px;color:#52525b;cursor:pointer" style-hover="outline:2px solid #1d4ed8">⌷ Kliknij, aby wybrać obraz wyróżniający</div>
+<div contentEditable="true" suppressContentEditableWarning="true" onBlur="{{ onPostTitleEdit }}" style="font-size:22px;font-weight:700;line-height:1.25;outline:none;border-radius:4px;padding:2px" style-focus="box-shadow:0 0 0 2px #1d4ed8">{{ postTitleInit }}</div>
+<div style="font-size:11.5px;color:#a1a1aa">Anna Kowalska · {{ postDate }} · {{ postCategory }}</div>
+<div contentEditable="true" suppressContentEditableWarning="true" onBlur="{{ onPostBodyEdit }}" style="font-size:13.5px;line-height:1.7;color:#3f3f46;outline:none;border-radius:4px;padding:2px;text-wrap:pretty" style-focus="box-shadow:0 0 0 2px #1d4ed8">{{ postBodyInit }}</div>
+<div style="border-left:3px solid #d4d4d8;padding:4px 0 4px 12px;font-size:13.5px;color:#52525b;font-style:italic">Cytat z wpisu — też edytowalny inline.</div>
+<div style="height:1px;background:#eee"></div>
+<div style="font-size:11.5px;color:#a1a1aa">Sekcje poniżej pochodzą z szablonu — tutaj są zablokowane.</div>
+<div style="height:56px;border-radius:8px;background:#f4f4f5;display:flex;align-items:center;justify-content:center;font-size:12px;color:#71717a">Zapis do newslettera (z szablonu)</div>
+</div>
+</div>
+<div style="padding-top:12px;font-size:12px;color:#a1a1aa">tytuł i akapit są edytowalne — zmiana zapisuje się po kliknięciu poza polem</div>
+</sc-if>
+
+<sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;background:rgba(9,9,11,.42);display:flex;align-items:center;justify-content:center;z-index:20;padding:24px">
+<div style="width:620px;max-height:100%;background:#fff;border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,.28);display:flex;flex-direction:column;overflow:hidden">
+<div style="display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid #e4e4e7">
+<div style="font-size:15px;font-weight:600">{{ modalTitle }}</div>
+<div onClick="{{ startNewPost }}" style="margin-left:auto;height:32px;display:flex;align-items:center;padding:0 14px;border-radius:8px;background:#171717;color:#fff;font-size:13px;font-weight:500;cursor:pointer" style-hover="background:#3f3f46">＋ Nowy wpis</div>
+<div onClick="{{ closeModal }}" style="width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#71717a;cursor:pointer" style-hover="background:#f4f4f5">✕</div>
+</div>
+
+<sc-if value="{{ modalList }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid #f4f4f5">
+<input value="{{ modalQuery }}" onChange="{{ onModalQuery }}" placeholder="Szukaj wpisu" style="flex:1;box-sizing:border-box;height:34px;padding:0 11px;border:1px solid #e4e4e7;border-radius:8px;font-size:13px;outline:none" style-focus="border-color:#a1a1aa">
+<div onClick="{{ toggleDrafts }}" style="{{ draftChipStyle }}">Tylko szkice</div>
+<div style="font-size:12px;color:#71717a;white-space:nowrap">{{ modalCount }}</div>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding:8px 16px;font-size:11px;font-weight:600;letter-spacing:.04em;color:#a1a1aa;border-bottom:1px solid #f4f4f5">
+<div style="flex:1">TYTUŁ WPISU</div><div style="width:150px">SZABLON</div><div style="width:78px">DATA</div><div style="width:96px">STATUS</div>
+</div>
+<div style="flex:1;overflow-y:auto;max-height:320px">
+<sc-for list="{{ modalPosts }}" as="po" hint-placeholder-count="5">
+<div onClick="{{ po.open }}" style="display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid #fafafa;font-size:13px;cursor:pointer" style-hover="background:#fafafa">
+<div style="flex:1">{{ po.title }}</div><div style="width:150px;color:#71717a;font-size:12.5px">{{ po.tplName }}</div><div style="width:78px;color:#71717a;font-size:12.5px">{{ po.date }}</div>
+<div style="width:96px"><span style="{{ po.badgeStyle }}">{{ po.status }}</span></div>
+</div>
+</sc-for>
+</div>
+<div style="padding:10px 16px;font-size:12px;color:#71717a;border-top:1px solid #e4e4e7">Kliknij wiersz, aby edytować treść wpisu. Builder zostaje w tle.</div>
+</sc-if>
+
+<sc-if value="{{ modalChoose }}" hint-placeholder-val="{{ false }}">
+<div style="padding:18px 16px 20px">
+<div style="font-size:14px;font-weight:600;padding-bottom:4px">Wybierz szablon dla nowego wpisu</div>
+<div style="font-size:12.5px;color:#71717a;padding-bottom:14px">Szablon zmienisz później w ustawieniach wpisu.</div>
+<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+<sc-for list="{{ modalTemplates }}" as="mt" hint-placeholder-count="2">
+<div onClick="{{ mt.pick }}" style="border:1px solid #e4e4e7;border-radius:12px;padding:12px;cursor:pointer" style-hover="border-color:#171717;background:#fafafa">
+<div style="height:74px;border-radius:8px;background:#f4f4f5;display:flex;align-items:center;justify-content:center;font-size:11.5px;color:#71717a;margin-bottom:10px">{{ mt.preview }}</div>
+<div style="font-size:13.5px;font-weight:500">{{ mt.name }}</div>
+<div style="font-size:12px;color:#71717a;padding-top:2px">{{ mt.desc }}</div>
+</div>
+</sc-for>
+</div>
+<div onClick="{{ backToList }}" style="margin-top:14px;font-size:13px;color:#52525b;cursor:pointer">‹ Wróć do listy wpisów</div>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+</div>
+
+<div style="width:336px;border-left:1px solid #e4e4e7;display:flex;flex-direction:column;overflow-y:auto">
+
+<sc-if value="{{ modeTemplate }}" hint-placeholder-val="{{ true }}">
+<div style="padding:12px 16px;border-bottom:1px solid #e4e4e7">
+<div style="font-size:11.5px;color:#71717a;padding-bottom:3px">Szablon · {{ tplCollectionName }}</div>
+<div style="display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600">{{ tplName }}<span style="margin-left:auto;color:#a1a1aa;font-weight:400">⋯</span></div>
+</div>
+<div style="padding:16px;display:flex;flex-direction:column;gap:14px">
+<div><div style="font-size:13.5px;font-weight:500;padding-bottom:6px">Układ</div>
+<div style="display:flex;gap:2px;padding:3px;background:#f4f4f5;border-radius:9px;font-size:13px">
+<div onClick="{{ setLayoutSingle }}" style="flex:1;text-align:center;padding:6px;border-radius:6px;cursor:pointer">{{ layoutSingleLabel }}</div>
+<div onClick="{{ setLayoutSidebar }}" style="flex:1;text-align:center;padding:6px;border-radius:6px;cursor:pointer">{{ layoutSidebarLabel }}</div>
+</div></div>
+<div style="font-size:11.5px;font-weight:600;letter-spacing:.04em;color:#71717a">ELEMENTY SZABLONU</div>
+<div onClick="{{ toggleThumb }}" style="display:flex;align-items:center;font-size:13.5px;font-weight:500;cursor:pointer">Obraz wyróżniający<span style="margin-left:auto">{{ thumbSwitch }}</span></div>
+<div onClick="{{ toggleRelated }}" style="display:flex;align-items:center;font-size:13.5px;font-weight:500;cursor:pointer">Powiązane artykuły<span style="margin-left:auto">{{ relatedSwitch }}</span></div>
+<div onClick="{{ toggleNews }}" style="display:flex;align-items:center;font-size:13.5px;font-weight:500;cursor:pointer">Zapis do newslettera<span style="margin-left:auto">{{ newsSwitch }}</span></div>
+<div style="height:1px;background:#e4e4e7"></div>
+<div style="font-size:11.5px;font-weight:600;letter-spacing:.04em;color:#71717a">MAPOWANIE DANYCH</div>
+<sc-for list="{{ bindings }}" as="bd" hint-placeholder-count="4">
+<div style="display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border:1px solid #e4e4e7;border-radius:8px;font-size:12.5px"><span style="color:#52525b">{{ bd.slot }}</span><span style="margin-left:auto;background:#eef2ff;color:#4338ca;border-radius:5px;padding:1px 7px">⛁ {{ bd.field }}</span></div>
+</sc-for>
+<div style="height:1px;background:#e4e4e7"></div>
+<div style="font-size:11.5px;font-weight:600;letter-spacing:.04em;color:#71717a">DOMYŚLNE SEO</div>
+<div><div style="font-size:12.5px;color:#52525b;padding-bottom:6px">Wzór tytułu</div><div style="height:34px;display:flex;align-items:center;padding:0 11px;border:1px solid #e4e4e7;border-radius:8px;font-size:12.5px;font-family:ui-monospace,Menlo,monospace;color:#3f3f46">[Tytuł wpisu] — Blog</div></div>
+<div><div style="font-size:12.5px;color:#52525b;padding-bottom:6px">Wzór opisu</div><div style="height:34px;display:flex;align-items:center;padding:0 11px;border:1px solid #e4e4e7;border-radius:8px;font-size:12.5px;font-family:ui-monospace,Menlo,monospace;color:#3f3f46">[Zajawka wpisu]</div></div>
+<div style="border:1px solid #bfdbfe;background:#eff6ff;border-radius:10px;padding:12px;font-size:12.5px;line-height:1.5;color:#1e40af">Zmiany w tym szablonie zobaczy {{ tplAffected }}.</div>
+<div onClick="{{ openCollectionModal }}" style="height:36px;display:flex;align-items:center;justify-content:center;border:1px solid #e4e4e7;border-radius:8px;font-size:13.5px;font-weight:500;cursor:pointer" style-hover="background:#f4f4f5">Zobacz wpisy w tym szablonie</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ modePost }}" hint-placeholder-val="{{ false }}">
+<div style="padding:12px 16px;border-bottom:1px solid #e4e4e7">
+<div style="font-size:11.5px;color:#71717a;padding-bottom:3px">Wpis · {{ postStatus }}</div>
+<div style="display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600">Ustawienia wpisu<span style="margin-left:auto;color:#a1a1aa;font-weight:400">⋯</span></div>
+</div>
+<div style="padding:16px;display:flex;flex-direction:column;gap:14px">
+<div><div style="font-size:13.5px;font-weight:500;padding-bottom:6px">Tytuł artykułu</div>
+<input value="{{ postTitle }}" onChange="{{ onPostTitle }}" style="width:100%;box-sizing:border-box;height:36px;padding:0 11px;border:1px solid #e4e4e7;border-radius:8px;font-size:13.5px;outline:none" style-focus="border-color:#a1a1aa">
+</div>
+<div><div style="font-size:13.5px;font-weight:500;padding-bottom:6px">Adres URL (slug)</div>
+<div style="display:flex;align-items:center;gap:4px;height:36px;padding:0 11px;border:1px solid #e4e4e7;border-radius:8px;font-size:13px;font-family:ui-monospace,Menlo,monospace;color:#71717a">/blog/<input value="{{ postSlug }}" onChange="{{ onPostSlug }}" style="flex:1;min-width:0;border:none;outline:none;background:transparent;font-size:13px;font-family:ui-monospace,Menlo,monospace;color:#3f3f46"></div>
+</div>
+<div><div style="font-size:13.5px;font-weight:500;padding-bottom:6px">Szablon wpisu</div>
+<div style="display:flex;gap:2px;padding:3px;background:#f4f4f5;border-radius:9px;font-size:12.5px">
+<sc-for list="{{ postTplOptions }}" as="pt" hint-placeholder-count="2">
+<div onClick="{{ pt.pick }}" style="flex:1;text-align:center;padding:6px;border-radius:6px;cursor:pointer">{{ pt.label }}</div>
+</sc-for>
+</div></div>
+<div><div style="font-size:13.5px;font-weight:500;padding-bottom:6px">Kategorie i tagi</div>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<sc-for list="{{ postTags }}" as="tg" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;gap:6px;padding:4px 9px;background:#f4f4f5;border-radius:999px;font-size:12.5px">{{ tg.name }}<span style="color:#a1a1aa;cursor:pointer">✕</span></div>
+</sc-for>
+<div style="padding:4px 9px;border:1px dashed #d4d4d8;border-radius:999px;font-size:12.5px;color:#52525b;cursor:pointer">＋ Dodaj</div>
+</div></div>
+<div><div style="font-size:13.5px;font-weight:500;padding-bottom:6px">Obraz wyróżniający (miniatura)</div>
+<div style="height:82px;border:1px dashed #d4d4d8;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12.5px;color:#52525b;cursor:pointer" style-hover="background:#fafafa">⌷ Wybierz z biblioteki</div></div>
+<div><div style="font-size:13.5px;font-weight:500;padding-bottom:6px">Zajawka (excerpt)</div>
+<textarea value="{{ postExcerpt }}" onChange="{{ onPostExcerpt }}" style="width:100%;box-sizing:border-box;height:74px;padding:9px 11px;border:1px solid #e4e4e7;border-radius:8px;font-size:13px;line-height:1.5;outline:none;resize:none;font-family:inherit" style-focus="border-color:#a1a1aa"></textarea></div>
+<div style="height:1px;background:#e4e4e7"></div>
+<div style="display:flex;gap:8px">
+<div onClick="{{ saveDraft }}" style="flex:1;height:36px;display:flex;align-items:center;justify-content:center;border:1px solid #e4e4e7;border-radius:8px;font-size:13.5px;font-weight:500;cursor:pointer" style-hover="background:#f4f4f5">Zapisz szkic</div>
+<div onClick="{{ publishPost }}" style="flex:1;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:#171717;color:#fff;font-size:13.5px;font-weight:500;cursor:pointer" style-hover="background:#3f3f46">Opublikuj</div>
+</div>
+<div onClick="{{ openCollectionModal }}" style="font-size:13px;color:#1d4ed8;cursor:pointer">‹ Wróć do listy wpisów</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ modePage }}" hint-placeholder-val="{{ false }}">
+<div style="padding:12px 16px;border-bottom:1px solid #e4e4e7">
+<div style="font-size:11.5px;color:#71717a;padding-bottom:3px">Strona</div>
+<div style="font-size:15px;font-weight:600">{{ pageTitle }}</div>
+</div>
+<div style="padding:16px;font-size:12.5px;line-height:1.55;color:#52525b">Standardowa podstrona — ustawienia jak w dotychczasowym prototypie. Ten plik pokazuje wyłącznie moduł bloga i szablonów.</div>
+</sc-if>
+
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1320,&quot;height&quot;:900}}">
+const TEMPLATES = {
+  "tpl-classic": { id: "tpl-classic", col: "blog", name: "Klasyczny Artykuł", desc: "Tytuł, zdjęcie, długi tekst", preview: "▤ jedna kolumna", layout: "single", thumb: true, related: true, news: true },
+  "tpl-interview": { id: "tpl-interview", col: "blog", name: "Wywiad / Case Study", desc: "Pytania, cytaty, sidebar", preview: "▤ + sidebar", layout: "sidebar", thumb: true, related: false, news: true },
+  "tpl-course": { id: "tpl-course", col: "kursy", name: "Domyślny", desc: "Karta kursu / nauczyciela", preview: "▤ karta", layout: "single", thumb: true, related: true, news: false },
+};
+
+const COLLECTIONS = [
+  { id: "blog", name: "Wpis na blogu", templates: ["tpl-classic", "tpl-interview"] },
+  { id: "kursy", name: "Kursy / Nauczyciele", templates: ["tpl-course"] },
+];
+
+const PAGES = [
+  { id: "home", name: "Strona główna", status: "Live" },
+  { id: "kursy", name: "Kursy językowe", status: "Robocza" },
+  { id: "cennik", name: "Cennik", status: "Ukryta" },
+];
+
+const POSTS = [
+  { id: "po1", col: "blog", title: "Jak zdać FCE w rok — plan nauki", tpl: "tpl-classic", date: "12.07.2026", status: "Opublikowany", slug: "jak-zdac-fce-w-rok", excerpt: "Konkretny plan na 12 miesięcy: ile godzin, jakie materiały i kiedy zapisać się na egzamin.", tags: ["Egzaminy", "Angielski"], body: "Przygotowanie do FCE w rok jest realne przy dwóch zajęciach w tygodniu i regularnej pracy własnej. Poniżej rozkładamy plan na kwartały i pokazujemy, na czym skupić się najpierw." },
+  { id: "po2", col: "blog", title: "Wywiad: nowa lektorka hiszpańskiego", tpl: "tpl-interview", date: "04.07.2026", status: "Szkic", slug: "wywiad-lektorka-hiszpanskiego", excerpt: "Rozmowa o tym, jak uczyć konwersacji od pierwszej lekcji.", tags: ["Zespół"], body: "Marta uczy hiszpańskiego od ośmiu lat. Pytamy ją o metodę, o pierwsze lekcje bez podręcznika i o to, czego najbardziej boją się dorośli kursanci." },
+  { id: "po3", col: "blog", title: "5 mitów o nauce w małych grupach", tpl: "tpl-classic", date: "28.06.2026", status: "Opublikowany", slug: "5-mitow-male-grupy", excerpt: "Czy mała grupa zawsze znaczy szybsze postępy?", tags: ["Metodyka"], body: "Mała grupa daje więcej czasu na mówienie, ale sama liczebność niczego nie gwarantuje. Sprawdzamy pięć powtarzanych opinii." },
+  { id: "po4", col: "blog", title: "Case study: angielski dla zespołu IT", tpl: "tpl-interview", date: "19.06.2026", status: "Opublikowany", slug: "case-study-zespol-it", excerpt: "40 osób, trzy lokalizacje, sześć miesięcy.", tags: ["Firmy"], body: "Zaczęliśmy od audytu poziomów, potem podzieliliśmy zespół na cztery grupy. Po pół roku 70% uczestników awansowało o poziom." },
+  { id: "po5", col: "blog", title: "Test poziomujący — czego się spodziewać", tpl: "tpl-classic", date: "02.06.2026", status: "Szkic", slug: "test-poziomujacy", excerpt: "Krótko o tym, jak wygląda test i rozmowa.", tags: ["Zapisy"], body: "Test trwa 25 minut i składa się z części pisemnej oraz krótkiej rozmowy z lektorem. Nie da się go oblać." },
+  { id: "po6", col: "kursy", title: "Anna Kowalska — lektorka angielskiego", tpl: "tpl-course", date: "10.05.2026", status: "Opublikowany", slug: "anna-kowalska", excerpt: "CELTA, 9 lat doświadczenia, egzaminy Cambridge.", tags: ["Nauczyciele"], body: "Anna prowadzi grupy B1–C1 oraz kursy przygotowujące do FCE i CAE." },
+];
+
+class Component extends DCLogic {
+  state = {
+    mode: "template",
+    pageId: "home",
+    colOpen: { blog: true },
+    tplId: "tpl-classic",
+    tpls: JSON.parse(JSON.stringify(TEMPLATES)),
+    tplBlockSel: "tb-title",
+    posts: JSON.parse(JSON.stringify(POSTS)),
+    postId: "po1",
+    modal: null,
+    modalStep: "list",
+    modalQuery: "",
+    draftsOnly: false,
+    dirty: true,
+  };
+
+  tpl() { return this.state.tpls[this.state.tplId] || this.state.tpls["tpl-classic"]; }
+  post() { return this.state.posts.find((p) => p.id === this.state.postId) || this.state.posts[0]; }
+  countPosts(col) { return this.state.posts.filter((p) => p.col === col).length; }
+  set(patch) { this.setState(Object.assign({ dirty: true }, patch)); }
+
+  patchTpl(mut) {
+    const tpls = JSON.parse(JSON.stringify(this.state.tpls));
+    mut(tpls[this.state.tplId]);
+    this.set({ tpls });
+  }
+  patchPost(mut) {
+    const posts = this.state.posts.map((p) => {
+      if (p.id !== this.state.postId) return p;
+      const c = JSON.parse(JSON.stringify(p));
+      mut(c);
+      return c;
+    });
+    this.set({ posts });
+  }
+
+  renderVals() {
+    const st = this.state;
+    const tpl = this.tpl();
+    const post = this.post();
+    const page = PAGES.find((p) => p.id === st.pageId) || PAGES[0];
+    const modalCol = st.modal;
+    const colName = (id) => (COLLECTIONS.find((c) => c.id === id) || {}).name;
+
+    const sw = (on) =>
+      React.createElement("span", {
+        style: { width: 36, height: 20, borderRadius: 20, background: on ? "#171717" : "#e4e4e7", position: "relative", display: "inline-block", verticalAlign: "middle" },
+      }, React.createElement("span", {
+        style: { position: "absolute", top: 2, left: on ? 18 : 2, width: 16, height: 16, borderRadius: "50%", background: "#fff", boxShadow: "0 1px 2px rgba(0,0,0,.2)" },
+      }));
+
+    const collections = COLLECTIONS.map((c) => {
+      const n = this.countPosts(c.id);
+      return {
+        name: c.name,
+        count: n + " wpisów",
+        chevron: st.colOpen[c.id] ? "▾" : "▸",
+        expanded: !!st.colOpen[c.id],
+        allLabel: "Wszystkie wpisy (" + n + ")",
+        toggle: () => this.setState({ colOpen: Object.assign({}, st.colOpen, { [c.id]: !st.colOpen[c.id] }) }),
+        openAll: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.setState({ modal: c.id, modalStep: "list", modalQuery: "", draftsOnly: false }); },
+        templates: c.templates.map((tid) => ({
+          name: "Szablon: " + st.tpls[tid].name,
+          trail: st.mode === "template" && st.tplId === tid ? "●" : "",
+          open: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.setState({ mode: "template", tplId: tid, modal: null, tplBlockSel: "tb-title" }); },
+        })),
+      };
+    });
+
+    const tplBlocks = [
+      tpl.thumb && { id: "tb-img", label: "Obraz wyróżniający", binding: "Miniatura", isImage: true },
+      { id: "tb-title", label: "Nagłówek wpisu", binding: "Tytuł + autor + data", isTitle: true },
+      { id: "tb-body", label: "Treść artykułu", binding: "Treść wpisu", isText: true },
+      tpl.related && { id: "tb-rel", label: "Powiązane artykuły", binding: "Kolekcja: " + colName(tpl.col), isSection: true, hint: "3 najnowsze wpisy z tej samej kategorii" },
+      tpl.news && { id: "tb-news", label: "Newsletter", binding: "Sekcja globalna", isSection: true, hint: "Formularz zapisu — sekcja globalna" },
+    ].filter(Boolean).map((b) => Object.assign({}, b, {
+      selected: st.tplBlockSel === b.id,
+      select: () => this.setState({ tplBlockSel: b.id }),
+    }));
+
+    const badge = (s) =>
+      "font-size:11px;border-radius:6px;padding:2px 8px;" +
+      (s === "Szkic" ? "background:#fffbeb;color:#92400e;border:1px solid #fde68a" : "background:#f0fdf4;color:#166534;border:1px solid #bbf7d0");
+
+    const listPosts = st.posts
+      .filter((p) => p.col === modalCol)
+      .filter((p) => !st.draftsOnly || p.status === "Szkic")
+      .filter((p) => p.title.toLowerCase().indexOf(st.modalQuery.toLowerCase()) >= 0);
+
+    return {
+      modePage: st.mode === "page",
+      modeTemplate: st.mode === "template",
+      modePost: st.mode === "post",
+      crumbName: st.mode === "template" ? "Szablon: " + tpl.name : st.mode === "post" ? post.title : page.name,
+      crumbIcon: st.mode === "template" ? "◫" : st.mode === "post" ? "✎" : "▤",
+      statusText: st.dirty ? "• Wersja robocza zapisana" : "✓ Zapisano",
+      publishLabel: st.mode === "post" ? "Opublikuj wpis" : "Publikuj",
+      publish: () => this.setState({ dirty: false }),
+
+      pages: PAGES.map((p) => ({
+        name: p.name, status: p.status,
+        select: () => this.setState({ mode: "page", pageId: p.id }),
+      })),
+      pageTitle: page.name,
+      collections,
+
+      tplName: tpl.name,
+      tplCollectionName: colName(tpl.col),
+      tplAffected: this.countPosts(tpl.col) + " wpisów",
+      tplSidebar: tpl.layout === "sidebar",
+      tplBlocks,
+      layoutSingleLabel: tpl.layout === "single" ? "● Jedna kolumna" : "Jedna kolumna",
+      layoutSidebarLabel: tpl.layout === "sidebar" ? "● Z sidebarem" : "Z sidebarem",
+      setLayoutSingle: () => this.patchTpl((t) => { t.layout = "single"; }),
+      setLayoutSidebar: () => this.patchTpl((t) => { t.layout = "sidebar"; }),
+      thumbSwitch: sw(tpl.thumb), relatedSwitch: sw(tpl.related), newsSwitch: sw(tpl.news),
+      toggleThumb: () => this.patchTpl((t) => { t.thumb = !t.thumb; }),
+      toggleRelated: () => this.patchTpl((t) => { t.related = !t.related; }),
+      toggleNews: () => this.patchTpl((t) => { t.news = !t.news; }),
+      bindings: [
+        { slot: "Nagłówek H1", field: "Tytuł wpisu" },
+        { slot: "Zdjęcie u góry", field: "Obraz wyróżniający" },
+        { slot: "Treść", field: "Treść wpisu" },
+        { slot: "Podpis pod tytułem", field: "Autor + data" },
+      ],
+      openCollectionModal: () => this.setState({ modal: st.mode === "post" ? post.col : tpl.col, modalStep: "list", modalQuery: "", draftsOnly: false }),
+
+      postTitle: post.title,
+      postTitleInit: post.title,
+      postBodyInit: post.body,
+      postSlug: post.slug,
+      postExcerpt: post.excerpt,
+      postDate: post.date,
+      postStatus: post.status,
+      postCategory: (post.tags || [])[0] || "Bez kategorii",
+      postTplName: st.tpls[post.tpl].name,
+      postTags: (post.tags || []).map((t) => ({ name: t })),
+      postTplOptions: (COLLECTIONS.find((c) => c.id === post.col) || COLLECTIONS[0]).templates.map((tid) => ({
+        label: (post.tpl === tid ? "● " : "") + st.tpls[tid].name,
+        pick: () => this.patchPost((p) => { p.tpl = tid; }),
+      })),
+      onPostTitle: (e) => { const v = e.target.value; this.patchPost((p) => { p.title = v; }); },
+      onPostTitleEdit: (e) => { const v = e.target.innerText.trim(); this.patchPost((p) => { p.title = v; }); },
+      onPostBodyEdit: (e) => { const v = e.target.innerText.trim(); this.patchPost((p) => { p.body = v; }); },
+      onPostSlug: (e) => { const v = e.target.value; this.patchPost((p) => { p.slug = v; }); },
+      onPostExcerpt: (e) => { const v = e.target.value; this.patchPost((p) => { p.excerpt = v; }); },
+      saveDraft: () => this.patchPost((p) => { p.status = "Szkic"; }),
+      publishPost: () => this.patchPost((p) => { p.status = "Opublikowany"; }),
+
+      modalOpen: !!modalCol,
+      modalTitle: "Zarządzaj wpisami: " + (colName(modalCol) || ""),
+      modalList: !!modalCol && st.modalStep === "list",
+      modalChoose: !!modalCol && st.modalStep === "choose",
+      modalQuery: st.modalQuery,
+      onModalQuery: (e) => this.setState({ modalQuery: e.target.value }),
+      toggleDrafts: () => this.setState({ draftsOnly: !st.draftsOnly }),
+      draftChipStyle: "height:34px;display:flex;align-items:center;padding:0 12px;border-radius:8px;font-size:12.5px;cursor:pointer;white-space:nowrap;" +
+        (st.draftsOnly ? "background:#171717;color:#fff;border:1px solid #171717" : "border:1px solid #e4e4e7;color:#3f3f46"),
+      modalCount: listPosts.length + " z " + this.countPosts(modalCol || "blog"),
+      modalPosts: listPosts.map((p) => ({
+        title: p.title, date: p.date, status: p.status, tplName: st.tpls[p.tpl].name,
+        badgeStyle: badge(p.status),
+        open: () => this.setState({ mode: "post", postId: p.id, tplId: p.tpl, modal: null }),
+      })),
+      modalTemplates: (COLLECTIONS.find((c) => c.id === modalCol) || COLLECTIONS[0]).templates.map((tid) => ({
+        name: st.tpls[tid].name, desc: TEMPLATES[tid].desc, preview: TEMPLATES[tid].preview,
+        pick: () => {
+          const id = "new" + Date.now();
+          const np = { id, col: modalCol, title: "Nowy wpis", tpl: tid, date: "02.08.2026", status: "Szkic", slug: "nowy-wpis", excerpt: "", tags: ["Bez kategorii"], body: "Zacznij pisać treść wpisu…" };
+          this.setState({ posts: st.posts.concat([np]), modal: null, mode: "post", postId: id, tplId: tid });
+        },
+      })),
+      backToList: () => this.setState({ modalStep: "list" }),
+      startNewPost: () => this.setState({ modalStep: "choose" }),
+      closeModal: () => this.setState({ modal: null }),
+    };
+  }
+}
+</script>
+</body>
+</html>
