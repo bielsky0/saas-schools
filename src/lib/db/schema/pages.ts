@@ -1,6 +1,8 @@
 import { boolean, index, jsonb, pgTable, text, timestamp, unique } from "drizzle-orm/pg-core";
 import type { ChaiBlock } from "@chaibuilder/sdk/types";
 
+import type { TemplateConfig } from "@/lib/cms-collections";
+
 import { organization } from "./organizations";
 import { user } from "./auth";
 
@@ -43,6 +45,18 @@ export const page = pgTable(
       .notNull()
       .default("draft"),
     pageType: text("pageType").notNull().default("page"),
+    /**
+     * Links a collection entry (blog_post / course_entry) to its layout template.
+     * Stores the CMS template KEY from src/lib/cms-collections.ts
+     * (e.g. "tpl-blog-classic"), NOT a page id — see migration 0076. Nullable:
+     * existing pages and unassigned entries have no template.
+     */
+    templateId: text("templateId"),
+    /**
+     * Layout config for template pages (pageType = *_template):
+     * { layout, elements, dataMapping, seoDefaults }. Null for regular pages.
+     */
+    templateConfig: jsonb("templateConfig").$type<TemplateConfig>(),
     parentId: text("parentId").references((): any => page.id, {
       onDelete: "set null",
     }),
@@ -57,5 +71,6 @@ export const page = pgTable(
     uniqueOrgSlug: unique("page_org_slug_uq").on(t.organizationId, t.slug),
     orgSlugIdx: index("page_org_slug_idx").on(t.organizationId, t.slug),
     statusIdx: index("page_status_idx").on(t.status),
+    templateIdIdx: index("page_template_id_idx").on(t.templateId),
   }),
 );

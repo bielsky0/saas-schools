@@ -1,4 +1,4 @@
-import { and, desc, eq, ne } from "drizzle-orm";
+import { and, desc, eq, ilike, inArray, ne, sql } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 import { getServerSession } from "@/lib/auth";
@@ -6,10 +6,17 @@ import { db } from "@/lib/db";
 import { page } from "@/lib/db/schema/pages";
 import { organization } from "@/lib/db/schema/organizations";
 import { withTenant, type TenantDb } from "@/lib/db/tenant";
+import {
+  CMS_COLLECTIONS,
+  getCollectionById,
+  getDefaultTemplateConfig,
+  getTemplateById,
+  getTemplateName,
+} from "@/lib/cms-collections";
 import { getBlogPostBySlug } from "@/lib/block-data";
 import { ORG_SUBDOMAIN_HEADER } from "@/lib/tenant-host";
 import { getOrgBySubdomain } from "@/features/organizations/data";
-import { slugify } from "@/features/organizations/slug";
+import { resolveUniqueSlug, slugify } from "@/features/organizations/slug";
 import { getActiveBuilderTheme, upsertBuilderTheme } from "@/features/cms/builder-theme-data";
 
 // ── Response shape mapping ──────────────────────────────────────────────
@@ -32,6 +39,7 @@ function toChaiPage(row: typeof page.$inferSelect) {
     currentEditor: null,
     changes: [],
     parent: row.parentId ?? null,
+    templateId: row.templateId ?? null,
   };
 }
 
@@ -92,11 +100,43 @@ const defaultWebsiteSettings = {
 const pageTypes = [
   { key: "page", name: "Page", helpText: "", icon: "", hasSlug: true },
   { key: "blog_post", name: "Blog Post", helpText: "", icon: "", hasSlug: true },
+  { key: "blog_post_template", name: "Blog Template", helpText: "", icon: "", hasSlug: true },
+  { key: "course_entry", name: "Course Entry", helpText: "", icon: "", hasSlug: true },
+  { key: "course_template", name: "Course Template", helpText: "", icon: "", hasSlug: true },
 ];
+
+/** Per-collection `postCount` + template list — shared by GET_COLLECTIONS and GET_WEBSITE_DATA. */
+async function buildCollections(tx: TenantDb, organizationId: string) {
+  const collectionPageTypes = CMS_COLLECTIONS.map((c) => c.pageType);
+  const counts =
+    collectionPageTypes.length > 0
+      ? await tx
+          .select({
+            pageType: page.pageType,
+            count: sql<number>`count(*)::int`,
+          })
+          .from(page)
+          .where(
+            and(
+              eq(page.organizationId, organizationId),
+              ne(page.status, "archived"),
+              inArray(page.pageType, collectionPageTypes),
+            ),
+          )
+          .groupBy(page.pageType)
+      : [];
+  const countByType = Object.fromEntries(counts.map((r) => [r.pageType, r.count]));
+  return CMS_COLLECTIONS.map((c) => ({
+    id: c.id,
+    name: c.name,
+    pageType: c.pageType,
+    postCount: countByType[c.pageType] ?? 0,
+    templates: c.templates.map((t) => ({ id: t.id, name: t.name, layout: t.layout })),
+  }));
+}
 
 const emptyListActions = new Set([
   "GET_LIBRARIES",
-  "GET_COLLECTIONS",
   "GET_LANGUAGE_PAGES",
   "GET_LIBRARY_GROUPS",
   "GET_PAGE_REVISIONS",
@@ -166,7 +206,7 @@ export async function POST(req: NextRequest) {
             websitePages: pages.map(toChaiPage),
             pageTypes,
             libraries: [],
-            collections: [],
+            collections: await buildCollections(tx, organizationId),
             // UI locale for the editor chrome. Tenant-level default for now; a
             // per-organization `locale` column should flow through here later.
             uiLocale: "pl",
@@ -234,6 +274,74 @@ export async function POST(req: NextRequest) {
         case "GET_PAGE_TYPES":
           return NextResponse.json(pageTypes);
 
+        case "GET_COLLECTIONS": {
+          return NextResponse.json({
+            collections: await buildCollections(tx, organizationId),
+          });
+        }
+
+        case "LIST_COLLECTION_ITEMS": {
+          const collection = getCollectionById(data?.collectionId);
+          if (!collection) {
+            return NextResponse.json(
+              { error: "Collection not found" },
+              { status: 404 },
+            );
+          }
+          const conds = [
+            eq(page.organizationId, organizationId),
+            eq(page.pageType, collection.pageType),
+            ne(page.status, "archived"),
+          ];
+          if (data?.search) {
+            conds.push(ilike(page.title, `%${String(data.search)}%`));
+          }
+          if (data?.draftsOnly) {
+            conds.push(eq(page.status, "draft"));
+          }
+          const rows = await tx
+            .select()
+            .from(page)
+            .where(and(...conds))
+            .orderBy(desc(page.createdAt));
+          const items = rows.map((r) => ({
+            id: r.id,
+            title: r.title,
+            slug: r.slug,
+            templateId: r.templateId,
+            templateName: getTemplateName(collection.id, r.templateId),
+            status: r.status,
+            createdAt: r.createdAt?.toISOString() ?? "",
+          }));
+          return NextResponse.json({ items });
+        }
+
+        case "GET_TEMPLATE_DATA": {
+          const collection = getCollectionById(data?.collectionId);
+          const template = getTemplateById(data?.collectionId, data?.templateId);
+          if (!collection || !template) {
+            return NextResponse.json(
+              { error: "Template not found" },
+              { status: 404 },
+            );
+          }
+          const [tplPage] = await tx
+            .select()
+            .from(page)
+            .where(
+              and(
+                eq(page.organizationId, organizationId),
+                eq(page.pageType, collection.templatePageType),
+                eq(page.slug, template.id),
+              ),
+            )
+            .limit(1);
+          return NextResponse.json({
+            page: tplPage ? toChaiPage(tplPage) : null,
+            config: tplPage?.templateConfig ?? getDefaultTemplateConfig(template),
+          });
+        }
+
         case "GET_SITE_WIDE_USAGE":
         case "GET_BLOCK_ASYNC_PROPS":
         case "GET_COMPARE_DATA":
@@ -274,6 +382,99 @@ export async function POST(req: NextRequest) {
             })
             .returning();
           return NextResponse.json({ page: toChaiPage(newPage[0]!) });
+        }
+
+        case "CREATE_COLLECTION_ITEM": {
+          if (!userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+          }
+          const collection = getCollectionById(data?.collectionId);
+          const template = getTemplateById(data?.collectionId, data?.templateId);
+          if (!collection || !template) {
+            return NextResponse.json(
+              { error: "Collection or template not found" },
+              { status: 404 },
+            );
+          }
+          if (template.collectionId !== collection.id) {
+            return NextResponse.json(
+              { error: "Template does not belong to collection" },
+              { status: 400 },
+            );
+          }
+          const title = String(data?.title ?? "Nowy wpis");
+          const desiredSlug = data?.slug ? String(data.slug) : slugify(title);
+          const slug = await resolveUniqueSlug(desiredSlug, async (s) => {
+            const existing = await tx
+              .select({ id: page.id })
+              .from(page)
+              .where(and(eq(page.organizationId, organizationId), eq(page.slug, s)))
+              .limit(1);
+            return existing.length > 0;
+          });
+          const newPage = await tx
+            .insert(page)
+            .values({
+              organizationId,
+              slug,
+              title,
+              pageType: collection.pageType,
+              templateId: template.id,
+              blocks: [],
+              status: "draft",
+              isHome: false,
+              createdByUserId: userId,
+            })
+            .returning();
+          return NextResponse.json({ page: toChaiPage(newPage[0]!) });
+        }
+
+        case "UPDATE_TEMPLATE": {
+          if (!userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+          }
+          const collection = getCollectionById(data?.collectionId);
+          const template = getTemplateById(data?.collectionId, data?.templateId);
+          if (!collection || !template) {
+            return NextResponse.json(
+              { error: "Template not found" },
+              { status: 404 },
+            );
+          }
+          const [existing] = await tx
+            .select()
+            .from(page)
+            .where(
+              and(
+                eq(page.organizationId, organizationId),
+                eq(page.pageType, collection.templatePageType),
+                eq(page.slug, template.id),
+              ),
+            )
+            .limit(1);
+          const set: Partial<typeof page.$inferInsert> = { updatedAt: new Date() };
+          if (data?.blocks !== undefined) set.blocks = data.blocks;
+          if (data?.config !== undefined) set.templateConfig = data.config;
+          if (existing) {
+            await tx.update(page).set(set).where(eq(page.id, existing.id));
+          } else {
+            await tx
+              .insert(page)
+              .values({
+                organizationId,
+                slug: template.id,
+                title: template.name,
+                pageType: collection.templatePageType,
+                blocks: data?.blocks ?? [],
+                templateConfig: data?.config ?? null,
+                status: "draft",
+                isHome: false,
+                createdByUserId: userId,
+                updatedAt: new Date(),
+              })
+              .returning();
+          }
+          return NextResponse.json({ success: true });
         }
 
         case "UPDATE_PAGE": {

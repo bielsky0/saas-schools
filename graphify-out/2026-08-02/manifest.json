@@ -6350,8 +6350,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/en.json": {
-    "mtime": 1785659154.3624184,
-    "ast_hash": "8dc6330ead2e263108bba50b14f301c1",
+    "mtime": 1785665400.5756423,
+    "ast_hash": "0586dd4da0a307bad312cae8bbca2969",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/load.ts": {
@@ -10570,18 +10570,18 @@
     "semantic_hash": ""
   },
   "docs/editor-spec-implementation-plan.md": {
-    "mtime": 1785660536.9702241,
-    "ast_hash": "b2ea26fc6b64ce7f0667c895e6a6655b",
+    "mtime": 1785666111.8128083,
+    "ast_hash": "fe8ac75dbb42145201458eccb82832a1",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/i18n.test.ts": {
-    "mtime": 1785659154.3635058,
-    "ast_hash": "601c6ed7e240a030e37b3c1b0e233ab7",
+    "mtime": 1785665404.4131742,
+    "ast_hash": "1064c6601f64b62cd8b9c86c02a10168",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/pl.json": {
-    "mtime": 1785659154.3636475,
-    "ast_hash": "5fa9b0ca001b0245831f224746687094",
+    "mtime": 1785665401.3077712,
+    "ast_hash": "e4b83e45092e694bbcc779df0c7fbf86",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/topbar/builder-top-bar.tsx": {
@@ -10737,6 +10737,41 @@
   "packages/chaibuilder-sdk/src/pages/client/layouts/mobile/use-is-mobile.ts": {
     "mtime": 1785658814.3457928,
     "ast_hash": "13b4ffd0e160d1121943614ce10bdbd5",
+    "semantic_hash": ""
+  },
+  "e2e/editor-publish.spec.ts": {
+    "mtime": 1785665916.2433543,
+    "ast_hash": "8b4cd59f3b3373c2e7c33f57c23ef992",
+    "semantic_hash": ""
+  },
+  "e2e/editor-smoke.spec.ts": {
+    "mtime": 1785665938.8593407,
+    "ast_hash": "01fc08d5767d9cc4482b3966a8a18b56",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/hooks/__tests__/use-save-website-data.test.ts": {
+    "mtime": 1785665998.7952435,
+    "ast_hash": "d43841f252713cc1df16d1e1bd592f2a",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/hooks/history/use-undo-manager.test.ts": {
+    "mtime": 1785666002.4503956,
+    "ast_hash": "9ddb3dfd09028a55432ed7cced23ae8d",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/hooks/theme-contrast.test.ts": {
+    "mtime": 1785665733.3383472,
+    "ast_hash": "f793db2893e814da0131ee84a5aeb1c9",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/hooks/use-dark-mode.test.ts": {
+    "mtime": 1785665667.7994683,
+    "ast_hash": "3338fd5a5459b7f87a03924fe9ab2539",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/components/page-lock/page-lock.test.ts": {
+    "mtime": 1785665634.5254946,
+    "ast_hash": "878fecb179df03f8b556030a9cebccd1",
     "semantic_hash": ""
   }
 }

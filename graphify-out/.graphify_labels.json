@@ -728,13 +728,9 @@
   "726": "empty-box.tsx",
   "727": "calendar-view.tsx",
   "728": "@tiptap/extension-text-align",
-  "729": "form/checkbox.tsx",
   "730": "@rjsf/validator-ajv8",
   "731": "mobile-editor.spec.ts",
-  "732": "span.tsx",
   "733": "canvas-confetti",
   "734": "editor-smoke.spec.ts",
-  "735": "concurrently",
-  "740": "@payloadcms/next",
-  "741": "prettier-plugin-tailwindcss"
+  "740": "@payloadcms/next"
 }
