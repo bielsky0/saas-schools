@@ -291,6 +291,7 @@ export interface ChaiBuilderEditorProps {
     dragAndDrop?: boolean;
     validateStructure?: boolean;
     ai?: boolean;
+    devMode?: boolean;
   };
 
   //TODO: Move to registerChaiStructureRules()

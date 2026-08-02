@@ -67,7 +67,7 @@ export const useRightPanel = () => {
   return useAtom(rightPanelAtom);
 };
 
-const activeSettingsTabAtom = atom<"settings" | "styles">("settings");
+const activeSettingsTabAtom = atom<"settings" | "styles" | "advanced">("settings");
 export const useActiveSettingsTab = () => {
   return useAtom(activeSettingsTabAtom);
 };

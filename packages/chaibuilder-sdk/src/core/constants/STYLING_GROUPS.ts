@@ -1,5 +1,4 @@
 import { BreakpointSelector } from "~/core/components/settings/new-panel/breakpoint-selector";
-import { ManualClasses } from "~/core/components/settings/new-panel/manual-classes";
 
 const BASIC_UNITS: string[] = ["px", "%", "em", "rem", "ch", "vh", "vw"];
 
@@ -31,7 +30,6 @@ export const SETTINGS_SECTIONS = [
   {
     heading: "Styles",
     items: [
-      { component: ManualClasses },
       { component: BreakpointSelector },
       { type: "arbitrary", label: "layout.width", units: BASIC_UNITS.concat("auto"), property: "width" },
       { type: "arbitrary", label: "layout.height", units: BASIC_UNITS.concat("auto"), property: "height" },
@@ -492,9 +490,5 @@ export const SETTINGS_SECTIONS_ALL = [
         ],
       },
     ],
-  },
-  {
-    heading: "classes.heading",
-    items: [{ component: ManualClasses }],
   },
 ];

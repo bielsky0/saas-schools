@@ -170,6 +170,7 @@ export async function POST(req: NextRequest) {
             // UI locale for the editor chrome. Tenant-level default for now; a
             // per-organization `locale` column should flow through here later.
             uiLocale: "pl",
+            role: session ? "admin" : "guest",
             settings: orgRow[0] ?? { name: "Akademia", currency: "PLN" },
           });
         }

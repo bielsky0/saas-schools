@@ -66,8 +66,33 @@ function useUiLocale() {
   return uiLocale;
 }
 
+function useDevRole() {
+  const [role, setRole] = useState<"admin" | "guest">("guest");
+
+  useEffect(() => {
+    fetch("/editor/api", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "GET_WEBSITE_DATA", data: {} }),
+    })
+      .then((r) => r.json())
+      .then((data: { role?: "admin" | "guest" }) => {
+        let nextRole: "admin" | "guest" = data?.role ?? "guest";
+        const devOverride =
+          process.env.NODE_ENV === "development" &&
+          new URLSearchParams(window.location.search).get("devMode") === "1";
+        if (devOverride) nextRole = "admin";
+        setRole(nextRole);
+      })
+      .catch(() => {});
+  }, []);
+
+  return role;
+}
+
 export default function Editor() {
   const pageTypeMap = usePageTypeMap();
+  const devRole = useDevRole();
   const uiLocale = useUiLocale();
   const getAccessToken = useCallback(async () => MOCK_ACCESS_TOKEN, []);
 
@@ -96,6 +121,7 @@ export default function Editor() {
         dragAndDrop: true,
         ai: true,
         darkMode: true,
+        devMode: devRole === "admin",
       }}
       currentUser={null}
       locale={uiLocale}

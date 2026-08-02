@@ -3,6 +3,8 @@ import { filter, isEmpty, map } from "lodash-es";
 import { Suspense, lazy, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRightPanel } from "~/hooks/use-theme";
+import { useSelectedBlockIds } from "~/hooks/use-selected-blockIds";
+import { useSelectedStylingBlocks } from "~/hooks/use-selected-styling-blocks";
 import PageManagerSearchAndFilter from "~/pages/client/components/page-manager/page-manager-search-and-filter";
 import RenderPageItems from "~/pages/client/components/page-manager/render-page-items";
 import { useWebsitePrimaryPages } from "~/pages/hooks/pages/use-project-pages";
@@ -34,6 +36,8 @@ export const PagesTab = () => {
   const fallbackLang = useFallbackLang();
   const [queryParams, setQueryParams] = useSearchParams();
   const [, setRightPanel] = useRightPanel();
+  const [, setIds] = useSelectedBlockIds();
+  const [, setStyleBlocks] = useSelectedStylingBlocks();
   const currentPage = queryParams.get("page");
 
   const [search, setSearch] = useState("");
@@ -68,10 +72,12 @@ export const PagesTab = () => {
 
   const changePage = useCallback(
     (pageId: string) => {
+      setIds([]);
+      setStyleBlocks([]);
       navigateToPage(new URLSearchParams({ page: pageId }), setQueryParams);
       setRightPanel("page");
     },
-    [setQueryParams, setRightPanel],
+    [setIds, setStyleBlocks, setQueryParams, setRightPanel],
   );
 
   const handleClickAction = useCallback(

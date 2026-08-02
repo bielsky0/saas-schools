@@ -103,6 +103,18 @@ const PAGES_TAB_KEYS = [
   "Search pages",
 ];
 
+const RIGHT_PANEL_KEYS = [
+  "Advanced",
+  "Select a block or page",
+  "Select a block on the canvas or a page from the Pages tab to edit its settings",
+  "Advanced (CSS classes)",
+  "Custom code",
+  "Custom code coming soon",
+  "Visibility",
+  "Conditional Visibility",
+  "Enter a JavaScript expression",
+];
+
 describe("Editor i18n (Faza 0.3)", () => {
   it("BuilderLayout keys exist in both en.json and pl.json", () => {
     for (const key of LAYOUT_KEYS) {
@@ -138,6 +150,14 @@ describe("Editor i18n (Faza 0.3)", () => {
 
   it("Pages tab (Faza 4) keys exist in en.json and are translated in pl.json", () => {
     for (const key of PAGES_TAB_KEYS) {
+      expect(en, `en.json missing "${key}"`).toHaveProperty(key);
+      expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
+      expect(pl[key as keyof typeof pl]).toBeTruthy();
+    }
+  });
+
+  it("Right panel (Faza 5) keys exist in en.json and are translated in pl.json", () => {
+    for (const key of RIGHT_PANEL_KEYS) {
       expect(en, `en.json missing "${key}"`).toHaveProperty(key);
       expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
       expect(pl[key as keyof typeof pl]).toBeTruthy();

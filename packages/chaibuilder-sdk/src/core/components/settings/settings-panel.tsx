@@ -1,45 +1,22 @@
-import { ChevronDownIcon, MixerHorizontalIcon } from "@radix-ui/react-icons";
-import { isEmpty, noop } from "lodash-es";
-import React, { useCallback, useState } from "react";
+import { MixerHorizontalIcon } from "@radix-ui/react-icons";
+import { noop } from "lodash-es";
+import React, { useCallback } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { FallbackError } from "~/core/components/fallback-error";
+import { AdvancedPanel } from "~/core/components/settings/advanced-panel";
 import BlockSettings from "~/core/components/settings/block-settings";
 import BlockStyling from "~/core/components/settings/block-styling";
-import { BlockAttributesEditor } from "~/core/components/settings/new-panel/block-attributes-editor";
 import { PERMISSIONS } from "~/core/main";
 import { useBuilderProp } from "~/hooks/use-builder-prop";
 import { useLanguages } from "~/hooks/use-languages";
 import { usePermissions } from "~/hooks/use-permissions";
 import { useSavePage } from "~/hooks/use-save-page";
 import { useSelectedBlock } from "~/hooks/use-selected-blockIds";
-import { useSelectedStylingBlocks } from "~/hooks/use-selected-styling-blocks";
 import { useActiveSettingsTab } from "~/hooks/use-theme";
 import { ResetStylesButton } from "./choices/reset-all-styles";
-
-function BlockAttributesToggle() {
-  const { t } = useTranslation();
-  const [showAttributes, setShowAttributes] = useState(true);
-  const [stylingBlocks] = useSelectedStylingBlocks();
-  if (isEmpty(stylingBlocks)) {
-    return null;
-  }
-  return (
-    <>
-      <div
-        onClick={() => setShowAttributes(!showAttributes)}
-        className="flex cursor-pointer items-center justify-between border-t border-border py-3 text-xs font-medium hover:underline">
-        <span>{t("Attributes")}</span>
-        <span>
-          <ChevronDownIcon className={"h-4 w-4 text-gray-500 " + (showAttributes ? "rotate-180" : "")} />
-        </span>
-      </div>
-      {showAttributes && <BlockAttributesEditor />}
-    </>
-  );
-}
 
 const PartialWrapper = ({ partialBlockId }: { partialBlockId: string }) => {
   const gotoPage = useBuilderProp("gotoPage", noop);
@@ -72,6 +49,7 @@ const SettingsPanel: React.FC = () => {
   const { t } = useTranslation();
   const onErrorFn = useBuilderProp("onError", noop);
   const { hasPermission } = usePermissions();
+  const devMode = useBuilderProp("flags.devMode", false);
   let isSettingsDisabled = !hasPermission(PERMISSIONS.EDIT_BLOCK);
   const isStylesDisabled = !hasPermission(PERMISSIONS.EDIT_STYLES);
   const [activeTab, setActiveTab] = useActiveSettingsTab();
@@ -87,7 +65,7 @@ const SettingsPanel: React.FC = () => {
       <div className="p-4 text-center">
         <div className="space-y-4 rounded-xl p-4 text-muted-foreground">
           <MixerHorizontalIcon className="mx-auto text-3xl" />
-          <h1>{t("Please select a block to edit settings or styles")}</h1>
+          <h1>{t("Select a block or page")}</h1>
         </div>
       </div>
     );
@@ -127,7 +105,7 @@ const SettingsPanel: React.FC = () => {
             <ResetStylesButton />
           </div>
           <BlockStyling />
-          <BlockAttributesToggle />
+          {devMode && <AdvancedPanel />}
           <br />
           <br />
           <br />
@@ -137,7 +115,7 @@ const SettingsPanel: React.FC = () => {
   }
 
   const handleTabChange = (value: string) => {
-    if (value === "settings" || value === "styles") {
+    if (value === "settings" || value === "styles" || value === "advanced") {
       setActiveTab(value);
     }
   };
@@ -147,18 +125,23 @@ const SettingsPanel: React.FC = () => {
     <ErrorBoundary fallback={<FallbackError />} onError={onErrorFn}>
       <Tabs value={activeTab} onValueChange={handleTabChange} className="flex flex-1 flex-col">
         <div className="flex items-center justify-between">
-          <TabsList className="grid h-auto w-full grid-cols-2 p-1 py-1">
+          <TabsList className={`grid h-auto w-full p-1 py-1 ${devMode ? "grid-cols-3" : "grid-cols-2"}`}>
             <TabsTrigger value="settings" className="text-xs">
-              {t("Settings")}
+              {t("Content")}
             </TabsTrigger>
             <TabsTrigger value="styles" className="text-xs">
-              <div className="flex w-full items-center justify-between">
-                <span className="w-[90%] text-center">{t("Styling")}</span>
-                <span className="w-[10%]">
-                  <ResetStylesButton />
-                </span>
-              </div>
+              <span className="w-full text-center">{t("Styling")}</span>
             </TabsTrigger>
+            {devMode && (
+              <TabsTrigger value="advanced" className="text-xs">
+                <div className="flex w-full items-center justify-center gap-1">
+                  <span>{t("Advanced")}</span>
+                  <span className="rounded border border-dashed border-muted-foreground/40 px-1 text-[9px] font-normal uppercase tracking-wide text-muted-foreground">
+                    dev
+                  </span>
+                </div>
+              </TabsTrigger>
+            )}
           </TabsList>
         </div>
         <TabsContent value="settings" className="no-scrollbar h-full max-h-min overflow-y-auto">
@@ -169,12 +152,27 @@ const SettingsPanel: React.FC = () => {
         <TabsContent
           value="styles"
           className="no-scrollbar h-full max-h-min max-w-full overflow-y-auto overflow-x-hidden">
+          <div className="mb-2 flex items-center justify-end">
+            <ResetStylesButton />
+          </div>
           <BlockStyling />
-          <BlockAttributesToggle />
           <br />
           <br />
           <br />
         </TabsContent>
+        {devMode && (
+          <TabsContent
+            value="advanced"
+            className="no-scrollbar h-full max-h-min max-w-full overflow-y-auto overflow-x-hidden">
+            <p className="border-b border-border py-2 text-[11px] text-muted-foreground">
+              {t("Advanced (CSS classes)")}
+            </p>
+            <AdvancedPanel />
+            <br />
+            <br />
+            <br />
+          </TabsContent>
+        )}
       </Tabs>
     </ErrorBoundary>
   );
