@@ -27,7 +27,7 @@ import TopbarLeft from "~/pages/client/components/topbar-left";
 import { PreviewButton, PublishButton } from "~/pages/client/components/topbar-right";
 import { useGetPageFullSlug, usePrimaryPage } from "~/pages/hooks/pages/use-current-page";
 
-const SaveStateLabel = () => {
+export const SaveStateLabel = () => {
   const { t } = useTranslation();
   const { savePageAsync, saveState } = useSavePage();
   const { isLocked } = usePageLockStatus();

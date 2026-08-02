@@ -117,6 +117,7 @@ export default function Editor() {
   return (
     <ChaiWebsiteBuilder
       layout={BuilderLayout}
+      smallScreenComponent={false}
       flags={{
         dragAndDrop: true,
         ai: true,

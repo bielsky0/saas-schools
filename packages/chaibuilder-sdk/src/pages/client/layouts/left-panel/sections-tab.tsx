@@ -84,7 +84,7 @@ const EmptyPageState = ({ onAdd }: { onAdd: () => void }) => {
   );
 };
 
-const AddSectionDialog = () => {
+export const AddSectionDialog = () => {
   const { t } = useTranslation();
   const [open, setOpen] = useAtom(addSectionDialogOpenAtom);
 
@@ -104,7 +104,7 @@ const AddSectionDialog = () => {
   );
 };
 
-const GenerateSectionDialog = () => {
+export const GenerateSectionDialog = () => {
   const { t } = useTranslation();
   const [open, setOpen] = useAtom(generateSectionDialogOpenAtom);
   const [prompt, setPrompt] = useState("");

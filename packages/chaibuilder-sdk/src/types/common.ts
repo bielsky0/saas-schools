@@ -67,6 +67,7 @@ export type ChaiWebsiteBuilderProps = {
   | "flags"
   | "structureRules"
   | "layout"
+  | "smallScreenComponent"
 >;
 
 export type ChaiPageProps<T = Record<string, any>> = {

@@ -185,9 +185,18 @@ MARKA
 
 ## 9. Faza 6 — Mobile editor (2b) — plan szczegółowy
 
+> **Status: ZROBIONE (sesja 2026-08-02).** Różnice względem planu:
+> - `smallScreenComponent={false}` (render `null`), nie `null` — patch `screen-too-small.tsx` + forward przez `ChaibuilderPages`/`ChaiBuilderInner` + typ `ReactComponentType | false`.
+> - Stany sheeta: `"collapsed" | "settings" | "menu" | "theme" | "pages" | "actions"` (`mobileSheetAtom`) + `inspectorEnabledAtom` (placeholder „wkrótce").
+> - „‹ wróć do strony" zamyka tylko sheet (decyzja: bez nawigacji); Back w sheecie = stan z `BACK_TARGET`.
+> - **Drzewo sekcji na mobile NIE używa `react-arborist`** (klik w Radix Dialog nie selekcjonował — `aria-selected` nie ustawiane). Zamiast tego `MobileTree` — prosta tappowalna lista z `groupSections`, tap = `setIds([id])` + przejście do settings.
+> - `SheetContent` dostał prop `showCloseButton={false}` (wbudowany X nakładał się na „Akcje bloku" w headerze).
+> - Reużycia: `SaveStateLabel` (topbar), `AddSectionDialog`/`GenerateSectionDialog` (sections-tab), `ThemeTab`/`PagesTab`, `UndoRedo`, `PreviewButton` — wyeksportowane tam, gdzie dotąd prywatne.
+> - **Follow-up (sesja 2026-08-02):** tap na blok na canvasie otwiera settings (`MobileBottomSheet` nasłuchuje `CANVAS_BLOCK_SELECTED`→settings, `CANVAS_BLOCK_STYLE_SELECTED`→settings, `CLEAR_CANVAS_SELECTION`/pusty klik→collapsed; spójne z desktopem, nie koliduje z drzewem — tam selekcja idzie bezpośrednio). Canvas renderuje się w **szerokości urządzenia**, nie laptopowej: `MobileBuilderLayout` w `useLayoutEffect` ustawia `canvasWidthAtom`/`canvasDisplayWidthAtom` = `window.innerWidth` (resize listener) i **przywraca** na cleanupie poprzednie `canvasWidth/canvasDisplayWidth/canvasZoom/selectedBreakpoints` (fix pre-existing buga — desktop nie zostawał z `["XS"]` po powrocie z mobile; localStorage edge: zamknięcie karty na mobile zostawia szerokość urządzenia do czasu kliknięcia breakpointa). E2E `e2e/mobile-editor.spec.ts`: asercja `transform: scale() > 0.9` (rozróżnia 390px od 800px — iframe jest zawsze `w-full`) + tap→settings; `waitUntil: "domcontentloaded"` (page ma ciągłe requesty, `networkidle` bywał flaky).
+
 ### 9.1 Założenia
-- Tryb mobilny wykrywany po **szerokości okna** (nie canvas): hook `useIsMobile()` (`window.innerWidth < 768`, listener resize, atom).
-- **Wymagane: wyłączyć `ScreenTooSmall`** — overlay blokuje wszystko <1280px (screen-too-small.tsx). Dodać prop `smallScreenComponent={null}` gdy mobile (lub flagę), by nie renderował „Screen too small".
+- Tryb mobilny wykrywany po **szerokości okna** (nie canvas): hook `useIsMobile()` (`window.innerWidth < 768`, resize listener) w `hooks/use-is-mobile.ts` (+ test).
+- **Wymagane: wyłączyć `ScreenTooSmall`** — `smallScreenComponent={false}` → render `null`.
 - `BuilderLayout` rozgałęzia: `isMobile ? <MobileBuilderLayout/> : <DesktopBuilderLayout/>`.
 
 ### 9.2 MobileBuilderLayout
@@ -197,14 +206,15 @@ MARKA
 
 ### 9.3 Stany Sheeta
 1. **Collapsed (chip zaznaczenia):** pasek przy dole: „Polecane kursy · sekcja · 4 bloki ⋯" — nazwa z `useSelectedBlock()`; tap → stan settings; `⋯` → stan actions; osobne przyciski `+` (dodaj), `☰` (menu).
-2. **Settings:** `SettingsPanel` (z Fazy 5) w sheecie; header „‹ Wróć" (→ collapsed) + „⋯".
+2. **Settings:** `SettingsPanel` (z Fazy 5) w sheecie; header „‹ Wróć" (→ collapsed) + „⋯" (→ actions).
 3. **Menu (☰):** lista:
-   - **Drzewo sekcji** (grupowane, Faza 2) — przewijane, `ListTree` w trybie mobilnym (zmniejszony indent, tap = zaznacz i zamknij → settings),
+   - **Drzewo sekcji** (grupowane, Faza 2) — przewijane, `MobileTree` (tap = zaznacz i przejdź do settings),
    - **„✦ Wygeneruj sekcję"** (AI, dialog),
-   - **„Inspector: włączony"** toggle,
-   - **↺ Cofnij / ↻ Ponów**,
-   - **WIĘCEJ:** Ustawienia motywu (→ motyw), Strony (→ lista), Podgląd na żywo (→ `/api/preview`).
-4. **Actions (⋯ na bloku):** „‹ Wróć" + akcje: Kopiuj, Duplikuj (`duplicate-block`), Nazwa (`_name` edit), Ukryj (visibility), Usuń sekcję; poniżej „BLOKI W SEKCJI" (`ListTree` sekcji wewnętrznych) + „＋ Dodaj blok".
+   - **„Inspector: włączony"** toggle (`inspectorEnabledAtom`, placeholder),
+   - **↺ Cofnij / ↻ Ponów** (`UndoRedo`),
+   - **WIĘCEJ:** Ustawienia motywu (→ `theme`), Strony (→ `pages`), Podgląd na żywo (→ `/api/preview`).
+4. **Actions (⋯ na bloku):** „‹ Wróć" + akcje: Kopiuj, Duplikuj (`duplicate-block`), Nazwa (`_name` edit), Ukryj (visibility), Usuń sekcję; poniżej „BLOKI W SEKCJI" (`MobileTree` sekcji wewnętrznych) + „＋ Dodaj blok".
+5. **Theme / Pages:** osobne stany (`theme`/`pages`) reużywające `ThemeTab`/`PagesTab`; Back wraca do `menu`.
 
 ### 9.4 Pliki mobilne
 - `layouts/mobile/mobile-builder-layout.tsx`
@@ -220,7 +230,7 @@ MARKA
 - `Sheet` musi mieć `max-h-[85vh]`, body nie przewija.
 - `ScreenTooSmall` — bez patcha mobile nie wystartuje.
 
-**DoD:** 4 stany sheeta przechodzą między sobą; edycja bloku i nawigacja działają z toucha; autozapis/publikuj działają; canvas na pełną wysokość bez overlay.
+**DoD (spełniony):** 6 stanów sheeta przechodzą między sobą (zweryfikowane e2e `e2e/mobile-editor.spec.ts`: collapsed→menu→theme→back→pages→collapsed→menu→settings→actions); edycja bloku i nawigacja działają z toucha; brak overlay „Screen too small"; test SDK `use-is-mobile` + 569 testów regresji zielone.
 
 ---
 

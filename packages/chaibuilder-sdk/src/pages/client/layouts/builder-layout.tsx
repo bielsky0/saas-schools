@@ -10,13 +10,15 @@ import { useSelectedBlock } from "~/hooks/use-selected-blockIds";
 import { useRightPanel } from "~/hooks/use-theme";
 import { useTopBarComponent } from "~/runtime/client";
 import { BuilderLeftPanel } from "./left-panel/builder-left-panel";
+import { MobileBuilderLayout } from "./mobile/mobile-builder-layout";
+import { useIsMobile } from "./mobile/use-is-mobile";
 import { EmptyRightPanel } from "./right-panel/empty-right-panel";
 import { PageSettings } from "./right-panel/page-settings";
 import { ThemeEditor } from "./theme/theme-editor";
 
 const DEFAULT_PANEL_WIDTH = 280;
 
-const BuilderLayout = () => {
+const DesktopBuilderLayout = () => {
   const TopBar = useTopBarComponent();
   const [panel, setRightPanel] = useRightPanel();
   const htmlDir = useBuilderProp("htmlDir", "ltr");
@@ -74,6 +76,11 @@ const BuilderLayout = () => {
       </TooltipProvider>
     </div>
   );
+};
+
+const BuilderLayout = () => {
+  const isMobile = useIsMobile();
+  return isMobile ? <MobileBuilderLayout /> : <DesktopBuilderLayout />;
 };
 
 export { BuilderLayout };

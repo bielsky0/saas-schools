@@ -115,6 +115,30 @@ const RIGHT_PANEL_KEYS = [
   "Enter a JavaScript expression",
 ];
 
+const MOBILE_KEYS = [
+  "Back",
+  "Name",
+  "Hide",
+  "Delete section",
+  "Add block",
+  "Blocks in section",
+  "MORE",
+  "Theme settings",
+  "Live preview",
+  "Inspector",
+  "Enabled",
+  "Disabled",
+  "Block settings",
+  "Nothing selected",
+  "blocks",
+  "Menu",
+  "Block actions",
+  "No blocks",
+  "Done",
+  "Undo / Redo",
+  "Editor",
+];
+
 describe("Editor i18n (Faza 0.3)", () => {
   it("BuilderLayout keys exist in both en.json and pl.json", () => {
     for (const key of LAYOUT_KEYS) {
@@ -158,6 +182,14 @@ describe("Editor i18n (Faza 0.3)", () => {
 
   it("Right panel (Faza 5) keys exist in en.json and are translated in pl.json", () => {
     for (const key of RIGHT_PANEL_KEYS) {
+      expect(en, `en.json missing "${key}"`).toHaveProperty(key);
+      expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
+      expect(pl[key as keyof typeof pl]).toBeTruthy();
+    }
+  });
+
+  it("Mobile editor (Faza 6) keys exist in en.json and are translated in pl.json", () => {
+    for (const key of MOBILE_KEYS) {
       expect(en, `en.json missing "${key}"`).toHaveProperty(key);
       expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
       expect(pl[key as keyof typeof pl]).toBeTruthy();

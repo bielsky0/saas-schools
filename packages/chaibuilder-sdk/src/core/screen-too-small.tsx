@@ -3,6 +3,7 @@ import { useBuilderProp } from "../hooks/use-builder-prop";
 
 export const ScreenTooSmall = () => {
   const smallScreenComponent = useBuilderProp("smallScreenComponent", null);
+  if (smallScreenComponent === false) return null;
   return (
     <section className="fixed inset-0 z-[99999] flex h-screen w-screen items-center justify-center bg-white xl:hidden">
       {smallScreenComponent ? (

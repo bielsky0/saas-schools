@@ -304,5 +304,5 @@ export interface ChaiBuilderEditorProps {
   /**
    * Screen to small message component
    */
-  smallScreenComponent?: ReactComponentType;
+  smallScreenComponent?: ReactComponentType | false;
 }
