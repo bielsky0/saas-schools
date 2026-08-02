@@ -12,6 +12,7 @@ import { enqueueNotification } from "@/features/notifications/send";
 import { requireSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { invitation, membership, organization, user } from "@/lib/db/schema";
+import { cmsCollection, DEFAULT_CMS_COLLECTIONS } from "@/lib/db/schema/cms-collections";
 import { clientEnv } from "@/lib/env/client";
 import { storedLocaleForEmail, toLocale } from "@/lib/i18n/user-locale";
 import type { FormState } from "@/lib/validation";
@@ -167,6 +168,19 @@ export async function createOrganizationAction(
       role: "owner",
       status: "active",
     });
+    // Seed the tenant's default CMS collections (blog-templates-cms F2.5) —
+    // mirrors migration 0077's seed for existing orgs.
+    await tx.insert(cmsCollection).values(
+      DEFAULT_CMS_COLLECTIONS.map((c) => ({
+        organizationId,
+        key: c.key,
+        name: c.name,
+        pageType: c.pageType,
+        templatePageType: c.templatePageType,
+        templates: c.templates,
+        position: c.position,
+      })),
+    );
     // The genesis row: without it an org's trail begins mid-story, and "who
     // created this tenant" is the first question any audit asks.
     await recordAudit(tx, {

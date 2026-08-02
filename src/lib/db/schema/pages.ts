@@ -1,7 +1,7 @@
 import { boolean, index, jsonb, pgTable, text, timestamp, unique } from "drizzle-orm/pg-core";
 import type { ChaiBlock } from "@chaibuilder/sdk/types";
 
-import type { TemplateConfig } from "@/lib/cms-collections";
+import type { TemplateConfig } from "./cms-collections";
 
 import { organization } from "./organizations";
 import { user } from "./auth";

@@ -1,4 +1,4 @@
-import { File } from "lucide-react";
+import { File, Settings } from "lucide-react";
 import { filter, isEmpty, map } from "lodash-es";
 import { Suspense, lazy, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -7,6 +7,7 @@ import { useSelectedBlockIds } from "~/hooks/use-selected-blockIds";
 import { useSelectedStylingBlocks } from "~/hooks/use-selected-styling-blocks";
 import PageManagerSearchAndFilter from "~/pages/client/components/page-manager/page-manager-search-and-filter";
 import RenderPageItems from "~/pages/client/components/page-manager/render-page-items";
+import CollectionManager from "~/pages/client/components/posts-manager/collection-manager";
 import { useCollections } from "~/pages/hooks/pages/use-collections";
 import { useWebsitePrimaryPages } from "~/pages/hooks/pages/use-project-pages";
 import { usePageTypes } from "~/pages/hooks/project/use-page-types";
@@ -14,6 +15,7 @@ import { useFallbackLang } from "~/pages/hooks/use-fallback-lang";
 import { useSearchParams } from "~/pages/hooks/utils/use-search-params";
 import { navigateToPage } from "~/pages/utils/navigation";
 import { buildPageTree, filterPagesBySearch } from "~/pages/utils/page-organization";
+import { CmsCollectionVm } from "~/types/collections";
 import CollectionTreeGroup from "./collection-tree-group";
 import { groupPages } from "./page-groups";
 
@@ -51,6 +53,8 @@ export const PagesTab = () => {
   const [markAsTemplate, setMarkAsTemplate] = useState<any>(null);
   const [unmarkAsTemplate, setUnmarkAsTemplate] = useState<any>(null);
   const [duplicatePage, setDuplicatePage] = useState<any>(null);
+  const [collectionsManagerOpen, setCollectionsManagerOpen] = useState(false);
+  const [editingCollection, setEditingCollection] = useState<CmsCollectionVm | null>(null);
 
   const pages = useMemo(() => {
     if (!data) return [];
@@ -135,6 +139,17 @@ export const PagesTab = () => {
     console.warn(`[F4] Open template editor for: ${templateId} in collection: ${collectionId}`);
   }, []);
 
+  // Faza 2.5: otwiera panel zarządzania w trybie edycji wskazanej kolekcji.
+  const handleEditCollection = useCallback((collection: CmsCollectionVm) => {
+    setEditingCollection(collection);
+    setCollectionsManagerOpen(true);
+  }, []);
+
+  const handleCloseCollectionsManager = useCallback(() => {
+    setCollectionsManagerOpen(false);
+    setEditingCollection(null);
+  }, []);
+
   return (
     <div className="flex h-full flex-col">
       <div className="shrink-0">
@@ -184,13 +199,29 @@ export const PagesTab = () => {
             ))}
             {collectionsData && !isEmpty(collectionsData) && (
               <div key="collections">
-                <GroupHeader label={t("CMS Collections")} count={collectionsData.length} />
+                <div className="group/collections mb-1 mt-3 flex items-center justify-between px-1 first:mt-0">
+                  <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                    {t("CMS Collections")}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <span className="rounded-full bg-muted px-1.5 py-px text-[10px] font-medium text-muted-foreground">
+                      {collectionsData.length}
+                    </span>
+                    <button
+                      onClick={() => setCollectionsManagerOpen(true)}
+                      title={t("Manage collections")}
+                      className="rounded p-0.5 text-muted-foreground opacity-0 transition-opacity duration-300 hover:bg-muted hover:text-foreground group-hover/collections:opacity-100">
+                      <Settings className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                </div>
                 {collectionsData.map((collection) => (
                   <CollectionTreeGroup
                     key={collection.id}
                     collection={collection}
                     onOpenPosts={handleOpenPosts}
                     onOpenTemplate={handleOpenTemplate}
+                    onEditCollection={handleEditCollection}
                   />
                 ))}
               </div>
@@ -234,6 +265,11 @@ export const PagesTab = () => {
           <DuplicatePage page={duplicatePage} onClose={() => setDuplicatePage(null)} closePanel={() => {}} />
         </Suspense>
       )}
+      <CollectionManager
+        open={collectionsManagerOpen}
+        onClose={handleCloseCollectionsManager}
+        editCollection={editingCollection}
+      />
     </div>
   );
 };

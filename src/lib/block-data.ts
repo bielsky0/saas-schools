@@ -3,6 +3,7 @@ import { and, desc, eq, isNull } from "drizzle-orm";
 import type { TenantDb } from "@/lib/db/tenant";
 import { membership, user } from "@/lib/db/schema";
 import { page } from "@/lib/db/schema/pages";
+import { getBlogPageType } from "@/lib/cms-collection-data";
 import { getGroupType } from "@/features/groups/data";
 import { listUpcomingSessions } from "@/features/schedule/data";
 import type { ChaiBlock } from "@chaibuilder/sdk/types";
@@ -102,10 +103,11 @@ export async function getBlogPosts(
   limit?: number,
   offset?: number,
 ) {
+  const pageType = await getBlogPageType(tx, orgId);
   return tx.query.page.findMany({
     where: and(
       eq(page.organizationId, orgId),
-      eq(page.pageType, "blog_post"),
+      eq(page.pageType, pageType),
       eq(page.status, "published"),
     ),
     orderBy: [desc(page.publishedAt)],
@@ -119,6 +121,7 @@ export async function getBlogPostBySlug(
   orgId: string,
   slug: string,
 ) {
+  const pageType = await getBlogPageType(tx, orgId);
   const [row] = await tx
     .select()
     .from(page)
@@ -126,7 +129,7 @@ export async function getBlogPostBySlug(
       and(
         eq(page.organizationId, orgId),
         eq(page.slug, slug),
-        eq(page.pageType, "blog_post"),
+        eq(page.pageType, pageType),
         eq(page.status, "published"),
       ),
     )

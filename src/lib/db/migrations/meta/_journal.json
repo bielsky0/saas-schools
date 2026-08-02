@@ -533,6 +533,13 @@
       "when": 1786500000005,
       "tag": "0076_blog_templates",
       "breakpoints": true
+    },
+    {
+      "idx": 76,
+      "version": "7",
+      "when": 1786500000006,
+      "tag": "0077_cms_collections",
+      "breakpoints": true
     }
   ]
 }

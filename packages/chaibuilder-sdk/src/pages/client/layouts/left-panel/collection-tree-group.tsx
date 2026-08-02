@@ -1,7 +1,14 @@
-import { ChevronRight, Files, LayoutTemplate } from "lucide-react";
+import { ChevronRight, Files, LayoutTemplate, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { atomWithStorage } from "jotai/utils";
 import { useAtom } from "jotai";
 import { useTranslation } from "react-i18next";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+import { useCollectionActions } from "~/pages/hooks/pages/use-collection-actions";
 import { CmsCollectionVm } from "~/types/collections";
 
 const expandedCollectionsAtom = atomWithStorage<string[]>("expandedCollectionsState", []);
@@ -35,15 +42,18 @@ const CollectionTreeGroup = ({
   collection,
   onOpenPosts,
   onOpenTemplate,
+  onEditCollection,
   activeTemplateId,
 }: {
   collection: CmsCollectionVm;
   onOpenPosts: (collectionId: string) => void;
   onOpenTemplate: (templateId: string, collectionId: string) => void;
+  onEditCollection?: (collection: CmsCollectionVm) => void;
   activeTemplateId?: string;
 }) => {
   const { t } = useTranslation();
   const [expandedCollections, setExpandedCollections] = useExpandedCollections();
+  const { deleteCollection } = useCollectionActions();
   const isExpanded = expandedCollections.includes(collection.id);
 
   const toggleExpanded = () => {
@@ -56,7 +66,7 @@ const CollectionTreeGroup = ({
     <div className="mb-0.5">
       <div
         onClick={toggleExpanded}
-        className="flex h-8 cursor-pointer select-none items-center gap-x-1.5 rounded px-1 text-xs duration-300 hover:bg-muted">
+        className="group/row flex h-8 cursor-pointer select-none items-center gap-x-1.5 rounded px-1 text-xs duration-300 hover:bg-muted">
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -73,6 +83,33 @@ const CollectionTreeGroup = ({
         <span className="mr-1 rounded-full bg-muted px-1.5 py-px text-[10px] font-medium text-muted-foreground">
           {collection.postCount}
         </span>
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            onClick={(e) => e.stopPropagation()}
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-muted-foreground opacity-0 transition-opacity duration-300 hover:bg-muted hover:text-foreground group-hover/row:opacity-100 data-[state=open]:opacity-100"
+            title={t("Manage collection")}>
+            <MoreHorizontal size={14} />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="min-w-36">
+            <DropdownMenuItem
+              disabled={collection.postCount > 0}
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteCollection.mutate(collection.id);
+              }}>
+              <Trash2 className="mr-2 h-3.5 w-3.5 text-destructive" />
+              {t("Delete collection")}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                onEditCollection?.(collection);
+              }}>
+              <Pencil className="mr-2 h-3.5 w-3.5" />
+              {t("Edit collection")}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       {isExpanded && (
         <div className="mt-0.5 space-y-0.5 pl-2">

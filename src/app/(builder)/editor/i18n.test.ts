@@ -108,6 +108,20 @@ const PAGES_TAB_KEYS = [
   "Status archived",
 ];
 
+const COLLECTION_MANAGER_KEYS = [
+  "Manage collections",
+  "Manage collection",
+  "Add collection",
+  "Edit collection",
+  "Collection name",
+  "Collection key",
+  "Page type",
+  "Template page type",
+  "Add template",
+  "Delete collection",
+  "Delete template",
+];
+
 const RIGHT_PANEL_KEYS = [
   "Advanced",
   "Select a block or page",
@@ -180,6 +194,14 @@ describe("Editor i18n (Faza 0.3)", () => {
 
   it("Pages tab (Faza 4) keys exist in en.json and are translated in pl.json", () => {
     for (const key of PAGES_TAB_KEYS) {
+      expect(en, `en.json missing "${key}"`).toHaveProperty(key);
+      expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
+      expect(pl[key as keyof typeof pl]).toBeTruthy();
+    }
+  });
+
+  it("Collection manager (F2.5) keys exist in en.json and are translated in pl.json", () => {
+    for (const key of COLLECTION_MANAGER_KEYS) {
       expect(en, `en.json missing "${key}"`).toHaveProperty(key);
       expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
       expect(pl[key as keyof typeof pl]).toBeTruthy();

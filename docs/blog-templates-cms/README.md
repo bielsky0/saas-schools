@@ -15,7 +15,7 @@ Kluczowe założenie: ochrona interfejsu buildera — zarządzanie listą postó
 ## 2. Utrwalone decyzje
 
 - **Zmiany SDK** bezpośrednio w `packages/chaibuilder-sdk/` (fork), bez PR do upstream.
-- **Kolekcje CMS zdefiniowane w kodzie** (config mapujący `pageType` → nazwa kolekcji + lista szablonów). Bez osobnej tabeli i bez UI zarządzania kolekcjami.
+- **Kolekcje CMS zdefiniowane w kodzie** (config mapujący `pageType` → nazwa kolekcji + lista szablonów). Bez osobnej tabeli i bez UI zarządzania kolekcjami. *(do F1–F2; od F2.5 kolekcje per-tenant w tabeli `cms_collection`, zob. `07-collection-management.md`)*
 - **Pełne wyłączenie DND** w trybie edycji treści — nowa flaga `editorMode: "layout" | "content"` w SDK (nie obejście na poziomie bloków).
 - Szablony layoutu to **strony** (`pageType: "blog_post_template"` itp.) powiązane z postami przez nową kolumnę `page.templateId`.
 - UI po polsku, fallback EN (i18n), zgodnie z `docs/editor-spec-implementation-plan.md`.
@@ -28,6 +28,8 @@ Faza 1 ─── Backend: model danych (templateId) + API + config kolekcji
    │
 Faza 2 ─── Lewy panel: drzewo kolekcji CMS (rozwijane listy)
    │
+Faza 2.5 ─ Zarządzanie kolekcjami CMS (per-tenant, DB zamiast kodu)
+   │
 Faza 3 ─── Modal "Lista wpisów" + krok wyboru szablonu
    │
 Faza 4 ─── Tryb edycji szablonu (layout, DND, mapowanie danych, SEO)
@@ -37,7 +39,7 @@ Faza 5 ─── Tryb edycji treści wpisu (inline editing, układ zablokowany)
 Faza 6 ─── Integracja (editorMode atom, nawigacja, breadcrumb, statusy, polish)
 ```
 
-Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewie) oraz od F1 (dane szablonu/postu); F6 zależy od F4+F5.
+Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewie) oraz od F1 (dane szablonu/postu); F6 zależy od F4+F5. F2.5 jest niezależna od F3–F6 i rozszerza F2 (nie zmienia formatu API dla nich).
 
 ## 4. Mapowanie spec → faza
 
@@ -45,6 +47,7 @@ Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewi
 |---|---|
 | STRONY z wskaźnikiem statusu (Live/Robocza/Ukryta) | F2, F6 |
 | SZABLONY (KOLEKCJE CMS) jako rozwijane listy (kolekcja → „Wszystkie wpisy" + warianty szablonów) | F2 |
+| Zarządzanie kolekcjami przez tenanta (tworzenie/edycja/usuwanie, warianty szablonów) — spoza speca, F2.5 | F2.5 |
 | Klik „Wszystkie wpisy" → otwiera bazę postów (bez zmiany widoku roboczego) | F3 |
 | Klik „Szablon: X" → edytor layoutu z DND + placeholderami | F4 |
 | Prawy panel szablonu: Układ, Elementy, Mapowanie danych, Domyślne SEO | F4 |
@@ -62,11 +65,12 @@ Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewi
 |---|---|
 | F1 Backend | 3–4h |
 | F2 Lewy panel | 3–4h |
+| F2.5 Zarządzanie kolekcjami | 7–8h |
 | F3 Modal | 3–4h |
 | F4 Edycja szablonu | 4–5h |
 | F5 Inline editing | 4–5h |
 | F6 Integracja | 2–3h |
-| **Łącznie** | **~19–25h** |
+| **Łącznie** | **~26–33h** |
 
 ## 6. Kluczowe pliki (referencje)
 
@@ -93,6 +97,7 @@ Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewi
 | F0 — Audyt | ✅ | 2026-08-02 | 9 plików zweryfikowanych — stan zgodny z dokumentacją |
 | F1 — Backend | ✅ | 2026-08-02 | **Brak FK** na `templateId` (patrz niżej); szablony-pages tworzone leniwie |
 | F2 — Lewy panel | ✅ | 2026-08-02 | `GET_COLLECTIONS` rozszerzony o `templatePageType`; `toChaiPage` zwraca `status` |
+| F2.5 — Zarządzanie kolekcjami | ✅ | 2026-08-02 | Patrz `07-collection-management.md` — zrealizowano (odchyłki poniżej) |
 | F3 — Modal | ⬜ | — | — |
 | F4 — Edycja szablonu | ⬜ | — | — |
 | F5 — Inline editing | ⬜ | — | — |
@@ -113,3 +118,22 @@ Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewi
 2. **`toChaiPage` zwraca teraz `status`** (`"draft" | "published" | "archived"`). Potrzebne do rozróżnienia badge'y „Robocza" (draft) od „Ukryta" (archived) — samo `online: boolean` nie wystarcza.
 3. **Dedykowane klucze i18n dla badge'ów statusu** (`Status live` / `Status draft` / `Status archived`) zamiast współdzielonych `"Live"` / `"Draft"`, bo te w `pl.json` mapują się na „Opublikowana" / „Wersja robocza" (kontekst prawego panelu) i nie pasują do krótkich badge'y w drzewie.
 4. **Callbacki `onOpenPosts` / `onOpenTemplate` to na razie stuby** (`console.warn`) — właściwa implementacja (modal F3, tryb szablonu F4) w kolejnych fazach. Interfejs komponentu `CollectionTreeGroup` już je udostępnia.
+
+### F2.5 — Zarządzanie kolekcjami CMS (plan)
+
+Pełny plan w `07-collection-management.md`. Utrwalone decyzje (2026-08-02):
+
+1. **UI w lewym panelu buildera** (fork SDK) — nie w dashboardzie.
+2. **Kolekcje per-tenant** — nowa tabela `cms_collection` z `organizationId`, RLS jak `page`.
+3. **Pełne zastąpienie `CMS_COLLECTIONS`** bazą danych — hardcoded config tylko jako seed dla migracji 0077 i `createOrganization()`.
+4. **`api id` kolekcji = stabilny `key`** (np. `"blog"`), nie UUID — backward compat z istniejącym SDK/API.
+5. **Nowe akcje API**: `CREATE/UPDATE/DELETE_COLLECTION` + `CREATE/UPDATE/DELETE_COLLECTION_TEMPLATE`.
+6. **`DELETE_COLLECTION` blokowane gdy `postCount > 0`** (ochrona przed orphan pages).
+7. F3–F6 działają bez zmian — F2.5 nie zmienia formatu odpowiedzi `GET_COLLECTIONS`.
+
+### F2.5 — odchyłki od planu
+
+1. **Brak triggera `updated_at`.** Plan zakładał trigger wywołujący `update_updated_at_column()`, ale ta funkcja nie istnieje w tym repo (żadna tabela jej nie używa). `updatedAt` aktualizuje Drizzle `$onUpdate()` w schema oraz ręcznie w akcjach API — spójnie z resztą bazy.
+2. **Akcje `UPDATE_COLLECTION_TEMPLATE` / `DELETE_COLLECTION_TEMPLATE`** przyjmują `templateId` na top-level (obok `collectionId`), nie w zagnieżdżonym obiekcie.
+3. **`GET_BUILDER_PAGE_DATA`** zgeneralizowany: wzbogaca dane dla dowolnej kolekcji (`getCollectionByPageType`), nie tylko `blog_post`.
+4. **Nazwa pomocnicza:** `getTemplateOf`/`getTemplateNameOf` (przyjmują obiekt kolekcji, nie ID) — zero dodatkowego round-tripu przy już załadowanej kolekcji.

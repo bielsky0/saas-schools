@@ -4,20 +4,26 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { page } from "@/lib/db/schema/pages";
+import { cmsCollection } from "@/lib/db/schema/cms-collections";
 import { organization } from "@/lib/db/schema/organizations";
 import { withTenant, type TenantDb } from "@/lib/db/tenant";
 import {
-  CMS_COLLECTIONS,
-  getCollectionById,
+  getCollectionByKey,
+  getCollectionByPageType,
   getDefaultTemplateConfig,
-  getTemplateById,
-  getTemplateName,
-} from "@/lib/cms-collections";
-import { getBlogPostBySlug } from "@/lib/block-data";
+  getTemplateNameOf,
+  getTemplateOf,
+  listCollections,
+} from "@/lib/cms-collection-data";
 import { ORG_SUBDOMAIN_HEADER } from "@/lib/tenant-host";
 import { getOrgBySubdomain } from "@/features/organizations/data";
 import { resolveUniqueSlug, slugify } from "@/features/organizations/slug";
 import { getActiveBuilderTheme, upsertBuilderTheme } from "@/features/cms/builder-theme-data";
+
+// ── Validation constants (F2.5) ─────────────────────────────────────────
+
+const COLLECTION_KEY_RE = /^[a-z0-9_-]+$/;
+const MAX_TEMPLATES_PER_COLLECTION = 10;
 
 // ── Response shape mapping ──────────────────────────────────────────────
 
@@ -98,17 +104,26 @@ const defaultWebsiteSettings = {
   appChanges: [],
 };
 
-const pageTypes = [
-  { key: "page", name: "Page", helpText: "", icon: "", hasSlug: true },
-  { key: "blog_post", name: "Blog Post", helpText: "", icon: "", hasSlug: true },
-  { key: "blog_post_template", name: "Blog Template", helpText: "", icon: "", hasSlug: true },
-  { key: "course_entry", name: "Course Entry", helpText: "", icon: "", hasSlug: true },
-  { key: "course_template", name: "Course Template", helpText: "", icon: "", hasSlug: true },
-];
+/** Build the page-type list from a tenant's collections (F2.5). */
+function buildPageTypes(
+  collections: { pageType: string; templatePageType: string; name: string }[],
+) {
+  const types = collections.flatMap((c) => [
+    { key: c.pageType, name: c.name, helpText: "", icon: "", hasSlug: true },
+    { key: c.templatePageType, name: `${c.name} Template`, helpText: "", icon: "", hasSlug: true },
+  ]);
+  types.unshift({ key: "page", name: "Page", helpText: "", icon: "", hasSlug: true });
+  return types;
+}
 
-/** Per-collection `postCount` + template list — shared by GET_COLLECTIONS and GET_WEBSITE_DATA. */
+/**
+ * Per-collection `postCount` + template list — shared by GET_COLLECTIONS and
+ * GET_WEBSITE_DATA. Reads from the tenant's `cms_collection` rows instead of
+ * the removed CMS_COLLECTIONS config (F2.5).
+ */
 async function buildCollections(tx: TenantDb, organizationId: string) {
-  const collectionPageTypes = CMS_COLLECTIONS.map((c) => c.pageType);
+  const collections = await listCollections(tx, organizationId);
+  const collectionPageTypes = collections.map((c) => c.pageType);
   const counts =
     collectionPageTypes.length > 0
       ? await tx
@@ -127,8 +142,8 @@ async function buildCollections(tx: TenantDb, organizationId: string) {
           .groupBy(page.pageType)
       : [];
   const countByType = Object.fromEntries(counts.map((r) => [r.pageType, r.count]));
-  return CMS_COLLECTIONS.map((c) => ({
-    id: c.id,
+  return collections.map((c) => ({
+    id: c.key,
     name: c.name,
     pageType: c.pageType,
     templatePageType: c.templatePageType,
@@ -202,13 +217,14 @@ export async function POST(req: NextRequest) {
           const websiteSettings = builderTheme
             ? { ...defaultWebsiteSettings, theme: builderTheme }
             : defaultWebsiteSettings;
+          const collections = await buildCollections(tx, organizationId);
 
           return NextResponse.json({
             websiteSettings,
             websitePages: pages.map(toChaiPage),
-            pageTypes,
+            pageTypes: buildPageTypes(collections),
             libraries: [],
-            collections: await buildCollections(tx, organizationId),
+            collections,
             // UI locale for the editor chrome. Tenant-level default for now; a
             // per-organization `locale` column should flow through here later.
             uiLocale: "pl",
@@ -252,9 +268,21 @@ export async function POST(req: NextRequest) {
           const { pageType, pageProps } = data;
           let blogData = null;
 
-          if (pageType === "blog_post" && pageProps?.slug) {
+          const collection = await getCollectionByPageType(tx, organizationId, pageType);
+          if (collection && pageProps?.slug) {
             const slug = pageProps.slug.replace(/^\//, "");
-            const post = await getBlogPostBySlug(tx, organizationId, slug);
+            const [post] = await tx
+              .select()
+              .from(page)
+              .where(
+                and(
+                  eq(page.organizationId, organizationId),
+                  eq(page.slug, slug),
+                  eq(page.pageType, collection.pageType),
+                  ne(page.status, "archived"),
+                ),
+              )
+              .limit(1);
             if (post) {
               const seo = (post.seo ?? {}) as Record<string, string>;
               blogData = {
@@ -273,8 +301,10 @@ export async function POST(req: NextRequest) {
           });
         }
 
-        case "GET_PAGE_TYPES":
-          return NextResponse.json(pageTypes);
+        case "GET_PAGE_TYPES": {
+          const collections = await buildCollections(tx, organizationId);
+          return NextResponse.json(buildPageTypes(collections));
+        }
 
         case "GET_COLLECTIONS": {
           return NextResponse.json({
@@ -283,7 +313,7 @@ export async function POST(req: NextRequest) {
         }
 
         case "LIST_COLLECTION_ITEMS": {
-          const collection = getCollectionById(data?.collectionId);
+          const collection = await getCollectionByKey(tx, organizationId, data?.collectionId);
           if (!collection) {
             return NextResponse.json(
               { error: "Collection not found" },
@@ -311,7 +341,7 @@ export async function POST(req: NextRequest) {
             title: r.title,
             slug: r.slug,
             templateId: r.templateId,
-            templateName: getTemplateName(collection.id, r.templateId),
+            templateName: getTemplateNameOf(collection, r.templateId),
             status: r.status,
             createdAt: r.createdAt?.toISOString() ?? "",
           }));
@@ -319,8 +349,8 @@ export async function POST(req: NextRequest) {
         }
 
         case "GET_TEMPLATE_DATA": {
-          const collection = getCollectionById(data?.collectionId);
-          const template = getTemplateById(data?.collectionId, data?.templateId);
+          const collection = await getCollectionByKey(tx, organizationId, data?.collectionId);
+          const template = getTemplateOf(collection, data?.templateId);
           if (!collection || !template) {
             return NextResponse.json(
               { error: "Template not found" },
@@ -390,15 +420,15 @@ export async function POST(req: NextRequest) {
           if (!userId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
           }
-          const collection = getCollectionById(data?.collectionId);
-          const template = getTemplateById(data?.collectionId, data?.templateId);
+          const collection = await getCollectionByKey(tx, organizationId, data?.collectionId);
+          const template = getTemplateOf(collection, data?.templateId);
           if (!collection || !template) {
             return NextResponse.json(
               { error: "Collection or template not found" },
               { status: 404 },
             );
           }
-          if (template.collectionId !== collection.id) {
+          if (template.collectionId !== collection.key) {
             return NextResponse.json(
               { error: "Template does not belong to collection" },
               { status: 400 },
@@ -435,8 +465,8 @@ export async function POST(req: NextRequest) {
           if (!userId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
           }
-          const collection = getCollectionById(data?.collectionId);
-          const template = getTemplateById(data?.collectionId, data?.templateId);
+          const collection = await getCollectionByKey(tx, organizationId, data?.collectionId);
+          const template = getTemplateOf(collection, data?.templateId);
           if (!collection || !template) {
             return NextResponse.json(
               { error: "Template not found" },
@@ -477,6 +507,276 @@ export async function POST(req: NextRequest) {
               .returning();
           }
           return NextResponse.json({ success: true });
+        }
+
+        // ── Faza 2.5: Collection management ─────────────────────────────
+
+        case "CREATE_COLLECTION": {
+          if (!userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+          }
+          const key = String(data?.key ?? "");
+          const name = String(data?.name ?? "").trim();
+          const pageType = String(data?.pageType ?? "").trim();
+          const templatePageType = String(data?.templatePageType ?? "").trim();
+          if (!COLLECTION_KEY_RE.test(key)) {
+            return NextResponse.json(
+              { error: "Collection key must match ^[a-z0-9_-]+$" },
+              { status: 400 },
+            );
+          }
+          if (!name || !pageType || !templatePageType) {
+            return NextResponse.json(
+              { error: "Collection name, pageType and templatePageType are required" },
+              { status: 400 },
+            );
+          }
+          const existing = await getCollectionByKey(tx, organizationId, key);
+          if (existing) {
+            return NextResponse.json(
+              { error: "Collection with this key already exists" },
+              { status: 409 },
+            );
+          }
+          const pageTypeClash = await getCollectionByPageType(tx, organizationId, pageType);
+          if (pageTypeClash) {
+            return NextResponse.json(
+              { error: "This pageType is already used by another collection" },
+              { status: 409 },
+            );
+          }
+          const position = await tx
+            .select({ max: sql<number | null>`max(${cmsCollection.position})` })
+            .from(cmsCollection)
+            .where(eq(cmsCollection.organizationId, organizationId))
+            .then((r) => (r[0]?.max ?? -1) + 1);
+          const templates = Array.isArray(data?.templates)
+            ? data.templates
+            : [];
+          const inserted = await tx
+            .insert(cmsCollection)
+            .values({
+              organizationId,
+              key,
+              name,
+              pageType,
+              templatePageType,
+              templates,
+              position,
+            })
+            .returning();
+          return NextResponse.json({ collection: inserted[0] });
+        }
+
+        case "UPDATE_COLLECTION": {
+          if (!userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+          }
+          const collection = await getCollectionByKey(tx, organizationId, data?.collectionId);
+          if (!collection) {
+            return NextResponse.json(
+              { error: "Collection not found" },
+              { status: 404 },
+            );
+          }
+          const set: Partial<typeof cmsCollection.$inferInsert> = { updatedAt: new Date() };
+          if (data?.name !== undefined) {
+            const name = String(data.name).trim();
+            if (!name) {
+              return NextResponse.json(
+                { error: "Collection name cannot be empty" },
+                { status: 400 },
+              );
+            }
+            set.name = name;
+          }
+          if (data?.pageType !== undefined && data.pageType !== collection.pageType) {
+            const pageType = String(data.pageType).trim();
+            const clash = await getCollectionByPageType(tx, organizationId, pageType);
+            if (clash && clash.id !== collection.id) {
+              return NextResponse.json(
+                { error: "This pageType is already used by another collection" },
+                { status: 409 },
+              );
+            }
+            set.pageType = pageType;
+          }
+          if (data?.templatePageType !== undefined && data.templatePageType !== collection.templatePageType) {
+            set.templatePageType = String(data.templatePageType).trim();
+          }
+          if (data?.templates !== undefined) {
+            if (!Array.isArray(data.templates) || data.templates.length > MAX_TEMPLATES_PER_COLLECTION) {
+              return NextResponse.json(
+                { error: `Templates must be an array of at most ${MAX_TEMPLATES_PER_COLLECTION}` },
+                { status: 400 },
+              );
+            }
+            set.templates = data.templates;
+          }
+          const updated = await tx
+            .update(cmsCollection)
+            .set(set)
+            .where(eq(cmsCollection.id, collection.id))
+            .returning();
+          return NextResponse.json({ collection: updated[0] });
+        }
+
+        case "DELETE_COLLECTION": {
+          if (!userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+          }
+          const collection = await getCollectionByKey(tx, organizationId, data?.collectionId);
+          if (!collection) {
+            return NextResponse.json(
+              { error: "Collection not found" },
+              { status: 404 },
+            );
+          }
+          const [postCount] = await tx
+            .select({ count: sql<number>`count(*)::int` })
+            .from(page)
+            .where(
+              and(
+                eq(page.organizationId, organizationId),
+                eq(page.pageType, collection.pageType),
+                ne(page.status, "archived"),
+              ),
+            );
+          if ((postCount?.count ?? 0) > 0) {
+            return NextResponse.json(
+              { error: "Cannot delete collection with existing posts" },
+              { status: 409 },
+            );
+          }
+          // Orphan template pages are archived so they stop resolving.
+          await tx
+            .update(page)
+            .set({ status: "archived", updatedAt: new Date() })
+            .where(
+              and(
+                eq(page.organizationId, organizationId),
+                eq(page.pageType, collection.templatePageType),
+              ),
+            );
+          await tx.delete(cmsCollection).where(eq(cmsCollection.id, collection.id));
+          return NextResponse.json({ success: true });
+        }
+
+        case "CREATE_COLLECTION_TEMPLATE": {
+          if (!userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+          }
+          const collection = await getCollectionByKey(tx, organizationId, data?.collectionId);
+          if (!collection) {
+            return NextResponse.json(
+              { error: "Collection not found" },
+              { status: 404 },
+            );
+          }
+          if (collection.templates.length >= MAX_TEMPLATES_PER_COLLECTION) {
+            return NextResponse.json(
+              { error: `A collection can have at most ${MAX_TEMPLATES_PER_COLLECTION} templates` },
+              { status: 400 },
+            );
+          }
+          const id = String(data?.template?.id ?? "").trim();
+          const name = String(data?.template?.name ?? "").trim();
+          if (!id || !name) {
+            return NextResponse.json(
+              { error: "Template id and name are required" },
+              { status: 400 },
+            );
+          }
+          if (collection.templates.some((t) => t.id === id)) {
+            return NextResponse.json(
+              { error: "Template with this id already exists" },
+              { status: 409 },
+            );
+          }
+          const templates = [
+            ...collection.templates,
+            {
+              id,
+              name,
+              collectionId: collection.key,
+              layout: String(data?.template?.layout ?? "single") as "single" | "sidebar",
+            },
+          ];
+          const updated = await tx
+            .update(cmsCollection)
+            .set({ templates, updatedAt: new Date() })
+            .where(eq(cmsCollection.id, collection.id))
+            .returning();
+          return NextResponse.json({ collection: updated[0] });
+        }
+
+        case "UPDATE_COLLECTION_TEMPLATE": {
+          if (!userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+          }
+          const collection = await getCollectionByKey(tx, organizationId, data?.collectionId);
+          if (!collection) {
+            return NextResponse.json(
+              { error: "Collection not found" },
+              { status: 404 },
+            );
+          }
+          const templateId = String(data?.templateId ?? "");
+          const existing = collection.templates.find((t) => t.id === templateId);
+          if (!existing) {
+            return NextResponse.json(
+              { error: "Template not found" },
+              { status: 404 },
+            );
+          }
+          const templates = collection.templates.map((t) =>
+            t.id === templateId
+              ? {
+                  ...t,
+                  name: data?.name !== undefined ? String(data.name).trim() : t.name,
+                  layout: data?.layout !== undefined ? (String(data.layout) as "single" | "sidebar") : t.layout,
+                }
+              : t,
+          );
+          const updated = await tx
+            .update(cmsCollection)
+            .set({ templates, updatedAt: new Date() })
+            .where(eq(cmsCollection.id, collection.id))
+            .returning();
+          return NextResponse.json({ collection: updated[0] });
+        }
+
+        case "DELETE_COLLECTION_TEMPLATE": {
+          if (!userId) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+          }
+          const collection = await getCollectionByKey(tx, organizationId, data?.collectionId);
+          if (!collection) {
+            return NextResponse.json(
+              { error: "Collection not found" },
+              { status: 404 },
+            );
+          }
+          if (collection.templates.length <= 1) {
+            return NextResponse.json(
+              { error: "A collection must keep at least one template" },
+              { status: 400 },
+            );
+          }
+          const templateId = String(data?.templateId ?? "");
+          if (!collection.templates.some((t) => t.id === templateId)) {
+            return NextResponse.json(
+              { error: "Template not found" },
+              { status: 404 },
+            );
+          }
+          const templates = collection.templates.filter((t) => t.id !== templateId);
+          const updated = await tx
+            .update(cmsCollection)
+            .set({ templates, updatedAt: new Date() })
+            .where(eq(cmsCollection.id, collection.id))
+            .returning();
+          return NextResponse.json({ collection: updated[0] });
         }
 
         case "UPDATE_PAGE": {
