@@ -98,7 +98,7 @@ Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewi
 | F1 — Backend | ✅ | 2026-08-02 | **Brak FK** na `templateId` (patrz niżej); szablony-pages tworzone leniwie |
 | F2 — Lewy panel | ✅ | 2026-08-02 | `GET_COLLECTIONS` rozszerzony o `templatePageType`; `toChaiPage` zwraca `status` |
 | F2.5 — Zarządzanie kolekcjami | ✅ | 2026-08-02 | Patrz `07-collection-management.md` — zrealizowano (odchyłki poniżej) |
-| F3 — Modal | ⬜ | — | — |
+| F3 — Modal | ✅ | 2026-08-02 | Patrz `03-modal.md` — zrealizowano (odchyłki poniżej) |
 | F4 — Edycja szablonu | ⬜ | — | — |
 | F5 — Inline editing | ⬜ | — | — |
 | F6 — Integracja | ⬜ | — | — |
@@ -137,3 +137,11 @@ Pełny plan w `07-collection-management.md`. Utrwalone decyzje (2026-08-02):
 2. **Akcje `UPDATE_COLLECTION_TEMPLATE` / `DELETE_COLLECTION_TEMPLATE`** przyjmują `templateId` na top-level (obok `collectionId`), nie w zagnieżdżonym obiekcie.
 3. **`GET_BUILDER_PAGE_DATA`** zgeneralizowany: wzbogaca dane dla dowolnej kolekcji (`getCollectionByPageType`), nie tylko `blog_post`.
 4. **Nazwa pomocnicza:** `getTemplateOf`/`getTemplateNameOf` (przyjmują obiekt kolekcji, nie ID) — zero dodatkowego round-tripu przy już załadowanej kolekcji.
+
+### F3 — Modal (odchyłki od planu)
+
+1. **Backend gotowy z F1** — `LIST_COLLECTION_ITEMS` i `CREATE_COLLECTION_ITEM` już istniały; F3 to wyłącznie frontend (SDK). Dodano brakujące stałe w SDK `ACTIONS.ts` (`LIST_COLLECTION_ITEMS`, `CREATE_COLLECTION_ITEM`) oraz typ `CmsCollectionItemVm` w `src/types/collections.ts`.
+2. **Licznik „X z N"** — backend nie zwraca `total` (tylko `items`), więc `N` to `collection.postCount` z `GET_COLLECTIONS`. Przy search/filtrze `N` pozostaje całkowitą liczbą wpisów kolekcji.
+3. **Overlay `bg-black/40`** — zbudowano `DialogContent` z surowych prymitywów Radix (`DialogPrimitive.Content` + własny `DialogOverlay`), bo shadcn `DialogContent` domyślnie ma `bg-black/80`.
+4. **Nawigacja do wpisu** — `navigateToPost(pageId)` (w `use-posts-manager.ts`) używa globalnego `useSearchParams` + `navigateToPage` (ten sam mechanizm co `pages-tab.tsx`); modal zamykany przed nawigacją. F5 przejmie tryb edycji treści po tym URL.
+5. **Błąd tworzenia wpisu** renderowany inline w kroku wyboru szablonu (czerwony alert pod kafelkami) — modal nie zamyka się.

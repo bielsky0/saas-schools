@@ -36,3 +36,17 @@ export type CmsCollectionVm = {
   postCount: number;
   templates: CmsTemplateVm[];
 };
+
+/**
+ * A single post item in a CMS collection, as returned by the builder API's
+ * LIST_COLLECTION_ITEMS action (blog-templates-cms F3).
+ */
+export type CmsCollectionItemVm = {
+  id: string;
+  title: string;
+  slug: string;
+  templateId: string | null;
+  templateName: string | null;
+  status: "draft" | "published" | "archived";
+  createdAt: string;
+};

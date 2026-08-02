@@ -8,6 +8,7 @@ import { useSelectedStylingBlocks } from "~/hooks/use-selected-styling-blocks";
 import PageManagerSearchAndFilter from "~/pages/client/components/page-manager/page-manager-search-and-filter";
 import RenderPageItems from "~/pages/client/components/page-manager/render-page-items";
 import CollectionManager from "~/pages/client/components/posts-manager/collection-manager";
+import { usePostsManager } from "~/pages/client/components/posts-manager/use-posts-manager";
 import { useCollections } from "~/pages/hooks/pages/use-collections";
 import { useWebsitePrimaryPages } from "~/pages/hooks/pages/use-project-pages";
 import { usePageTypes } from "~/pages/hooks/project/use-page-types";
@@ -43,6 +44,7 @@ export const PagesTab = () => {
   const [, setRightPanel] = useRightPanel();
   const [, setIds] = useSelectedBlockIds();
   const [, setStyleBlocks] = useSelectedStylingBlocks();
+  const { open: openPostsModal } = usePostsManager();
   const currentPage = queryParams.get("page");
 
   const [search, setSearch] = useState("");
@@ -130,9 +132,12 @@ export const PagesTab = () => {
   );
 
   // Faza 3: otwiera modal "Lista wpisów" dla danej kolekcji.
-  const handleOpenPosts = useCallback((collectionId: string) => {
-    console.warn(`[F3] Open posts modal for collection: ${collectionId}`);
-  }, []);
+  const handleOpenPosts = useCallback(
+    (collectionId: string) => {
+      openPostsModal(collectionId);
+    },
+    [openPostsModal],
+  );
 
   // Faza 4: przełącza w tryb edycji layoutu szablonu.
   const handleOpenTemplate = useCallback((templateId: string, collectionId: string) => {
