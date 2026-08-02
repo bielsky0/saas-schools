@@ -1180,8 +1180,8 @@
     "semantic_hash": "50a943e9b2c854ace1ebffdf69ad8685"
   },
   "src/features/organizations/actions.ts": {
-    "mtime": 1785060014.6348233,
-    "ast_hash": "c6687151db31edb152d28b00b75eb438",
+    "mtime": 1785680751.9802604,
+    "ast_hash": "778cbdb70ddd597c72d16e52bde222f6",
     "semantic_hash": ""
   },
   "src/features/organizations/audit-data.ts": {
@@ -1755,8 +1755,8 @@
     "semantic_hash": "2aa4ed85c6e0d831f1d5450bcf174e7f"
   },
   "src/lib/db/migrations/meta/_journal.json": {
-    "mtime": 1785669389.5366812,
-    "ast_hash": "f00f47ac4517db99795c301a284de835",
+    "mtime": 1785682450.752447,
+    "ast_hash": "a5ede5128aef81e36360c7c1452fd330",
     "semantic_hash": ""
   },
   "src/lib/db/pagination.ts": {
@@ -1845,8 +1845,8 @@
     "semantic_hash": ""
   },
   "src/lib/db/schema/index.ts": {
-    "mtime": 1785449254.10279,
-    "ast_hash": "113b486fbc8c7ce63cea30c6a3f07953",
+    "mtime": 1785680751.9811778,
+    "ast_hash": "c66a069909b0fa2407076af574ad7757",
     "semantic_hash": ""
   },
   "src/lib/db/schema/invitations.ts": {
@@ -6350,8 +6350,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/en.json": {
-    "mtime": 1785671096.2655985,
-    "ast_hash": "16e66aa8236fede248e156ea2f70b73c",
+    "mtime": 1785684687.2523134,
+    "ast_hash": "0d332cdb477623d9440cdd80c4d4982c",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/load.ts": {
@@ -7505,8 +7505,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/constants/ACTIONS.ts": {
-    "mtime": 1785311019.1781917,
-    "ast_hash": "b025860f8a1398e0c6648dc230330ff7",
+    "mtime": 1785684687.2535439,
+    "ast_hash": "c292fe9955172b7e17f27e5811ca7e47",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/constants/ERRORS.ts": {
@@ -8420,8 +8420,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/types/collections.ts": {
-    "mtime": 1785671096.268737,
-    "ast_hash": "f43826f549bf503ab30885b52f3d2267",
+    "mtime": 1785684687.2536912,
+    "ast_hash": "07863005bdc32904d95f9a10b7dc88d2",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/types/common.ts": {
@@ -8700,8 +8700,8 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/api/route.ts": {
-    "mtime": 1785671096.269689,
-    "ast_hash": "3ec9835c1f02b1cf3425bfb44cb5f39e",
+    "mtime": 1785680751.978969,
+    "ast_hash": "7b2f1f9a406eb80a99560eed3806d603",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/editor.tsx": {
@@ -8970,8 +8970,8 @@
     "semantic_hash": ""
   },
   "src/lib/block-data.ts": {
-    "mtime": 1785398811.0260587,
-    "ast_hash": "2d7809afaab5c486b19f3cef9321509a",
+    "mtime": 1785680751.9807262,
+    "ast_hash": "a7eca5af4807669df256c7981d7fcc79",
     "semantic_hash": ""
   },
   "src/lib/blocks-library.ts": {
@@ -8985,13 +8985,13 @@
     "semantic_hash": ""
   },
   "src/lib/db/schema/pages.ts": {
-    "mtime": 1785669036.8378012,
-    "ast_hash": "386778a7ea5066ae2627aef5743e2e95",
+    "mtime": 1785680751.9818676,
+    "ast_hash": "ba5f57ad3b5a4297ac026def0ac7f50d",
     "semantic_hash": ""
   },
   "src/lib/page-service.ts": {
-    "mtime": 1785411972.9878955,
-    "ast_hash": "9814e837366a36853fd416f97cac3aef",
+    "mtime": 1785680751.982242,
+    "ast_hash": "27e66b5e37b6a19787935fa71a71e9f6",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/.github/FUNDING.yml": {
@@ -10555,8 +10555,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/builder-layout.tsx": {
-    "mtime": 1785659154.3626878,
-    "ast_hash": "646edbd1743959a76ecc8a38f2c5ca57",
+    "mtime": 1785684687.2528746,
+    "ast_hash": "eaba0bba91ef2c7cfdee322219c071e6",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/layout/index.ts": {
@@ -10575,13 +10575,13 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/i18n.test.ts": {
-    "mtime": 1785671096.2702725,
-    "ast_hash": "a683512c07954cd302a5d5cdbe5188b2",
+    "mtime": 1785684687.2539153,
+    "ast_hash": "4b204fdd92c9bef1113db35f7f29bf53",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/pl.json": {
-    "mtime": 1785671096.2707598,
-    "ast_hash": "fda6287b25c79172b33c1d3f3e63ca12",
+    "mtime": 1785684687.2541282,
+    "ast_hash": "1f3e699bc35dcfc6e5935107f6408a0f",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/topbar/builder-top-bar.tsx": {
@@ -10670,8 +10670,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/pages-tab.tsx": {
-    "mtime": 1785671096.2680483,
-    "ast_hash": "695f0751ea29a26df62180ec1fb6b39c",
+    "mtime": 1785684687.2533362,
+    "ast_hash": "a0c33c07ca71623caf3db030f4033e36",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/right-panel/page-settings.tsx": {
@@ -10774,16 +10774,6 @@
     "ast_hash": "878fecb179df03f8b556030a9cebccd1",
     "semantic_hash": ""
   },
-  "src/lib/cms-collections.test.ts": {
-    "mtime": 1785668990.7926586,
-    "ast_hash": "55b103b701d840249ebd6e51f6144b54",
-    "semantic_hash": ""
-  },
-  "src/lib/cms-collections.ts": {
-    "mtime": 1785668723.1179738,
-    "ast_hash": "5b862748bb15b27f639608dea4fe2620",
-    "semantic_hash": ""
-  },
   "src/lib/db/migrations/0076_blog_templates.sql": {
     "mtime": 1785668714.1141899,
     "ast_hash": "413cf399f5ad76fdcec9b97652e3bc6b",
@@ -10830,18 +10820,78 @@
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/README.md": {
-    "mtime": 1785671233.4004245,
-    "ast_hash": "a060374391f08f324a5c59f94996340a",
+    "mtime": 1785684709.8482432,
+    "ast_hash": "51c72c5c127c99105f297193dc09cdfa",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/collection-tree-group.tsx": {
-    "mtime": 1785670747.4532259,
-    "ast_hash": "107df6e6323ce9820591c9eaf9f9282e",
+    "mtime": 1785680800.6508827,
+    "ast_hash": "1448ddf02313ba1bf609803ccfc3e8d3",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/hooks/pages/use-collections.ts": {
     "mtime": 1785670697.7124817,
     "ast_hash": "4d4bd77765dc44791de6cda2d9189f5b",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/components/posts-manager/collection-manager.tsx": {
+    "mtime": 1785680831.5232193,
+    "ast_hash": "c6a527ab181fcd0c5b9cc3dbacdd0358",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/components/posts-manager/posts-list-row.tsx": {
+    "mtime": 1785684687.2673206,
+    "ast_hash": "1c9f1647a80127d1ab72dc45cfa65f54",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/components/posts-manager/posts-list.tsx": {
+    "mtime": 1785684687.267512,
+    "ast_hash": "a5fdef128ceedb38f09551f43f5b973f",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/components/posts-manager/posts-manager-modal.tsx": {
+    "mtime": 1785684687.2676241,
+    "ast_hash": "ce538c1a973300f708b27bbca6be232a",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/components/posts-manager/template-selector.tsx": {
+    "mtime": 1785684687.2677577,
+    "ast_hash": "002b40656d234a3e582328e7489ae80c",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/components/posts-manager/use-posts-manager.ts": {
+    "mtime": 1785684687.2679281,
+    "ast_hash": "ac67b369cc774a19833ea77aa9b79456",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/hooks/pages/use-collection-actions.ts": {
+    "mtime": 1785680136.1666164,
+    "ast_hash": "79bfe405753bc2f4a015193ce64b19c1",
+    "semantic_hash": ""
+  },
+  "src/lib/cms-collection-data.test.ts": {
+    "mtime": 1785680470.7464333,
+    "ast_hash": "4a1e049b49e439f8afb8a38ab20bc568",
+    "semantic_hash": ""
+  },
+  "src/lib/cms-collection-data.ts": {
+    "mtime": 1785679908.913796,
+    "ast_hash": "298099eb70e35d0082869a1dd9572fa2",
+    "semantic_hash": ""
+  },
+  "src/lib/db/migrations/0077_cms_collections.sql": {
+    "mtime": 1785679887.8086085,
+    "ast_hash": "7166e7d5280c4bb8680dd8f1900a524c",
+    "semantic_hash": ""
+  },
+  "src/lib/db/schema/cms-collections.ts": {
+    "mtime": 1785680047.7117932,
+    "ast_hash": "7f41b55335d7a5a572475426f9cd6898",
+    "semantic_hash": ""
+  },
+  "docs/blog-templates-cms/07-collection-management.md": {
+    "mtime": 1785672460.719937,
+    "ast_hash": "94f3556645028eba3f3b9df879cfcfb8",
     "semantic_hash": ""
   }
 }

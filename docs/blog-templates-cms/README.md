@@ -99,7 +99,7 @@ Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewi
 | F2 — Lewy panel | ✅ | 2026-08-02 | `GET_COLLECTIONS` rozszerzony o `templatePageType`; `toChaiPage` zwraca `status` |
 | F2.5 — Zarządzanie kolekcjami | ✅ | 2026-08-02 | Patrz `07-collection-management.md` — zrealizowano (odchyłki poniżej) |
 | F3 — Modal | ✅ | 2026-08-02 | Patrz `03-modal.md` — zrealizowano (odchyłki poniżej) |
-| F4 — Edycja szablonu | ⬜ | — | — |
+| F4 — Edycja szablonu | ✅ | 2026-08-02 | Patrz `04-template-editing.md` — zrealizowano (odchyłki poniżej) |
 | F5 — Inline editing | ⬜ | — | — |
 | F6 — Integracja | ⬜ | — | — |
 
@@ -145,3 +145,15 @@ Pełny plan w `07-collection-management.md`. Utrwalone decyzje (2026-08-02):
 3. **Overlay `bg-black/40`** — zbudowano `DialogContent` z surowych prymitywów Radix (`DialogPrimitive.Content` + własny `DialogOverlay`), bo shadcn `DialogContent` domyślnie ma `bg-black/80`.
 4. **Nawigacja do wpisu** — `navigateToPost(pageId)` (w `use-posts-manager.ts`) używa globalnego `useSearchParams` + `navigateToPage` (ten sam mechanizm co `pages-tab.tsx`); modal zamykany przed nawigacją. F5 przejmie tryb edycji treści po tym URL.
 5. **Błąd tworzenia wpisu** renderowany inline w kroku wyboru szablonu (czerwony alert pod kafelkami) — modal nie zamyka się.
+
+### F4 — Edycja szablonu (odchyłki od planu)
+
+1. **`use-editor-mode.ts` już istniał** jako `editorModeAtom<'edit' | 'view'>` (tryb preview/eksport). Nowy kontekst page/template/post dodano jako **osobny eksport** `editorContextAtom` + `useEditorContext` w tym samym pliku — bez łamania istniejącego `useEditorMode`.
+2. **Swap bloków przez prop `blocks`** zamiast `setNewBlocks`: tryb szablonu ładuje bloki do współdzielonego `presentBlocksAtom` surowym setterem (`setBlocks` z `useBlocksStore`), bo prop `blocks` przekazywany do `ChaiBuilderEditor` nie zmienia się przy przejściu page→template (URL `page` ten sam) — efekt ładowania w `chaibuilder-editor.tsx` nie nadpisuje bloków szablonu. Snapshot bloków strony robiony w `chaibuilder-pages.tsx` przez `getCurrentBlocks()`; przywracany przy wyjściu.
+3. **Autozapis szablonu** — przekierowanie w `onSave` prop (`chaibuilder-pages.tsx`): gdy `editorContext.type === "template"` → `UPDATE_TEMPLATE` (zamiast `UPDATE_PAGE`), z `mutateAsync` z `useUpdateTemplate`. Cały łańcuch autozapisu (`userActionsCount` → `useAutoSave` → `useSavePage`) działa bez zmian; throttle 3s i `saveState` współdzielone.
+4. **`TemplateSettings`** zrealizowany z 4 sekcjami (Układ, Elementy, Mapowanie read-only, Domyślne SEO) + bannerem „zmiany zobaczy N wpisów" + CTA „Zobacz wpisy w tym szablonie". Config zapisywany debounced (1000ms, `useDebouncedCallback` z `@react-hookz/web`).
+5. **Banner trybu szablonu** nad canvasem w `canvas-area.tsx` (nie w `static-canvas.tsx`) — warstwa jest wyżej, nie wpływa na DND/iframe.
+6. **Nakładki bindingów** (`new-blocks-renderer.tsx`): overlay „⛁ {pole}" renderowany tylko gdy blok ma `dataMapping`/`dataField` — w F4 bloki jeszcze ich nie mają (mapowanie read-only), mechanizm gotowy na F5.
+7. **`changePage` w `pages-tab.tsx`** resetuje teraz `editorContext` do `{ type: "page", pageId }` — inaczej po wyjściu z szablonu kontekst zostawałby `template` i canvas pokazywałby nie te bloki.
+8. **Aktywacja panelu**: klik „Szablon: X" ustawia `editorContext` + `rightPanel` na `"template"`; `builder-layout.tsx` renderuje `TemplateSettings`. Auto-switch `template`→`block` przy zaznaczeniu bloku (jak dla `page`).
+9. **i18n**: 17 nowych kluczy w `en.json` + `pl.json`, pokryte testem `TEMPLATE_SETTINGS_KEYS` w `i18n.test.ts`. Dodano flat `"Layout"` (wcześniej tylko `layout.heading`).

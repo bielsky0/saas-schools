@@ -50,3 +50,45 @@ export type CmsCollectionItemVm = {
   status: "draft" | "published" | "archived";
   createdAt: string;
 };
+
+export type CmsTemplateLayout = "single" | "sidebar";
+
+export type TemplateDataMapping = {
+  slot: string;
+  field: string;
+};
+
+export type TemplateSeoDefaults = {
+  titlePattern?: string;
+  descriptionPattern?: string;
+};
+
+export type TemplateElements = {
+  thumbnail?: boolean;
+  related?: boolean;
+  newsletter?: boolean;
+};
+
+/**
+ * Template layout config stored on the template page (`page.templateConfig`)
+ * and returned by the builder API's GET_TEMPLATE_DATA action (blog-templates-cms F4).
+ */
+export type TemplateConfig = {
+  layout: CmsTemplateLayout;
+  elements?: TemplateElements;
+  dataMapping?: TemplateDataMapping[];
+  seoDefaults?: TemplateSeoDefaults;
+};
+
+/**
+ * Response of GET_TEMPLATE_DATA: the lazily-created template page (blocks) + its
+ * layout config. `page` is null until the template page exists (UPDATE_TEMPLATE
+ * creates it on first save).
+ */
+export type TemplateDataVm = {
+  page: {
+    id: string;
+    blocks: unknown[];
+  } | null;
+  config: TemplateConfig;
+};

@@ -6,11 +6,16 @@ import { Loader } from "lucide-react";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { ChaiBuilderEditor } from "~/core/main";
+import { getCurrentBlocks } from "~/atoms/store";
+import { useBlocksStore } from "~/hooks/history/use-blocks-store-undoable-actions";
+import { useEditorContext } from "~/hooks/use-editor-mode";
 import { BuilderTopBar } from "~/pages/client/layouts/topbar/builder-top-bar";
 import { useAskAi } from "~/pages/hooks/ai/use-ask-ai";
 import { usePrimaryPage } from "~/pages/hooks/pages/use-current-page";
 import { useExtractPageBlocks } from "~/pages/hooks/pages/use-extract-page-blocks";
 import { usePageAllData } from "~/pages/hooks/pages/use-page-all-data";
+import { useTemplateData } from "~/pages/hooks/pages/use-template-data";
+import { useUpdateTemplate } from "~/pages/hooks/pages/use-update-template";
 import { useUpdateWebsiteFields } from "~/pages/hooks/project/mutations";
 import { useSearchPageTypePages } from "~/pages/hooks/project/use-page-types";
 import { useCheckUserAccess } from "~/pages/hooks/user/use-check-access";
@@ -21,7 +26,7 @@ import { useSearchParams } from "~/pages/hooks/utils/use-search-params";
 import { registerChaiPanels } from "~/pages/panels";
 import { registerChaiMediaManager } from "~/runtime/client/register-chai-media-manager";
 import { registerChaiTopBar } from "~/runtime/client/register-chai-top-bar";
-import { ChaiWebsiteBuilderProps } from "~/types/common";
+import { ChaiBlock, ChaiWebsiteBuilderProps } from "~/types/common";
 import { loadWebBlocks } from "~/web-blocks";
 import { previewUrlAtom } from "./atom/preview-url";
 import { BlurContainer } from "./client/components/chai-loader";
@@ -118,6 +123,56 @@ const ChaiBuilderInner = ({ ...props }: ChaiBuilderInnerProps) => {
   const { mutateAsync: updateSettings } = useUpdateWebsiteFields();
   const gotoPage = useGotoPage();
 
+  // * TEMPLATE EDITING (blog-templates-cms F4)
+  const { context: editorContext } = useEditorContext();
+  const [, setBlocks] = useBlocksStore();
+  const { data: templateData } = useTemplateData(
+    editorContext.type === "template" ? editorContext.templateId : undefined,
+    editorContext.type === "template" ? editorContext.collectionId : undefined,
+  );
+  const { mutateAsync: updateTemplate } = useUpdateTemplate();
+  const pageBlocksRef = useRef<ChaiBlock[]>([]);
+  const prevContextRef = useRef(editorContext);
+  const loadedTemplateRef = useRef<string | null>(null);
+
+  // Handle entering/leaving template mode. On enter we snapshot the page blocks
+  // (from the shared atom) so they can be restored on exit; on leave we restore
+  // them via the raw atom setter (no undo history, no action counter bump).
+  useEffect(() => {
+    const prev = prevContextRef.current;
+    const entering = editorContext.type === "template" && prev.type !== "template";
+    const leaving = prev.type === "template" && editorContext.type !== "template";
+
+    if (entering) {
+      pageBlocksRef.current = getCurrentBlocks();
+      loadedTemplateRef.current = null;
+    }
+    if (leaving) {
+      if (pageBlocksRef.current.length > 0) {
+        setBlocks(pageBlocksRef.current);
+      }
+      pageBlocksRef.current = [];
+      loadedTemplateRef.current = null;
+    }
+    prevContextRef.current = editorContext;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editorContext.type]);
+
+  // Load template page blocks into the shared atom once data is ready.
+  useEffect(() => {
+    if (editorContext.type !== "template") return;
+    const key = `${editorContext.templateId}:${editorContext.collectionId}`;
+    if (loadedTemplateRef.current === key) return;
+    if (!templateData?.page) return;
+    loadedTemplateRef.current = key;
+    setBlocks(templateData.page.blocks as ChaiBlock[]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editorContext, templateData]);
+
+  const isTemplateContext = editorContext.type === "template";
+  const activeTemplateId = isTemplateContext ? editorContext.templateId : undefined;
+  const activeCollectionId = isTemplateContext ? editorContext.collectionId : undefined;
+
   // * STATES
   const [tabHidden, setTabHidden] = useState(false);
 
@@ -211,6 +266,17 @@ const ChaiBuilderInner = ({ ...props }: ChaiBuilderInnerProps) => {
         searchPageTypeItems={searchPages}
         askAiCallBack={askAiCallBack}
         onSave={async ({ blocks: _blocks, needTranslations, partialIds, linkPageIds, designTokens }) => {
+          if (isTemplateContext && activeTemplateId && activeCollectionId) {
+            blocksDataRef.current = _blocks;
+            const updatedBlocks = [..._blocks];
+            await updateTemplate({
+              templateId: activeTemplateId,
+              collectionId: activeCollectionId,
+              blocks: updatedBlocks,
+            });
+            blocksDataRef.current = updatedBlocks;
+            return true;
+          }
           if (!page) return true;
           blocksDataRef.current = _blocks;
           const updatedBlocks = [..._blocks];

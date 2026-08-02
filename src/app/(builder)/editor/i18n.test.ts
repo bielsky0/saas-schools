@@ -141,6 +141,25 @@ const POSTS_MANAGER_KEYS = [
   "Create post",
 ];
 
+const TEMPLATE_SETTINGS_KEYS = [
+  "Layout",
+  "Single column",
+  "With sidebar",
+  "Elements",
+  "Featured image",
+  "Related articles",
+  "Newsletter signup",
+  "Data mapping",
+  "SEO defaults",
+  "Title pattern",
+  "Description pattern",
+  "Changes will affect {{count}} posts",
+  "View posts in this template",
+  "Select a template to edit its settings",
+  "Editing template layout — changes will affect {{count}} posts",
+  "Template data is shown as placeholders",
+];
+
 const RIGHT_PANEL_KEYS = [
   "Advanced",
   "Select a block or page",
@@ -229,6 +248,14 @@ describe("Editor i18n (Faza 0.3)", () => {
 
   it("Posts manager (F3) keys exist in en.json and are translated in pl.json", () => {
     for (const key of POSTS_MANAGER_KEYS) {
+      expect(en, `en.json missing "${key}"`).toHaveProperty(key);
+      expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
+      expect(pl[key as keyof typeof pl]).toBeTruthy();
+    }
+  });
+
+  it("Template settings (F4) keys exist in en.json and are translated in pl.json", () => {
+    for (const key of TEMPLATE_SETTINGS_KEYS) {
       expect(en, `en.json missing "${key}"`).toHaveProperty(key);
       expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
       expect(pl[key as keyof typeof pl]).toBeTruthy();

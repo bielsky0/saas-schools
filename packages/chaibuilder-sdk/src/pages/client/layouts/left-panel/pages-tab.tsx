@@ -2,6 +2,7 @@ import { File, Settings } from "lucide-react";
 import { filter, isEmpty, map } from "lodash-es";
 import { Suspense, lazy, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useEditorContext } from "~/hooks/use-editor-mode";
 import { useRightPanel } from "~/hooks/use-theme";
 import { useSelectedBlockIds } from "~/hooks/use-selected-blockIds";
 import { useSelectedStylingBlocks } from "~/hooks/use-selected-styling-blocks";
@@ -45,7 +46,9 @@ export const PagesTab = () => {
   const [, setIds] = useSelectedBlockIds();
   const [, setStyleBlocks] = useSelectedStylingBlocks();
   const { open: openPostsModal } = usePostsManager();
+  const { context: editorContext, setContext: setEditorContext } = useEditorContext();
   const currentPage = queryParams.get("page");
+  const activeTemplateId = editorContext.type === "template" ? editorContext.templateId : undefined;
 
   const [search, setSearch] = useState("");
   const [selectedPageType, setSelectedPageType] = useState("all");
@@ -94,8 +97,9 @@ export const PagesTab = () => {
       setStyleBlocks([]);
       navigateToPage(new URLSearchParams({ page: pageId }), setQueryParams);
       setRightPanel("page");
+      setEditorContext({ type: "page", pageId });
     },
-    [setIds, setStyleBlocks, setQueryParams, setRightPanel],
+    [setIds, setStyleBlocks, setQueryParams, setRightPanel, setEditorContext],
   );
 
   const handleClickAction = useCallback(
@@ -139,10 +143,16 @@ export const PagesTab = () => {
     [openPostsModal],
   );
 
-  // Faza 4: przełącza w tryb edycji layoutu szablonu.
-  const handleOpenTemplate = useCallback((templateId: string, collectionId: string) => {
-    console.warn(`[F4] Open template editor for: ${templateId} in collection: ${collectionId}`);
-  }, []);
+  // Faza 4: przełącza w tryb edycji layoutu szablonu (canvas + prawy panel).
+  const handleOpenTemplate = useCallback(
+    (templateId: string, collectionId: string) => {
+      setIds([]);
+      setStyleBlocks([]);
+      setEditorContext({ type: "template", templateId, collectionId });
+      setRightPanel("template");
+    },
+    [setIds, setStyleBlocks, setEditorContext, setRightPanel],
+  );
 
   // Faza 2.5: otwiera panel zarządzania w trybie edycji wskazanej kolekcji.
   const handleEditCollection = useCallback((collection: CmsCollectionVm) => {
@@ -227,6 +237,7 @@ export const PagesTab = () => {
                     onOpenPosts={handleOpenPosts}
                     onOpenTemplate={handleOpenTemplate}
                     onEditCollection={handleEditCollection}
+                    activeTemplateId={activeTemplateId}
                   />
                 ))}
               </div>

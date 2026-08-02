@@ -62,7 +62,7 @@ export const useThemeOptions = () => {
   return defaultOptions as ChaiThemeOptions;
 };
 
-const rightPanelAtom = atom<"block" | "theme" | "ai" | "settings" | "design-tokens" | "page">("block");
+const rightPanelAtom = atom<"block" | "theme" | "ai" | "settings" | "design-tokens" | "page" | "template">("block");
 export const useRightPanel = () => {
   return useAtom(rightPanelAtom);
 };

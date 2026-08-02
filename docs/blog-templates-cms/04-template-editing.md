@@ -106,3 +106,25 @@ const rightPanelAtom = atom<"block" | "theme" | "ai" | "settings" | "design-toke
 ## 8. Szacowany nakład
 
 4–5h — panel szablonu, canvas z placeholderami, autozapis szablonu.
+
+## 9. Status realizacji (2026-08-02)
+
+Zrealizowano w całości. Odchyłki i szczegóły: `README.md → F4 — Edycja szablonu (odchyłki od planu)`.
+
+Kluczowe pliki utworzone/zmienione:
+
+| Plik | Rola |
+|------|------|
+| `packages/chaibuilder-sdk/src/pages/hooks/pages/use-template-data.ts` | **Nowy** — `GET_TEMPLATE_DATA` |
+| `packages/chaibuilder-sdk/src/pages/hooks/pages/use-update-template.ts` | **Nowy** — `UPDATE_TEMPLATE` |
+| `packages/chaibuilder-sdk/src/pages/client/layouts/right-panel/template-settings.tsx` | **Nowy** — prawy panel szablonu |
+| `packages/chaibuilder-sdk/src/hooks/use-editor-mode.ts` | `editorContextAtom` + `useEditorContext` |
+| `packages/chaibuilder-sdk/src/pages/chaibuilder-pages.tsx` | swap-in/swap-out bloków + `onSave` → `UPDATE_TEMPLATE` |
+| `packages/chaibuilder-sdk/src/core/components/canvas/canvas-area.tsx` | banner trybu szablonu |
+| `packages/chaibuilder-sdk/src/core/components/canvas/static/new-blocks-renderer.tsx` | overlay bindingów „⛁ pole" |
+| `packages/chaibuilder-sdk/src/pages/client/layouts/builder-layout.tsx` | switch `"template"` |
+| `packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/pages-tab.tsx` | `handleOpenTemplate` + `activeTemplateId` + reset kontekstu |
+| `packages/chaibuilder-sdk/src/pages/constants/ACTIONS.ts` | `GET_TEMPLATE_DATA`, `UPDATE_TEMPLATE` |
+| `packages/chaibuilder-sdk/src/types/collections.ts` | `TemplateConfig`, `TemplateDataVm` |
+
+Weryfikacja: `pnpm --filter @chaibuilder/sdk build` ✅, `pnpm --filter @chaibuilder/sdk test` (603 passed) ✅, `pnpm build` (Next.js) ✅, test i18n F4 ✅. Typecheck ma 5 pre-existing errors (e2e/admin-preview), niezwiązanych z F4.

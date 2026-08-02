@@ -200,10 +200,27 @@ const BlockRenderer = ({
       blockNode
     );
 
+  // blog-templates-cms F4: when editing a layout template, blocks carrying a
+  // data mapping get a small binding badge. Read-only in F4 — the mapping
+  // list lives in the template settings panel; this overlay activates once a
+  // block carries a `dataMapping`/`dataField` attribute (F5 inline editing).
+  const mappedField = get(block, "dataMapping", "") || get(block, "dataField", "");
+  const blockNodeWithTemplateOverlay =
+    mappedField ? (
+      <div className="relative">
+        {blockNodeWithTextEditor}
+        <div className="pointer-events-none absolute right-0 top-0 z-10 rounded-bl-md border border-dashed border-blue-400 bg-blue-50 px-1.5 py-0.5 font-mono text-[10px] text-blue-700">
+          ⛁ {mappedField}
+        </div>
+      </div>
+    ) : (
+      blockNodeWithTextEditor
+    );
+
   return needErrorBoundary ? (
-    <ErrorBoundary fallbackRender={ErrorFallback}>{blockNodeWithTextEditor}</ErrorBoundary>
+    <ErrorBoundary fallbackRender={ErrorFallback}>{blockNodeWithTemplateOverlay}</ErrorBoundary>
   ) : (
-    blockNodeWithTextEditor
+    blockNodeWithTemplateOverlay
   );
 };
 

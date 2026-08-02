@@ -15,6 +15,7 @@ import { useIsMobile } from "./mobile/use-is-mobile";
 import { PostsManagerModal } from "~/pages/client/components/posts-manager/posts-manager-modal";
 import { EmptyRightPanel } from "./right-panel/empty-right-panel";
 import { PageSettings } from "./right-panel/page-settings";
+import { TemplateSettings } from "./right-panel/template-settings";
 import { ThemeEditor } from "./theme/theme-editor";
 
 const DEFAULT_PANEL_WIDTH = 280;
@@ -63,6 +64,8 @@ const DesktopBuilderLayout = () => {
                     <ThemeEditor />
                   ) : panel === "page" ? (
                     <PageSettings />
+                  ) : panel === "template" ? (
+                    <TemplateSettings />
                   ) : selectedBlock ? (
                     <SettingsPanel />
                   ) : (
