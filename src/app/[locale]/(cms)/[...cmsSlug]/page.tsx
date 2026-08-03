@@ -11,7 +11,7 @@ import { getPageBySlug } from "@/lib/page-service";
 import { TenantPageRenderer } from "@/features/cms/tenant-page-renderer.client";
 import { getBlocksCss } from "@/features/cms/get-blocks-css";
 import { PageStyles } from "@/features/cms/components/page-styles.client";
-import { enrichBlocksWithData, getBlogPostBySlug, getBlogPosts } from "@/lib/block-data";
+import { enrichBlocksWithData, getBlogPostBySlug, getBlogPosts, getBlogPostPreviewForPost } from "@/lib/block-data";
 import { BlogList } from "@/features/cms/components/blog-list";
 
 export const dynamic = "force-dynamic";
@@ -111,6 +111,9 @@ export default async function CmsPage({ params }: CmsPageProps) {
     const enrichedBlocks = await withTenant(org.id, (tx) =>
       enrichBlocksWithData(tx, org.id, post.blocks),
     );
+    const preview = await withTenant(org.id, (tx) =>
+      getBlogPostPreviewForPost(tx, post),
+    );
 
     const h = await headers();
     const host = h.get("host") || "";
@@ -125,6 +128,7 @@ export default async function CmsPage({ params }: CmsPageProps) {
           blocks={enrichedBlocks}
           slug={post.slug}
           pageType={post.pageType}
+          externalData={{ post: preview }}
         />
       </ThemeInjector>
     );

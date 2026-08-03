@@ -13,10 +13,12 @@ export function TenantPageRenderer({
   blocks,
   slug = "/",
   pageType = "page",
+  externalData,
 }: {
   blocks: ChaiBlock[];
   slug?: string;
   pageType?: string;
+  externalData?: Record<string, unknown>;
 }) {
   const pageProps: ChaiPageProps = {
     slug,
@@ -31,6 +33,7 @@ export function TenantPageRenderer({
       lang="en"
       fallbackLang="en"
       pageProps={pageProps}
+      externalData={externalData}
     />
   );
 }

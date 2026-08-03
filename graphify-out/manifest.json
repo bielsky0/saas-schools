@@ -130,8 +130,8 @@
     "semantic_hash": "7109ecedac87dbabe61a9a099a6544cf"
   },
   "src/app/[locale]/(marketing)/blog/[slug]/page.tsx": {
-    "mtime": 1785753839.6727395,
-    "ast_hash": "83a69f49d8fb639bd164733941f72038",
+    "mtime": 1785765183.6745696,
+    "ast_hash": "6df7e87e957a3b1a556fc37870947b27",
     "semantic_hash": ""
   },
   "src/app/[locale]/(marketing)/blog/page.tsx": {
@@ -5325,8 +5325,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/atoms/builder.ts": {
-    "mtime": 1785311019.0921168,
-    "ast_hash": "890a6ffd8b64d8faa7657ef3e7687026",
+    "mtime": 1785765183.6725004,
+    "ast_hash": "cf775df484f68d10c01f89540a48e168",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/atoms/click-detection.ts": {
@@ -8745,8 +8745,8 @@
     "semantic_hash": ""
   },
   "src/app/[locale]/(cms)/[...cmsSlug]/page.tsx": {
-    "mtime": 1785404007.118856,
-    "ast_hash": "c1688a816a748584df2dd7c0e9ea47d3",
+    "mtime": 1785765183.6734333,
+    "ast_hash": "ca2098e6d6dbf3adc9c0324abb727b32",
     "semantic_hash": ""
   },
   "src/app/[locale]/(cms)/layout.tsx": {
@@ -8955,8 +8955,8 @@
     "semantic_hash": ""
   },
   "src/features/cms/tenant-page-renderer.client.tsx": {
-    "mtime": 1785359065.3286717,
-    "ast_hash": "bc3cca99a864fd9c66bd3f4fc6a84285",
+    "mtime": 1785765183.6759794,
+    "ast_hash": "9f939446c8f1c3633f775ac9036ab947",
     "semantic_hash": ""
   },
   "src/features/cms/theme-data.ts": {
@@ -8970,8 +8970,8 @@
     "semantic_hash": ""
   },
   "src/lib/block-data.ts": {
-    "mtime": 1785763444.6938348,
-    "ast_hash": "0af1ba8b23cbfe2682d9c78f7c0d3c5d",
+    "mtime": 1785765183.677166,
+    "ast_hash": "415ea548a57d7ce9a8696a1dc9fd5d5c",
     "semantic_hash": ""
   },
   "src/lib/blocks-library.ts": {
@@ -10820,8 +10820,8 @@
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/README.md": {
-    "mtime": 1785758410.2938921,
-    "ast_hash": "a04b48b03ceedfa99fadfd4cb1820b18",
+    "mtime": 1785765279.496978,
+    "ast_hash": "730065d5578ca13d7e4354e732fce74e",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/collection-tree-group.tsx": {
@@ -10900,8 +10900,8 @@
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/08-blog-cms-redesign.md": {
-    "mtime": 1785758413.4638262,
-    "ast_hash": "4d6da305344f2d6a2aef59842bbf679d",
+    "mtime": 1785765285.6700606,
+    "ast_hash": "0f70bfae4631c5a208ab25dd63ea560e",
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/Zrzut ekranu 2026-08-3 o 00.52.25.png": {
@@ -11097,6 +11097,11 @@
   "src/blocks/blog/BlogPostList/index.tsx": {
     "mtime": 1785763372.3881845,
     "ast_hash": "b6c452412e9ad750762d34334f816c51",
+    "semantic_hash": ""
+  },
+  "src/lib/block-data.test.ts": {
+    "mtime": 1785765246.4695911,
+    "ast_hash": "53c2fccdbde01880fb3688638f27606e",
     "semantic_hash": ""
   }
 }

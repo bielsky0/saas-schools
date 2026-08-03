@@ -4,10 +4,15 @@ import { count } from "drizzle-orm";
 import type { TenantDb } from "@/lib/db/tenant";
 import { membership, user } from "@/lib/db/schema";
 import { page } from "@/lib/db/schema/pages";
-import { getBlogPageType } from "@/lib/cms-collection-data";
+import {
+  getBlogPageType,
+  getCollectionByKey,
+  getTemplateOf,
+} from "@/lib/cms-collection-data";
 import { getGroupType } from "@/features/groups/data";
 import { listUpcomingSessions } from "@/features/schedule/data";
 import type { ChaiBlock } from "@chaibuilder/sdk/types";
+import type { BlogPostPreview } from "@chaibuilder/sdk/runtime";
 
 export type GroupTypeBlockData = {
   name: string;
@@ -151,6 +156,111 @@ export async function getBlogPostBySlug(
     )
     .limit(1);
   return row ?? null;
+}
+
+/**
+ * Map a blog post row into the SDK `BlogPostPreview` shape (F5.5 dynamic
+ * sources). Mirrors the builder API's `GET_BLOG_POST_PREVIEW` mapping so the
+ * public renderer resolves `{{post.*}}` bindings with the same field set.
+ */
+export function toBlogPostPreview(
+  row: typeof page.$inferSelect,
+  authorName = "",
+): BlogPostPreview {
+  const content = row.pageContent ?? {};
+  const seo = (row.seo ?? {}) as { description?: string; ogImage?: string };
+  return {
+    id: row.id,
+    title: content.title ?? row.title ?? "",
+    body: content.body ?? "",
+    excerpt: content.excerpt ?? seo.description ?? "",
+    image: content.image ?? seo.ogImage ?? "",
+    author: authorName,
+    datePublished: row.publishedAt?.toISOString() ?? row.updatedAt?.toISOString() ?? "",
+    tags: content.tags ?? [],
+    categories: content.categories ?? [],
+    slug: row.slug,
+  };
+}
+
+/**
+ * Build the `BlogPostPreview` for a public post page, resolving the author
+ * display name from the post's creator.
+ */
+export async function getBlogPostPreviewForPost(
+  tx: TenantDb,
+  post: typeof page.$inferSelect,
+): Promise<BlogPostPreview> {
+  let authorName = "";
+  if (post.createdByUserId) {
+    const [author] = await tx
+      .select({ name: user.name })
+      .from(user)
+      .where(eq(user.id, post.createdByUserId))
+      .limit(1);
+    authorName = author?.name ?? "";
+  }
+  return toBlogPostPreview(post, authorName);
+}
+
+/**
+ * Resolve a collection layout template page: `(organizationId, pageType =
+ * <collection>.templatePageType, slug = <template id>)` — the same identity the
+ * builder API uses (GET_TEMPLATE_DATA). Returns `null` when the tenant has not
+ * customized the template yet.
+ */
+export async function getBlogTemplatePage(
+  tx: TenantDb,
+  orgId: string,
+  collectionKey: string,
+  templateId: string,
+) {
+  const collection = await getCollectionByKey(tx, orgId, collectionKey);
+  const template = collection ? getTemplateOf(collection, templateId) : null;
+  if (!collection || !template) return null;
+  const [row] = await tx
+    .select()
+    .from(page)
+    .where(
+      and(
+        eq(page.organizationId, orgId),
+        eq(page.pageType, collection.templatePageType),
+        eq(page.slug, template.id),
+      ),
+    )
+    .limit(1);
+  return row ?? null;
+}
+
+/** Dedicated single-post blog blocks — the ones that read `data` (F5.2). */
+const BLOG_POST_PREVIEW_BLOCK_TYPES = new Set([
+  "BlogPostTitle",
+  "BlogPostContent",
+  "BlogPostImage",
+  "BlogPostAuthor",
+  "BlogPostDate",
+  "BlogPostExcerpt",
+  "BlogPostTags",
+]);
+
+/**
+ * Enrich template blocks for a blog post page: run the generic enrichment and
+ * inject the post preview into the dedicated blog blocks, so they render real
+ * content publicly. Generic `{{post.*}}` bindings resolve via `externalData`
+ * passed to `TenantPageRenderer` (F5.5).
+ */
+export async function enrichBlogPostBlocks(
+  tx: TenantDb,
+  orgId: string,
+  blocks: ChaiBlock[],
+  preview: BlogPostPreview,
+): Promise<ChaiBlock[]> {
+  const enriched = await enrichBlocksWithData(tx, orgId, blocks);
+  return enriched.map((block) =>
+    BLOG_POST_PREVIEW_BLOCK_TYPES.has(block._type)
+      ? { ...block, data: preview }
+      : block,
+  );
 }
 
 export async function enrichBlocksWithData(

@@ -16,7 +16,13 @@ import { CONTENT_LOCALE, getBlogPost, listBlogPosts } from "@/features/content/s
 
 import { servedOrganization } from "@/features/organizations/served-org";
 import { withTenant } from "@/lib/db/tenant";
-import { getBlogPostBySlug, enrichBlocksWithData } from "@/lib/block-data";
+import {
+  enrichBlocksWithData,
+  getBlogPostBySlug,
+  getBlogPostPreviewForPost,
+  getBlogTemplatePage,
+  enrichBlogPostBlocks,
+} from "@/lib/block-data";
 import { ThemeInjector } from "@/features/cms/components/theme-injector";
 import { TenantPageRenderer } from "@/features/cms/tenant-page-renderer.client";
 import { PageStyles } from "@/features/cms/components/page-styles.client";
@@ -94,9 +100,38 @@ export default async function BlogPostPage({ params }: PageProps) {
     const content = post.pageContent ?? {};
 
     // New-architecture posts carry their content in `pageContent` (dashboard
-    // blog, F5.1) — render the HTML body directly. Legacy posts have layout
-    // blocks in `post.blocks`; render those through the tenant page renderer.
+    // blog, F5.1). When the post has a layout template, render it through the
+    // template page with the post exposed as a dynamic source (F5.5) — this
+    // resolves `{{post.*}}` bindings and feeds the dedicated blog blocks.
+    // Fall back to the hardcoded layout when no template has been customized.
     if (content.title || content.body) {
+      const preview = await withTenant(org.id, (tx) =>
+        getBlogPostPreviewForPost(tx, post),
+      );
+
+      if (post.templateId) {
+        const template = await withTenant(org.id, (tx) =>
+          getBlogTemplatePage(tx, org.id, "blog", post.templateId as string),
+        );
+        if (template && template.blocks.length > 0) {
+          const blocks = await withTenant(org.id, (tx) =>
+            enrichBlogPostBlocks(tx, org.id, template.blocks, preview),
+          );
+          const pageCss = await getBlocksCss(blocks);
+          return (
+            <ThemeInjector organizationId={org.id}>
+              <PageStyles css={pageCss} />
+              <TenantPageRenderer
+                blocks={blocks}
+                slug={post.slug}
+                pageType={post.pageType}
+                externalData={{ post: preview }}
+              />
+            </ThemeInjector>
+          );
+        }
+      }
+
       const title = content.title ?? post.title;
       const tags = content.tags ?? [];
       return (

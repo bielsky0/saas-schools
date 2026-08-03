@@ -223,8 +223,8 @@ Bloki blogowe czytają atom przez `useAtomValue`.
 - [x] F5.1: posty tworzone/edytowane w dashboardzie (TipTap), widoczne na publicznym blogu.
 - [x] F5.2: bloki blogowe w szablonach bloga, auto-render z podglądu.
 - [x] F5.3: dropdown podglądu posta w prawym panelu szablonu działa.
-- [ ] F5.4: strona bloga (listing) edytowalna i renderowana publicznie.
-- [ ] F5.5: (future) dynamiczne źródła.
+- [x] F5.4: strona bloga (listing) edytowalna i renderowana publicznie.
+- [x] F5.5: (future) dynamiczne źródła — `{{post.*}}` w szablonach bloga + render przez szablon na froncie.
 
 ## 11. Szacowany nakład
 

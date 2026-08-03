@@ -122,8 +122,8 @@ Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewi
 | **F5.1 — Dashboard Blog** | ✅ | 2026-08-03 | Lista + edytor posta (TipTap) + CRUD API (patrz niżej) |
 | **F5.2 — Bloki blogowe** | ✅ | 2026-08-03 | Dedykowane bloki, tylko w szablonach bloga (patrz niżej) |
 | **F5.3 — Podgląd posta** | ✅ | 2026-08-03 | Dropdown podglądu w TemplateSettings (patrz niżej) |
-| **F5.4 — Strona bloga** | ⬜ | — | Listing + bloki listingu |
-| **F5.5 — Dynamiczne źródła** | ⬜ | — | (future) |
+| **F5.4 — Strona bloga** | ✅ | 2026-08-03 | Listing + bloki listingu (patrz niżej) |
+| **F5.5 — Dynamiczne źródła** | ✅ | 2026-08-03 | `{{post.*}}` w szablonach bloga + render przez szablon (patrz niżej) |
 | **F7 — Lewy panel + AI drawer** | ⬜ | — | Shopify-style: edycja w lewym panelu, AI z prawej (na końcu) |
 
 ### Odchyłki F1
@@ -280,3 +280,40 @@ Pełny plan w `07-collection-management.md`. Utrwalone decyzje (2026-08-02):
 7. **Testy:** vitest zielone dla zmian; root `tsc --noEmit` ma te same 5
    pre-existing błędów (spoza F5.3); eslint czysty poza pre-existing
    `console.error` w `route.ts`.
+
+### F5.4 — Strona bloga (odchyłki od planu)
+
+1. **Zrealizowana w całości wcześniej niż wskazywał README.** `blog_index` page
+   type, lazy-create (`createDefaultBlogIndexPage`), bloki `BlogPostList` /
+   `BlogPagination` i publiczny `/blog` z ręcznym nadpisaniem danych
+   (`BlogPostList` posts + `BlogPagination` total/page/itemsPerPage) działały już
+   przed sesją F5.5. Opcjonalne bloki `BlogHero` / `BlogSearch` nie zostały
+   dodane (poza specem).
+
+### F5.5 — Dynamiczne źródła danych (odchyłki od planu)
+
+1. **Mostek w `usePageExternalData()` (SDK), nie osobny hook.** Zamiast nowego
+   `useBlogExternalData()` rozszerzono `usePageExternalData()` w
+   `atoms/builder.ts`: gdy `editorContext.type === "template"` i
+   `collectionId === "blog"` oraz wybrano post (atom nie-null), wstrzykuje
+   `{ post: preview }` do drzewa danych. Efekt (a) renderer canvas rozwiązuje
+   `{{post.*}}` bindingi i (b) `DataBindingSelector` / `NestedPathSelector`
+   pokazują `post.title`, `post.body` itd. — bez zmian w tych komponentach
+   (podpunkt 5.5.2 planu nie wymagał zmian UI).
+2. **`TenantPageRenderer` przyjmuje `externalData`** — przekazywane do
+   `RenderChaiBlocks` (był już w propach renderera, ale nie był podawany).
+3. **Publiczny renderer posta przez szablon.** `blog/[slug]/page.tsx`: gdy post
+   ma `templateId` i strona-szablon istnieje (`getBlogTemplatePage`, ta sama
+   tożsamość co `GET_TEMPLATE_DATA`: `org + templatePageType + slug=template.id`),
+   renderuje bloki szablonu z `externalData={{ post: preview }}`. Dedicated bloki
+   blogowe dostają `data` przez nowe `enrichBlogPostBlocks()`. Fallback do
+   dotychczasowego hardcoded layoutu, gdy szablon nie został dostosowany.
+4. **Mapowanie `BlogPostPreview` po stronie publicznej** — `toBlogPostPreview()`
+   + `getBlogPostPreviewForPost()` w `block-data.ts`, lustrzane do akcji
+   `GET_BLOG_POST_PREVIEW` (title/body/excerpt/image/author/datePublished/tags/
+   categories/slug). Autor rozwiązywany z `createdByUserId`.
+5. **CMS catch-all** (`(cms)/[...cmsSlug]`) — gałąź `blog-post` też przekazuje
+   `externalData={{ post: preview }}` dla legacy postów z blokami.
+6. **Testy:** `block-data.test.ts` (3 przypadki mapowania, czysta funkcja).
+   SDK vitest 603 zielone; root vitest tylko pre-existing faili Payload CMS
+   (`src/features/cms/*`), potwierdzone `git stash`.
