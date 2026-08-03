@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "~/components/ui/button";
@@ -15,6 +15,9 @@ import { PagesTab } from "./pages-tab";
 import { SectionsTab } from "./sections-tab";
 import { ThemeTab } from "./theme-tab";
 
+const MIN_PANEL_WIDTH = 320;
+const MAX_PANEL_WIDTH = 500;
+
 export const BuilderLeftPanel = () => {
   const { t } = useTranslation();
   const [bottomPanel, setBottomPanel] = useLeftPanelBottom();
@@ -22,6 +25,34 @@ export const BuilderLeftPanel = () => {
   const [, setBlockIds] = useSelectedBlockIds();
   const { context: editorContext } = useEditorContext();
   const prevContextRef = useRef(editorContext);
+
+  // F7.5: resizable left panel (320-500px). The panel starts at x=0, so the
+  // pointer's clientX is the width directly. Document-level listeners survive
+  // dragging outside the handle element.
+  const [leftPanelWidth, setLeftPanelWidth] = useState(300);
+
+  const onResizeStart = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+
+    const onMove = (event: MouseEvent) => {
+      setLeftPanelWidth(Math.min(MAX_PANEL_WIDTH, Math.max(MIN_PANEL_WIDTH, event.clientX)));
+    };
+    const onUp = () => {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+      document.body.style.userSelect = "";
+      document.body.style.cursor = "";
+    };
+
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+    document.body.style.userSelect = "none";
+    document.body.style.cursor = "col-resize";
+  }, []);
+
+  useEffect(() => () => {
+    document.body.style.userSelect = "";
+  }, []);
 
   // F7.1/F7.2: dolny panel wysuwany wg kontekstu.
   //  - blok wybrany → SettingsPanel (block)
@@ -78,7 +109,16 @@ export const BuilderLeftPanel = () => {
             : "";
 
   return (
-    <div className="flex h-full max-h-full w-[300px] flex-col border-r border-gray-200 bg-white text-gray-900">
+    <div
+      className="relative flex h-full max-h-full flex-col border-r border-gray-200 bg-white text-gray-900"
+      style={{ width: leftPanelWidth }}>
+      <div
+        role="separator"
+        aria-orientation="vertical"
+        aria-label={t("Resize left panel")}
+        onMouseDown={onResizeStart}
+        className="absolute -right-1.5 top-0 z-10 h-full w-3 cursor-col-resize touch-none select-none hover:bg-blue-400/30 active:bg-blue-400/40"
+      />
       {/* Górna sekcja — taby, kurczy się gdy dolny panel otwarty */}
       <div className={cn("flex min-h-0 flex-1 flex-col", bottomPanel && "border-b border-gray-200")}>
         <Tabs defaultValue="sections" className="flex h-full max-h-full flex-col">

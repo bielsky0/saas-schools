@@ -151,6 +151,14 @@ const RIGHT_PANEL_KEYS = [
   "Enter a JavaScript expression",
 ];
 
+const LEFT_PANEL_KEYS = [
+  "Block settings",
+  "Page settings",
+  "Template settings",
+  "Theme editor",
+  "Resize left panel",
+];
+
 const MOBILE_KEYS = [
   "Back",
   "Block",
@@ -235,6 +243,14 @@ describe("Editor i18n (Faza 0.3)", () => {
 
   it("Right panel (Faza 5) keys exist in en.json and are translated in pl.json", () => {
     for (const key of RIGHT_PANEL_KEYS) {
+      expect(en, `en.json missing "${key}"`).toHaveProperty(key);
+      expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
+      expect(pl[key as keyof typeof pl]).toBeTruthy();
+    }
+  });
+
+  it("Left panel (F7) keys exist in en.json and are translated in pl.json", () => {
+    for (const key of LEFT_PANEL_KEYS) {
       expect(en, `en.json missing "${key}"`).toHaveProperty(key);
       expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
       expect(pl[key as keyof typeof pl]).toBeTruthy();

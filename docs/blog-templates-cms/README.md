@@ -128,7 +128,8 @@ Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewi
 | **F7.2 — Page/Template w lewym** | ✅ | 2026-08-03 | PageSettings/TemplateSettings/ThemeEditor w dolnym panelu wg `editorContext` (patrz niżej) |
 | **F7.3 — Usunięcie prawego panelu** | ✅ | 2026-08-03 | Canvas wypełnia pełną szerokość; AI hooki przeniesione na `aiDrawerOpenAtom` (patrz niżej) |
 | **F7.4 — AI sidebar + topbar button** | ✅ | 2026-08-03 | Prawy sidebar 280px (jak stary panel AI), canvas się kurczy; button w topbarze (patrz niżej) |
-| **F7 — Lewy panel + AI drawer** | ⬜ | — | Zostało: F7.5 resize, F7.6 testy/i18n |
+| **F7.5 — Resize lewego panelu** | ✅ | 2026-08-03 | Własny resize handle (bez zależności), zakres 320-500px (patrz niżej) |
+| **F7.6 — Testy / i18n / animacje** | ✅ | 2026-08-03 | Brakujące klucze i18n + test `LEFT_PANEL_KEYS` (patrz niżej) |
 
 ### Odchyłki F1
 
@@ -385,3 +386,38 @@ Pełny plan w `07-collection-management.md`. Utrwalone decyzje (2026-08-02):
 6. **Testy:** SDK `tsc --noEmit` czysty; eslint czysty na zmienionych plikach
    (jedyny error to pre-existing `Cannot create components during render` w
    `builder-layout.tsx`, niezmienione linie `TopBar`).
+
+### F7.5 — Resize lewego panelu (odchyłki od planu)
+
+1. **Własny resize handle zamiast `react-resizable-panels`.** Pakiet nie jest w
+   zależnościach SDK (spec dopuszczał opcję własnego handle). W
+   `builder-left-panel.tsx`: `useState(300)` + `onMouseDown` na separatorze
+   (`absolute -right-1.5`, `role="separator"`, `aria-orientation="vertical"`),
+   listenery `mousemove`/`mouseup` na `document` (survive'ują drag poza handle),
+   `userSelect: none` + `cursor: col-resize` na body na czas dragu, przywracane
+   w `onUp`. Szerokość liczona bezpośrednio z `event.clientX` — panel zaczyna się
+   na x=0. Clamping `Math.min(500, Math.max(320, x))` wg zakresu ze spec (7.5).
+2. **Domyślna szerokość 300px** — pod istniejącą (spec sugerował przedział
+   320-500 jako *zakres resize*, nie startowy; start na 300 nie łamie żadnego
+   układu). Minimalna szerokość w trakcie dragu to 320.
+3. **`builder-layout.tsx` bez zmian** — handle żyje wewnątrz `BuilderLeftPanel`
+   (absolute na prawej krawędzi), canvas i AI sidebar automatycznie reagują.
+4. **i18n:** nowy klucz `Resize left panel` (aria-label separatora) w obu językach.
+5. **Testy:** SDK `tsc --noEmit` czysty; vitest 603 zielone; eslint czysty na
+   zmienionym pliku. Brak testów komponentu `BuilderLeftPanel` (nie istniały
+   wcześniej — panel to czysty layout, drag testowany manualnie).
+
+### F7.6 — Testy / i18n / animacje (odchyłki od planu)
+
+1. **Animacje były już zaimplementowane.** Dolny panel ma `transition-[height]
+   duration-300`, AI sidebar używa `motion.div` (framer-motion) — nic do dodania.
+   Mobile (`MobileBuilderLayout`) ma własny układ, bez zmian.
+2. **Brakujące klucze i18n:** `Page settings`, `Template settings`,
+   `Theme editor` były używane w `builder-left-panel.tsx` przez `t()`, ale nie
+   istniały w `en.json` (SDK) ani `pl.json` (app) — fallback pokazywał angielską
+   nazwę klucza. Dodano w obu katalogach (+ `Resize left panel` z F7.5).
+3. **Test `LEFT_PANEL_KEYS`** w `src/app/(builder)/editor/i18n.test.ts` —
+   weryfikuje 5 kluczy panelu w `en.json` + `pl.json`, wzorem `TEMPLATE_SETTINGS_KEYS`.
+   i18n.test.ts: 12 testów zielonych.
+4. **Root `tsc --noEmit`:** te same 5 pre-existing błędów co w F5.2/F5.3
+   (`e2e/*`, `admin-preview.test.ts`) — potwierdzone, spoza F7.6.

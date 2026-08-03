@@ -130,6 +130,7 @@
   "Outline": "Struktura",
   "Overridden": "nadpisane",
   "Page name": "Nazwa strony",
+  "Page settings": "Ustawienia strony",
   "Page type": "Typ strony",
   "Pages": "Strony",
   "Password protected": "Chroniona hasłem",
@@ -147,6 +148,7 @@
   "Replace image": "Zastąp obraz",
   "Reset style": "Resetuj styl",
   "Reset styles": "Resetuj style",
+  "Resize left panel": "Zmień rozmiar lewego panelu",
   "SEO": "SEO",
   "SEO Description": "Opis SEO",
   "SEO Title": "Tytuł SEO",
@@ -187,6 +189,7 @@
   "Template": "Szablon",
   "Template data is shown as placeholders": "Dane szablonu pokazane jako zastępcze",
   "Template page type": "Typ strony szablonu",
+  "Template settings": "Ustawienia szablonu",
   "Templates": "Szablony",
   "Theme": "Motyw",
   "Theme Config": {
@@ -201,6 +204,7 @@
     "Text Color Dark Mode": "Kolor tekstu (tryb ciemny)",
     "Reset styles": "Resetuj style"
   },
+  "Theme editor": "Edytor motywu",
   "Theme Settings": "Ustawienia motywu",
   "Theme changes apply to all pages": "Zmiany motywu dotyczą wszystkich stron",
   "Theme settings": "Ustawienia motywu",

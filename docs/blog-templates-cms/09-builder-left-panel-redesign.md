@@ -2,8 +2,7 @@
 
 > Status: **plan** — zatwierdzony 2026-08-03.
 >
-> Postęp: **F7.1 ✅, F7.2 ✅, F7.3 ✅, F7.4 ✅** (2026-08-03) — szczegóły w `README.md`.
-> Zostało: F7.5 (resize), F7.6 (testy/i18n).
+> Postęp: **F7.1 ✅, F7.2 ✅, F7.3 ✅, F7.4 ✅, F7.5 ✅, F7.6 ✅** (2026-08-03) — szczegóły w `README.md`.
 >
 > Decyzje użytkownika (2026-08-03):
 > 1. **Kolejność: lewy panel NA KOŃCU** — po blog CMS (F5.0–F5.4). Blog CMS pracuje na
@@ -80,14 +79,20 @@ PO:
 
 ### 7.5 — Resize lewego panelu
 
-- `react-resizable-panels` (jeśli w zależnościach) lub własny resize handle.
-- Zakres ~320-500px.
+> ✅ Zrealizowane 2026-08-03. Odchyłki w `README.md`.
+
+- `builder-left-panel.tsx`: własny resize handle (separator na prawej krawędzi,
+  `role="separator"`), drag przez `document`-level `mousemove`/`mouseup`.
+- Zakres **320-500px** (clamping w `onMove`); start na 300px.
+- Brak `react-resizable-panels` — własny handle (pakiet nie jest w zależnościach).
 
 ### 7.6 — Testy / i18n / animacje
 
-- i18n dla nowych kluczy (Content, Styling, Advanced, Ask AI, AI placeholder itd.).
-- Animacje slide-up / slide-in (shadcn).
-- Mobile (`MobileBuilderLayout`) — bez zmian, ma własny układ.
+> ✅ Zrealizowane 2026-08-03. Odchyłki w `README.md`.
+
+- i18n: brakujące klucze `Page settings`, `Template settings`, `Theme editor`,
+  `Resize left panel` w `en.json` + `pl.json`; test `LEFT_PANEL_KEYS`.
+- Animacje slide-up / AI sidebar istniały już (F7.1/F7.4). Mobile bez zmian.
 
 ## 3. Kluczowe pliki
 
