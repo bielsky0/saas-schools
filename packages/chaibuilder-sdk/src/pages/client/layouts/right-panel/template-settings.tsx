@@ -9,18 +9,10 @@ import { Label } from "~/components/ui/label";
 import { Separator } from "~/components/ui/separator";
 import { Switch } from "~/components/ui/switch";
 import { useEditorContext } from "~/hooks/use-editor-mode";
-import { usePostsManager } from "~/pages/client/components/posts-manager/use-posts-manager";
 import { useCollections } from "~/pages/hooks/pages/use-collections";
 import { useTemplateData } from "~/pages/hooks/pages/use-template-data";
 import { useUpdateTemplate } from "~/pages/hooks/pages/use-update-template";
-import { TemplateDataMapping, TemplateElements, TemplateSeoDefaults } from "~/types/collections";
-
-const DEFAULT_DATA_MAPPING: TemplateDataMapping[] = [
-  { slot: "heading_h1", field: "title" },
-  { slot: "featured_image", field: "image" },
-  { slot: "body", field: "body" },
-  { slot: "author_date", field: "author+date" },
-];
+import { TemplateElements, TemplateSeoDefaults } from "~/types/collections";
 
 /**
  * Right panel for editing a collection layout template (blog-templates-cms F4).
@@ -33,7 +25,6 @@ export const TemplateSettings = () => {
   const { t } = useTranslation();
   const { context } = useEditorContext();
   const { data: collections = [] } = useCollections();
-  const { open: openPostsModal } = usePostsManager();
 
   const templateId = context.type === "template" ? context.templateId : undefined;
   const collectionId = context.type === "template" ? context.collectionId : undefined;
@@ -82,7 +73,6 @@ export const TemplateSettings = () => {
 
   const elements: TemplateElements = config?.elements ?? {};
   const seoDefaults: TemplateSeoDefaults = config?.seoDefaults ?? {};
-  const dataMapping = config?.dataMapping?.length ? config.dataMapping : DEFAULT_DATA_MAPPING;
 
   return (
     <div className="flex h-full flex-col">
@@ -165,26 +155,6 @@ export const TemplateSettings = () => {
 
           <Separator />
 
-          {/* Data mapping (read-only in F4) */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between gap-2">
-              <Label className="text-xs font-medium">{t("Data mapping")}</Label>
-              <Badge variant="outline" className="text-[10px]">
-                {t("Coming soon")}
-              </Badge>
-            </div>
-            <div className="space-y-1 rounded-md border border-dashed border-gray-200 bg-gray-50 p-2">
-              {dataMapping.map((mapping) => (
-                <div
-                  key={mapping.slot}
-                  className="flex items-center justify-between gap-2 rounded px-1 py-0.5 text-xs">
-                  <span className="truncate font-medium text-slate-700">{mapping.slot}</span>
-                  <span className="shrink-0 font-mono text-[10px] text-muted-foreground">→ {mapping.field}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* SEO defaults */}
           <div className="space-y-2">
             <Label className="text-xs font-medium">{t("SEO defaults")}</Label>
@@ -230,9 +200,6 @@ export const TemplateSettings = () => {
         <div className="rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-xs leading-5 text-blue-800">
           {t("Changes will affect {{count}} posts", { count: postCount })}
         </div>
-        <Button variant="outline" size="sm" className="w-full" onClick={() => collectionId && openPostsModal(collectionId)}>
-          {t("View posts in this template")}
-        </Button>
       </div>
     </div>
   );

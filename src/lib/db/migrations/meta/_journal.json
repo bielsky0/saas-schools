@@ -540,6 +540,13 @@
       "when": 1786500000006,
       "tag": "0077_cms_collections",
       "breakpoints": true
+    },
+    {
+      "idx": 77,
+      "version": "7",
+      "when": 1786500000007,
+      "tag": "0078_page_content",
+      "breakpoints": true
     }
   ]
 }

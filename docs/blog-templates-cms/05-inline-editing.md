@@ -1,5 +1,9 @@
 # Faza 5: Tryb edycji treści wpisu (inline editing)
 
+> **⚠️ Superseded 2026-08-03.** Zastąpiony dedykowanymi blokami blogowymi +
+> podglądem posta w szablonie (F5.2/F5.3). Kod (content mode, dataMapping,
+> PostSettings) jest do usunięcia w F5.0. Patrz `08-blog-cms-redesign.md`.
+
 ## Cel
 
 Tryb stricte do pisania treści, bez ryzyka zepsucia layoutu: canvas pokazuje **Live Preview konkretnego posta** z **układem zablokowanym** (wg wybranego szablonu), użytkownik edytuje bloki tekstowe **inline** (klik → pisanie), obraz przez media picker, a prawy panel zawiera czyste metadane CMS (tytuł, slug, szablon, kategorie/tagi, thumbnail, zajawka, status).
@@ -62,38 +66,45 @@ Tryb stricte do pisania treści, bez ryzyka zepsucia layoutu: canvas pokazuje **
 
 ## 5. Definition of Done
 
-- [ ] Klik wiersza modala otwiera tryb posta (canvas + prawy panel).
-- [ ] DND wyłączone w trybie treści (brak overlay, toolbarów, „+").
-- [ ] Tytuł i akapity edytowalne inline (contentEditable), zapis po `onBlur`.
-- [ ] Klik w obraz otwiera media picker.
-- [ ] Prawy panel: tytuł, slug `/blog/...`, szablon (dropdown), kategorie/tagi, thumbnail, zajawka.
-- [ ] [Zapisz szkic] / [Opublikuj] zmieniają status.
-- [ ] Zmiana szablonu w locie przebudowuje layout bez utraty treści.
-- [ ] „‹ Wróć do listy wpisów" otwiera modal.
-- [ ] Banner „układ zablokowany przez szablon".
+- [x] Klik wiersza modala otwiera tryb posta (canvas + prawy panel).
+- [x] DND wyłączone w trybie treści (brak overlay, toolbarów, „+").
+- [x] Tytuł i akapity edytowalne inline (contentEditable), zapis po `onBlur`.
+- [x] Klik w obraz otwiera media picker.
+- [x] Prawy panel: tytuł, slug `/blog/...`, szablon (dropdown), kategorie/tagi, thumbnail, zajawka.
+- [x] [Zapisz szkic] / [Opublikuj] zmieniają status.
+- [x] Zmiana szablonu w locie przebudowuje layout bez utraty treści.
+- [x] „‹ Wróć do listy wpisów" otwiera modal.
+- [x] Banner „układ zablokowany przez szablon".
 
 ## 6. Testy
 
 ### Manualne QA
-- [ ] Inline editing: zmiana tytułu na canvasie aktualizuje pole w prawym panelu i vice versa.
-- [ ] Zmiana szablonu w locie (Klasyczny → Wywiad) zachowuje body/excerpt/obraz.
-- [ ] Brak możliwości przeciągnięcia/usunięcia bloków w trybie treści.
-- [ ] Zapis szkicu nie zmienia statusu published.
-- [ ] Slug auto-generowany z tytułu, ręcznie edytowalny.
+- [x] Inline editing: zmiana tytułu na canvasie aktualizuje pole w prawym panelu i vice versa.
+- [x] Zmiana szablonu w locie (Klasyczny → Wywiad) zachowuje body/excerpt/obraz.
+- [x] Brak możliwości przeciągnięcia/usunięcia bloków w trybie treści.
+- [x] Zapis szkicu nie zmienia statusu published.
+- [x] Slug auto-generowany z tytułu, ręcznie edytowalny.
 
 ## 7. Pliki
 
 | Plik | Akcja |
 |------|-------|
-| `packages/chaibuilder-sdk/src/pages/client/layouts/right-panel/post-settings.tsx` | **Nowy** |
-| `packages/chaibuilder-sdk/src/hooks/use-editor-mode.ts` | **Zmiana** — tryb `content` |
-| `packages/chaibuilder-sdk/src/core/components/canvas/canvas-area.tsx` | **Zmiana** — wyłączenie DND + banner |
-| `packages/chaibuilder-sdk/src/core/components/canvas/dnd/*.ts` | **Zmiana** — guard `editorMode === "content"` |
-| `packages/chaibuilder-sdk/src/core/components/canvas/static/block-floating-actions.tsx` | **Zmiana** — ukrycie w trybie treści |
-| `packages/chaibuilder-sdk/src/core/components/canvas/static/add-block-at-bottom.tsx` | **Zmiana** — ukrycie w trybie treści |
-| `packages/chaibuilder-sdk/src/core/components/canvas/static/chai-canvas.tsx` | **Zmiana** — `contentEditable` dla bloków tekstowych |
-| `packages/chaibuilder-sdk/src/types/blocks.ts` | **Zmiana** — `contentEditable?: boolean` |
-| `packages/chaibuilder-sdk/src/pages/client/layouts/builder-layout.tsx` | **Zmiana** — warunek `panel === "post"` |
+| `packages/chaibuilder-sdk/src/pages/client/layouts/right-panel/post-settings.tsx` | **Nowy** — panel edycji treści posta |
+| `packages/chaibuilder-sdk/src/hooks/use-post-content.ts` | **Nowy** — `postContentAtom`/`postSlotMapAtom`/`postImageEditAtom` + `usePostContent` (live source of truth, debounced save) |
+| `packages/chaibuilder-sdk/src/lib/post-content-transform.ts` | **Nowy** — transformacja bloków szablonu + dwukierunkowa mapa slotów (testy w `post-content-transform.test.ts`) |
+| `packages/chaibuilder-sdk/src/core/components/canvas/static/post-image-editor-dialog.tsx` | **Nowy** — media picker dla obrazu wyróżniającego |
+| `packages/chaibuilder-sdk/src/hooks/use-editor-mode.ts` | **Zmiana** — tryb `content` (typ `{ type: "post" }` już istniał z F4) |
+| `packages/chaibuilder-sdk/src/pages/chaibuilder-pages.tsx` | **Zmiana** — snapshot/restore bloków dla post mode, ładowanie szablonu + transformacja, onSave no-op |
+| `packages/chaibuilder-sdk/src/core/components/canvas/canvas-area.tsx` | **Zmiana** — banner trybu treści + `PostImageEditorDialog` |
+| `packages/chaibuilder-sdk/src/core/components/canvas/dnd/drag-and-drop/hooks/*.ts` | **Zmiana** — guard `context.type === "post"` |
+| `packages/chaibuilder-sdk/src/core/components/canvas/block-floating-actions.tsx` | **Zmiana** — ukrycie toolbaru w trybie treści |
+| `packages/chaibuilder-sdk/src/core/components/canvas/static/add-block-at-bottom.tsx` | **Zmiana** — ukrycie „+" w trybie treści |
+| `packages/chaibuilder-sdk/src/core/components/canvas/static/static-canvas.tsx` | **Zmiana** — wyłączenie DND handlers + drop indicator |
+| `packages/chaibuilder-sdk/src/core/components/canvas/static/chai-canvas.tsx` | **Zmiana** — klik w obraz → media picker w trybie treści |
+| `packages/chaibuilder-sdk/src/core/components/canvas/static/new-blocks-renderer.tsx` | **Zmiana** — override propów mapowanych bloków z atomu + brak drag handlers |
+| `packages/chaibuilder-sdk/src/core/components/canvas/static/with-block-text-editor.tsx` | **Zmiana** — zapis do `pageContent` w trybie treści |
+| `packages/chaibuilder-sdk/src/pages/client/components/posts-manager/use-posts-manager.ts` | **Zmiana** — `enterPostMode` + `navigateToPost(postId, templateId)` |
+| `packages/chaibuilder-sdk/src/pages/client/layouts/builder-layout.tsx` | **Zmiana** — warunek `panel === "post"` (już częściowo z F4) |
 
 ## 8. Szacowany nakład
 

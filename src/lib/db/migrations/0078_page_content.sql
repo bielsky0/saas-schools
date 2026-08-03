@@ -1,0 +1,14 @@
+--> HAND-WRITTEN (blog-templates-cms, Faza 5 — post content payload).
+-->
+--> Adds `page.pageContent`, a JSONB column holding the structured CMS content of
+--> a collection entry (title, body, excerpt, image, tags, categories). This is
+--> deliberately separate from `page.blocks` (the layout, inherited from the
+--> template) so that:
+-->   * switching the post template in F5 can rebuild the layout without touching
+-->     the content,
+-->   * inline editing of mapped fields writes to a stable carrier instead of
+-->     mutating shared template blocks.
+-->
+--> The column is nullable and defaults to NULL; the API seeds a sensible empty
+--> shape on CREATE_COLLECTION_ITEM.
+ALTER TABLE "page" ADD COLUMN "pageContent" jsonb;

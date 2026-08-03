@@ -8,14 +8,13 @@ export const useEditorMode = () => {
 };
 
 /**
- * Editor context for CMS layout/content editing (blog-templates-cms F4+).
+ * Editor context for CMS layout editing (blog-templates-cms F4+).
  * Unlike `editorModeAtom` (edit/view preview), this describes WHAT is being
- * edited: a regular page, a collection layout template, or a post item.
+ * edited: a regular page or a collection layout template.
  */
 export type EditorContext =
   | { type: "page"; pageId: string }
-  | { type: "template"; templateId: string; collectionId: string }
-  | { type: "post"; postId: string; templateId: string; collectionId: string };
+  | { type: "template"; templateId: string; collectionId: string };
 
 export const editorContextAtom = atom<EditorContext>({ type: "page", pageId: "" });
 

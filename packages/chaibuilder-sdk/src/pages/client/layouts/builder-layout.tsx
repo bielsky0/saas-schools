@@ -12,7 +12,6 @@ import { useTopBarComponent } from "~/runtime/client";
 import { BuilderLeftPanel } from "./left-panel/builder-left-panel";
 import { MobileBuilderLayout } from "./mobile/mobile-builder-layout";
 import { useIsMobile } from "./mobile/use-is-mobile";
-import { PostsManagerModal } from "~/pages/client/components/posts-manager/posts-manager-modal";
 import { EmptyRightPanel } from "./right-panel/empty-right-panel";
 import { PageSettings } from "./right-panel/page-settings";
 import { TemplateSettings } from "./right-panel/template-settings";
@@ -77,7 +76,6 @@ const DesktopBuilderLayout = () => {
           </main>
         </div>
         <AddBlocksDialog />
-        <PostsManagerModal />
       </TooltipProvider>
     </div>
   );

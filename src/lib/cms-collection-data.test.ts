@@ -39,7 +39,11 @@ describe("cms-collection-data (blog-templates-cms F2.5)", () => {
     const config = getDefaultTemplateConfig({ layout: "sidebar" });
     expect(config.layout).toBe("sidebar");
     expect(config.elements).toEqual({ thumbnail: true, related: true, newsletter: false });
-    expect(config.dataMapping).toEqual([]);
+    expect(config.dataMapping).toEqual([
+      { slot: "heading_h1", field: "title" },
+      { slot: "featured_image", field: "image" },
+      { slot: "body", field: "body" },
+    ]);
     expect(config.seoDefaults).toEqual({
       titlePattern: "{title}",
       descriptionPattern: "{description}",

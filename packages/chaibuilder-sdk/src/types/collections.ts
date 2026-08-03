@@ -53,11 +53,6 @@ export type CmsCollectionItemVm = {
 
 export type CmsTemplateLayout = "single" | "sidebar";
 
-export type TemplateDataMapping = {
-  slot: string;
-  field: string;
-};
-
 export type TemplateSeoDefaults = {
   titlePattern?: string;
   descriptionPattern?: string;
@@ -76,7 +71,6 @@ export type TemplateElements = {
 export type TemplateConfig = {
   layout: CmsTemplateLayout;
   elements?: TemplateElements;
-  dataMapping?: TemplateDataMapping[];
   seoDefaults?: TemplateSeoDefaults;
 };
 
@@ -91,4 +85,18 @@ export type TemplateDataVm = {
     blocks: unknown[];
   } | null;
   config: TemplateConfig;
+};
+
+/**
+ * Structured CMS content of a collection entry (blog-templates-cms F5). Stored
+ * in `page.pageContent`, separate from the layout blocks so a template switch
+ * rebuilds the layout without losing the author's content.
+ */
+export type PostContent = {
+  title?: string;
+  body?: string;
+  excerpt?: string;
+  image?: string;
+  tags?: string[];
+  categories?: string[];
 };

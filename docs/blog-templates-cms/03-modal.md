@@ -1,5 +1,8 @@
 # Faza 3: Modal „Lista wpisów" + krok wyboru szablonu
 
+> **⚠️ Superseded 2026-08-03.** Zarządzanie postami przenosi się do dashboardu
+> (F5.1). Kod modala jest do usunięcia w F5.0. Patrz `08-blog-cms-redesign.md`.
+
 ## Cel
 
 Zarządzanie bazą postów bez opuszczania buildera: po kliknięciu „Wszystkie wpisy" canvas zostaje przyciemniony, a na wierzchu pojawia się wycentrowany szeroki **Modal** z tabelą wpisów. Zawiera search, filtr szkiców, „+ Nowy wpis" oraz dwustopniowy przepływ: lista → (nowy wpis) → wybór szablonu → zamknięcie.

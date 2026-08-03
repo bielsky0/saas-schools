@@ -40,13 +40,11 @@ const CollectionRow = ({
 
 const CollectionTreeGroup = ({
   collection,
-  onOpenPosts,
   onOpenTemplate,
   onEditCollection,
   activeTemplateId,
 }: {
   collection: CmsCollectionVm;
-  onOpenPosts: (collectionId: string) => void;
   onOpenTemplate: (templateId: string, collectionId: string) => void;
   onEditCollection?: (collection: CmsCollectionVm) => void;
   activeTemplateId?: string;
@@ -117,7 +115,6 @@ const CollectionTreeGroup = ({
             icon={<Files size={12} className="shrink-0 stroke-[1] text-slate-500" />}
             label={t("All posts")}
             sublabel={String(collection.postCount)}
-            onClick={() => onOpenPosts(collection.id)}
           />
           {collection.templates.map((template) => (
             <CollectionRow

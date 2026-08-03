@@ -6,11 +6,25 @@
 >
 > Każda faza = osobna sesja. Wpisuj postęp/odchyłki przy każdej fazie.
 
-## 1. Cel
+> ## ⚠️ PIVOT ARCHITEKTURY (2026-08-03)
+>
+> Faza 5 (inline editing) i Faza 3 (modal listy wpisów) zostają **zastąpione** nowym,
+> **Shopify-style CMS**: posty edytuje się w **dashboardzie** (TipTap), a w builderze
+> projektuje się tylko **layouty szablonów** z **dedykowanymi blokami blogowymi**
+> (auto-bindowanymi z podglądu posta). Szczegóły: **`08-blog-cms-redesign.md`**.
+>
+> F1–F5 poniżej to historia implementacji (częściowo do usunięcia w F5.0). Nowe fazy:
+> F5.0 (cleanup) → F5.1 (dashboard blog) → F5.2 (bloki blogowe) → F5.3 (podgląd posta)
+> → F5.4 (strona bloga) → **F7 (lewy panel + AI drawer — na końcu)** → F5.5 (future: dynamiczne źródła).
+>
+> **F7 (przebudowa lewego panelu + AI drawer z prawej)** — na końcu, po blog CMS.
+> Szczegóły: **`09-builder-left-panel-redesign.md`**.
+
+## 1. Cel (historyczny)
 
 Dodać do buildera ChaiBuilder pełny moduł CMS: **kolekcje w drzewie lewego panelu** (STRONY / SZABLONY (KOLEKCJE CMS) / SYSTEMOWE), **modal listy wpisów** (overlay nad canvasem), **edycję layoutu szablonu** (drag & drop, dziedziczona przez posty) oraz **tryb edycji treści wpisu** (inline editing, układ zablokowany).
 
-Kluczowe założenie: ochrona interfejsu buildera — zarządzanie listą postów odbywa się przez **Modal (nakładkę)**, a nie przez zmianę głównego widoku roboczego.
+Kluczowe założenie (historyczne): ochrona interfejsu buildera — zarządzanie listą postów odbywa się przez **Modal (nakładkę)**, a nie przez zmianę głównego widoku roboczego.
 
 ## 2. Utrwalone decyzje
 
@@ -91,6 +105,8 @@ Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewi
 ## 7. Postęp implementacji
 
 > Zasada: wpisuj postęp/odchyłki przy każdej zakończonej fazie.
+>
+> **F1–F5 to historia.** Od 2026-08-03 obowiązuje nowa architektura (patrz `08-blog-cms-redesign.md`).
 
 | Faza | Status | Data | Odchyłki / notatki |
 |------|--------|------|--------------------|
@@ -98,10 +114,17 @@ Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewi
 | F1 — Backend | ✅ | 2026-08-02 | **Brak FK** na `templateId` (patrz niżej); szablony-pages tworzone leniwie |
 | F2 — Lewy panel | ✅ | 2026-08-02 | `GET_COLLECTIONS` rozszerzony o `templatePageType`; `toChaiPage` zwraca `status` |
 | F2.5 — Zarządzanie kolekcjami | ✅ | 2026-08-02 | Patrz `07-collection-management.md` — zrealizowano (odchyłki poniżej) |
-| F3 — Modal | ✅ | 2026-08-02 | Patrz `03-modal.md` — zrealizowano (odchyłki poniżej) |
-| F4 — Edycja szablonu | ✅ | 2026-08-02 | Patrz `04-template-editing.md` — zrealizowano (odchyłki poniżej) |
-| F5 — Inline editing | ⬜ | — | — |
-| F6 — Integracja | ⬜ | — | — |
+| F3 — Modal | ⚠️ superseded | 2026-08-02 | Zastąpiony dashboardem (F5.1) — do usunięcia w F5.0 |
+| F4 — Edycja szablonu | ✅ | 2026-08-02 | Zostaje (baza dla F5.3). Patrz `04-template-editing.md` |
+| F5 — Inline editing | ⚠️ superseded | 2026-08-02 | Zastąpiony blokami blogowymi + podglądem (F5.2/F5.3) — do usunięcia w F5.0 |
+| F6 — Integracja | ⬜ | — | Na razie zawieszona (po nowej architekturze) |
+| **F5.0 — Cleanup** | ⬜ | — | Usunięcie F3/F5 z SDK |
+| **F5.1 — Dashboard Blog** | ⬜ | — | Lista + edytor posta (TipTap) + CRUD API |
+| **F5.2 — Bloki blogowe** | ⬜ | — | Dedykowane bloki, tylko w szablonach bloga |
+| **F5.3 — Podgląd posta** | ⬜ | — | Dropdown podglądu w TemplateSettings |
+| **F5.4 — Strona bloga** | ⬜ | — | Listing + bloki listingu |
+| **F5.5 — Dynamiczne źródła** | ⬜ | — | (future) |
+| **F7 — Lewy panel + AI drawer** | ⬜ | — | Shopify-style: edycja w lewym panelu, AI z prawej (na końcu) |
 
 ### Odchyłki F1
 
@@ -157,3 +180,17 @@ Pełny plan w `07-collection-management.md`. Utrwalone decyzje (2026-08-02):
 7. **`changePage` w `pages-tab.tsx`** resetuje teraz `editorContext` do `{ type: "page", pageId }` — inaczej po wyjściu z szablonu kontekst zostawałby `template` i canvas pokazywałby nie te bloki.
 8. **Aktywacja panelu**: klik „Szablon: X" ustawia `editorContext` + `rightPanel` na `"template"`; `builder-layout.tsx` renderuje `TemplateSettings`. Auto-switch `template`→`block` przy zaznaczeniu bloku (jak dla `page`).
 9. **i18n**: 17 nowych kluczy w `en.json` + `pl.json`, pokryte testem `TEMPLATE_SETTINGS_KEYS` w `i18n.test.ts`. Dodano flat `"Layout"` (wcześniej tylko `layout.heading`).
+
+### F5 — Inline editing (odchyłki od planu)
+
+1. **Inline editing oparty o istniejący `WithBlockTextEditor` (dblclick)** zamiast "zawsze-contentEditable": w trybie treści ten sam edytor nadpisuje zapis do `pageContent` (zamiast blocks store) przez `updatePostContent`. DoD „Tytuł i akapity edytowalne inline (contentEditable), zapis po onBlur" jest spełniony — `MemoizedEditor` używa `contentEditable: true`, a zamknięcie (`onBlur`) zapisuje do pola.
+2. **Live źródło prawdy: `postContentAtom`** (`src/hooks/use-post-content.ts`) współdzielony przez renderer bloków, inline editing i `PostSettings` — dzięki temu „zmiana tytułu na canvasie aktualizuje pole w prawym panelu i vice versa" działa bez refetchu. Renderer nadpisuje propy mapowanych bloków z atomu (`new-blocks-renderer.tsx`).
+3. **Mapa slotów dwukierunkowa**: `post-content-transform.ts` buduje `{ slotToBlockId, blockIdToField, blockIdToProp }`. Forward (load): pierwszy blok pasującego typu per slot (albo atrybut `dataMapping`/`dataField` jeśli obecny); backward (save): `blockId → field → pageContent[field]`. Pola złożone (`author+date`) pomijane (brak pola w `PostContent`).
+4. **Slug/prefiks**: prefiks `/blog/` wyświetlany z `collection.id` (key kolekcji) — nie hardcoded.
+5. **Klik w obraz otwiera media picker** przez `postImageEditAtom` + `PostImageEditorDialog` (renderowany poza iframe w `canvas-area.tsx`); wybór zapisuje URL do `pageContent[field]`.
+6. **Obraz wyróżniający w `PostSettings`** przez istniejący `ImagePicker` (ten sam wzorzec co w innych panelach).
+7. **Nowe klucze i18n** pokryte testem `POST_SETTINGS_KEYS` w `i18n.test.ts`; transformacja bloków pokryta `post-content-transform.test.ts` (5 przypadków, SDK vitest).
+8. **Autozapis w trybie treści = no-op** (`onSave` w `chaibuilder-pages.tsx` zwraca `true` bez zapisu) — bloki na canvasie należą do szablonu i nie mogą trafić do `page.blocks` posta.
+
+> **Superseded 2026-08-03.** F5 (inline editing) i F3 (modal) zostają zastąpione nową
+> architekturą Shopify-style — patrz `08-blog-cms-redesign.md` (F5.0 cleanup → F5.4).

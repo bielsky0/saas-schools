@@ -47,6 +47,7 @@ function toChaiPage(row: typeof page.$inferSelect) {
     changes: [],
     parent: row.parentId ?? null,
     templateId: row.templateId ?? null,
+    pageContent: row.pageContent ?? null,
   };
 }
 
@@ -285,10 +286,14 @@ export async function POST(req: NextRequest) {
               .limit(1);
             if (post) {
               const seo = (post.seo ?? {}) as Record<string, string>;
+              const content = post.pageContent ?? {};
               blogData = {
-                title: post.title,
-                description: seo.description || "",
-                image: seo.ogImage || "",
+                title: content.title ?? post.title,
+                body: content.body ?? "",
+                excerpt: content.excerpt ?? seo.description ?? "",
+                image: content.image ?? seo.ogImage ?? "",
+                tags: content.tags ?? [],
+                categories: content.categories ?? [],
                 url: `/${slug}`,
                 datePublished: post.publishedAt?.toISOString() ?? new Date().toISOString(),
               };
@@ -453,6 +458,7 @@ export async function POST(req: NextRequest) {
               pageType: collection.pageType,
               templateId: template.id,
               blocks: [],
+              pageContent: { title, body: "", excerpt: "", image: "", tags: [], categories: [] },
               status: "draft",
               isHome: false,
               createdByUserId: userId,

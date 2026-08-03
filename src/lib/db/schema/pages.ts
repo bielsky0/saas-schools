@@ -3,6 +3,31 @@ import type { ChaiBlock } from "@chaibuilder/sdk/types";
 
 import type { TemplateConfig } from "./cms-collections";
 
+/**
+ * Structured CMS content of a collection entry (blog-templates-cms F5). Stored
+ * in `page.pageContent` and kept separate from the layout blocks so a template
+ * switch rebuilds the layout without losing the author's content. `tags` and
+ * `categories` are flat string arrays (chips in the post settings panel).
+ */
+export type PageContent = {
+  title?: string;
+  body?: string;
+  excerpt?: string;
+  image?: string;
+  tags?: string[];
+  categories?: string[];
+};
+
+/** Empty content shape used to seed new posts / posts without content yet. */
+export const EMPTY_PAGE_CONTENT: PageContent = {
+  title: "",
+  body: "",
+  excerpt: "",
+  image: "",
+  tags: [],
+  categories: [],
+};
+
 import { organization } from "./organizations";
 import { user } from "./auth";
 
@@ -57,6 +82,13 @@ export const page = pgTable(
      * { layout, elements, dataMapping, seoDefaults }. Null for regular pages.
      */
     templateConfig: jsonb("templateConfig").$type<TemplateConfig>(),
+    /**
+     * Structured CMS content of a collection entry (blog_post / course_entry):
+     * { title, body, excerpt, image, tags, categories } — see PageContent type.
+     * Separate from `blocks` (layout inherited from the template), so template
+     * switching never touches the content (blog-templates-cms F5).
+     */
+    pageContent: jsonb("pageContent").$type<PageContent>(),
     parentId: text("parentId").references((): any => page.id, {
       onDelete: "set null",
     }),

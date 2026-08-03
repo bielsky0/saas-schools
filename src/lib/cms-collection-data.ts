@@ -88,7 +88,13 @@ export function getDefaultTemplateConfig(
   return {
     layout: template.layout,
     elements: { thumbnail: true, related: true, newsletter: false },
-    dataMapping: [],
+    // Default slot->field mapping so post content binds to the obvious blocks
+    // even before a layout was designed (blog-templates-cms F5).
+    dataMapping: [
+      { slot: "heading_h1", field: "title" },
+      { slot: "featured_image", field: "image" },
+      { slot: "body", field: "body" },
+    ],
     seoDefaults: { titlePattern: "{title}", descriptionPattern: "{description}" },
   };
 }

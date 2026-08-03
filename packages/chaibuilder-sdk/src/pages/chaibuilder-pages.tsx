@@ -28,6 +28,7 @@ import { registerChaiMediaManager } from "~/runtime/client/register-chai-media-m
 import { registerChaiTopBar } from "~/runtime/client/register-chai-top-bar";
 import { ChaiBlock, ChaiWebsiteBuilderProps } from "~/types/common";
 import { loadWebBlocks } from "~/web-blocks";
+
 import { previewUrlAtom } from "./atom/preview-url";
 import { BlurContainer } from "./client/components/chai-loader";
 import { usePageLockStatus } from "./client/components/page-lock/page-lock-hook";
@@ -140,23 +141,29 @@ const ChaiBuilderInner = ({ ...props }: ChaiBuilderInnerProps) => {
   // them via the raw atom setter (no undo history, no action counter bump).
   useEffect(() => {
     const prev = prevContextRef.current;
-    const entering = editorContext.type === "template" && prev.type !== "template";
-    const leaving = prev.type === "template" && editorContext.type !== "template";
+    const next = editorContext;
 
-    if (entering) {
+    const enteringNonPage = prev.type === "page" && next.type !== "page";
+    const leavingToPage = next.type === "page" && prev.type !== "page";
+
+    if (enteringNonPage) {
       pageBlocksRef.current = getCurrentBlocks();
       loadedTemplateRef.current = null;
     }
-    if (leaving) {
+    if (leavingToPage) {
       if (pageBlocksRef.current.length > 0) {
         setBlocks(pageBlocksRef.current);
       }
       pageBlocksRef.current = [];
       loadedTemplateRef.current = null;
     }
-    prevContextRef.current = editorContext;
+    // Leaving template mode must clear the loaded-ref, otherwise a
+    // template -> page -> template trip hits the `loadedTemplateRef` guard and
+    // skips loading fresh blocks (the canvas stays empty/stale).
+    if (prev.type === "template" && next.type !== "template") loadedTemplateRef.current = null;
+    prevContextRef.current = next;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editorContext.type]);
+  }, [editorContext]);
 
   // Load template page blocks into the shared atom once data is ready.
   useEffect(() => {

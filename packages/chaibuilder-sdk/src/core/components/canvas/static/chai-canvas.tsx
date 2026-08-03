@@ -111,6 +111,7 @@ const useHandleCanvasClick = () => {
       if (editingBlockId) return;
       e.stopPropagation();
       const chaiBlock = getTargetedBlock(e.target) as HTMLElement | null;
+
       // If clicked on empty canvas area (no block found), deselect all blocks
       if (!chaiBlock) {
         clearHighlight();
