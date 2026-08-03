@@ -120,8 +120,8 @@ Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewi
 | F6 — Integracja | ⬜ | — | Na razie zawieszona (po nowej architekturze) |
 | **F5.0 — Cleanup** | ✅ | 2026-08-03 | Usunięcie F3/F5 z SDK (patrz niżej) |
 | **F5.1 — Dashboard Blog** | ✅ | 2026-08-03 | Lista + edytor posta (TipTap) + CRUD API (patrz niżej) |
-| **F5.2 — Bloki blogowe** | ⬜ | — | Dedykowane bloki, tylko w szablonach bloga |
-| **F5.3 — Podgląd posta** | ⬜ | — | Dropdown podglądu w TemplateSettings |
+| **F5.2 — Bloki blogowe** | ✅ | 2026-08-03 | Dedykowane bloki, tylko w szablonach bloga (patrz niżej) |
+| **F5.3 — Podgląd posta** | ✅ | 2026-08-03 | Dropdown podglądu w TemplateSettings (patrz niżej) |
 | **F5.4 — Strona bloga** | ⬜ | — | Listing + bloki listingu |
 | **F5.5 — Dynamiczne źródła** | ⬜ | — | (future) |
 | **F7 — Lewy panel + AI drawer** | ⬜ | — | Shopify-style: edycja w lewym panelu, AI z prawej (na końcu) |
@@ -228,3 +228,55 @@ Pełny plan w `07-collection-management.md`. Utrwalone decyzje (2026-08-02):
    Warstwa danych weryfikowana przez e2e (Vitest nie dotyka DB — konwencja repo).
 6. **Brak routu `/new` jako osobnego pliku** — `[postId]/page.tsx` obsługuje
    `postId === "new"` (jeden plik zamiast dwóch).
+
+### F5.2 — Bloki blogowe (odchyłki od planu)
+
+1. **Atom w SDK, ale czytany przez hook z `@chaibuilder/sdk/runtime`.** Zgodnie z
+   planem `blogPostPreviewAtom` + `BlogPostPreview` + `useBlogPostPreview` w
+   `packages/chaibuilder-sdk/src/hooks/use-blog-preview.ts`, wyeksportowane przez
+   `@chaibuilder/sdk/runtime` (bloki w głównej app nie mają zależności `jotai` —
+   root `package.json` jej nie deklaruje). Bloki czytają dane przez hook, nie
+   bezpośrednio `useAtomValue`.
+2. **Publiczne renderowanie przez prop `data`.** Poza builderem bloki czytają
+   `data` (serwerowe wzbogacanie wzorem `enrichBlocksWithData`), w builderze —
+   `blogPostPreviewAtom`. W F5.2 atom zawsze `null` (ustawiany w F5.3), więc
+   bloki renderują placeholder; wzbogacanie publiczne dociągnięte w F5.4.
+3. **Filtrowanie w `default-blocks.tsx`.** Zamiast `add-blocks.tsx` — `DefaultChaiBlocks`
+   (zakładka Blocks) filtruje bloki `group: "Blog"` po kontekście
+   `editorContext.type === "template" && collectionId === "blog"`. Blok blogowy
+   poza szablonem bloga dodatkowo renderuje placeholder (atom null).
+4. **Wspólny helper `src/blocks/blog/shared.tsx`** — `useBlogPostData` +
+   `BlogBlockPlaceholder` (placeholder „Wybierz post do podglądu") zamiast
+   duplikacji logiki w 7 blokach.
+5. **Testy:** SDK build + vitest (603 testy zielone), eslint czysty. Root
+   `tsc --noEmit` ma 5 błędów w plikach spoza F5.2 (`e2e/*`, `admin-preview.test.ts`)
+   — pre-existing (potwierdzone przez `git stash`).
+
+### F5.3 — Podgląd posta (odchyłki od planu)
+
+1. **Dwie akcje API zamiast jednej.** Plan dopuszczał nową akcję
+   `LIST_BLOG_POSTS_FOR_PREVIEW` albo re-use `LIST_COLLECTION_ITEMS`. Użyto
+   istniejącego `LIST_COLLECTION_ITEMS` (`collectionId: "blog"`) do lekkiej listy
+   w dropdownie (id + title + status) + **nową akcję `GET_BLOG_POST_PREVIEW`** do
+   pełnych danych wybranego posta (2-step fetch — pełne dane nie są ściągane dla
+   całej listy).
+2. **Backend `GET_BLOG_POST_PREVIEW`** reużywa `getBlogPost()` z
+   `@/features/blog/data` (joiny `user` dla autora) i mapuje `pageContent`/`seo`
+   na `BlogPostPreview`. Fallbacki: `excerpt ← seo.description`, `image ← seo.ogImage`,
+   `datePublished ← publishedAt ?? updatedAt`.
+3. **Sentinel `__none__` zamiast pustego stringa.** Radix Select nie przyjmuje
+   pustej wartości itema, więc opcja „Brak" używa stałej `NONE_POST_VALUE =
+   "__none__"`; wybór jej resetuje atom do `null` (placeholdery).
+4. **Atom resetowany poza szablonem bloga.** `useEffect` w `TemplateSettings`
+   ustawia `blogPostPreviewAtom = null`, gdy `collectionId !== "blog"` lub wybrano
+   „Brak" — blogowe bloki pokazują placeholder poza szablonem bloga (zgodnie z
+   odchyłką 3 w F5.2).
+5. **i18n:** 4 nowe klucze w `en.json` (`Post preview`, `None`,
+   `Choose a post to preview`, `Blog blocks render the selected post's data`).
+6. **Nowe hooki SDK:** `use-collection-items.ts` (lista kolekcji, `staleTime: 30s`)
+   i `use-blog-post-preview-data.ts` (pełne dane posta). Wzorzec identyczny z
+   `use-collections.ts` / `use-template-data.ts` (react-query + `useFetch` +
+   `useApiUrl`).
+7. **Testy:** vitest zielone dla zmian; root `tsc --noEmit` ma te same 5
+   pre-existing błędów (spoza F5.3); eslint czysty poza pre-existing
+   `console.error` w `route.ts`.

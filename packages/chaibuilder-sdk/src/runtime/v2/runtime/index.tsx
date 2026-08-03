@@ -17,6 +17,7 @@ import {
 } from "./core";
 
 export * from "../../fonts";
+export * from "../../../hooks/use-blog-preview";
 
 const setChaiBlockDataProvider = setChaiServerBlockDataProvider;
 

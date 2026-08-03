@@ -5,7 +5,22 @@ import { Component as UpcomingEvents, Config as UpcomingEventsConfig } from "./U
 import { Component as BookingButton, Config as BookingButtonConfig } from "./BookingButton/config";
 import { Component as InstructorCard, Config as InstructorCardConfig } from "./InstructorCard/config";
 
+import { Component as BlogPostTitle, Config as BlogPostTitleConfig } from "./blog/BlogPostTitle/config";
+import { Component as BlogPostContent, Config as BlogPostContentConfig } from "./blog/BlogPostContent/config";
+import { Component as BlogPostImage, Config as BlogPostImageConfig } from "./blog/BlogPostImage/config";
+import { Component as BlogPostAuthor, Config as BlogPostAuthorConfig } from "./blog/BlogPostAuthor/config";
+import { Component as BlogPostDate, Config as BlogPostDateConfig } from "./blog/BlogPostDate/config";
+import { Component as BlogPostExcerpt, Config as BlogPostExcerptConfig } from "./blog/BlogPostExcerpt/config";
+import { Component as BlogPostTags, Config as BlogPostTagsConfig } from "./blog/BlogPostTags/config";
+
 registerChaiBlock(GroupTypeCard, GroupTypeCardConfig);
 registerChaiBlock(UpcomingEvents, UpcomingEventsConfig);
 registerChaiBlock(BookingButton, BookingButtonConfig);
 registerChaiBlock(InstructorCard, InstructorCardConfig);
+registerChaiBlock(BlogPostTitle, BlogPostTitleConfig);
+registerChaiBlock(BlogPostContent, BlogPostContentConfig);
+registerChaiBlock(BlogPostImage, BlogPostImageConfig);
+registerChaiBlock(BlogPostAuthor, BlogPostAuthorConfig);
+registerChaiBlock(BlogPostDate, BlogPostDateConfig);
+registerChaiBlock(BlogPostExcerpt, BlogPostExcerptConfig);
+registerChaiBlock(BlogPostTags, BlogPostTagsConfig);

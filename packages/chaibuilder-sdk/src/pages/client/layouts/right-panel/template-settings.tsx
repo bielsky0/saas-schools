@@ -1,18 +1,31 @@
 import { useDebouncedCallback } from "@react-hookz/web";
 import { LayoutTemplate } from "lucide-react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { Separator } from "~/components/ui/separator";
 import { Switch } from "~/components/ui/switch";
+import { useBlogPostPreview } from "~/hooks/use-blog-preview";
 import { useEditorContext } from "~/hooks/use-editor-mode";
+import { useBlogPostPreviewData } from "~/pages/hooks/pages/use-blog-post-preview-data";
 import { useCollections } from "~/pages/hooks/pages/use-collections";
+import { useCollectionItems } from "~/pages/hooks/pages/use-collection-items";
 import { useTemplateData } from "~/pages/hooks/pages/use-template-data";
 import { useUpdateTemplate } from "~/pages/hooks/pages/use-update-template";
 import { TemplateElements, TemplateSeoDefaults } from "~/types/collections";
+
+/** Radix Select requires non-empty item values — sentinel for "no post" (F5.3). */
+const NONE_POST_VALUE = "__none__";
 
 /**
  * Right panel for editing a collection layout template (blog-templates-cms F4).
@@ -31,6 +44,29 @@ export const TemplateSettings = () => {
 
   const { data: templateData } = useTemplateData(templateId, collectionId);
   const { mutateAsync: updateTemplate } = useUpdateTemplate();
+
+  // ── F5.3: blog post preview (dropdown → blogPostPreviewAtom) ──────────
+  const isBlogTemplate = context.type === "template" && collectionId === "blog";
+  const { setPreview } = useBlogPostPreview();
+  const { data: collectionItems = [] } = useCollectionItems(
+    isBlogTemplate ? collectionId : undefined,
+  );
+  const [selectedPostId, setSelectedPostId] = useState<string>(NONE_POST_VALUE);
+  const { data: selectedPostPreview } = useBlogPostPreviewData(
+    selectedPostId && selectedPostId !== NONE_POST_VALUE ? selectedPostId : undefined,
+  );
+
+  // Push the fetched post into the preview atom; reset to placeholders outside
+  // a blog template or when "Brak" is selected.
+  useEffect(() => {
+    if (!isBlogTemplate || !selectedPostId || selectedPostId === NONE_POST_VALUE) {
+      setPreview(null);
+      return;
+    }
+    if (selectedPostPreview !== undefined) {
+      setPreview(selectedPostPreview);
+    }
+  }, [isBlogTemplate, selectedPostId, selectedPostPreview, setPreview]);
 
   const collection = useMemo(
     () => collections.find((c) => c.id === collectionId) ?? null,
@@ -89,6 +125,29 @@ export const TemplateSettings = () => {
 
       <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto pb-2">
         <div className="space-y-5">
+          {/* Post preview (F5.3) — blog template only */}
+          {isBlogTemplate && (
+            <div className="space-y-2">
+              <Label className="text-xs font-medium">{t("Post preview")}</Label>
+              <Select value={selectedPostId} onValueChange={setSelectedPostId}>
+                <SelectTrigger className="text-xs">
+                  <SelectValue placeholder={t("Choose a post to preview")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={NONE_POST_VALUE}>{t("None")}</SelectItem>
+                  {collectionItems.map((item) => (
+                    <SelectItem key={item.id} value={item.id}>
+                      {item.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                {t("Blog blocks render the selected post's data")}
+              </p>
+            </div>
+          )}
+
           {/* Layout */}
           <div className="space-y-2">
             <Label className="text-xs font-medium">{t("Layout")}</Label>

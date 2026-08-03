@@ -19,6 +19,7 @@ import { ORG_SUBDOMAIN_HEADER } from "@/lib/tenant-host";
 import { getOrgBySubdomain } from "@/features/organizations/data";
 import { resolveUniqueSlug, slugify } from "@/features/organizations/slug";
 import { getActiveBuilderTheme, upsertBuilderTheme } from "@/features/cms/builder-theme-data";
+import { getBlogPost } from "@/features/blog/data";
 
 // ── Validation constants (F2.5) ─────────────────────────────────────────
 
@@ -351,6 +352,33 @@ export async function POST(req: NextRequest) {
             createdAt: r.createdAt?.toISOString() ?? "",
           }));
           return NextResponse.json({ items });
+        }
+
+        case "GET_BLOG_POST_PREVIEW": {
+          const post = data?.postId
+            ? await getBlogPost(tx, organizationId, String(data.postId))
+            : null;
+          if (!post) {
+            return NextResponse.json(
+              { error: "Post not found" },
+              { status: 404 },
+            );
+          }
+          const content = post.pageContent ?? {};
+          const seo = (post.seo ?? {}) as Record<string, string>;
+          const preview = {
+            id: post.id,
+            title: content.title ?? post.title,
+            body: content.body ?? "",
+            excerpt: content.excerpt ?? seo.description ?? "",
+            image: content.image ?? seo.ogImage ?? "",
+            author: post.authorName ?? "",
+            datePublished: post.publishedAt?.toISOString() ?? post.updatedAt.toISOString(),
+            tags: content.tags ?? [],
+            categories: content.categories ?? [],
+            slug: post.slug,
+          };
+          return NextResponse.json({ preview });
         }
 
         case "GET_TEMPLATE_DATA": {

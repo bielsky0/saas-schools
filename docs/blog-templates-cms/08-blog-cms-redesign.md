@@ -221,8 +221,8 @@ Bloki blogowe czytają atom przez `useAtomValue`.
 
 - [x] F5.0: stary F3–F5 usunięty, build i testy zielone.
 - [x] F5.1: posty tworzone/edytowane w dashboardzie (TipTap), widoczne na publicznym blogu.
-- [ ] F5.2: bloki blogowe w szablonach bloga, auto-render z podglądu.
-- [ ] F5.3: dropdown podglądu posta w prawym panelu szablonu działa.
+- [x] F5.2: bloki blogowe w szablonach bloga, auto-render z podglądu.
+- [x] F5.3: dropdown podglądu posta w prawym panelu szablonu działa.
 - [ ] F5.4: strona bloga (listing) edytowalna i renderowana publicznie.
 - [ ] F5.5: (future) dynamiczne źródła.
 
