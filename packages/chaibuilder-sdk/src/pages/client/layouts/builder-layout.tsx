@@ -11,9 +11,6 @@ import { BuilderLeftPanel } from "./left-panel/builder-left-panel";
 import { MobileBuilderLayout } from "./mobile/mobile-builder-layout";
 import { useIsMobile } from "./mobile/use-is-mobile";
 import { EmptyRightPanel } from "./right-panel/empty-right-panel";
-import { PageSettings } from "./right-panel/page-settings";
-import { TemplateSettings } from "./right-panel/template-settings";
-import { ThemeEditor } from "./theme/theme-editor";
 
 const DEFAULT_PANEL_WIDTH = 280;
 
@@ -50,12 +47,6 @@ const DesktopBuilderLayout = () => {
                 <Suspense fallback={<div>Loading...</div>}>
                   {panel === "ai" ? (
                     <AskAI />
-                  ) : panel === "theme" ? (
-                    <ThemeEditor />
-                  ) : panel === "page" ? (
-                    <PageSettings />
-                  ) : panel === "template" ? (
-                    <TemplateSettings />
                   ) : (
                     <EmptyRightPanel />
                   )}

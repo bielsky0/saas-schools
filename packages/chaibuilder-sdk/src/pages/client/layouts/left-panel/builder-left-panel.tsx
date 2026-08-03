@@ -1,12 +1,16 @@
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import SettingsPanel from "~/core/components/settings/settings-panel";
 import { cn } from "~/core/functions/common-functions";
+import { useEditorContext } from "~/hooks/use-editor-mode";
 import { useSelectedBlock, useSelectedBlockIds } from "~/hooks/use-selected-blockIds";
 import { useLeftPanelBottom } from "~/hooks/use-theme";
+import { PageSettings } from "~/pages/client/layouts/right-panel/page-settings";
+import { TemplateSettings } from "~/pages/client/layouts/right-panel/template-settings";
+import { ThemeEditor } from "~/pages/client/layouts/theme/theme-editor";
 import { PagesTab } from "./pages-tab";
 import { SectionsTab } from "./sections-tab";
 import { ThemeTab } from "./theme-tab";
@@ -16,16 +20,46 @@ export const BuilderLeftPanel = () => {
   const [bottomPanel, setBottomPanel] = useLeftPanelBottom();
   const selectedBlock = useSelectedBlock();
   const [, setBlockIds] = useSelectedBlockIds();
+  const { context: editorContext } = useEditorContext();
+  const prevContextRef = useRef(editorContext);
 
-  // F7.1: gdy blok wybrany → pokaż ustawienia bloku w dolnym panelu;
-  // gdy odznaczony (np. klik w canvas) → schowaj panel.
+  // F7.1/F7.2: dolny panel wysuwany wg kontekstu.
+  //  - blok wybrany → SettingsPanel (block)
+  //  - theme otwarty jawnie (ThemeTab) → ThemeEditor — zostaje aż do nawigacji/back
+  //  - editorContext.type === "template" → TemplateSettings
+  //  - editorContext.type === "page" → PageSettings
+  //  - nic → panel ukryty (taby na pełnej wysokości)
   useEffect(() => {
-    if (selectedBlock && bottomPanel !== "block") {
-      setBottomPanel("block");
-    } else if (!selectedBlock && bottomPanel === "block") {
-      setBottomPanel(null);
+    // 1) Blok zawsze wygrywa.
+    if (selectedBlock) {
+      if (bottomPanel !== "block") setBottomPanel("block");
+      return;
     }
-  }, [selectedBlock, bottomPanel, setBottomPanel]);
+
+    // 2) Jawnie otwarty theme zostaje, dopóki użytkownik nie przejdzie na inną
+    //    stronę/szablon (zmiana editorContext) lub nie wybierze bloku.
+    if (bottomPanel === "theme") {
+      if (prevContextRef.current !== editorContext) {
+        prevContextRef.current = editorContext;
+        setBottomPanel(editorContext.type === "template" ? "template" : "page");
+      }
+      return;
+    }
+
+    // 3) Zmiana kontekstu (strona/szablon) → pokaż ustawienia wg kontekstu.
+    if (prevContextRef.current !== editorContext) {
+      prevContextRef.current = editorContext;
+      const next =
+        editorContext.type === "template" ? "template" : editorContext.type === "page" ? "page" : null;
+      if (next !== bottomPanel) setBottomPanel(next);
+      return;
+    }
+
+    // 4) Odznaczono blok (klik w canvas) → wróć do panelu kontekstu.
+    if (bottomPanel === "block") {
+      setBottomPanel(editorContext.type === "template" ? "template" : editorContext.type === "page" ? "page" : null);
+    }
+  }, [selectedBlock, editorContext, bottomPanel, setBottomPanel]);
 
   const handleBack = () => {
     setBlockIds([]);
@@ -97,6 +131,9 @@ export const BuilderLeftPanel = () => {
           <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto p-3">
             <Suspense fallback={<div>Loading...</div>}>
               {bottomPanel === "block" && <SettingsPanel />}
+              {bottomPanel === "page" && <PageSettings />}
+              {bottomPanel === "template" && <TemplateSettings />}
+              {bottomPanel === "theme" && <ThemeEditor />}
             </Suspense>
           </div>
         </div>

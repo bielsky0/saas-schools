@@ -3,7 +3,6 @@ import { filter, isEmpty, map } from "lodash-es";
 import { Suspense, lazy, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useEditorContext } from "~/hooks/use-editor-mode";
-import { useRightPanel } from "~/hooks/use-theme";
 import { useSelectedBlockIds } from "~/hooks/use-selected-blockIds";
 import { useSelectedStylingBlocks } from "~/hooks/use-selected-styling-blocks";
 import PageManagerSearchAndFilter from "~/pages/client/components/page-manager/page-manager-search-and-filter";
@@ -41,7 +40,6 @@ export const PagesTab = () => {
   const { data: collectionsData } = useCollections();
   const fallbackLang = useFallbackLang();
   const [queryParams, setQueryParams] = useSearchParams();
-  const [, setRightPanel] = useRightPanel();
   const [, setIds] = useSelectedBlockIds();
   const [, setStyleBlocks] = useSelectedStylingBlocks();
   const { context: editorContext, setContext: setEditorContext } = useEditorContext();
@@ -94,10 +92,9 @@ export const PagesTab = () => {
       setIds([]);
       setStyleBlocks([]);
       navigateToPage(new URLSearchParams({ page: pageId }), setQueryParams);
-      setRightPanel("page");
       setEditorContext({ type: "page", pageId });
     },
-    [setIds, setStyleBlocks, setQueryParams, setRightPanel, setEditorContext],
+    [setIds, setStyleBlocks, setQueryParams, setEditorContext],
   );
 
   const handleClickAction = useCallback(
@@ -133,15 +130,14 @@ export const PagesTab = () => {
     [changePage],
   );
 
-  // Faza 4: przełącza w tryb edycji layoutu szablonu (canvas + prawy panel).
+  // Faza 4: przełącza w tryb edycji layoutu szablonu (canvas + lewy panel).
   const handleOpenTemplate = useCallback(
     (templateId: string, collectionId: string) => {
       setIds([]);
       setStyleBlocks([]);
       setEditorContext({ type: "template", templateId, collectionId });
-      setRightPanel("template");
     },
-    [setIds, setStyleBlocks, setEditorContext, setRightPanel],
+    [setIds, setStyleBlocks, setEditorContext],
   );
 
   // Faza 2.5: otwiera panel zarządzania w trybie edycji wskazanej kolekcji.

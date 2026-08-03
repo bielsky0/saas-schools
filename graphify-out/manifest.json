@@ -10555,8 +10555,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/builder-layout.tsx": {
-    "mtime": 1785766167.6430576,
-    "ast_hash": "96c6e45dbd8ceb67d1a5fddee0d15805",
+    "mtime": 1785767653.6797078,
+    "ast_hash": "98a2e5646b79d76672ce06da68861a95",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/layout/index.ts": {
@@ -10590,8 +10590,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/builder-left-panel.tsx": {
-    "mtime": 1785766193.431697,
-    "ast_hash": "207ef09a8a1b0ac2d9e6079915a6306e",
+    "mtime": 1785767653.6802595,
+    "ast_hash": "f99663051283df50dc29a5cbc8bf446a",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-groups.test.ts": {
@@ -10615,8 +10615,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/theme-tab.tsx": {
-    "mtime": 1785587313.602368,
-    "ast_hash": "f1d1aba2cfeb7ea0a84ee20289e8ac8d",
+    "mtime": 1785767653.6814044,
+    "ast_hash": "8d9f6c16dd13333b238e9f48fd2c2e1e",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/theme/theme-editor.tsx": {
@@ -10670,8 +10670,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/pages-tab.tsx": {
-    "mtime": 1785751348.8256361,
-    "ast_hash": "25a7966d26f38f4627bf4be49323decc",
+    "mtime": 1785767653.680916,
+    "ast_hash": "4ca3dc8b4b921461d459917c84cd84d5",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/right-panel/page-settings.tsx": {
@@ -10820,8 +10820,8 @@
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/README.md": {
-    "mtime": 1785765279.496978,
-    "ast_hash": "730065d5578ca13d7e4354e732fce74e",
+    "mtime": 1785767696.7520587,
+    "ast_hash": "38da2f1985c030d14e6ef461e200e32b",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/collection-tree-group.tsx": {
@@ -10930,8 +10930,8 @@
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/09-builder-left-panel-redesign.md": {
-    "mtime": 1785748718.5951848,
-    "ast_hash": "8710e108518de53d2a286f1ef184e4d6",
+    "mtime": 1785767707.7141902,
+    "ast_hash": "354a48058b1e78b18171b1d78077176f",
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/Zrzut ekranu 2026-08-3 o 11.17.02.png": {

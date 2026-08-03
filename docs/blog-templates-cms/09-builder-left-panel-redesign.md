@@ -2,6 +2,9 @@
 
 > Status: **plan** — zatwierdzony 2026-08-03.
 >
+> Postęp: **F7.1 ✅, F7.2 ✅** (2026-08-03) — szczegóły w `README.md`.
+> Zostało: F7.3 (usunięcie prawego panelu), F7.4 (AI drawer), F7.5 (resize), F7.6 (testy/i18n).
+>
 > Decyzje użytkownika (2026-08-03):
 > 1. **Kolejność: lewy panel NA KOŃCU** — po blog CMS (F5.0–F5.4). Blog CMS pracuje na
 >    obecnym layoucie, potem przebudowa przenosi wszystko do lewego panelu.
@@ -33,6 +36,8 @@ PO:
 
 ### 7.1 — Block settings w lewym panelu (bottom slide-up)
 
+> ✅ Zrealizowane 2026-08-03.
+
 - `builder-left-panel.tsx`: struktura z dolnym panelem.
 - Gdy blok wybrany → `SettingsPanel` (Content/Styling/Advanced) wysuwa się z dołu, góra się kurczy.
 - Back button (←) odznacza blok.
@@ -40,6 +45,8 @@ PO:
   (`useSelectedBlock`, `useSelectedStylingBlocks`) — działają w dowolnym miejscu drzewa.
 
 ### 7.2 — Page / Template settings w lewym panelu
+
+> ✅ Zrealizowane 2026-08-03.
 
 - `PageSettings`, `TemplateSettings`, `ThemeEditor` renderują się w dolnym panelu wg kontekstu:
   - `editorContext.type === "page"` + brak bloku → `PageSettings`

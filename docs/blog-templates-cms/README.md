@@ -124,7 +124,9 @@ Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewi
 | **F5.3 — Podgląd posta** | ✅ | 2026-08-03 | Dropdown podglądu w TemplateSettings (patrz niżej) |
 | **F5.4 — Strona bloga** | ✅ | 2026-08-03 | Listing + bloki listingu (patrz niżej) |
 | **F5.5 — Dynamiczne źródła** | ✅ | 2026-08-03 | `{{post.*}}` w szablonach bloga + render przez szablon (patrz niżej) |
-| **F7 — Lewy panel + AI drawer** | ⬜ | — | Shopify-style: edycja w lewym panelu, AI z prawej (na końcu) |
+| **F7.1 — Block settings w lewym** | ✅ | 2026-08-03 | Dolny panel w lewym panelu + auto-pokaz przy wybranym bloku (patrz niżej) |
+| **F7.2 — Page/Template w lewym** | ✅ | 2026-08-03 | PageSettings/TemplateSettings/ThemeEditor w dolnym panelu wg `editorContext` (patrz niżej) |
+| **F7 — Lewy panel + AI drawer** | ⬜ | — | Zostało: F7.3 usunięcie prawego panelu, F7.4 AI drawer, F7.5 resize, F7.6 testy |
 
 ### Odchyłki F1
 
@@ -317,3 +319,27 @@ Pełny plan w `07-collection-management.md`. Utrwalone decyzje (2026-08-02):
 6. **Testy:** `block-data.test.ts` (3 przypadki mapowania, czysta funkcja).
    SDK vitest 603 zielone; root vitest tylko pre-existing faili Payload CMS
    (`src/features/cms/*`), potwierdzone `git stash`.
+
+### F7.1 — Block settings w lewym panelu (odchyłki od planu)
+
+1. **Atomy już istniały** (`leftPanelBottomAtom`, `aiDrawerOpenAtom` w `use-theme.ts`),
+   dołożono tylko strukturę dolnego panelu w `builder-left-panel.tsx`. Panel
+   wysuwa się na 45% wysokości, `SettingsPanel` działa w dowolnym miejscu drzewa
+   (czyta globalne atomy `useSelectedBlock`).
+
+### F7.2 — Page/Template w lewym panelu (odchyłki od planu)
+
+1. **Kierowanie wg `editorContextAtom`.** Dolny panel wyświetla `PageSettings`
+   (kontekst `page`), `TemplateSettings` (kontekst `template`), `ThemeEditor`
+   (jawnie otwarty z Theme tab) lub nic. `pages-tab.tsx` przestał ustawiać
+   `rightPanelAtom` — kontekst płynie przez `setEditorContext` (F4/F5.3 już to
+   robiły), a `builder-left-panel.tsx` reaguje na zmiany `editorContext`.
+2. **Priorytet panelu:** blok wybrany → `block`; theme otwarty → `theme` (trwa
+   aż do nawigacji/back); szablon → `template`; strona → `page`; nic → ukryty.
+   Zmiana `editorContext` (klik w inną stronę/szablon) nadpisuje jawny theme.
+3. **Prawy panel** w `builder-layout.tsx` renderuje już tylko `EmptyRightPanel`
+   (i AI) — `PageSettings`/`TemplateSettings`/`ThemeEditor` przeniesione do
+   lewego panelu (importy; pliki zostały na miejscu w `right-panel/`).
+4. **Testy:** SDK `tsc --noEmit` czysty; eslint czysty na zmienionych plikach
+   (pre-existing `Cannot create components during render` w `builder-layout.tsx`
+   był przed zmianą, potwierdzone `git stash`).

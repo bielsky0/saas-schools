@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "~/components/ui/button";
 import { cn } from "~/core/functions/common-functions";
 import { useDarkMode } from "~/hooks/use-dark-mode";
-import { useRightPanel } from "~/hooks/use-theme";
+import { useLeftPanelBottom } from "~/hooks/use-theme";
 import {
   getThemeGroupsBySection,
   selectedThemeGroupAtom,
@@ -44,13 +44,13 @@ const SectionHeader = ({ label }: { label: string }) => (
 
 const ThemeGroupRow = ({ group }: { group: ThemeGroup }) => {
   const { t } = useTranslation();
-  const [, setRightPanel] = useRightPanel();
+  const [, setBottomPanel] = useLeftPanelBottom();
   const [selectedGroup, setSelectedGroup] = useAtom(selectedThemeGroupAtom);
   const Icon = GROUP_ICONS[group.id] ?? Palette;
 
   const handleSelect = () => {
     setSelectedGroup(group.id);
-    setRightPanel("theme");
+    setBottomPanel("theme");
   };
 
   return (
@@ -77,12 +77,12 @@ const ThemeGroupRow = ({ group }: { group: ThemeGroup }) => {
 export const ThemeTab = () => {
   const { t } = useTranslation();
   const [darkMode] = useDarkMode();
-  const [, setRightPanel] = useRightPanel();
+  const [, setBottomPanel] = useLeftPanelBottom();
   const [, setSelectedGroup] = useAtom(selectedThemeGroupAtom);
 
   const openColorsEditor = () => {
     setSelectedGroup("colors");
-    setRightPanel("theme");
+    setBottomPanel("theme");
   };
 
   return (
