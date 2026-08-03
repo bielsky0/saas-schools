@@ -1755,7 +1755,7 @@
     "semantic_hash": "2aa4ed85c6e0d831f1d5450bcf174e7f"
   },
   "src/lib/db/migrations/meta/_journal.json": {
-    "mtime": 1785707505.675553,
+    "mtime": 1785751149.0381043,
     "ast_hash": "10902facc77c5cac5b4a5fc6216c8dff",
     "semantic_hash": ""
   },
@@ -5515,8 +5515,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/block-floating-actions.tsx": {
-    "mtime": 1785704508.9884236,
-    "ast_hash": "7a685bcd9d2eba85214c9d3ad353a9af",
+    "mtime": 1785749849.0056963,
+    "ast_hash": "5531986b63e3db61d0f793ada9f3a929",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/block-style-highlight.tsx": {
@@ -5525,8 +5525,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/canvas-area.tsx": {
-    "mtime": 1785704427.8534522,
-    "ast_hash": "10061997537e09b60f687dafca026e8e",
+    "mtime": 1785749695.516195,
+    "ast_hash": "d4f9ca0a7552acbca03d1a939b0ecb7d",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/dnd/drag-and-drop/create-drag-image.ts": {
@@ -5545,8 +5545,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/dnd/drag-and-drop/hooks/use-block-drag-end.ts": {
-    "mtime": 1785704427.8538404,
-    "ast_hash": "1b5fe5dae3bb9ee02fcc01089f414e40",
+    "mtime": 1785749720.158287,
+    "ast_hash": "6f9dc6c83e084656cee4312bbf2ef2a0",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/dnd/drag-and-drop/hooks/use-block-drag-over.ts": {
@@ -5555,13 +5555,13 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/dnd/drag-and-drop/hooks/use-block-drag-start.ts": {
-    "mtime": 1785704517.7226768,
-    "ast_hash": "80c4eb61621435bffa7ef1b78bccf2a0",
+    "mtime": 1785749796.0791845,
+    "ast_hash": "ab064f2cdff9f17c52e7340e67a9c8da",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/dnd/drag-and-drop/hooks/use-block-drop.ts": {
-    "mtime": 1785704427.8548305,
-    "ast_hash": "b7dde5b277725733f941df30c2c7cf4d",
+    "mtime": 1785749760.2721016,
+    "ast_hash": "602cd3e80b5a8017c88b4ac56deb8e20",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/dnd/drag-and-drop/hooks/use-direct-block-drag.ts": {
@@ -5605,8 +5605,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/static/add-block-at-bottom.tsx": {
-    "mtime": 1785704427.8552039,
-    "ast_hash": "7be3cdb2bac71d733b6ffbfdcdb2c8c6",
+    "mtime": 1785749857.1536787,
+    "ast_hash": "6ccc22c82ab25e194ee8b25bf74dde6f",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/static/adjust-spacing-in-blocks.ts": {
@@ -5635,8 +5635,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/static/chai-canvas.tsx": {
-    "mtime": 1785705043.2267432,
-    "ast_hash": "80a58bc45c035da92d3cfda6f6b92ab8",
+    "mtime": 1785751149.0328534,
+    "ast_hash": "020bc0d37abe71ed747858ae78e78d48",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/static/chai-theme-helpers.ts": {
@@ -5670,8 +5670,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/static/new-blocks-renderer.tsx": {
-    "mtime": 1785704427.856084,
-    "ast_hash": "89f297ab2f6f2be5542b552fa0534194",
+    "mtime": 1785751149.0334263,
+    "ast_hash": "014b4585ab4d36cefc3c9e854f715e83",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/static/resizable-canvas-wrapper.tsx": {
@@ -5685,8 +5685,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/static/static-canvas.tsx": {
-    "mtime": 1785704427.8565056,
-    "ast_hash": "5ae2d2ba24d2617b011ac095ca1ec3c7",
+    "mtime": 1785749967.113334,
+    "ast_hash": "ccc6d9c173bb4adeaf8456ae73a56249",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/static/use-block-runtime-props.ts": {
@@ -5705,8 +5705,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/static/with-block-text-editor.tsx": {
-    "mtime": 1785704427.8570251,
-    "ast_hash": "086cf2c9407636ea6b1e0236f2e56be5",
+    "mtime": 1785749888.8576455,
+    "ast_hash": "50a6141ee5e3b1dcb9395ca4e8558474",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/tailwind-preview-iframe.tsx": {
@@ -6350,8 +6350,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/en.json": {
-    "mtime": 1785704427.8576264,
-    "ast_hash": "99130bc40ac33ea4a8581dec7ee62459",
+    "mtime": 1785751149.033807,
+    "ast_hash": "364d0c59d78d4b8d2cbdb8e811a6a5c0",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/load.ts": {
@@ -6770,8 +6770,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/hooks/use-add-block.ts": {
-    "mtime": 1785708965.9546385,
-    "ast_hash": "674448793a16170c159da25af2418815",
+    "mtime": 1785749661.9701233,
+    "ast_hash": "5bf4d46e33d5959c5ade21f837ec90dd",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/hooks/use-add-classes-to-blocks.ts": {
@@ -6880,8 +6880,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/hooks/use-editor-mode.ts": {
-    "mtime": 1785687590.7969384,
-    "ast_hash": "12498d3a0688a85ac23d55538034d272",
+    "mtime": 1785751149.0340922,
+    "ast_hash": "6cc0d67a80836019bfd8015e2e6ade48",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/hooks/use-expand-tree.ts": {
@@ -7055,8 +7055,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/hooks/use-theme.ts": {
-    "mtime": 1785704427.8580244,
-    "ast_hash": "6bc3bfb232c9f6d9237d96f06424ce8b",
+    "mtime": 1785750366.360367,
+    "ast_hash": "1e8b1e7bd16be4c4dcf25007eeab3ba6",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/hooks/use-update-block-atom.ts": {
@@ -7095,8 +7095,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/chaibuilder-pages.tsx": {
-    "mtime": 1785708981.8441997,
-    "ast_hash": "d9ff324e7c68851be71d437968cfa5f2",
+    "mtime": 1785751149.034462,
+    "ast_hash": "dcc58af13a367092eb580c23d701ee14",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/add-new-language-page.tsx": {
@@ -7505,8 +7505,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/constants/ACTIONS.ts": {
-    "mtime": 1785704427.8603878,
-    "ast_hash": "aefce3e682433cf749a4a9fa60a3412f",
+    "mtime": 1785750137.0300667,
+    "ast_hash": "ea80474c8028e3d356436172bece99eb",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/constants/ERRORS.ts": {
@@ -8420,8 +8420,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/types/collections.ts": {
-    "mtime": 1785704427.8608696,
-    "ast_hash": "26c536741edf4e14a2f4d0932c2b14cb",
+    "mtime": 1785751149.0365362,
+    "ast_hash": "f38aba0608515398c01835d701bfa972",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/types/common.ts": {
@@ -8700,8 +8700,8 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/api/route.ts": {
-    "mtime": 1785704427.8612773,
-    "ast_hash": "ffec49db6f1900f357d8cf6229431dba",
+    "mtime": 1785751149.0369182,
+    "ast_hash": "88ac2f2261216ec939ee04a0d8ee5488",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/editor.tsx": {
@@ -8985,7 +8985,7 @@
     "semantic_hash": ""
   },
   "src/lib/db/schema/pages.ts": {
-    "mtime": 1785704427.8625286,
+    "mtime": 1785751149.038553,
     "ast_hash": "7786e389a873c1a157a812947ebbdda3",
     "semantic_hash": ""
   },
@@ -10555,8 +10555,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/builder-layout.tsx": {
-    "mtime": 1785704427.8600523,
-    "ast_hash": "7f843ef4749a4ca806a768d29a2ea4a1",
+    "mtime": 1785751149.0347419,
+    "ast_hash": "6e7afb4b5e5db3468a8ebf2aa9593b6c",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/layout/index.ts": {
@@ -10575,13 +10575,13 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/i18n.test.ts": {
-    "mtime": 1785704427.861751,
-    "ast_hash": "54360f0e4d917bb43c1deaa62df32c4d",
+    "mtime": 1785751149.0371623,
+    "ast_hash": "ea166ffbafca8527c91b1e6fe821382c",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/pl.json": {
-    "mtime": 1785704427.8621724,
-    "ast_hash": "e0b08d60db81b503a848be378e3f3320",
+    "mtime": 1785751149.0373738,
+    "ast_hash": "8d1e5c0c4ad4ec12a87e8c9fd6ea6950",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/topbar/builder-top-bar.tsx": {
@@ -10670,8 +10670,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/pages-tab.tsx": {
-    "mtime": 1785687590.7983484,
-    "ast_hash": "adab7d3cf08fa5d38169e6df512bd1c1",
+    "mtime": 1785751149.036135,
+    "ast_hash": "25a7966d26f38f4627bf4be49323decc",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/right-panel/page-settings.tsx": {
@@ -10800,7 +10800,7 @@
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/03-modal.md": {
-    "mtime": 1785713022.0248165,
+    "mtime": 1785751149.0035944,
     "ast_hash": "aac990a453416d0aa4a2c091edc0387a",
     "semantic_hash": ""
   },
@@ -10810,7 +10810,7 @@
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/05-inline-editing.md": {
-    "mtime": 1785713027.2367907,
+    "mtime": 1785751149.0039754,
     "ast_hash": "9afb3f1ec56bc009489728a1b6577811",
     "semantic_hash": ""
   },
@@ -10820,13 +10820,13 @@
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/README.md": {
-    "mtime": 1785748760.2221406,
+    "mtime": 1785751149.0042238,
     "ast_hash": "55da3f21fcfe5850dd0af6d0aa8fbfa6",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/collection-tree-group.tsx": {
-    "mtime": 1785680800.6508827,
-    "ast_hash": "1448ddf02313ba1bf609803ccfc3e8d3",
+    "mtime": 1785751149.035131,
+    "ast_hash": "58ec8b49e959f8b73cea97e0867db509",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/hooks/pages/use-collections.ts": {
@@ -10839,43 +10839,18 @@
     "ast_hash": "c6a527ab181fcd0c5b9cc3dbacdd0358",
     "semantic_hash": ""
   },
-  "packages/chaibuilder-sdk/src/pages/client/components/posts-manager/posts-list-row.tsx": {
-    "mtime": 1785704427.8587685,
-    "ast_hash": "004e2640327ff3284093dc4d50ce54f7",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/pages/client/components/posts-manager/posts-list.tsx": {
-    "mtime": 1785704427.8591328,
-    "ast_hash": "5685439908ca3b5b9dcd1df82bf1abc1",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/pages/client/components/posts-manager/posts-manager-modal.tsx": {
-    "mtime": 1785684687.2676241,
-    "ast_hash": "ce538c1a973300f708b27bbca6be232a",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/pages/client/components/posts-manager/template-selector.tsx": {
-    "mtime": 1785704427.8593974,
-    "ast_hash": "ad595faa29f1781e1b8523620f36efb3",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/pages/client/components/posts-manager/use-posts-manager.ts": {
-    "mtime": 1785709007.0826797,
-    "ast_hash": "b2716eecbe98e543e2d98989e98fd84e",
-    "semantic_hash": ""
-  },
   "packages/chaibuilder-sdk/src/pages/hooks/pages/use-collection-actions.ts": {
     "mtime": 1785680136.1666164,
     "ast_hash": "79bfe405753bc2f4a015193ce64b19c1",
     "semantic_hash": ""
   },
   "src/lib/cms-collection-data.test.ts": {
-    "mtime": 1785710010.109537,
+    "mtime": 1785751149.037561,
     "ast_hash": "d0b144fe6ab0a52f3d6f8c75095156e6",
     "semantic_hash": ""
   },
   "src/lib/cms-collection-data.ts": {
-    "mtime": 1785709998.074583,
+    "mtime": 1785751149.03789,
     "ast_hash": "d1f5522fae638e16be1a1d8ecc5f1646",
     "semantic_hash": ""
   },
@@ -10895,8 +10870,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/right-panel/template-settings.tsx": {
-    "mtime": 1785687025.296241,
-    "ast_hash": "e62436fa7a7c68b90aa51e53de4dd666",
+    "mtime": 1785751149.0363603,
+    "ast_hash": "06064b146dbbe7dd48ea45d8dfc8213f",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/hooks/pages/use-template-data.ts": {
@@ -10907,36 +10882,6 @@
   "packages/chaibuilder-sdk/src/pages/hooks/pages/use-update-template.ts": {
     "mtime": 1785686682.8901222,
     "ast_hash": "3a6247a1083ee45fb157ca9c5d5c0398",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/core/components/canvas/static/post-image-editor-dialog.tsx": {
-    "mtime": 1785704495.616463,
-    "ast_hash": "b8f496077bee17867982ad4d2921cd40",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/hooks/use-post-content.ts": {
-    "mtime": 1785700512.626941,
-    "ast_hash": "1fbea1a91371b4945418ee4e3351703a",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/lib/post-content-transform.test.ts": {
-    "mtime": 1785710026.335461,
-    "ast_hash": "7e5f36dbaccfb2eed4b600c1bbdd3acf",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/lib/post-content-transform.ts": {
-    "mtime": 1785709987.6473563,
-    "ast_hash": "1b0bf75183fd738ab2b63666e31f1e40",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/pages/client/layouts/right-panel/post-settings.tsx": {
-    "mtime": 1785704779.3750112,
-    "ast_hash": "781481ea3e043023605dcef108128e99",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/pages/hooks/pages/use-update-page-content.ts": {
-    "mtime": 1785708897.7525325,
-    "ast_hash": "ec87c94dbf136de84451b46d05d5bcd3",
     "semantic_hash": ""
   },
   "src/lib/db/migrations/0078_page_content.sql": {

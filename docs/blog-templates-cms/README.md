@@ -118,8 +118,8 @@ Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewi
 | F4 — Edycja szablonu | ✅ | 2026-08-02 | Zostaje (baza dla F5.3). Patrz `04-template-editing.md` |
 | F5 — Inline editing | ⚠️ superseded | 2026-08-02 | Zastąpiony blokami blogowymi + podglądem (F5.2/F5.3) — do usunięcia w F5.0 |
 | F6 — Integracja | ⬜ | — | Na razie zawieszona (po nowej architekturze) |
-| **F5.0 — Cleanup** | ⬜ | — | Usunięcie F3/F5 z SDK |
-| **F5.1 — Dashboard Blog** | ⬜ | — | Lista + edytor posta (TipTap) + CRUD API |
+| **F5.0 — Cleanup** | ✅ | 2026-08-03 | Usunięcie F3/F5 z SDK (patrz niżej) |
+| **F5.1 — Dashboard Blog** | ✅ | 2026-08-03 | Lista + edytor posta (TipTap) + CRUD API (patrz niżej) |
 | **F5.2 — Bloki blogowe** | ⬜ | — | Dedykowane bloki, tylko w szablonach bloga |
 | **F5.3 — Podgląd posta** | ⬜ | — | Dropdown podglądu w TemplateSettings |
 | **F5.4 — Strona bloga** | ⬜ | — | Listing + bloki listingu |
@@ -194,3 +194,37 @@ Pełny plan w `07-collection-management.md`. Utrwalone decyzje (2026-08-02):
 
 > **Superseded 2026-08-03.** F5 (inline editing) i F3 (modal) zostają zastąpione nową
 > architekturą Shopify-style — patrz `08-blog-cms-redesign.md` (F5.0 cleanup → F5.4).
+
+### F5.0 — Cleanup (odchyłki od planu)
+
+1. **Większość elementów do usunięcia już nie istniała** — commit `48d0b10b` (cleanup)
+   wyprzedził listę z `08-blog-cms-redesign.md`. Zostało tylko usunięcie stale typu
+   `PostContent` z `packages/chaibuilder-sdk/src/types/collections.ts` (nieużywany,
+   definicja przejęta przez `PageContent` w `src/lib/db/schema/pages.ts`).
+2. **`POST_SETTINGS_KEYS`** nie istniało już w `i18n.test.ts` (usunięte wraz z
+   panelami wcześniej) — graf (graphify) wskazywał stale wpis.
+3. **Audyt:** dodano akcje `blog_post.create/update/delete` i target type `blog_post`
+   do `src/features/admin/audit.ts` (plan nie zakładał audytu — dodane w F5.1).
+
+### F5.1 — Dashboard Blog (odchyłki od planu)
+
+1. **Slug bez wiodącego `/`.** Publiczny reader (`getBlogPostBySlug`) dopytywał
+   `"/" + slug`, ale builder (`CREATE_COLLECTION_ITEM`) zapisuje slug bez slasha —
+   legacy posty miały mieszane formaty. Dashboard zapisuje czysty slug; reader
+   publiczny zmieniony na dokładne dopasowanie. `BlogList` linkuje `/blog/{slug}`.
+2. **Publiczny blog renderuje `pageContent`.** `blog/[slug]/page.tsx` ma teraz gałąź:
+   gdy post ma `pageContent.title/body` (nowa architektura) renderuje HTML body
+   (prose + dangerouslySetInnerHTML); legacy posty z blokami wciąż przez
+   `TenantPageRenderer`. To minimalna integracja F5.1 → „posty widoczne na
+   publicznym blogu" (pełny listing to F5.4).
+3. **Redirect z akcji create** — `next/navigation` redirect w server action jest
+   rozwiązywany wewnętrznie (F4.6) i gubi prefiks locale → 404 na tencie. Cel
+   prefiksowany jawnie `withLocale(...)`; e2e robi hard-navigation po redirect
+   (dev-mode quirk).
+4. **Obraz wyróżniający = URL input z podglądem** zamiast pełnego media pickera
+   (osobny flow z `/dashboard/files` poza zakresem F5.1).
+5. **Testy:** schema unit (`schema.test.ts`, 9 przypadków) + e2e
+   (`e2e/blog-cms-dashboard.spec.ts` — create→publish→lista→public blog).
+   Warstwa danych weryfikowana przez e2e (Vitest nie dotyka DB — konwencja repo).
+6. **Brak routu `/new` jako osobnego pliku** — `[postId]/page.tsx` obsługuje
+   `postId === "new"` (jeden plik zamiast dwóch).

@@ -29,6 +29,7 @@ const segmentLabels: Record<string, string> = {
   members: "breadcrumbs.members",
   permissions: "breadcrumbs.permissions",
   files: "breadcrumbs.files",
+  blog: "breadcrumbs.blog",
 }
 
 export function Breadcrumbs() {

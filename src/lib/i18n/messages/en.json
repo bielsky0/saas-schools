@@ -603,7 +603,8 @@
       "files": "Files",
       "myClasses": "My classes",
       "groupChanges": "Change requests",
-      "leaveRequests": "Leave Requests"
+      "leaveRequests": "Leave Requests",
+      "blog": "Blog"
     },
     "nav": {
       "dashboard": "Dashboard",
@@ -629,7 +630,8 @@
       "cms": "CMS",
       "myClasses": "My classes",
       "groupChanges": "Change requests",
-      "leaveRequests": "Leave Requests"
+      "leaveRequests": "Leave Requests",
+      "blog": "Blog"
     }
   },
   "trainer": {
@@ -2138,5 +2140,99 @@
     "errors": {
       "generic": "Something went wrong. Try again."
     }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Manage blog posts",
+    "newPost": "New post",
+    "search": "Search posts…",
+    "searchLabel": "Search posts",
+    "filterAll": "All",
+    "filterDrafts": "Drafts",
+    "filterPublished": "Published",
+    "columns": {
+      "title": "Title",
+      "status": "Status",
+      "author": "Author",
+      "updated": "Updated",
+      "actions": "Actions"
+    },
+    "statusPublished": "Published",
+    "statusDraft": "Draft",
+    "statusArchived": "Archived",
+    "empty": "No posts yet. Create the first one.",
+    "emptySearch": "No results for this query.",
+    "edit": "Edit",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {page} of {total}",
+    "deleteTitle": "Delete post?",
+    "deleteDescription": "“{title}” will be archived and removed from the public blog.",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "editTitle": "Edit post",
+    "newTitle": "New post",
+    "backToPosts": "Back to posts",
+    "backToBlog": "Back to blog",
+    "viewPost": "View post",
+    "saved": "Post saved.",
+    "saving": "Saving…",
+    "creating": "Creating…",
+    "createPost": "Create post",
+    "save": "Save post",
+    "form": {
+      "title": "Title",
+      "slug": "URL (slug)",
+      "body": "Body",
+      "bodyPlaceholder": "Write your post…",
+      "excerpt": "Excerpt",
+      "image": "Featured image",
+      "tags": "Tags",
+      "categories": "Categories",
+      "commaSeparated": "Comma separated",
+      "publish": "Publishing",
+      "statusPublished": "Published",
+      "publishedHint": "The post will be visible on the public blog.",
+      "draftHint": "The post is only visible here, in the panel.",
+      "seo": "SEO",
+      "seoTitle": "SEO title",
+      "seoDescription": "SEO description",
+      "seoOgImage": "Open Graph image",
+      "seoNoIndex": "Do not index (noindex)"
+    },
+    "toolbar": {
+      "undo": "Undo",
+      "redo": "Redo",
+      "h1": "Heading 1",
+      "h2": "Heading 2",
+      "h3": "Heading 3",
+      "paragraph": "Paragraph",
+      "bold": "Bold",
+      "italic": "Italic",
+      "underline": "Underline",
+      "strike": "Strikethrough",
+      "bulletList": "Bullet list",
+      "orderedList": "Numbered list",
+      "quote": "Quote",
+      "code": "Code",
+      "alignLeft": "Align left",
+      "alignCenter": "Align center",
+      "link": "Link",
+      "image": "Image"
+    },
+    "linkPrompt": "Link URL:",
+    "imagePrompt": "Image URL:",
+    "errors": {
+      "generic": "Could not save the post. Please try again.",
+      "notFound": "Post not found."
+    },
+    "titleMin": "Title must be at least 2 characters.",
+    "titleMax": "Title must be at most 160 characters.",
+    "slugMin": "Slug must be at least 2 characters.",
+    "slugMax": "Slug must be at most 48 characters.",
+    "slugFormat": "Slug may only contain lowercase letters, digits and hyphens.",
+    "bodyMax": "Body is too long.",
+    "excerptMax": "Excerpt must be at most 1000 characters.",
+    "imageMax": "Image URL is too long."
   }
 }

@@ -87,16 +87,4 @@ export type TemplateDataVm = {
   config: TemplateConfig;
 };
 
-/**
- * Structured CMS content of a collection entry (blog-templates-cms F5). Stored
- * in `page.pageContent`, separate from the layout blocks so a template switch
- * rebuilds the layout without losing the author's content.
- */
-export type PostContent = {
-  title?: string;
-  body?: string;
-  excerpt?: string;
-  image?: string;
-  tags?: string[];
-  categories?: string[];
-};
+

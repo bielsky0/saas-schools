@@ -603,7 +603,8 @@
       "files": "Pliki",
       "myClasses": "Moje zajęcia",
       "groupChanges": "Prośby o zmianę",
-      "leaveRequests": "Wnioski urlopowe"
+      "leaveRequests": "Wnioski urlopowe",
+      "blog": "Blog"
     },
     "nav": {
       "dashboard": "Panel",
@@ -629,7 +630,8 @@
       "cms": "CMS",
       "myClasses": "Moje zajęcia",
       "groupChanges": "Prośby o zmianę",
-      "leaveRequests": "Wnioski urlopowe"
+      "leaveRequests": "Wnioski urlopowe",
+      "blog": "Blog"
     }
   },
   "trainer": {
@@ -2138,5 +2140,99 @@
     "errors": {
       "generic": "Coś poszło nie tak. Spróbuj ponownie."
     }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Zarządzaj wpisami blogowymi",
+    "newPost": "Nowy wpis",
+    "search": "Szukaj wpisów…",
+    "searchLabel": "Szukaj wpisów",
+    "filterAll": "Wszystkie",
+    "filterDrafts": "Szkice",
+    "filterPublished": "Opublikowane",
+    "columns": {
+      "title": "Tytuł",
+      "status": "Status",
+      "author": "Autor",
+      "updated": "Zaktualizowano",
+      "actions": "Akcje"
+    },
+    "statusPublished": "Opublikowany",
+    "statusDraft": "Szkic",
+    "statusArchived": "Zarchiwizowany",
+    "empty": "Brak wpisów. Utwórz pierwszy wpis.",
+    "emptySearch": "Brak wyników dla tego zapytania.",
+    "edit": "Edytuj",
+    "previous": "Poprzednia",
+    "next": "Następna",
+    "page": "Strona {page} z {total}",
+    "deleteTitle": "Usunąć wpis?",
+    "deleteDescription": "Wpis „{title}” zostanie przeniesiony do archiwum i zniknie z publicznego bloga.",
+    "delete": "Usuń",
+    "cancel": "Anuluj",
+    "editTitle": "Edytuj wpis",
+    "newTitle": "Nowy wpis",
+    "backToPosts": "Wróć do wpisów",
+    "backToBlog": "Wróć do bloga",
+    "viewPost": "Zobacz wpis",
+    "saved": "Wpis zapisany.",
+    "saving": "Zapisywanie…",
+    "creating": "Tworzenie…",
+    "createPost": "Utwórz wpis",
+    "save": "Zapisz wpis",
+    "form": {
+      "title": "Tytuł",
+      "slug": "Adres URL (slug)",
+      "body": "Treść",
+      "bodyPlaceholder": "Napisz treść wpisu…",
+      "excerpt": "Zajawka",
+      "image": "Obraz wyróżniający",
+      "tags": "Tagi",
+      "categories": "Kategorie",
+      "commaSeparated": "Rozdzielone przecinkami",
+      "publish": "Publikacja",
+      "statusPublished": "Opublikowany",
+      "publishedHint": "Wpis będzie widoczny na publicznym blogu.",
+      "draftHint": "Wpis jest widoczny tylko tutaj, w panelu.",
+      "seo": "SEO",
+      "seoTitle": "Tytuł SEO",
+      "seoDescription": "Opis SEO",
+      "seoOgImage": "Obraz Open Graph",
+      "seoNoIndex": "Nie indeksuj (noindex)"
+    },
+    "toolbar": {
+      "undo": "Cofnij",
+      "redo": "Ponów",
+      "h1": "Nagłówek 1",
+      "h2": "Nagłówek 2",
+      "h3": "Nagłówek 3",
+      "paragraph": "Akapit",
+      "bold": "Pogrubienie",
+      "italic": "Kursywa",
+      "underline": "Podkreślenie",
+      "strike": "Przekreślenie",
+      "bulletList": "Lista punktowana",
+      "orderedList": "Lista numerowana",
+      "quote": "Cytat",
+      "code": "Kod",
+      "alignLeft": "Wyrównaj do lewej",
+      "alignCenter": "Wyśrodkuj",
+      "link": "Link",
+      "image": "Obraz"
+    },
+    "linkPrompt": "Adres linku:",
+    "imagePrompt": "Adres obrazu (URL):",
+    "errors": {
+      "generic": "Nie udało się zapisać wpisu. Spróbuj ponownie.",
+      "notFound": "Wpis nie został znaleziony."
+    },
+    "titleMin": "Tytuł musi mieć co najmniej 2 znaki.",
+    "titleMax": "Tytuł może mieć maksymalnie 160 znaków.",
+    "slugMin": "Slug musi mieć co najmniej 2 znaki.",
+    "slugMax": "Slug może mieć maksymalnie 48 znaków.",
+    "slugFormat": "Slug może zawierać tylko małe litery, cyfry i myślniki.",
+    "bodyMax": "Treść jest zbyt długa.",
+    "excerptMax": "Zajawka może mieć maksymalnie 1000 znaków.",
+    "imageMax": "Adres obrazu jest zbyt długi."
   }
 }

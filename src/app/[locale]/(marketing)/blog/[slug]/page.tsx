@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { Link } from "@/lib/i18n/navigation";
 
@@ -41,9 +41,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (org) {
     const post = await withTenant(org.id, (tx) =>
-      getBlogPostBySlug(tx, org.id, "/" + slug),
+      getBlogPostBySlug(tx, org.id, slug),
     );
     if (!post) return {};
+    const content = post.pageContent ?? {};
     const seo = (post.seo ?? {}) as {
       title?: string;
       description?: string;
@@ -51,10 +52,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       noIndex?: boolean;
     };
     return {
-      title: seo.title ?? post.title,
-      description: seo.description,
+      title: seo.title ?? content.title ?? post.title,
+      description: seo.description ?? content.excerpt,
       ...(seo.noIndex ? { robots: { index: false } as const } : {}),
-      openGraph: seo.ogImage ? { images: [seo.ogImage] } : undefined,
+      openGraph: seo.ogImage || content.image
+        ? { images: [(seo.ogImage ?? content.image)!] }
+        : undefined,
     };
   }
 
@@ -82,10 +85,72 @@ export default async function BlogPostPage({ params }: PageProps) {
   const { slug } = await params;
 
   if (org) {
+    const t = await getTranslations("blog");
     const post = await withTenant(org.id, (tx) =>
-      getBlogPostBySlug(tx, org.id, "/" + slug),
+      getBlogPostBySlug(tx, org.id, slug),
     );
     if (!post || post.status !== "published") notFound();
+
+    const content = post.pageContent ?? {};
+
+    // New-architecture posts carry their content in `pageContent` (dashboard
+    // blog, F5.1) — render the HTML body directly. Legacy posts have layout
+    // blocks in `post.blocks`; render those through the tenant page renderer.
+    if (content.title || content.body) {
+      const title = content.title ?? post.title;
+      const tags = content.tags ?? [];
+      return (
+        <ThemeInjector organizationId={org.id}>
+          <article className="mx-auto w-full max-w-3xl px-4 py-16">
+            <Link href="/blog" className="text-muted-foreground hover:text-foreground text-sm">
+              ← {t("backToBlog")}
+            </Link>
+            {content.image && (
+              <div className="mt-6 aspect-video overflow-hidden rounded-xl bg-muted">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={content.image}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            )}
+            <header className="mt-8 mb-8 flex flex-col gap-4">
+              <h1 className="text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+                {title}
+              </h1>
+              {content.excerpt && (
+                <p className="text-muted-foreground text-lg text-balance">
+                  {content.excerpt}
+                </p>
+              )}
+              {post.publishedAt && (
+                <time
+                  dateTime={post.publishedAt.toISOString()}
+                  className="text-muted-foreground text-sm"
+                >
+                  {formatContentDate(post.publishedAt.toISOString(), await getLocale())}
+                </time>
+              )}
+              {tags.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {tags.map((tag) => (
+                    <Badge key={tag} variant="outline" className="normal-case">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </header>
+            {/* TipTap/HTML body — trusted admin content. */}
+            <div
+              className="prose prose-neutral dark:prose-invert max-w-none"
+              dangerouslySetInnerHTML={{ __html: content.body ?? "" }}
+            />
+          </article>
+        </ThemeInjector>
+      );
+    }
 
     const enrichedBlocks = await withTenant(org.id, (tx) =>
       enrichBlocksWithData(tx, org.id, post.blocks),

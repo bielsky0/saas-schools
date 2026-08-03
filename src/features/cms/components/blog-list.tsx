@@ -5,6 +5,13 @@ type BlogPost = {
   id: string;
   slug: string;
   title: string;
+  pageContent?: {
+    title?: string;
+    body?: string;
+    excerpt?: string;
+    image?: string;
+    tags?: string[];
+  } | null;
   blocks: ChaiBlock[];
   seo: Record<string, unknown> | null;
   publishedAt: Date | null;
@@ -29,10 +36,21 @@ function extractText(blocks: ChaiBlock[]): string {
   return texts.join(" ");
 }
 
-function excerpt(blocks: ChaiBlock[], max = 150): string {
-  const text = extractText(blocks);
-  if (text.length <= max) return text;
-  const trimmed = text.slice(0, max).trimEnd();
+function plainText(html: string): string {
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function excerpt(post: BlogPost, max = 150): string {
+  const source = post.pageContent?.excerpt?.trim()
+    ? post.pageContent.excerpt
+    : post.pageContent?.body
+      ? plainText(post.pageContent.body)
+      : extractText(post.blocks);
+  if (source.length <= max) return source;
+  const trimmed = source.slice(0, max).trimEnd();
   const lastSpace = trimmed.lastIndexOf(" ");
   return (lastSpace > 0 ? trimmed.slice(0, lastSpace) : trimmed) + "…";
 }
@@ -55,15 +73,17 @@ export async function BlogList({ posts }: { posts: BlogPost[] }) {
           const seo = (post.seo ?? {}) as {
             ogImage?: string;
           };
-          const imgSrc = seo.ogImage;
+          const imgSrc =
+            post.pageContent?.image?.trim() || seo.ogImage || undefined;
           return (
             <Link
               key={post.id}
-              href={post.slug}
+              href={`/blog/${post.slug}`}
               className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm transition-shadow hover:shadow-md"
             >
               {imgSrc && (
                 <div className="aspect-video overflow-hidden bg-muted">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={imgSrc}
                     alt=""
@@ -79,7 +99,7 @@ export async function BlogList({ posts }: { posts: BlogPost[] }) {
                   {post.title}
                 </h2>
                 <p className="mt-auto line-clamp-3 text-sm text-muted-foreground">
-                  {excerpt(post.blocks)}
+                  {excerpt(post)}
                 </p>
               </div>
             </Link>

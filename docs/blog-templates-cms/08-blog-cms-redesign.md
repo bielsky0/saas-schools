@@ -219,8 +219,8 @@ Bloki blogowe czytają atom przez `useAtomValue`.
 
 ## 10. Definicja ukończenia (ogólna)
 
-- [ ] F5.0: stary F3–F5 usunięty, build i testy zielone.
-- [ ] F5.1: posty tworzone/edytowane w dashboardzie (TipTap), widoczne na publicznym blogu.
+- [x] F5.0: stary F3–F5 usunięty, build i testy zielone.
+- [x] F5.1: posty tworzone/edytowane w dashboardzie (TipTap), widoczne na publicznym blogu.
 - [ ] F5.2: bloki blogowe w szablonach bloga, auto-render z podglądu.
 - [ ] F5.3: dropdown podglądu posta w prawym panelu szablonu działa.
 - [ ] F5.4: strona bloga (listing) edytowalna i renderowana publicznie.

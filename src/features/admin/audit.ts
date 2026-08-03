@@ -352,6 +352,10 @@ export const AUDIT_ACTIONS = [
   // `sms_credit.topup` — organization SMS credit refill.
   "broadcast.sent",
   "sms_credit.topup",
+  // Blog CMS dashboard (blog-templates-cms F5.1).
+  "blog_post.create",
+  "blog_post.update",
+  "blog_post.delete",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -421,8 +425,10 @@ export type AuditTargetType =
   // Faza 33 — Waitlist
   | "waitlist_entry"
   // Faza 35 — SMS / broadcast
-  | "broadcast_message"
-  | "organization_sms_credit";
+  |   "broadcast_message"
+  | "organization_sms_credit"
+  // Blog CMS dashboard (blog-templates-cms F5.1).
+  | "blog_post";
 
 /**
  * WHO acted, as a kind — §6.4's actor model. A different question from WHICH
