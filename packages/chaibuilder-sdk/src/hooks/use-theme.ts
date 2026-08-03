@@ -86,6 +86,19 @@ export const useAiDrawerOpen = () => {
   return useAtom(aiDrawerOpenAtom);
 };
 
+/**
+ * Controls which view is rendered in the left panel (Shopify-like topbar modes).
+ * "sections" → section/block tree, "template-settings" → theme tab (colors/typography),
+ * "seo" → inline SEO panel.
+ */
+export type LeftPanelMode = "sections" | "template-settings" | "seo";
+
+const leftPanelModeAtom = atom<LeftPanelMode>("sections");
+leftPanelModeAtom.debugLabel = "leftPanelModeAtom";
+export const useLeftPanelMode = () => {
+  return useAtom(leftPanelModeAtom);
+};
+
 const activeSettingsTabAtom = atom<"settings" | "styles" | "advanced">("settings");
 export const useActiveSettingsTab = () => {
   return useAtom(activeSettingsTabAtom);

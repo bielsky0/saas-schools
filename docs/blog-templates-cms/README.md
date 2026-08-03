@@ -19,6 +19,12 @@
 >
 > **F7 (przebudowa lewego panelu + AI drawer z prawej)** — na końcu, po blog CMS.
 > Szczegóły: **`09-builder-left-panel-redesign.md`**.
+>
+> **PIVOT 2 (2026-08-03):** F7.1–F7.6 zrealizowane. Topbar i lewy panel przebudowane
+> ponownie wg `docs/shopify-like/spec.md` (tryby Sekcje / Ustawienia szablonu / SEO
+> sterowane ikonami z topbaru, wybór strony + wyszukiwarka + „+" pośrodku, przycisk
+> powrotu do `/dashboard`). Zakładki Sekcje/Motyw/Strony w lewym panelu zastąpione
+> trybami. Szczegóły: **`docs/shopify-like/implementation.md`**.
 
 ## 1. Cel (historyczny)
 

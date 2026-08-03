@@ -1,6 +1,6 @@
 import { LightningBoltIcon } from "@radix-ui/react-icons";
 import { useAtom } from "jotai";
-import { CheckCircle, ChevronRight, Eraser, ExternalLink, Folder, Loader, MoreVertical, Save } from "lucide-react";
+import { CheckCircle, Eraser, ExternalLink, Loader, MoreVertical, Save } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { dataBindingActiveAtom } from "~/atoms/ui";
@@ -17,15 +17,15 @@ import { ScalePercent } from "~/core/components/canvas/scale-percent";
 import { AiAssistant } from "~/core/components/canvas/topbar/ai-assistant";
 import { Breakpoints } from "~/core/components/canvas/topbar/canvas-breakpoints";
 import { ClearCanvas } from "~/core/components/canvas/topbar/clear-canvas";
+import { DevicePreview } from "~/core/components/canvas/topbar/device-preview";
 import { UndoRedo } from "~/core/components/canvas/topbar/undo-redo";
 import { useBuilderProp } from "~/hooks/use-builder-prop";
 import { useDarkMode } from "~/hooks/use-dark-mode";
 import { useSavePage } from "~/hooks/use-save-page";
-import { PageDropdownInHeader } from "~/pages/client/components/page-dropdown-in-header";
 import { usePageLockStatus } from "~/pages/client/components/page-lock/page-lock-hook";
-import PagesManagerTrigger from "~/pages/client/components/page-manager/page-manager-trigger";
-import TopbarLeft from "~/pages/client/components/topbar-left";
-import { PreviewButton, PublishButton } from "~/pages/client/components/topbar-right";
+import PageSelector from "~/pages/client/components/page-selector-in-header";
+import TopbarModeSwitcher from "~/pages/client/components/topbar-mode-switcher";
+import { PublishButton } from "~/pages/client/components/topbar-right";
 import { useGetPageFullSlug, usePrimaryPage } from "~/pages/hooks/pages/use-current-page";
 
 export const SaveStateLabel = () => {
@@ -151,31 +151,25 @@ export const BuilderTopBar = () => {
   return (
     <div className="grid h-full w-full grid-cols-3 items-center px-2">
       <div className="flex min-w-0 items-center justify-start">
-        <TopbarLeft />
-        <PagesManagerTrigger>
-          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-md">
-            <Folder className="h-4 w-4" />
-          </Button>
-        </PagesManagerTrigger>
-        <ChevronRight className="mx-1 h-3 w-3 flex-shrink-0 text-gray-400" />
-        <PageDropdownInHeader />
+        <TopbarModeSwitcher />
       </div>
-      <div className="flex items-center justify-center">
+      <div className="flex min-w-0 items-center justify-center">
         <Breakpoints canvas openDelay={400} activeButtonClass="bg-gray-200" />
         <ScalePercent />
+        <div className="mx-1 h-4 w-px flex-shrink-0 bg-gray-200" />
+        <PageSelector />
       </div>
       <div className="flex items-center justify-end gap-1">
         {isLocked ? null : (
           <>
-            <SaveStateLabel />
+            <AiAssistant />
+            <DevicePreview />
             <div className="mx-1 h-4 w-px bg-gray-200" />
             <UndoRedo />
             <div className="mx-1 h-4 w-px bg-gray-200" />
-            <PreviewButton />
-            <PublishButton />
-            <div className="mx-1 h-4 w-px bg-gray-200" />
-            <AiAssistant />
             <TopBarOverflowMenu />
+            <SaveStateLabel />
+            <PublishButton />
           </>
         )}
       </div>

@@ -75,7 +75,7 @@ const insertFieldAtCursor = (inputElement: HTMLInputElement | HTMLTextAreaElemen
   };
 };
 
-const SeoPanel = () => {
+const SeoPanel = ({ onCancel, inline = false }: { onCancel?: () => void; inline?: boolean }) => {
   const { t } = useTranslation();
   const [, setActivePanel] = useSidebarActivePanel();
   const { data: primaryPage } = usePrimaryPage();
@@ -701,7 +701,12 @@ const SeoPanel = () => {
       </div>
 
       {editSeo && (
-        <div className="fixed bottom-0 left-0 right-0 flex w-full flex-shrink-0 items-center justify-between border-t bg-background p-4">
+        <div
+          className={
+            inline
+              ? "flex w-full shrink-0 items-center justify-between border-t bg-background p-3"
+              : "fixed bottom-0 left-0 right-0 flex w-full flex-shrink-0 items-center justify-between border-t bg-background p-4"
+          }>
           {resetSeoToDefault ? (
             <Button
               type="button"
@@ -742,7 +747,7 @@ const SeoPanel = () => {
             <Button
               variant="link"
               className="text-gray-500 hover:text-gray-700"
-              onClick={() => setActivePanel("outline")}>
+              onClick={() => (onCancel ? onCancel() : setActivePanel("outline"))}>
               {t("Cancel")}
             </Button>
           </div>

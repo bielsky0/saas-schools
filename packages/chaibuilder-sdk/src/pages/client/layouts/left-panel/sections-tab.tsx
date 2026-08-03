@@ -10,7 +10,6 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Textarea } from "~/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import AddBlocksPanel from "~/core/components/sidepanels/panels/add-blocks/add-blocks";
-import SearchInput from "~/core/components/sidepanels/panels/add-blocks/search-input";
 import { Node } from "~/core/components/sidepanels/panels/outline/node";
 import { CHAI_BUILDER_EVENTS } from "~/core/events";
 import { useBlocksStoreUndoableActions } from "~/hooks/history/use-blocks-store-undoable-actions";
@@ -20,7 +19,7 @@ import { usePubSub } from "~/hooks/use-pub-sub";
 import { getBlockDefaultProps } from "~/runtime";
 import { ChaiBlock } from "~/types/common";
 import { ChaiAskAiResponse } from "~/types/chaibuilder-editor-props";
-import { filterSections, groupSections, isSectionOverridden, type SectionTreeNode } from "./section-groups";
+import { groupSections, isSectionOverridden, type SectionTreeNode } from "./section-groups";
 import { SectionTree } from "./section-tree";
 
 export const addSectionDialogOpenAtom = atom(false);
@@ -189,33 +188,16 @@ export const GenerateSectionDialog = () => {
 export const SectionsTab = () => {
   const { t } = useTranslation();
   const [treeData] = useAtom(treeDSBlocks);
-  const [searchQuery, setSearchQuery] = useState("");
   const [, setAddDialogOpen] = useAtom(addSectionDialogOpenAtom);
-  const [, setGenerateDialogOpen] = useAtom(generateSectionDialogOpenAtom);
 
   const groups = useMemo(() => groupSections(treeData), [treeData]);
 
-  const searching = searchQuery.trim().length > 0;
-
-  const filteredGroups = useMemo(() => {
-    if (!searching) return groups;
-    return groups.map((group) => ({ ...group, nodes: filterSections(group.nodes, searchQuery) }));
-  }, [groups, searching, searchQuery]);
-
-  const searchNodes = useMemo(
-    () => filteredGroups.flatMap((group) => group.nodes),
-    [filteredGroups],
-  );
-
-  const hasResults = filteredGroups.some((group) => group.nodes.length > 0);
   const isEmptyPage = treeData.length === 0;
 
   return (
     <div className="flex h-full flex-col">
       <div className="flex shrink-0 items-center gap-1">
-        <div className="min-w-0 flex-1">
-          <SearchInput value={searchQuery} setValue={setSearchQuery} />
-        </div>
+        <div className="min-w-0 flex-1" />
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -230,27 +212,12 @@ export const SectionsTab = () => {
           <TooltipContent className="isolate z-[9999]">{t("Add section")}</TooltipContent>
         </Tooltip>
       </div>
-      <div className="shrink-0 pb-2">
-        <Button
-          variant="outline"
-          className="h-8 w-full justify-start gap-2 text-xs text-muted-foreground"
-          onClick={() => setGenerateDialogOpen(true)}>
-          <MagicWandIcon className="h-3.5 w-3.5" />
-          {t("Generate section from description")}
-        </Button>
-      </div>
 
       <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto pb-2">
         {isEmptyPage ? (
           <EmptyPageState onAdd={() => setAddDialogOpen(true)} />
-        ) : searching ? (
-          hasResults ? (
-            <SectionTree data={searchNodes} height={countNodes(searchNodes) * 25 + 16} nodeRenderer={SectionNode} />
-          ) : (
-            <p className="px-2 py-6 text-center text-xs text-muted-foreground">{t("No sections found")}</p>
-          )
         ) : (
-          filteredGroups
+          groups
             .filter((group) => group.nodes.length > 0)
             .map((group) => (
               <div key={group.id}>
@@ -262,7 +229,6 @@ export const SectionsTab = () => {
       </div>
 
       <AddSectionDialog />
-      <GenerateSectionDialog />
     </div>
   );
 };

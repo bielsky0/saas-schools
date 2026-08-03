@@ -73,6 +73,21 @@ API dla stron CMS: `src/app/(builder)/editor/api/route.ts`
 - `PUT /api/pages` — aktualizacja strony
 - `DELETE /api/pages` — usunięcie strony
 
+## Topbar edytora (Shopify-like)
+
+Topbar edytora działa w układzie wzorowanym na Shopify (spec: `docs/shopify-like/spec.md`,
+implementacja: `docs/shopify-like/implementation.md`):
+
+- **Lewa strona:** 3 tryby lewego panelu sterowane ikonami — Sekcje / Ustawienia szablonu (⌘⇧2) / SEO,
+  plus przycisk powrotu do dashboardu (`getBackUrl`, domyślnie `/dashboard`).
+- **Środek:** breakpoints + skala + dropdown wyboru strony z wyszukiwarką i przyciskiem „+" (dodanie strony).
+- **Prawa:** asystent AI, przełącznik desktop/mobile, cofnij/ponów, menu „...", zapis, publikacja.
+
+Lewy panel renderuje zawartość wg aktywnego trybu (`leftPanelModeAtom`):
+`sections` → drzewo sekcji, `template-settings` → ThemeTab (kolory/typografia),
+`seo` → formularz SEO inline. Dolny panel edycji bloku pozycjonuje się tak, by
+widoczne były ~3 elementy drzewa (wybrany pośrodku).
+
 ## Konflikt wersji: framer-motion vs motion
 
 SDK ma `framer-motion@12.23.20` (pin) obok `motion@^12.24.1`. Rozwiązane przez `pnpm.overrides` w root `package.json`:

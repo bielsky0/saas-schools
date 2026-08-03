@@ -50,6 +50,7 @@ export type ChaiWebsiteBuilderProps = {
   apiUrl?: string;
   getPreviewUrl?: (slug: string) => string;
   getLiveUrl?: (slug: string) => string;
+  getBackUrl?: string;
   onLogout?: (reason?: string) => void;
   getAccessToken?: () => Promise<string>;
   currentUser: LoggedInUser | null;

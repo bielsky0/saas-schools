@@ -569,7 +569,6 @@
   "567": "tailwind-merge",
   "568": "@tailwindcss/aspect-ratio",
   "569": "@tailwindcss/container-queries",
-  "570": "@tailwindcss/forms",
   "571": "@tailwindcss/line-clamp",
   "572": "@tailwindcss/typography",
   "573": "@tanstack/react-query",
@@ -726,7 +725,6 @@
   "724": "drizzle-kit",
   "725": "@tiptap/extension-ordered-list",
   "726": "Fazy 26–28 — dalsze poprawki konkurencyjne (spec v18)",
-  "727": "calendar-view.tsx",
   "728": "@tiptap/extension-text-align",
   "729": "PromptInputSpeechButton",
   "730": "topbar.spec.ts",
@@ -767,6 +765,5 @@
   "765": "blogStatus",
   "766": "shadcn",
   "767": "source-map",
-  "768": "concurrently",
   "769": "@testing-library/react"
 }

@@ -335,6 +335,7 @@ const ChaiWebsiteBuilder = (props: ChaiWebsiteBuilderProps) => {
         "assetsApiUrl",
         "getPreviewUrl",
         "getLiveUrl",
+        "getBackUrl",
         "topLeftCorner",
         "onLogout",
         "getAccessToken",

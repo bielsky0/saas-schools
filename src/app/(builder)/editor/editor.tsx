@@ -133,6 +133,7 @@ export default function Editor() {
       apiUrl="/editor/api"
       getPreviewUrl={getPreviewUrl}
       getLiveUrl={getLiveUrl}
+      getBackUrl="/dashboard"
     />
   );
 }
