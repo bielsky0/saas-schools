@@ -1,12 +1,10 @@
-import { Suspense, useCallback, useEffect, type MouseEvent } from "react";
+import { Suspense, useCallback, type MouseEvent } from "react";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { AskAI } from "~/core/components/ask-ai-panel";
 import CanvasArea from "~/core/components/canvas/canvas-area";
 import { isDevelopment } from "~/core/import-html/general";
 import { AddBlocksDialog } from "~/core/components/layout/add-blocks-dialog";
-import SettingsPanel from "~/core/components/settings/settings-panel";
 import { useBuilderProp } from "~/hooks/use-builder-prop";
-import { useSelectedBlock } from "~/hooks/use-selected-blockIds";
 import { useRightPanel } from "~/hooks/use-theme";
 import { useTopBarComponent } from "~/runtime/client";
 import { BuilderLeftPanel } from "./left-panel/builder-left-panel";
@@ -21,15 +19,8 @@ const DEFAULT_PANEL_WIDTH = 280;
 
 const DesktopBuilderLayout = () => {
   const TopBar = useTopBarComponent();
-  const [panel, setRightPanel] = useRightPanel();
+  const [panel] = useRightPanel();
   const htmlDir = useBuilderProp("htmlDir", "ltr");
-  const selectedBlock = useSelectedBlock();
-
-  useEffect(() => {
-    if (panel === "page" && selectedBlock) {
-      setRightPanel("block");
-    }
-  }, [panel, selectedBlock, setRightPanel]);
 
   const preventContextMenu = useCallback((e: MouseEvent<HTMLDivElement>) => {
     if (!isDevelopment()) e.preventDefault();
@@ -65,8 +56,6 @@ const DesktopBuilderLayout = () => {
                     <PageSettings />
                   ) : panel === "template" ? (
                     <TemplateSettings />
-                  ) : selectedBlock ? (
-                    <SettingsPanel />
                   ) : (
                     <EmptyRightPanel />
                   )}

@@ -771,5 +771,9 @@
   "769": "vite",
   "770": "vite-plugin-dts",
   "771": "vitest",
-  "772": "pages/components/ui/hover-card.tsx"
+  "772": "pages/components/ui/hover-card.tsx",
+  "773": "eslint",
+  "774": "shadcn",
+  "775": "source-map",
+  "776": "@testing-library/react"
 }
