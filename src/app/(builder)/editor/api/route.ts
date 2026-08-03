@@ -115,6 +115,13 @@ function buildPageTypes(
     { key: c.templatePageType, name: `${c.name} Template`, helpText: "", icon: "", hasSlug: true },
   ]);
   types.unshift({ key: "page", name: "Page", helpText: "", icon: "", hasSlug: true });
+  types.push({
+    key: "blog_index",
+    name: "Blog Index",
+    helpText: "",
+    icon: "",
+    hasSlug: true,
+  });
   return types;
 }
 
@@ -379,6 +386,45 @@ export async function POST(req: NextRequest) {
             slug: post.slug,
           };
           return NextResponse.json({ preview });
+        }
+
+        case "GET_BLOG_POSTS_LIST": {
+          const collection = await getCollectionByKey(tx, organizationId, "blog");
+          if (!collection) {
+            return NextResponse.json({ posts: [], total: 0 });
+          }
+          const conds = [
+            eq(page.organizationId, organizationId),
+            eq(page.pageType, collection.pageType),
+            eq(page.status, "published"),
+          ];
+          const limit = Math.min(Number(data?.limit) || 6, 50);
+          const offset = Number(data?.offset) || 0;
+          const rows = await tx
+            .select()
+            .from(page)
+            .where(and(...conds))
+            .orderBy(desc(page.publishedAt))
+            .limit(limit)
+            .offset(offset);
+          const [countRow] = await tx
+            .select({ value: sql<number>`count(*)::int` })
+            .from(page)
+            .where(and(...conds));
+          const posts = rows.map((r) => {
+            const content = r.pageContent ?? {};
+            return {
+              id: r.id,
+              title: content.title ?? r.title,
+              slug: r.slug,
+              excerpt: content.excerpt ?? "",
+              image: content.image ?? null,
+              author: null as string | null,
+              datePublished: r.publishedAt?.toISOString() ?? null,
+              tags: content.tags ?? [],
+            };
+          });
+          return NextResponse.json({ posts, total: countRow?.value ?? 0 });
         }
 
         case "GET_TEMPLATE_DATA": {

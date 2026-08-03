@@ -767,5 +767,9 @@
   "765": "blogStatus",
   "766": "pages/components/ui/button.tsx",
   "767": "canvas-confetti",
-  "768": "concurrently"
+  "768": "concurrently",
+  "769": "vite",
+  "770": "vite-plugin-dts",
+  "771": "vitest",
+  "772": "pages/components/ui/hover-card.tsx"
 }

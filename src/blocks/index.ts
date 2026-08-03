@@ -12,6 +12,8 @@ import { Component as BlogPostAuthor, Config as BlogPostAuthorConfig } from "./b
 import { Component as BlogPostDate, Config as BlogPostDateConfig } from "./blog/BlogPostDate/config";
 import { Component as BlogPostExcerpt, Config as BlogPostExcerptConfig } from "./blog/BlogPostExcerpt/config";
 import { Component as BlogPostTags, Config as BlogPostTagsConfig } from "./blog/BlogPostTags/config";
+import { Component as BlogPostList, Config as BlogPostListConfig } from "./blog/BlogPostList/config";
+import { Component as BlogPagination, Config as BlogPaginationConfig } from "./blog/BlogPagination/config";
 
 registerChaiBlock(GroupTypeCard, GroupTypeCardConfig);
 registerChaiBlock(UpcomingEvents, UpcomingEventsConfig);
@@ -24,3 +26,5 @@ registerChaiBlock(BlogPostAuthor, BlogPostAuthorConfig);
 registerChaiBlock(BlogPostDate, BlogPostDateConfig);
 registerChaiBlock(BlogPostExcerpt, BlogPostExcerptConfig);
 registerChaiBlock(BlogPostTags, BlogPostTagsConfig);
+registerChaiBlock(BlogPostList, BlogPostListConfig);
+registerChaiBlock(BlogPagination, BlogPaginationConfig);

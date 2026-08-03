@@ -5945,7 +5945,7 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/sidepanels/panels/add-blocks/default-blocks.tsx": {
-    "mtime": 1785756725.7576795,
+    "mtime": 1785758382.1369414,
     "ast_hash": "9281e38aadb6015edf5cf135c9cb8dfd",
     "semantic_hash": ""
   },
@@ -6350,8 +6350,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/en.json": {
-    "mtime": 1785751348.823326,
-    "ast_hash": "364d0c59d78d4b8d2cbdb8e811a6a5c0",
+    "mtime": 1785758382.1377716,
+    "ast_hash": "83867a69c6e72883571b9efef4c0222d",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/load.ts": {
@@ -7505,8 +7505,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/constants/ACTIONS.ts": {
-    "mtime": 1785750137.0300667,
-    "ast_hash": "ea80474c8028e3d356436172bece99eb",
+    "mtime": 1785758382.138153,
+    "ast_hash": "6d387142021188a4bd87b438464fd65e",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/constants/ERRORS.ts": {
@@ -8400,7 +8400,7 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/runtime/v2/runtime/index.tsx": {
-    "mtime": 1785756711.8222783,
+    "mtime": 1785758382.1391323,
     "ast_hash": "064d0d0993b6a28e4cc0199750059eb4",
     "semantic_hash": ""
   },
@@ -8700,8 +8700,8 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/api/route.ts": {
-    "mtime": 1785751348.8263874,
-    "ast_hash": "88ac2f2261216ec939ee04a0d8ee5488",
+    "mtime": 1785758382.1406896,
+    "ast_hash": "a355f726e46f1374163f2c4234e41299",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/editor.tsx": {
@@ -8820,7 +8820,7 @@
     "semantic_hash": ""
   },
   "src/blocks/index.ts": {
-    "mtime": 1785756711.8225274,
+    "mtime": 1785758382.142032,
     "ast_hash": "8e07b759d481cd1c4dee138c36ceb1a2",
     "semantic_hash": ""
   },
@@ -10820,8 +10820,8 @@
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/README.md": {
-    "mtime": 1785755279.511501,
-    "ast_hash": "22d9a34261540a54af6fdc83a2d3ec40",
+    "mtime": 1785758410.2938921,
+    "ast_hash": "a04b48b03ceedfa99fadfd4cb1820b18",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/collection-tree-group.tsx": {
@@ -10870,8 +10870,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/right-panel/template-settings.tsx": {
-    "mtime": 1785751348.8258429,
-    "ast_hash": "06064b146dbbe7dd48ea45d8dfc8213f",
+    "mtime": 1785758382.1379964,
+    "ast_hash": "31c9682982388bab9861d6d6ad4f4610",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/hooks/pages/use-template-data.ts": {
@@ -10900,8 +10900,8 @@
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/08-blog-cms-redesign.md": {
-    "mtime": 1785755285.1487706,
-    "ast_hash": "77ab53c249bf401f6f0d33feaf9afaf5",
+    "mtime": 1785758413.4638262,
+    "ast_hash": "4d6da305344f2d6a2aef59842bbf679d",
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/Zrzut ekranu 2026-08-3 o 00.52.25.png": {
@@ -11067,6 +11067,16 @@
   "src/blocks/blog/shared.tsx": {
     "mtime": 1785756363.6442258,
     "ast_hash": "6ff5417e51aa217cdbcfe350d4be3323",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/hooks/pages/use-blog-post-preview-data.ts": {
+    "mtime": 1785758268.4555101,
+    "ast_hash": "778ee558ab46a6fd6f601940aac0961f",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/hooks/pages/use-collection-items.ts": {
+    "mtime": 1785758264.557856,
+    "ast_hash": "877b25fe05bde7f81b0bb18748c88d58",
     "semantic_hash": ""
   }
 }

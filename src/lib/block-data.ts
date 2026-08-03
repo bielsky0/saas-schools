@@ -1,4 +1,5 @@
 import { and, desc, eq, isNull } from "drizzle-orm";
+import { count } from "drizzle-orm";
 
 import type { TenantDb } from "@/lib/db/tenant";
 import { membership, user } from "@/lib/db/schema";
@@ -116,6 +117,21 @@ export async function getBlogPosts(
   });
 }
 
+export async function getBlogPostsCount(tx: TenantDb, orgId: string) {
+  const pageType = await getBlogPageType(tx, orgId);
+  const [row] = await tx
+    .select({ value: count() })
+    .from(page)
+    .where(
+      and(
+        eq(page.organizationId, orgId),
+        eq(page.pageType, pageType),
+        eq(page.status, "published"),
+      ),
+    );
+  return row?.value ?? 0;
+}
+
 export async function getBlogPostBySlug(
   tx: TenantDb,
   orgId: string,
@@ -163,6 +179,9 @@ export async function enrichBlocksWithData(
           if (!trainerId) break;
           const data = await getTrainerForBlock(tx, orgId, trainerId);
           return { ...block, data };
+        }
+        case "BlogPostList": {
+          return { ...block, data: { posts: [] } };
         }
       }
       return block;
