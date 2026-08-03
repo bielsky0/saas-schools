@@ -2,8 +2,8 @@
 
 > Status: **plan** — zatwierdzony 2026-08-03.
 >
-> Postęp: **F7.1 ✅, F7.2 ✅, F7.3 ✅** (2026-08-03) — szczegóły w `README.md`.
-> Zostało: F7.4 (AI drawer), F7.5 (resize), F7.6 (testy/i18n).
+> Postęp: **F7.1 ✅, F7.2 ✅, F7.3 ✅, F7.4 ✅** (2026-08-03) — szczegóły w `README.md`.
+> Zostało: F7.5 (resize), F7.6 (testy/i18n).
 >
 > Decyzje użytkownika (2026-08-03):
 > 1. **Kolejność: lewy panel NA KOŃCU** — po blog CMS (F5.0–F5.4). Blog CMS pracuje na
@@ -63,14 +63,20 @@ PO:
 - Canvas automatycznie wypełnia przestrzeń.
 - `rightPanelAtom` stopniowo zastępowany przez `editorContextAtom` + `useSelectedBlock`.
 
-### 7.4 — AI drawer z prawej + przycisk w topbarze
+### 7.4 — AI sidebar z prawej + przycisk w topbarze
 
-- **Przycisk AI w topbarze** (chat icon) — otwiera/zamyka drawer.
-- **Drawer**: wysuwany z prawej krawędzi nad canvasem (overlay, `fixed right-0 top-0 h-full`),
-  szerokość ~360-400px, animacja slide-in z prawej (shadcn `Sheet`/Drawer).
-- Renderuje `AskAI`.
-- Nie zajmuje layoutu — canvas nie zmienia szerokości przy otwarciu (jak Shopify).
-- Zamknięcie: back button, klik poza, ESC.
+> ✅ Zrealizowane 2026-08-03. Odchyłki w `README.md`.
+>
+> ⚠️ **Zmiana względem spec:** zamiast drawer/overlay AI otwiera się jako **prawy
+> sidebar zajmujący przestrzeń** (jak stary prawy panel) — canvas się kurczy.
+> Wygląd chatu identyczny jak w starym panelu AI (`root-layout.tsx`).
+
+- **Przycisk AI w topbarze** (chat icon) — otwiera/zamyka sidebar.
+- **Sidebar**: prawy panel 280px, `motion.div` z animowaną szerokością `0 ↔ 280px`,
+  zawsze w DOM (animacja w obie strony), canvas (`flex-1`) kurczy się przy otwarciu.
+- Renderuje `AiPanelContent` (pełny chat z modelami — ten sam co w starym panelu AI).
+- Header: `LightningBoltIcon` + "AI Assistant" + X (close).
+- Zamknięcie: X w headerze lub ponowny klik przycisku AI w topbarze.
 
 ### 7.5 — Resize lewego panelu
 
@@ -88,7 +94,7 @@ PO:
 | Plik | Zmiana |
 |------|--------|
 | `packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/builder-left-panel.tsx` | Nowa struktura z dolnym panelem |
-| `packages/chaibuilder-sdk/src/pages/client/layouts/builder-layout.tsx` | Usunięcie prawego panelu; topbar button AI; AI drawer |
+| `packages/chaibuilder-sdk/src/pages/client/layouts/builder-layout.tsx` | Usunięcie prawego panelu; topbar button AI; AI sidebar (`AiPanel`) |
 | `packages/chaibuilder-sdk/src/pages/client/layouts/right-panel/*` | Komponenty przeniesione do lewego panelu (importy) |
 | `packages/chaibuilder-sdk/src/hooks/use-theme.ts` | `rightPanelAtom` → stopniowo zastępowany |
 | `packages/chaibuilder-sdk/src/pages/client/layouts/topbar/builder-top-bar.tsx` | Przycisk AI chat |

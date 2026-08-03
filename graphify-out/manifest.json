@@ -5445,7 +5445,7 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/components/ui/sheet.tsx": {
-    "mtime": 1785660234.7204301,
+    "mtime": 1785770522.7696793,
     "ast_hash": "c0a70ab84bb741a12f922475038a4f51",
     "semantic_hash": ""
   },
@@ -5715,8 +5715,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/topbar/ai-assistant.tsx": {
-    "mtime": 1785768563.7278855,
-    "ast_hash": "0b796bdcac2306c326b196a91c4dbd9b",
+    "mtime": 1785769539.5005202,
+    "ast_hash": "10fd933c0c0448a1172959ab73a1992a",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/topbar/canvas-breakpoints.tsx": {
@@ -10555,8 +10555,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/builder-layout.tsx": {
-    "mtime": 1785768563.729457,
-    "ast_hash": "09ffb27294e5e790579da37f450dd714",
+    "mtime": 1785771005.233186,
+    "ast_hash": "ed37baa5b34ac5ef22cfa48b0f8772f7",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/layout/index.ts": {
@@ -10585,8 +10585,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/topbar/builder-top-bar.tsx": {
-    "mtime": 1785659154.3631039,
-    "ast_hash": "563bc4637a923eac9cfccad0ff982477",
+    "mtime": 1785769539.5008276,
+    "ast_hash": "b8ffff9b3588d743553164df412bbdb2",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/builder-left-panel.tsx": {
@@ -10820,8 +10820,8 @@
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/README.md": {
-    "mtime": 1785768639.5670564,
-    "ast_hash": "c1be4b49bda6fb4d6c1f8b8528a77fac",
+    "mtime": 1785771091.4226074,
+    "ast_hash": "63f1ee402e44a07d227568b478fe38ea",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/collection-tree-group.tsx": {
@@ -10930,8 +10930,8 @@
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/09-builder-left-panel-redesign.md": {
-    "mtime": 1785768646.9876833,
-    "ast_hash": "2cb35342a1c898c3d6b25a4824202fcb",
+    "mtime": 1785771095.4717195,
+    "ast_hash": "4aaddcf709d0f717f815bbb659999f7c",
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/Zrzut ekranu 2026-08-3 o 11.17.02.png": {

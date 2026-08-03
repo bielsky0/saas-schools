@@ -1,13 +1,57 @@
-import { Suspense, useCallback, type MouseEvent } from "react";
+import { lazy, Suspense, useCallback, type MouseEvent } from "react";
+import { useTranslation } from "react-i18next";
+import { Cross1Icon, LightningBoltIcon } from "@radix-ui/react-icons";
+import { motion } from "framer-motion";
+import { Button } from "~/components/ui/button";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import CanvasArea from "~/core/components/canvas/canvas-area";
 import { isDevelopment } from "~/core/import-html/general";
 import { AddBlocksDialog } from "~/core/components/layout/add-blocks-dialog";
 import { useBuilderProp } from "~/hooks/use-builder-prop";
+import { useAiDrawerOpen } from "~/hooks/use-theme";
 import { useTopBarComponent } from "~/runtime/client";
 import { BuilderLeftPanel } from "./left-panel/builder-left-panel";
 import { MobileBuilderLayout } from "./mobile/mobile-builder-layout";
 import { useIsMobile } from "./mobile/use-is-mobile";
+
+const AI_PANEL_WIDTH = 280;
+
+const AiPanelContent = lazy(() => import("~/pages/panels/ai-panel/ai-panel-content"));
+
+const AiPanel = () => {
+  const [aiDrawerOpen, setAiDrawerOpen] = useAiDrawerOpen();
+  const { t } = useTranslation();
+  return (
+    <motion.div
+      id="ai-panel"
+      className="h-full max-h-full overflow-hidden border-l border-gray-200 bg-white text-gray-900"
+      initial={{ width: 0 }}
+      animate={{ width: aiDrawerOpen ? AI_PANEL_WIDTH : 0 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}>
+      <div className="flex h-full w-[280px] flex-col overflow-hidden p-3">
+        <div className="flex items-center justify-between">
+          <h2 className="-mt-1 flex items-center space-x-1 text-base font-bold">
+            <LightningBoltIcon className="rtl:ml-2" />
+            <span>{t("AI Assistant")}</span>
+          </h2>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-xs"
+            onClick={() => setAiDrawerOpen(false)}>
+            <Cross1Icon className="h-4 w-4 rtl:ml-2" />
+            <span className="sr-only">{t("Close")}</span>
+          </Button>
+        </div>
+        <div className="flex h-full max-h-full w-full">
+          <Suspense fallback={<div>Loading...</div>}>
+            <AiPanelContent />
+          </Suspense>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
 
 const DesktopBuilderLayout = () => {
   const TopBar = useTopBarComponent();
@@ -33,6 +77,7 @@ const DesktopBuilderLayout = () => {
                 <CanvasArea />
               </Suspense>
             </div>
+            <AiPanel />
           </main>
         </div>
         <AddBlocksDialog />

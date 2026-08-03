@@ -14,6 +14,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Switch } from "~/components/ui/switch";
 import { ScalePercent } from "~/core/components/canvas/scale-percent";
+import { AiAssistant } from "~/core/components/canvas/topbar/ai-assistant";
 import { Breakpoints } from "~/core/components/canvas/topbar/canvas-breakpoints";
 import { ClearCanvas } from "~/core/components/canvas/topbar/clear-canvas";
 import { UndoRedo } from "~/core/components/canvas/topbar/undo-redo";
@@ -172,6 +173,8 @@ export const BuilderTopBar = () => {
             <div className="mx-1 h-4 w-px bg-gray-200" />
             <PreviewButton />
             <PublishButton />
+            <div className="mx-1 h-4 w-px bg-gray-200" />
+            <AiAssistant />
             <TopBarOverflowMenu />
           </>
         )}

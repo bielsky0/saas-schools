@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Label } from "~/components/ui/label";
-import { Switch } from "~/components/ui/switch";
+import { Button } from "~/components/ui/button";
 import { AiIcon } from "~/core/components/ai/ai-icon";
 import { PERMISSIONS } from "~/core/main";
 import { useAiAssistant } from "~/hooks/use-ask-ai";
@@ -18,19 +17,13 @@ export const AiAssistant = () => {
 
   if (!askAiCallBack || !hasPermission(PERMISSIONS.EDIT_BLOCK) || !isAiEnabled) return null;
   return (
-    <div className="flex items-center space-x-2">
-      <Label htmlFor="ai-assistant" className="flex items-center gap-x-1 text-sm text-yellow-600">
-        <AiIcon className="h-4 w-4" />
-        {t("AI Assistant")}
-      </Label>
-      <Switch
-        className={"scale-90"}
-        checked={aiDrawerOpen}
-        onCheckedChange={(state) => {
-          setAiAssistantActive(state);
-        }}
-        id="ai-assistant"
-      />
-    </div>
+    <Button
+      variant={aiDrawerOpen ? "default" : "ghost"}
+      size="icon"
+      className="h-8 w-8 rounded-md"
+      title={t("Ask AI")}
+      onClick={() => setAiAssistantActive(!aiDrawerOpen)}>
+      <AiIcon className="h-4 w-4" />
+    </Button>
   );
 };

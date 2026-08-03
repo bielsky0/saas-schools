@@ -127,7 +127,8 @@ Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewi
 | **F7.1 — Block settings w lewym** | ✅ | 2026-08-03 | Dolny panel w lewym panelu + auto-pokaz przy wybranym bloku (patrz niżej) |
 | **F7.2 — Page/Template w lewym** | ✅ | 2026-08-03 | PageSettings/TemplateSettings/ThemeEditor w dolnym panelu wg `editorContext` (patrz niżej) |
 | **F7.3 — Usunięcie prawego panelu** | ✅ | 2026-08-03 | Canvas wypełnia pełną szerokość; AI hooki przeniesione na `aiDrawerOpenAtom` (patrz niżej) |
-| **F7 — Lewy panel + AI drawer** | ⬜ | — | Zostało: F7.4 AI drawer, F7.5 resize, F7.6 testy |
+| **F7.4 — AI sidebar + topbar button** | ✅ | 2026-08-03 | Prawy sidebar 280px (jak stary panel AI), canvas się kurczy; button w topbarze (patrz niżej) |
+| **F7 — Lewy panel + AI drawer** | ⬜ | — | Zostało: F7.5 resize, F7.6 testy/i18n |
 
 ### Odchyłki F1
 
@@ -359,3 +360,28 @@ Pełny plan w `07-collection-management.md`. Utrwalone decyzje (2026-08-02):
    + demo `routes/demo/right-top.tsx` — stopniowe zastąpienie wg spec.
 5. **Testy:** SDK `tsc --noEmit` czysty; vitest 603 zielone; eslint tylko
    pre-existing `Cannot create components during render` (niezmienione linie `TopBar`).
+
+### F7.4 — AI sidebar z prawej + przycisk w topbarze (odchyłki od planu)
+
+> **Zmiana decyzji użytkownika:** zamiast drawer (overlay, jak w spec 7.4) AI otwiera się
+> jako **prawy sidebar zajmujący przestrzeń** (jak stary prawy panel) — canvas się kurczy.
+> Wygląd chatu identyczny jak w starym panelu AI.
+
+1. **`AiAssistant` zmieniony ze Switcha na button.** Komponent (canvas topbar) to teraz
+   ikona chatu (`AiIcon`), która toggle'uje `aiDrawerOpenAtom` przez `useAiAssistant`.
+   Nadal honoruje `flags.ai`, `askAiCallBack` i `PERMISSIONS.EDIT_BLOCK`.
+2. **Przycisk dodany w `builder-top-bar.tsx`** (prawa sekcja, między `PublishButton`
+   a `TopBarOverflowMenu`, z separatorami `bg-gray-200`).
+3. **Sidebar w `builder-layout.tsx`** (`AiPanel`): `motion.div` po kanwie w `<main>`,
+   zawsze w DOM, animowana szerokość `0 ↔ 280px` (stary `DEFAULT_PANEL_WIDTH`). Wewnętrzny
+   `w-[280px]` zapobiega reflow treści podczas animacji. Header: `LightningBoltIcon` +
+   "AI Assistant" (jak w starym `root-layout.tsx`) + X (close). Canvas (`flex-1`) kurczy
+   się przy otwarciu — bez overlay.
+4. **Treść: `AiPanelContent`** (`pages/panels/ai-panel/ai-panel-content.tsx`) — pełny chat
+   z modelami (Gemini/GPT/Claude), historią konwersacji, streamingiem, task messages,
+   selected block display (lazy import, w istniejącym `<Suspense>`). Zastąpił prosty
+   `AskAI` (`core/components/ask-ai-panel.tsx`), który nie miał wyboru modeli.
+5. **`sheet.tsx` nietknięty** — prop `overlayClassName` wycofany (drawer usunięty).
+6. **Testy:** SDK `tsc --noEmit` czysty; eslint czysty na zmienionych plikach
+   (jedyny error to pre-existing `Cannot create components during render` w
+   `builder-layout.tsx`, niezmienione linie `TopBar`).
