@@ -5715,8 +5715,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/topbar/ai-assistant.tsx": {
-    "mtime": 1785311019.1101012,
-    "ast_hash": "e350cdf12cdb706d1f4bd9e9b50bc87e",
+    "mtime": 1785768563.7278855,
+    "ast_hash": "0b796bdcac2306c326b196a91c4dbd9b",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/topbar/canvas-breakpoints.tsx": {
@@ -6785,8 +6785,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/hooks/use-ask-ai.ts": {
-    "mtime": 1785311019.1566377,
-    "ast_hash": "58dbd187effcd324158a97c627e764e8",
+    "mtime": 1785768563.7283096,
+    "ast_hash": "646bbeda257f89073a0d1ad90cdd2e81",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/hooks/use-block-highlight.ts": {
@@ -7380,8 +7380,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/topbar-right.tsx": {
-    "mtime": 1785582921.815828,
-    "ast_hash": "f8f87114805e41a898c250b0886f3366",
+    "mtime": 1785768563.728884,
+    "ast_hash": "b9ec03d49204b15359409144c4f65bee",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/ui/chai-command-list.tsx": {
@@ -10555,8 +10555,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/builder-layout.tsx": {
-    "mtime": 1785767653.6797078,
-    "ast_hash": "98a2e5646b79d76672ce06da68861a95",
+    "mtime": 1785768563.729457,
+    "ast_hash": "09ffb27294e5e790579da37f450dd714",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/layout/index.ts": {
@@ -10820,8 +10820,8 @@
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/README.md": {
-    "mtime": 1785767696.7520587,
-    "ast_hash": "38da2f1985c030d14e6ef461e200e32b",
+    "mtime": 1785768639.5670564,
+    "ast_hash": "c1be4b49bda6fb4d6c1f8b8528a77fac",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/collection-tree-group.tsx": {
@@ -10930,8 +10930,8 @@
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/09-builder-left-panel-redesign.md": {
-    "mtime": 1785767707.7141902,
-    "ast_hash": "354a48058b1e78b18171b1d78077176f",
+    "mtime": 1785768646.9876833,
+    "ast_hash": "2cb35342a1c898c3d6b25a4824202fcb",
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/Zrzut ekranu 2026-08-3 o 11.17.02.png": {

@@ -4,7 +4,6 @@ import {
   ChevronDown,
   ExternalLink,
   Loader,
-  Palette,
   Pencil,
   Play,
   Rocket,
@@ -25,7 +24,6 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { useLanguages } from "~/hooks/use-languages";
 import { useSavePage } from "~/hooks/use-save-page";
-import { useRightPanel } from "~/hooks/use-theme";
 import PublishPages from "~/pages/client/components/publish-pages/publish-pages";
 import { usePublishPages } from "~/pages/hooks/pages/mutations";
 import { useCurrentActivePage, useGetPageFullSlug, usePrimaryPage } from "~/pages/hooks/pages/use-current-page";
@@ -83,25 +81,6 @@ export const PreviewButton = () => {
             <Play className="h-4 w-4" />
           </Button>
         </a>
-      </Tooltip>
-      <div className="h-4 w-px bg-gray-200" />
-    </>
-  );
-};
-
-const ThemeButton = () => {
-  const { t } = useTranslation();
-  const [rightPanel, setRightPanel] = useRightPanel();
-  return (
-    <>
-      <Tooltip content={t("Theme")} delayDuration={0}>
-        <Button
-          variant={rightPanel === "theme" ? "outline" : "ghost"}
-          size="icon"
-          className="gap-2"
-          onClick={() => setRightPanel(rightPanel === "theme" ? "block" : "theme")}>
-          <Palette className="h-4 w-4" />
-        </Button>
       </Tooltip>
       <div className="h-4 w-px bg-gray-200" />
     </>
@@ -389,7 +368,6 @@ export default function TopbarRight() {
   if (isLocked || !isLanguagePageCreated) return <div />;
   return (
     <div className="flex items-center justify-end gap-1">
-      <ThemeButton />
       <PreviewButton />
       <SaveButton />
       <PublishButton />

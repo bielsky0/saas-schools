@@ -126,7 +126,8 @@ Zależności: F2 i F3 zależą od F1; F4 i F5 zależą od F2 (wyzwalacz w drzewi
 | **F5.5 — Dynamiczne źródła** | ✅ | 2026-08-03 | `{{post.*}}` w szablonach bloga + render przez szablon (patrz niżej) |
 | **F7.1 — Block settings w lewym** | ✅ | 2026-08-03 | Dolny panel w lewym panelu + auto-pokaz przy wybranym bloku (patrz niżej) |
 | **F7.2 — Page/Template w lewym** | ✅ | 2026-08-03 | PageSettings/TemplateSettings/ThemeEditor w dolnym panelu wg `editorContext` (patrz niżej) |
-| **F7 — Lewy panel + AI drawer** | ⬜ | — | Zostało: F7.3 usunięcie prawego panelu, F7.4 AI drawer, F7.5 resize, F7.6 testy |
+| **F7.3 — Usunięcie prawego panelu** | ✅ | 2026-08-03 | Canvas wypełnia pełną szerokość; AI hooki przeniesione na `aiDrawerOpenAtom` (patrz niżej) |
+| **F7 — Lewy panel + AI drawer** | ⬜ | — | Zostało: F7.4 AI drawer, F7.5 resize, F7.6 testy |
 
 ### Odchyłki F1
 
@@ -343,3 +344,18 @@ Pełny plan w `07-collection-management.md`. Utrwalone decyzje (2026-08-02):
 4. **Testy:** SDK `tsc --noEmit` czysty; eslint czysty na zmienionych plikach
    (pre-existing `Cannot create components during render` w `builder-layout.tsx`
    był przed zmianą, potwierdzone `git stash`).
+
+### F7.3 — Usunięcie prawego panelu (odchyłki od planu)
+
+1. **`builder-layout.tsx`:** usunięty `<div id="right-panel">` (280px) oraz
+   martwe importy (`AskAI`, `EmptyRightPanel`, `useRightPanel`, `DEFAULT_PANEL_WIDTH`).
+   Canvas (już `flex-1`) automatycznie wypełnia całą szerokość — bez zmian CSS.
+2. **AI hooki przeniesione na `aiDrawerOpenAtom`** (przygotowanie pod F7.4):
+   `useAiAssistant` w `use-ask-ai.ts` i `AiAssistant` (canvas topbar) czytają/ustawiają
+   `useAiDrawerOpen` zamiast `rightPanelAtom` (`panel === "ai"` / `"block"`).
+3. **`ThemeButton` usunięty z `topbar-right.tsx`** — zakładka Theme w lewym panelu
+   już pełni tę rolę (F7.2); przycisk tylko przełączał nieistniejący już prawy panel.
+4. **Nietknięte:** `rightPanelAtom` w `use-theme.ts` + legacy `root-layout.tsx`
+   + demo `routes/demo/right-top.tsx` — stopniowe zastąpienie wg spec.
+5. **Testy:** SDK `tsc --noEmit` czysty; vitest 603 zielone; eslint tylko
+   pre-existing `Cannot create components during render` (niezmienione linie `TopBar`).

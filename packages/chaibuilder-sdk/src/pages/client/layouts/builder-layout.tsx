@@ -1,22 +1,16 @@
 import { Suspense, useCallback, type MouseEvent } from "react";
 import { TooltipProvider } from "~/components/ui/tooltip";
-import { AskAI } from "~/core/components/ask-ai-panel";
 import CanvasArea from "~/core/components/canvas/canvas-area";
 import { isDevelopment } from "~/core/import-html/general";
 import { AddBlocksDialog } from "~/core/components/layout/add-blocks-dialog";
 import { useBuilderProp } from "~/hooks/use-builder-prop";
-import { useRightPanel } from "~/hooks/use-theme";
 import { useTopBarComponent } from "~/runtime/client";
 import { BuilderLeftPanel } from "./left-panel/builder-left-panel";
 import { MobileBuilderLayout } from "./mobile/mobile-builder-layout";
 import { useIsMobile } from "./mobile/use-is-mobile";
-import { EmptyRightPanel } from "./right-panel/empty-right-panel";
-
-const DEFAULT_PANEL_WIDTH = 280;
 
 const DesktopBuilderLayout = () => {
   const TopBar = useTopBarComponent();
-  const [panel] = useRightPanel();
   const htmlDir = useBuilderProp("htmlDir", "ltr");
 
   const preventContextMenu = useCallback((e: MouseEvent<HTMLDivElement>) => {
@@ -38,20 +32,6 @@ const DesktopBuilderLayout = () => {
               <Suspense>
                 <CanvasArea />
               </Suspense>
-            </div>
-            <div
-              id="right-panel"
-              className="h-full max-h-full border-l border-gray-200 bg-white text-gray-900"
-              style={{ width: panel === "ai" ? 0 : DEFAULT_PANEL_WIDTH }}>
-              <div className="no-scrollbar h-full max-h-full overflow-hidden p-3">
-                <Suspense fallback={<div>Loading...</div>}>
-                  {panel === "ai" ? (
-                    <AskAI />
-                  ) : (
-                    <EmptyRightPanel />
-                  )}
-                </Suspense>
-              </div>
             </div>
           </main>
         </div>

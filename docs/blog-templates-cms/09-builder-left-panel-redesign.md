@@ -2,8 +2,8 @@
 
 > Status: **plan** — zatwierdzony 2026-08-03.
 >
-> Postęp: **F7.1 ✅, F7.2 ✅** (2026-08-03) — szczegóły w `README.md`.
-> Zostało: F7.3 (usunięcie prawego panelu), F7.4 (AI drawer), F7.5 (resize), F7.6 (testy/i18n).
+> Postęp: **F7.1 ✅, F7.2 ✅, F7.3 ✅** (2026-08-03) — szczegóły w `README.md`.
+> Zostało: F7.4 (AI drawer), F7.5 (resize), F7.6 (testy/i18n).
 >
 > Decyzje użytkownika (2026-08-03):
 > 1. **Kolejność: lewy panel NA KOŃCU** — po blog CMS (F5.0–F5.4). Blog CMS pracuje na
@@ -56,6 +56,8 @@ PO:
 - Eliminuje `rightPanelAtom` dla page/template (kontekst już jest w `editorContextAtom`).
 
 ### 7.3 — Usunięcie prawego panelu
+
+> ✅ Zrealizowane 2026-08-03.
 
 - `builder-layout.tsx`: usunąć `<div id="right-panel">` (280px).
 - Canvas automatycznie wypełnia przestrzeń.

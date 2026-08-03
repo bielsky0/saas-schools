@@ -20,7 +20,7 @@ import { getSplitChaiClasses } from "~/hooks/get-split-classes";
 import { useBlocksStore } from "~/hooks/history/use-blocks-store-undoable-actions";
 import { useBuilderProp } from "~/hooks/use-builder-prop";
 import { useLanguages } from "~/hooks/use-languages";
-import { useRightPanel } from "~/hooks/use-theme";
+import { useAiDrawerOpen } from "~/hooks/use-theme";
 import { useStreamMultipleBlocksProps, useUpdateMultipleBlocksProps } from "~/hooks/use-update-blocks-props";
 import { getRegisteredChaiBlock } from "~/runtime";
 import { ChaiAskAiResponse } from "~/types/chaibuilder-editor-props";
@@ -165,11 +165,11 @@ export const useAskAi = () => {
   };
 };
 export const useAiAssistant = () => {
-  const [, setRightPanel] = useRightPanel();
+  const [, setAiDrawerOpen] = useAiDrawerOpen();
   return useCallback(
     (value: boolean) => {
-      setRightPanel(value ? "ai" : "block");
+      setAiDrawerOpen(value);
     },
-    [setRightPanel],
+    [setAiDrawerOpen],
   );
 };

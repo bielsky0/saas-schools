@@ -6,11 +6,11 @@ import { PERMISSIONS } from "~/core/main";
 import { useAiAssistant } from "~/hooks/use-ask-ai";
 import { useBuilderProp } from "~/hooks/use-builder-prop";
 import { usePermissions } from "~/hooks/use-permissions";
-import { useRightPanel } from "~/hooks/use-theme";
+import { useAiDrawerOpen } from "~/hooks/use-theme";
 
 export const AiAssistant = () => {
   const setAiAssistantActive = useAiAssistant();
-  const [panel] = useRightPanel();
+  const [aiDrawerOpen] = useAiDrawerOpen();
   const askAiCallBack = useBuilderProp("askAiCallBack", null);
   const isAiEnabled = useBuilderProp("flags.ai", false);
   const { t } = useTranslation();
@@ -25,7 +25,7 @@ export const AiAssistant = () => {
       </Label>
       <Switch
         className={"scale-90"}
-        checked={panel === "ai"}
+        checked={aiDrawerOpen}
         onCheckedChange={(state) => {
           setAiAssistantActive(state);
         }}
