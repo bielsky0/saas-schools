@@ -55,6 +55,28 @@ Synchronizacja z oryginałem (upstream): `git subtree pull --prefix=packages/cha
 Powód forka: audyt bezpieczeństwa wykrył IDOR-y i race condition (static appId)
 niekompatybilne z architekturą multi-tenant.
 
+### Cykl deweloperski SDK — watch build
+
+Zmiany w `packages/chaibuilder-sdk/src/` wymagają rebuildu do `dist/` (app importuje
+`@chaibuilder/sdk` z `dist` przez exports map). **Nie buduj ręcznie przy każdej zmianie** —
+użyj watch:
+
+```bash
+pnpm dev:sdk        # vite build --watch (JS + d.ts) — terminal 1
+pnpm dev:editor-css # tailwind watch edytora (nowe klasy Tailwind) — terminal 2
+# albo oba naraz:
+pnpm dev:builder    # oba watche w jednym terminalu (macOS)
+```
+
+- Pierwszy build w watchu ~30 s (dominuje `vite-plugin-dts`), kolejne inkrementalne.
+- Nowe **klasy Tailwind** w komponentach SDK trafiają do `dist`, ale `builder-output.css`
+  wymaga przebudowy — dlatego `dev:editor-css`/`dev:builder` (skanuje `dist/**/*`).
+- Zmiana `exports` w `packages/chaibuilder-sdk/package.json` → **restart dev servera** wymagany.
+- Pełny build + typecheck: `pnpm --filter @chaibuilder/sdk build` (tsc && vite).
+
+Testy: `pnpm --filter @chaibuilder/sdk test`. Baseline regresji: `docs/sdk-test-baseline.md`
+(603 passed / 62 plików, log w `docs/dev/logs/`).
+
 ### Znany konflikt wersji: framer-motion vs motion
 
 SDK ma `framer-motion@12.23.20` (pin) obok `motion@^12.24.1` (który narzuca `framer-motion@^12.24.1`).

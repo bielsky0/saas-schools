@@ -19,6 +19,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:watch": "vite build --watch",
     "live": "tsc && vite build --config vite.config.live.ts",
     "live:serve": "cd live && npx http-server -p 8080",
     "build:editor-css": "tailwindcss -c '../../src/app/(builder)/editor/tailwind.config.ts' -i '../../src/app/(builder)/editor/builder.css' -o '../../src/app/(builder)/editor/builder-output.css' --minify",
