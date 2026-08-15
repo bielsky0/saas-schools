@@ -9,21 +9,16 @@ import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "~/components/ui/dialog";
 import { Textarea } from "~/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
-import AddBlocksPanel from "~/core/components/sidepanels/panels/add-blocks/add-blocks";
 import { Node } from "~/core/components/sidepanels/panels/outline/node";
-import { CHAI_BUILDER_EVENTS } from "~/core/events";
 import { useBlocksStoreUndoableActions } from "~/hooks/history/use-blocks-store-undoable-actions";
 import { useBuilderProp } from "~/hooks/use-builder-prop";
 import { useLanguages } from "~/hooks/use-languages";
-import { usePubSub } from "~/hooks/use-pub-sub";
 import { getBlockDefaultProps } from "~/runtime";
 import { ChaiBlock } from "~/types/common";
 import { ChaiAskAiResponse } from "~/types/chaibuilder-editor-props";
 import { groupSections, isSectionOverridden, type SectionTreeNode } from "./section-groups";
+import { SectionLibrarySheet, sectionLibraryOpenAtom } from "./section-library";
 import { SectionTree } from "./section-tree";
-
-export const addSectionDialogOpenAtom = atom(false);
-addSectionDialogOpenAtom.debugLabel = "addSectionDialogOpenAtom";
 
 export const generateSectionDialogOpenAtom = atom(false);
 generateSectionDialogOpenAtom.debugLabel = "generateSectionDialogOpenAtom";
@@ -80,26 +75,6 @@ const EmptyPageState = ({ onAdd }: { onAdd: () => void }) => {
         {t("Add section")}
       </Button>
     </div>
-  );
-};
-
-export const AddSectionDialog = () => {
-  const { t } = useTranslation();
-  const [open, setOpen] = useAtom(addSectionDialogOpenAtom);
-
-  usePubSub(CHAI_BUILDER_EVENTS.CLOSE_ADD_BLOCK, () => setOpen(false));
-
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="max-w-4xl overflow-hidden border-border">
-        <DialogHeader>
-          <DialogTitle className="text-foreground">{t("Add section")}</DialogTitle>
-        </DialogHeader>
-        <div className="h-[480px] max-h-[70vh] overflow-hidden">
-          <AddBlocksPanel parentId={undefined} position={-1} showHeading={false} />
-        </div>
-      </DialogContent>
-    </Dialog>
   );
 };
 
@@ -188,7 +163,7 @@ export const GenerateSectionDialog = () => {
 export const SectionsTab = () => {
   const { t } = useTranslation();
   const [treeData] = useAtom(treeDSBlocks);
-  const [, setAddDialogOpen] = useAtom(addSectionDialogOpenAtom);
+  const [, setLibraryOpen] = useAtom(sectionLibraryOpenAtom);
 
   const groups = useMemo(() => groupSections(treeData), [treeData]);
 
@@ -205,7 +180,7 @@ export const SectionsTab = () => {
               size="icon"
               aria-label={t("Add section")}
               className="h-8 w-8 shrink-0 rounded-md"
-              onClick={() => setAddDialogOpen(true)}>
+              onClick={() => setLibraryOpen(true)}>
               <PlusIcon className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
@@ -215,7 +190,7 @@ export const SectionsTab = () => {
 
       <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto pb-2">
         {isEmptyPage ? (
-          <EmptyPageState onAdd={() => setAddDialogOpen(true)} />
+          <EmptyPageState onAdd={() => setLibraryOpen(true)} />
         ) : (
           groups
             .filter((group) => group.nodes.length > 0)
@@ -228,7 +203,7 @@ export const SectionsTab = () => {
         )}
       </div>
 
-      <AddSectionDialog />
+      <SectionLibrarySheet />
     </div>
   );
 };
