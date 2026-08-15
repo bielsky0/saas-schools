@@ -3,7 +3,7 @@ import { each, noop, omit } from "lodash-es";
 import React, { useEffect, useMemo } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { Toaster } from "sonner";
-import { chaiBuilderPropsAtom, chaiDesignTokensAtom, chaiPageExternalDataAtom } from "~/atoms/builder";
+import { chaiBuilderPropsAtom, chaiDesignTokensAtom, chaiPageExternalDataAtom, componentTokensAtom } from "~/atoms/builder";
 import { builderStore } from "~/atoms/store";
 import { selectedLibraryAtom } from "~/atoms/ui";
 import { CssThemeVariables } from "~/core/components/css-theme-var";
@@ -59,6 +59,10 @@ const ChaiWatchers = (props: ChaiBuilderEditorProps) => {
   useEffect(() => {
     builderStore.set(chaiDesignTokensAtom, props.designTokens || {});
   }, [props.designTokens]);
+
+  useEffect(() => {
+    builderStore.set(componentTokensAtom, props.componentTokens || {});
+  }, [props.componentTokens]);
 
   useEffect(() => {
     setIsPageLoaded(false);

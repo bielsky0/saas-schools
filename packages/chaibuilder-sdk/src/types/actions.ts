@@ -1,7 +1,7 @@
 import type { StreamTextResult } from "ai";
 import type { ChaiBlock, ChaiPageProps } from "~/types/common";
 import type { ChaiTheme } from "./chaibuilder-editor-props";
-import type { ChaiDesignTokens } from "./types";
+import type { ChaiDesignTokens, ComponentTokens } from "./types";
 
 export type ChaiWebsiteSetting = {
   appKey: string;
@@ -10,6 +10,7 @@ export type ChaiWebsiteSetting = {
   theme: ChaiTheme;
   settings: Record<string, any>;
   designTokens: ChaiDesignTokens;
+  componentTokens?: ComponentTokens;
   appChanges?: string[];
 };
 

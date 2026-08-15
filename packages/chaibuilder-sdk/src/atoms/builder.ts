@@ -4,7 +4,7 @@ import { useBlogPostPreview } from "~/hooks/use-blog-preview";
 import { useEditorContext } from "~/hooks/use-editor-mode";
 import { useBlockRepeaterDataAtom } from "~/hooks/async-props/use-async-props";
 import { ChaiBuilderEditorProps } from "~/types";
-import { ChaiDesignTokens } from "~/types/types";
+import { ChaiDesignTokens, ComponentTokens } from "~/types/types";
 
 export const chaiBuilderPropsAtom = atom<Omit<
   ChaiBuilderEditorProps,
@@ -29,6 +29,9 @@ chaiPageExternalDataAtom.debugLabel = "chaiPageExternalDataAtom";
 
 export const chaiDesignTokensAtom = atom<ChaiDesignTokens>({});
 chaiDesignTokensAtom.debugLabel = "chaiDesignTokensAtom";
+
+export const componentTokensAtom = atom<ComponentTokens>({});
+componentTokensAtom.debugLabel = "componentTokensAtom";
 
 export const usePageExternalData = () => {
   const [blockRepeaterData] = useBlockRepeaterDataAtom();

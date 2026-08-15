@@ -1,10 +1,10 @@
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { builderStore } from "~/atoms/store";
-import { chaiDesignTokensAtom } from "~/atoms/builder";
+import { chaiDesignTokensAtom, componentTokensAtom } from "~/atoms/builder";
 import { defaultThemeValues } from "~/hooks/default-theme-options";
 import { useSaveWebsiteData } from "~/hooks/use-save-website-data";
-import type { ChaiDesignTokens } from "~/types/types";
+import type { ChaiDesignTokens, ComponentTokens } from "~/types/types";
 
 vi.mock("~/hooks/use-builder-prop", () => ({
   useBuilderProp: vi.fn(),
@@ -16,6 +16,11 @@ vi.mock("~/hooks/use-theme", () => ({
 
 const tokensFixture: ChaiDesignTokens = {
   "radius-lg": { name: "Radius LG", value: "12px" },
+};
+
+const componentTokensFixture: ComponentTokens = {
+  "--cmp-btn-radius": "8px",
+  "--cmp-container-max-width": "1200px",
 };
 
 describe("useSaveWebsiteData", () => {
@@ -177,6 +182,59 @@ describe("useSaveWebsiteData", () => {
     expect(mockOnSaveWebsiteData).toHaveBeenCalledWith({
       type: "DESIGN_TOKENS",
       data: tokensFixture,
+    });
+  });
+
+  it("saveComponentTokens should save tokens from the atom store when none passed", async () => {
+    builderStore.set(componentTokensAtom, componentTokensFixture);
+
+    const { result } = renderHook(() => useSaveWebsiteData());
+
+    await act(async () => {
+      await result.current.saveComponentTokens();
+    });
+
+    expect(mockOnSaveWebsiteData).toHaveBeenCalledWith({
+      type: "COMPONENT_TOKENS",
+      data: componentTokensFixture,
+    });
+  });
+
+  it("saveComponentTokens should prefer the explicit tokens", async () => {
+    builderStore.set(componentTokensAtom, componentTokensFixture);
+
+    const explicit: ComponentTokens = { "--cmp-btn-height": "44px" };
+    const { result } = renderHook(() => useSaveWebsiteData());
+
+    await act(async () => {
+      await result.current.saveComponentTokens(explicit);
+    });
+
+    expect(mockOnSaveWebsiteData).toHaveBeenCalledWith({
+      type: "COMPONENT_TOKENS",
+      data: explicit,
+    });
+  });
+
+  it("debouncedSaveComponentTokens should save after the debounce delay", async () => {
+    vi.useFakeTimers();
+    builderStore.set(componentTokensAtom, componentTokensFixture);
+
+    const { result } = renderHook(() => useSaveWebsiteData());
+
+    act(() => {
+      result.current.debouncedSaveComponentTokens();
+    });
+    expect(mockOnSaveWebsiteData).not.toHaveBeenCalled();
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(1000);
+    });
+
+    expect(mockOnSaveWebsiteData).toHaveBeenCalledTimes(1);
+    expect(mockOnSaveWebsiteData).toHaveBeenCalledWith({
+      type: "COMPONENT_TOKENS",
+      data: componentTokensFixture,
     });
   });
 });

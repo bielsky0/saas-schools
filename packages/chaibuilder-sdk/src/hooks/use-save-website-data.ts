@@ -1,10 +1,10 @@
 import { useDebouncedCallback } from "@react-hookz/web";
 import { useCallback, useRef } from "react";
-import { chaiDesignTokensAtom } from "~/atoms/builder";
+import { chaiDesignTokensAtom, componentTokensAtom } from "~/atoms/builder";
 import { builderStore } from "~/atoms/store";
 import { useBuilderProp } from "~/hooks/use-builder-prop";
 import { useTheme } from "~/hooks/use-theme";
-import { ChaiDesignTokens, ChaiSaveWebsiteData, ChaiTheme } from "~/types";
+import { ChaiDesignTokens, ChaiSaveWebsiteData, ChaiTheme, ComponentTokens } from "~/types";
 
 export const useSaveWebsiteData = () => {
   const onSaveWebsiteData = useBuilderProp("onSaveWebsiteData", async (_data: ChaiSaveWebsiteData) => {});
@@ -40,15 +40,28 @@ export const useSaveWebsiteData = () => {
     [saveWebsiteData],
   );
 
+  const saveComponentTokens = useCallback(
+    async (tokens?: ComponentTokens) => {
+      // Get latest from store if not provided
+      const data = tokens ?? builderStore.get(componentTokensAtom);
+      await saveWebsiteData({ type: "COMPONENT_TOKENS", data });
+    },
+    [saveWebsiteData],
+  );
+
   const debouncedSaveTheme = useDebouncedCallback(saveTheme, [saveTheme], 1000);
 
   const debouncedSaveDesignTokens = useDebouncedCallback(saveDesignTokens, [saveDesignTokens], 1000);
+
+  const debouncedSaveComponentTokens = useDebouncedCallback(saveComponentTokens, [saveComponentTokens], 1000);
 
   return {
     saveWebsiteData,
     saveTheme,
     saveDesignTokens,
+    saveComponentTokens,
     debouncedSaveTheme,
     debouncedSaveDesignTokens,
+    debouncedSaveComponentTokens,
   };
 };

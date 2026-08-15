@@ -4,7 +4,7 @@ import { ChaiPage } from "~/pages/utils/page-organization";
 import { ChaiBlock } from "~/types/common";
 import { ChaiLoggedInUser, ChaiPageType } from "./actions";
 import { ChaiCollectoin } from "./collections";
-import { ChaiDesignTokens, ChaiSiteWideUsageData } from "./types";
+import { ChaiDesignTokens, ChaiSiteWideUsageData, ComponentTokens } from "./types";
 
 export type ChaiLibraryBlock<T = Record<string, any>> = {
   id: string;
@@ -59,7 +59,8 @@ export type ChaiSavePageData = {
 
 export type ChaiSaveWebsiteData =
   | { type: "THEME"; data: ChaiTheme }
-  | { type: "DESIGN_TOKENS"; data: ChaiDesignTokens };
+  | { type: "DESIGN_TOKENS"; data: ChaiDesignTokens }
+  | { type: "COMPONENT_TOKENS"; data: ComponentTokens };
 
 export type ChaiAskAiResponse = {
   blocks?: Array<{ _id: string } & Partial<ChaiBlock>>;
@@ -298,6 +299,8 @@ export interface ChaiBuilderEditorProps {
   structureRules?: StructureRule[];
 
   designTokens?: ChaiDesignTokens;
+
+  componentTokens?: ComponentTokens;
 
   siteWideUsage?: ChaiSiteWideUsageData;
 

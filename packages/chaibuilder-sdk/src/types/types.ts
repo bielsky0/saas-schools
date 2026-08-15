@@ -21,6 +21,14 @@ export interface ChaiDesignTokens {
   };
 }
 
+/**
+ * Component theme tokens (`--cmp-*` CSS variables) — map of CSS var name to
+ * its raw value, e.g. `{ "--cmp-btn-radius": "8px" }`. Kept OUT of `ChaiTheme`
+ * on purpose (Phase 3 §4.2): separate persistence + injection, no ChaiTheme
+ * regressions.
+ */
+export type ComponentTokens = Record<string, string>;
+
 type ChaiBlocksWithDesignTokens = Record<string, string>;
 export interface ChaiSiteWideUsageData {
   [pageId: string]: {

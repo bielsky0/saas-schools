@@ -188,6 +188,7 @@ const ChaiBuilderInner = ({ ...props }: ChaiBuilderInnerProps) => {
   const currentTheme = useMemo(() => get(websiteConfig, "theme", {}) || {}, [websiteConfig]);
   const websiteLanguages = useMemo(() => get(websiteConfig, "languages", []) || [], [websiteConfig]);
   const websiteDesignTokens = useMemo(() => get(websiteConfig, "designTokens", {}) || {}, [websiteConfig]);
+  const websiteComponentTokens = useMemo(() => get(websiteConfig, "componentTokens", {}) || {}, [websiteConfig]);
   const isEditing = pageStatus === PAGE_STATUS.EDITING;
   const isCheckingPageLock = pageStatus === PAGE_STATUS.CHECKING;
   const isFetchingPageData = isFetchingPageAllData || isCheckingPageLock;
@@ -259,6 +260,7 @@ const ChaiBuilderInner = ({ ...props }: ChaiBuilderInnerProps) => {
         languages={websiteLanguages}
         brandingOptions={currentTheme}
         designTokens={websiteDesignTokens}
+        componentTokens={websiteComponentTokens}
         translations={props.translations || {}}
         locale={props.locale || "en"}
         htmlDir={props.htmlDir || "ltr"}
@@ -303,6 +305,8 @@ const ChaiBuilderInner = ({ ...props }: ChaiBuilderInnerProps) => {
             await updateSettings({ settings: { theme: data } });
           } else if (type === "DESIGN_TOKENS") {
             await updateSettings({ settings: { designTokens: data } });
+          } else if (type === "COMPONENT_TOKENS") {
+            await updateSettings({ settings: { componentTokens: data } });
           }
           return true;
         }}

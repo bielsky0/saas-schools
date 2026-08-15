@@ -3,12 +3,12 @@ import { SetStateAction, useAtom } from "jotai";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { chaiDesignTokensAtom } from "~/atoms/builder";
+import { chaiDesignTokensAtom, componentTokensAtom } from "~/atoms/builder";
 import { useSendRealtimeEvent } from "~/pages/client/components/page-lock/page-lock-hook";
 import { ACTIONS } from "~/pages/constants/ACTIONS";
 import { ChaiPage, ChaiWebsiteSetting } from "~/types/actions";
 import { ChaiTheme } from "~/types/chaibuilder-editor-props";
-import { ChaiDesignTokens } from "~/types/types";
+import { ChaiDesignTokens, ComponentTokens } from "~/types/types";
 import { chaiThemeValuesAtom } from "./use-theme";
 
 type SyncPayload = {
@@ -37,6 +37,7 @@ type UpdateQueryDataParams = {
   data: Partial<ChaiWebsiteSetting>;
   setTheme?: (theme: SetStateAction<ChaiTheme | Partial<ChaiTheme>>) => void;
   setDesignTokens?: (tokens: ChaiDesignTokens) => void;
+  setComponentTokens?: (tokens: ComponentTokens) => void;
 };
 
 type UpdatePageDataParams = {
@@ -94,6 +95,23 @@ const trackDesignTokenChanges = (
 };
 
 /**
+ * Track component token changes in appChanges array
+ */
+const trackComponentTokenChanges = (
+  appChanges: AppChanges,
+  data: Partial<ChaiWebsiteSetting>,
+  setComponentTokens?: (tokens: ComponentTokens) => void,
+): AppChanges => {
+  if (appChanges.includes("COMPONENT_TOKENS") || data?.componentTokens !== undefined) {
+    appChanges.push("COMPONENT_TOKENS");
+    if (setComponentTokens && data.componentTokens) {
+      setComponentTokens(data.componentTokens);
+    }
+  }
+  return appChanges;
+};
+
+/**
  * Merge old data with new data and track changes
  */
 const mergeDataWithChanges = (
@@ -101,11 +119,13 @@ const mergeDataWithChanges = (
   data: Partial<ChaiWebsiteSetting>,
   setTheme?: (theme: SetStateAction<ChaiTheme | Partial<ChaiTheme>>) => void,
   setDesignTokens?: (tokens: ChaiDesignTokens) => void,
+  setComponentTokens?: (tokens: ComponentTokens) => void,
 ): ChaiWebsiteSetting | Partial<ChaiWebsiteSetting> => {
   let appChanges = oldData?.appChanges || [];
 
   appChanges = trackThemeChanges(appChanges, data, setTheme);
   appChanges = trackDesignTokenChanges(appChanges, data, setDesignTokens);
+  appChanges = trackComponentTokenChanges(appChanges, data, setComponentTokens);
 
   if (!oldData) return data;
   return {
@@ -118,9 +138,16 @@ const mergeDataWithChanges = (
 /**
  * Update QueryClient cache directly without refetching
  */
-const updateQueryData = ({ queryClient, queryKey, data, setTheme, setDesignTokens }: UpdateQueryDataParams): void => {
+const updateQueryData = ({
+  queryClient,
+  queryKey,
+  data,
+  setTheme,
+  setDesignTokens,
+  setComponentTokens,
+}: UpdateQueryDataParams): void => {
   queryClient.setQueryData(queryKey, (oldData: ChaiWebsiteSetting | undefined) =>
-    mergeDataWithChanges(oldData, data, setTheme, setDesignTokens),
+    mergeDataWithChanges(oldData, data, setTheme, setDesignTokens, setComponentTokens),
   );
 };
 
@@ -172,6 +199,7 @@ const handleWebsiteDataSync = (
   t: (key: string, options?: any) => string,
   setChaiTheme?: (theme: SetStateAction<ChaiTheme | Partial<ChaiTheme>>) => void,
   setDesignTokens?: (tokens: ChaiDesignTokens) => void,
+  setComponentTokens?: (tokens: ComponentTokens) => void,
 ): void => {
   if (data.settings) {
     updateQueryData({
@@ -180,6 +208,7 @@ const handleWebsiteDataSync = (
       data: data.settings,
       setTheme: setChaiTheme,
       setDesignTokens,
+      setComponentTokens,
     });
 
     if (!sync && userName) {
@@ -260,7 +289,7 @@ const handlePublishChanges = ({ queryClient, ids }: PublishChangesParams): void 
     return oldData.map((page) => clearPageChanges(page, ids));
   });
 
-  if (ids.includes("THEME") || ids.includes("DESIGN_TOKENS")) {
+  if (ids.includes("THEME") || ids.includes("DESIGN_TOKENS") || ids.includes("COMPONENT_TOKENS")) {
     queryClient.setQueryData([ACTIONS.GET_WEBSITE_DRAFT_SETTINGS], (oldData: ChaiWebsiteSetting | undefined) =>
       clearAppChanges(oldData, ids),
     );
@@ -319,13 +348,14 @@ const processSyncPayload = (
   queryClient: QueryClient,
   setChaiTheme: (theme: SetStateAction<ChaiTheme | Partial<ChaiTheme>>) => void,
   setDesignTokens: (tokens: ChaiDesignTokens) => void,
+  setComponentTokens: (tokens: ComponentTokens) => void,
   t: (key: string, options?: any) => string,
 ): boolean => {
   const { type, data, sync = false, userName } = payload;
 
   switch (type) {
     case "UPDATE_WEBSITE_DATA":
-      handleWebsiteDataSync(queryClient, data, sync, userName, t, setChaiTheme, setDesignTokens);
+      handleWebsiteDataSync(queryClient, data, sync, userName, t, setChaiTheme, setDesignTokens, setComponentTokens);
       break;
 
     case "UPDATE_PAGE_DATA":
@@ -356,6 +386,7 @@ export const useQuerySync = () => {
   const sendEvent = useSendRealtimeEvent();
   const [_, setChaiTheme] = useAtom(chaiThemeValuesAtom);
   const [, setDesignTokensAtom] = useAtom(chaiDesignTokensAtom);
+  const [, setComponentTokensAtom] = useAtom(componentTokensAtom);
   const { t } = useTranslation();
 
   const setDesignTokens = useCallback(
@@ -365,12 +396,19 @@ export const useQuerySync = () => {
     [setDesignTokensAtom],
   );
 
+  const setComponentTokens = useCallback(
+    (tokens: ComponentTokens) => {
+      setComponentTokensAtom(tokens);
+    },
+    [setComponentTokensAtom],
+  );
+
   const handleQuerySync = useCallback(
     (payload: SyncPayload) => {
-      const shouldSync = processSyncPayload(payload, queryClient, setChaiTheme, setDesignTokens, t);
+      const shouldSync = processSyncPayload(payload, queryClient, setChaiTheme, setDesignTokens, setComponentTokens, t);
       sendRealtimeEventIfNeeded(shouldSync, sendEvent, payload.type, payload.data);
     },
-    [queryClient, sendEvent, setChaiTheme, setDesignTokens, t],
+    [queryClient, sendEvent, setChaiTheme, setDesignTokens, setComponentTokens, t],
   );
 
   return {
