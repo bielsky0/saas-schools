@@ -2,10 +2,7 @@ import { componentTokensToCssVars, getChaiThemeCssVariables } from "@chaibuilder
 import type { ChaiTheme } from "@chaibuilder/sdk/types";
 import { withTenant } from "@/lib/db/tenant";
 import { getTheme } from "@/features/cms/theme-data";
-import {
-  getActiveBuilderComponentTokens,
-  getActiveBuilderTheme,
-} from "@/features/cms/builder-theme-data";
+import { getActiveBuilderThemeAndTokens } from "@/features/cms/builder-theme-data";
 
 const GOOGLE_FONTS: Record<string, string> = {
   Inter: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap",
@@ -63,11 +60,13 @@ export async function ThemeInjector({ organizationId, children }: Props) {
     return <>{children}</>;
   }
 
-  // 1. Try the builder theme (full ChaiTheme from JSONB)
-  const [builderTheme, componentTokens] = await Promise.all([
-    withTenant(organizationId, async (tx) => getActiveBuilderTheme(tx, organizationId)),
-    withTenant(organizationId, async (tx) => getActiveBuilderComponentTokens(tx, organizationId)),
-  ]);
+  // 1. Try the builder theme (full ChaiTheme from JSONB) — one query returns
+  //    both the theme and the component tokens (no two-query tx fragility).
+  const activeTheme = await withTenant(organizationId, async (tx) =>
+    getActiveBuilderThemeAndTokens(tx, organizationId),
+  );
+  const builderTheme = activeTheme?.theme ?? null;
+  const componentTokens = activeTheme?.componentTokens ?? null;
 
   const componentCss = componentTokensToCssVars(componentTokens ?? {});
 

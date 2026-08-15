@@ -3,25 +3,6 @@ import { sql } from "drizzle-orm";
 import type { TenantDb } from "@/lib/db/tenant";
 import type { ChaiTheme, ComponentTokens } from "@chaibuilder/sdk/types";
 
-export async function getActiveBuilderTheme(
-  tx: TenantDb,
-  organizationId: string,
-): Promise<ChaiTheme | null> {
-  try {
-    const [row] = await tx.execute<{ theme: ChaiTheme }>(
-      sql`
-        SELECT theme FROM builder_theme
-        WHERE organization_id = ${organizationId} AND is_active = true
-        LIMIT 1
-      `,
-    );
-    return row?.theme ?? null;
-  } catch (e) {
-    console.warn("[builder-theme-data] getActiveBuilderTheme failed:", e);
-    return null;
-  }
-}
-
 export async function upsertBuilderTheme(
   tx: TenantDb,
   organizationId: string,
@@ -43,22 +24,31 @@ export async function upsertBuilderTheme(
   );
 }
 
-export async function getActiveBuilderComponentTokens(
+/**
+ * Motyw + tokeny komponentowe w JEDNYM zapytaniu. Route/ThemeInjector używają tej
+ * funkcji zamiast dwóch osobnych SELECT-ów na wspólnej transakcji — pojedyncze
+ * zapytanie nie może "zatruć" transakcji (current transaction is aborted) przy
+ * awarii drugiego z nich.
+ */
+export async function getActiveBuilderThemeAndTokens(
   tx: TenantDb,
   organizationId: string,
-): Promise<ComponentTokens | null> {
+): Promise<{ theme: ChaiTheme | null; componentTokens: ComponentTokens | null }> {
   try {
-    const [row] = await tx.execute<{ component_tokens: ComponentTokens }>(
+    const [row] = await tx.execute<{ theme: ChaiTheme; component_tokens: ComponentTokens }>(
       sql`
-        SELECT component_tokens FROM builder_theme
+        SELECT theme, component_tokens FROM builder_theme
         WHERE organization_id = ${organizationId} AND is_active = true
         LIMIT 1
       `,
     );
-    return row?.component_tokens ?? null;
+    return {
+      theme: row?.theme ?? null,
+      componentTokens: row?.component_tokens ?? null,
+    };
   } catch (e) {
-    console.warn("[builder-theme-data] getActiveBuilderComponentTokens failed:", e);
-    return null;
+    console.warn("[builder-theme-data] getActiveBuilderThemeAndTokens failed:", e);
+    return { theme: null, componentTokens: null };
   }
 }
 

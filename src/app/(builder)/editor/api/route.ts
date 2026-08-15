@@ -19,8 +19,7 @@ import { ORG_SUBDOMAIN_HEADER } from "@/lib/tenant-host";
 import { getOrgBySubdomain } from "@/features/organizations/data";
 import { resolveUniqueSlug, slugify } from "@/features/organizations/slug";
 import {
-  getActiveBuilderComponentTokens,
-  getActiveBuilderTheme,
+  getActiveBuilderThemeAndTokens,
   upsertBuilderComponentTokens,
   upsertBuilderTheme,
 } from "@/features/cms/builder-theme-data";
@@ -227,14 +226,11 @@ export async function POST(req: NextRequest) {
             .where(eq(organization.id, organizationId))
             .limit(1);
 
-          const [builderTheme, componentTokens] = await Promise.all([
-            getActiveBuilderTheme(tx, organizationId),
-            getActiveBuilderComponentTokens(tx, organizationId),
-          ]);
+          const activeTheme = await getActiveBuilderThemeAndTokens(tx, organizationId);
           const websiteSettings = {
             ...defaultWebsiteSettings,
-            ...(builderTheme ? { theme: builderTheme } : {}),
-            ...(componentTokens ? { componentTokens } : {}),
+            ...(activeTheme?.theme ? { theme: activeTheme.theme } : {}),
+            ...(activeTheme?.componentTokens ? { componentTokens: activeTheme.componentTokens } : {}),
           };
           const collections = await buildCollections(tx, organizationId);
 
@@ -254,14 +250,11 @@ export async function POST(req: NextRequest) {
 
         case "GET_WEBSITE_SETTINGS":
         case "GET_WEBSITE_DRAFT_SETTINGS": {
-          const [builderTheme, componentTokens] = await Promise.all([
-            getActiveBuilderTheme(tx, organizationId),
-            getActiveBuilderComponentTokens(tx, organizationId),
-          ]);
+          const activeTheme = await getActiveBuilderThemeAndTokens(tx, organizationId);
           const websiteSettings = {
             ...defaultWebsiteSettings,
-            ...(builderTheme ? { theme: builderTheme } : {}),
-            ...(componentTokens ? { componentTokens } : {}),
+            ...(activeTheme?.theme ? { theme: activeTheme.theme } : {}),
+            ...(activeTheme?.componentTokens ? { componentTokens: activeTheme.componentTokens } : {}),
           };
           return NextResponse.json(websiteSettings);
         }
