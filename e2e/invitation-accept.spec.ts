@@ -66,7 +66,7 @@ test("existing user accepts an invitation", async ({ page, request }) => {
   // Accepting lands on the APEX dashboard, not inside the academy (F4.6): the
   // new member's session does not exist on that host yet. The directory listing
   // is the confirmation that they joined. `**/dashboard**`, not `**/dashboard`:
-  // the redirect now carries `?handoff=` (Faza 5.5 / D74).
+  // the directory link now bridges via the handoff `start` endpoint (F5.6 / D74).
   await page.waitForURL("**/dashboard**");
   await expect(page.getByRole("link", { name: "Invite Co" })).toBeVisible();
 

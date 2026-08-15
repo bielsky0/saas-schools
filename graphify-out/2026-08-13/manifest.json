@@ -80,8 +80,8 @@
     "semantic_hash": ""
   },
   "src/app/[locale]/(app)/dashboard/page.tsx": {
-    "mtime": 1786639280.1689281,
-    "ast_hash": "2256b5448a1ea377db6a069c274ce49a",
+    "mtime": 1784669769.5473607,
+    "ast_hash": "c462f6e31c2272d2009043ad570cc632",
     "semantic_hash": ""
   },
   "src/app/[locale]/(app)/dashboard/schedule/page.tsx": {
@@ -1180,8 +1180,8 @@
     "semantic_hash": "50a943e9b2c854ace1ebffdf69ad8685"
   },
   "src/features/organizations/actions.ts": {
-    "mtime": 1786639280.1701803,
-    "ast_hash": "b722eb392aa8e7906d72e59bffe0d834",
+    "mtime": 1785680751.9802604,
+    "ast_hash": "778cbdb70ddd597c72d16e52bde222f6",
     "semantic_hash": ""
   },
   "src/features/organizations/audit-data.ts": {
@@ -1225,8 +1225,8 @@
     "semantic_hash": ""
   },
   "src/features/organizations/cross-tenant.ts": {
-    "mtime": 1786639280.1709151,
-    "ast_hash": "ab36d3ea07e2992ea529f6e6bae4b270",
+    "mtime": 1784669314.6363802,
+    "ast_hash": "5c1ae4edecfe3b4e25a137cb8bc5d634",
     "semantic_hash": ""
   },
   "src/features/organizations/data.ts": {
@@ -2275,8 +2275,8 @@
     "semantic_hash": "7dddd0eb4c5da37bfda8edca98b42a04"
   },
   "e2e/invitation-accept.spec.ts": {
-    "mtime": 1786639280.1668315,
-    "ast_hash": "2fa91857fd07f0c8c4bfac7012ec0ff6",
+    "mtime": 1784669927.7701547,
+    "ast_hash": "6651495e1180c2f4c993b3e9df4078d8",
     "semantic_hash": ""
   },
   "e2e/langlion-client-auth.spec.ts": {
@@ -2345,8 +2345,8 @@
     "semantic_hash": "0c99b112de1dfe8bb9f3b0cf70276531"
   },
   "e2e/org-last-owner.spec.ts": {
-    "mtime": 1786639280.1673326,
-    "ast_hash": "42664a1e826f0a07c21a2fd6b9ff3d03",
+    "mtime": 1784669933.5504932,
+    "ast_hash": "d0aa4725bce30610d419985b26e037aa",
     "semantic_hash": ""
   },
   "e2e/protected-redirect.spec.ts": {
@@ -2530,8 +2530,8 @@
     "semantic_hash": "58a0eca1c03b99d4e1a9d211ce5f08c6"
   },
   "docs/architecture/sessions-and-routing.md": {
-    "mtime": 1786639280.1662278,
-    "ast_hash": "0099e02e3751c5a570d873fd4fec8974",
+    "mtime": 1784671349.8233418,
+    "ast_hash": "72ddc34d713f36f0d9813fb09d0af524",
     "semantic_hash": ""
   },
   "docs/architecture/reference-patterns/a-adaptery-i18n-zadania-dane-audyt.md": {
@@ -2705,8 +2705,8 @@
     "semantic_hash": ""
   },
   "e2e/staff-session-handoff.spec.ts": {
-    "mtime": 1786639280.168267,
-    "ast_hash": "15e91c2ab3543e2c724088e92531ec8f",
+    "mtime": 1784670329.2494843,
+    "ast_hash": "b5aa60116834bdb653d613b806a0d409",
     "semantic_hash": ""
   },
   "seed-plans.ts": {
@@ -7945,8 +7945,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/panels/seo-panel.tsx": {
-    "mtime": 1785774692.2997055,
-    "ast_hash": "85a6f50ae0f5278f48fd6db3957f88b6",
+    "mtime": 1785311019.1926024,
+    "ast_hash": "656554745277f653d4db19663805ae0c",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/panels/user-info.tsx": {
@@ -9735,8 +9735,8 @@
     "semantic_hash": ""
   },
   "docs/architecture/chaibuilder-cms.md": {
-    "mtime": 1785774460.291762,
-    "ast_hash": "284a9bd6abe2117ba80310d579d0d989",
+    "mtime": 1785417125.3094537,
+    "ast_hash": "cbff8cfcd3e705226b0657a7de58279f",
     "semantic_hash": ""
   },
   "docs/architecture/payload-apex.md": {
@@ -10820,8 +10820,8 @@
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/README.md": {
-    "mtime": 1785774518.2533467,
-    "ast_hash": "b9d0da427f338251ef944536f961b5cc",
+    "mtime": 1785771673.8901012,
+    "ast_hash": "65ada19bcb64f31b23f97f31cd856469",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/collection-tree-group.tsx": {
@@ -11157,16 +11157,6 @@
   "docs/shopify-like/Zrzut ekranu 2026-08-3 o 17.49.14.png": {
     "mtime": 1785772157.8432145,
     "ast_hash": "c282ea8e60f138330561e822b92391b2",
-    "semantic_hash": ""
-  },
-  "src/app/api/auth/staff-handoff/start/route.ts": {
-    "mtime": 1786639280.2488742,
-    "ast_hash": "a67088c111ffc19f54719bd71869faea",
-    "semantic_hash": ""
-  },
-  "docs/shopify-like/implementation.md": {
-    "mtime": 1785774430.9887807,
-    "ast_hash": "c78ae7c50fa45864c5b10c2976c6fe81",
     "semantic_hash": ""
   }
 }

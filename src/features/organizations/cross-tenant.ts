@@ -7,15 +7,25 @@ import type { OrgSummary } from "./data";
 
 /**
  * SHA-256 of a raw handoff token (plan Faza 5.5, decyzja D74) — kept here,
- * not in `./actions.ts`, because every exported value in a `"use server"`
- * module must be an async Server Action, and this needs to be callable from a
- * plain Server Component (the apex directory) as a synchronous pure function.
- * `./actions.ts` mints the token and hashes it with this same function before
- * the insert, so the two sides never disagree on the hash.
+ * not in a `"use server"` module, because every exported value in one of those
+ * must be an async Server Action, and this needs to be callable as a
+ * synchronous pure function. Every mint site hashes with this same function
+ * before the insert, so the two sides never disagree on the hash.
  */
 export function hashHandoffToken(rawToken: string): string {
   return createHash("sha256").update(rawToken).digest("hex");
 }
+
+/**
+ * TTL for staff session handoff tokens (plan Faza 5.5, decyzja D74). A bridge
+ * between two requests of the SAME browser session (apex directory click →
+ * tenant host), not a "remember me" mechanism — minutes, not days.
+ *
+ * Home of the constant since F5.6 moved minting out of the server actions and
+ * into the click-time `start` endpoint; the one mint site and every reader now
+ * share this file.
+ */
+export const HANDOFF_TTL_MS = 3 * 60 * 1000;
 
 /**
  * The organization reads that cannot be scoped to one tenant (spec §1.3, F1a).
@@ -110,35 +120,6 @@ export async function getInvitationWithValidity(tokenHash: string) {
   const valid =
     invite !== null && invite.status === "pending" && invite.expiresAt.getTime() >= Date.now();
   return { invite, valid };
-}
-
-/**
- * Which organization a handoff token points at, WITHOUT consuming it (plan
- * Faza 5.5, decyzja D74).
- *
- * A read, not the atomic redemption below — used only by the apex directory
- * page to decide which ONE academy's link gets `?handoff=` appended. It cannot
- * create a session and cannot be raced into doing so; the actual redemption
- * happens once, on the tenant host, via `consumeStaffSessionHandoff`.
- *
- * BYPASS: same reason as every other function in this file — the organization
- * is the output of the token, not an input.
- */
-export async function peekHandoffOrganizationId(tokenHash: string): Promise<string | null> {
-  return withSystemBypass("staff session handoff — directory link targeting", async (tx) => {
-    const [row] = await tx
-      .select({ organizationId: staffSessionHandoff.organizationId })
-      .from(staffSessionHandoff)
-      .where(
-        and(
-          eq(staffSessionHandoff.tokenHash, tokenHash),
-          isNull(staffSessionHandoff.consumedAt),
-          gt(staffSessionHandoff.expiresAt, new Date()),
-        ),
-      )
-      .limit(1);
-    return row?.organizationId ?? null;
-  });
 }
 
 /**

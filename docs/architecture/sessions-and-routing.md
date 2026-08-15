@@ -120,24 +120,32 @@ a redirecting action must **not** emit a bare path (see `finishSignIn` in
 **fast path** with a `parseHost(Host)` fallback — the same function on the same
 input, not a second copy of the rule.
 
-**Staff session handoff (F5.5, decyzja D74) is a one-time addition to THIS
-mechanism, not a third session system.** Creating an organization or accepting
-an invitation lands on the apex directory (D71 — the cookie is host-scoped, so
-redirecting straight into `{subdomain}` would show a login screen seconds after
-signing in). The directory's link to that ONE academy carries a short-lived
-(3-minute), single-use token (`staff_session_handoff`, hashed like
-`invitation.tokenHash`) that a custom Better Auth endpoint
-(`/api/auth/staff-handoff/verify`) redeems into a NEW session on that host via
-`internalAdapter.createSession` + `setSessionCookie` — the same primitives the
-built-in `magic-link` plugin uses, so the cookie's shape and host-scoping (D70)
-come from the same code as every other sign-in. It is not a shared session
-across hosts: each host still gets its own session row, and the token only
-skips re-entering credentials for a person already authenticated seconds
-earlier. See `docs/plan/faza-5.5.md` for the mechanism's full decisions
-(D74, D81–D83), including the prefetch-safety check (an existing valid session
-on the redeeming host is ridden without touching the token) and the
-host-match validation (a token is refused on any host other than the academy
-it was minted for).
+**Staff session handoff (F5.5–F5.6, decyzja D74) is a bridge added to THIS
+mechanism, not a third session system.** Each academy is its own authentication,
+so the apex directory link to `{subdomain}` must somehow cross the host switch
+without the host-scoped cookie (D70) following. Instead of one shared cookie,
+the click itself carries a short-lived (3-minute), single-use token
+(`staff_session_handoff`, hashed like `invitation.tokenHash`):
+
+- Every directory link points at the apex's `GET /api/auth/staff-handoff/start?subdomain=…`
+  (`src/app/api/auth/staff-handoff/start/route.ts`, F5.6). It reads the apex
+  session, confirms the caller is an active member of that academy, mints one
+  token, and redirects to that host's verify endpoint. Minting at click time —
+  not during the directory render — keeps the page pure and bounds the table to
+  roughly one live token per actual click.
+- A custom Better Auth endpoint (`/api/auth/staff-handoff/verify`, F5.5)
+  redeems the token into a NEW session on that host via
+  `internalAdapter.createSession` + `setSessionCookie` — the same primitives the
+  built-in `magic-link` plugin uses, so the cookie's shape and host-scoping (D70)
+  come from the same code as every other sign-in.
+
+It is not a shared session across hosts: each host still gets its own session
+row, and the token only skips re-entering credentials for a person already
+authenticated on the apex. See `docs/plan/faza-5.5.md` for the mechanism's full
+decisions (D74, D81–D83), including the prefetch-safety check (an existing valid
+session on the redeeming host is ridden without touching the token) and the
+host-match validation (a token is refused on any host other than the academy it
+was minted for).
 
 **Local dev and E2E** use `APP_ROOT_DOMAIN=localtest.me`, a public DNS name whose
 every label resolves to 127.0.0.1 — so `acme.localtest.me:3000` works with no

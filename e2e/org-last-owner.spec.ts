@@ -28,8 +28,8 @@ test("the last owner cannot be demoted or removed", async ({ page, request }) =>
   // Back to the APEX dashboard, not into the new academy (F4.6): the staff
   // cookie is host-scoped, so redirecting into `{subdomain}` would land on a
   // login screen seconds after signing in. The directory confirms it exists.
-  // `**/dashboard**`, not `**/dashboard`: the redirect now carries `?handoff=`
-  // (Faza 5.5 / D74).
+  // `**/dashboard**`, not `**/dashboard`: the directory link now bridges via
+  // the handoff `start` endpoint (F5.6 / D74).
   await page.waitForURL("**/dashboard**");
   await expect(page.getByRole("link", { name: "Last Owner Co" })).toBeVisible();
 
