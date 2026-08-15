@@ -1,0 +1,79 @@
+
+> @chaibuilder/sdk@0.0.0 test /Users/bielsky/Documents/saas-school/packages/chaibuilder-sdk
+> vitest --run
+
+
+ RUN  v3.2.7 /Users/bielsky/Documents/saas-school/packages/chaibuilder-sdk
+
+ ✓ src/pages/client/layouts/left-panel/page-groups.test.ts (10 tests) 6ms
+ ✓ src/hooks/use-dark-mode.test.ts (5 tests) 36ms
+ ✓ src/runtime/client/register-chai-media-manager.test.tsx (3 tests) 28ms
+ ✓ src/pages/client/components/page-manager/page-manager-search-and-filter.test.tsx (2 tests) 84ms
+ ✓ src/runtime/client/register-chai-save-to-library.test.tsx (3 tests) 15ms
+ ✓ src/pages/panels/ai-panel/__tests__/conversation-history.test.ts (8 tests) 6ms
+ ✓ src/hooks/__tests__/use-replace-block.test.ts (15 tests) 19ms
+ ✓ src/core/utils/get-queries.test.ts (7 tests) 2ms
+ ✓ src/runtime/client/register-chai-add-block-tab.test.tsx (4 tests) 24ms
+ ✓ src/hooks/use-selected-block-hierarchy.test.tsx (6 tests) 28ms
+ ✓ src/runtime/client/register-chai-top-bar.test.tsx (4 tests) 13ms
+ ✓ src/core/functions/get-user-input-values.test.ts (6 tests) 2ms
+ ✓ src/render/functions.test.ts (6 tests) 3ms
+ ✓ src/pages/utils/__tests__/fetch-api.test.ts (6 tests) 5ms
+ ✓ src/core/components/sidepanels/panels/add-blocks/import-html.test.tsx (4 tests) 6ms
+ ✓ src/core/utils/remove-size-classes.test.ts (27 tests) 3ms
+ ✓ src/runtime/v2/__tests__/index.test.ts (7 tests) 4ms
+ ✓ src/hooks/get-split-classes.ts (1 test) 2ms
+ ✓ src/pages/client/layouts/left-panel/section-groups.test.ts (7 tests) 3ms
+ ✓ src/hooks/history/use-undo-manager.test.ts (6 tests) 24ms
+ ✓ src/hooks/__tests__/use-save-website-data.test.ts (9 tests) 34ms
+ ✓ src/core/functions/convert-brbitrary-to-tailwind-class.test.ts (6 tests) 21ms
+ ✓ src/pages/client/components/page-lock/page-lock.test.ts (10 tests) 22ms
+ ✓ src/hooks/__tests__/use-save-page.test.ts (45 tests) 144ms
+ ✓ src/core/functions/class-fn.test.ts (5 tests | 1 skipped) 358ms
+   ✓ Class functions > getPropertyForClass  355ms
+ ✓ src/runtime/register-page-type.test.ts (18 tests) 12ms
+ ✓ src/core/functions/get-new-classes.ts (2 tests) 12ms
+ ✓ src/pages/client/components/get-seo-defaults.ts (1 test) 3ms
+ ✓ src/core/components/canvas/static/adjust-spacing-in-blocks.ts (9 tests) 5ms
+ ✓ src/core/import-html/html-to-json.test.ts (14 tests) 12ms
+ ✓ src/core/components/canvas/static/apply-language.test.ts (22 tests) 7ms
+ ✓ src/render/async-props-block.test.tsx (10 tests) 12ms
+ ✓ src/render/binding-engine.test.ts (68 tests) 14ms
+ ✓ src/pages/client/components/process-ai-seo-response.ts (19 tests) 6ms
+stderr | src/runtime/register-collection.test.ts > Collection Registration > registerChaiCollection > should override existing collection with the same id
+Collection overridden already registered
+
+ ✓ src/runtime/register-collection.test.ts (14 tests) 12ms
+ ✓ src/core/import-html/import-video.test.ts (17 tests) 4ms
+ ✓ src/hooks/__tests__/pick-only-ai-props.test.ts (27 tests) 16ms
+ ✓ src/core/functions/remove-duplicate-classes.ts (1 test) 21ms
+ ✓ src/render/apply-design-tokens.ts (11 tests) 15ms
+ ✓ src/hooks/history/insert-block-at-position.test.ts (4 tests) 4ms
+ ✓ src/runtime/client/register-chai-sidebar-panel.test.tsx (3 tests) 7ms
+ ✓ src/hooks/__tests__/use-blocks-html-for-ai.test.ts (16 tests) 7ms
+ ✓ src/core/functions/sanitize-classes.test.ts (1 test) 10ms
+ ✓ src/core/functions/order-classes-by-breakpoint.ts (1 test) 18ms
+ ✓ src/web-blocks/form/input.test.tsx (13 tests) 6ms
+ ✓ src/hooks/history/move-blocks-with-children.test.ts (5 tests) 4ms
+ ✓ src/hooks/use-html-to-blocks.test.ts (10 tests) 10ms
+ ✓ src/pages/client/layouts/theme/theme-groups.test.ts (7 tests) 9ms
+ ✓ src/hooks/theme-contrast.test.ts (2 tests) 3ms
+ ✓ src/core/functions/common-functions.test.ts (10 tests) 6ms
+ ✓ src/pages/extensions/topbar.spec.ts (4 tests) 2ms
+ ✓ src/core/functions/helper-fn.test.ts (7 tests) 12ms
+ ✓ src/core/functions/is-visible-at-breakpoint.test.ts (10 tests) 6ms
+ ✓ src/core/rjsf-widgets/image.test.tsx (11 tests) 3ms
+ ✓ src/core/components/canvas/static/get-theme-custom-font-face.test.ts (5 tests) 5ms
+ ✓ src/hooks/get-block-with-nested-children.test.ts (12 tests) 16ms
+ ✓ src/pages/panels/ai-panel/__tests__/models.test.ts (8 tests) 8ms
+ ✓ src/pages/client/layouts/mobile/use-is-mobile.test.ts (2 tests) 2ms
+ ✓ src/runtime/controls/controls.test.ts (1 test) 8ms
+ ✓ src/core/functions/block-helpers.ts (2 tests) 2ms
+ ✓ src/hooks/__tests__/use-partial-blocks-store.test.ts (18 tests) 2ms
+ ✓ src/core/components/sidepanels/panels/outline/getBlockDisplayName.test.ts (7 tests) 1ms
+
+ Test Files  62 passed (62)
+      Tests  603 passed | 1 skipped (604)
+   Start at  16:18:30
+   Duration  9.74s (transform 2.53s, setup 377ms, collect 40.46s, tests 1.19s, environment 24.16s, prepare 4.28s)
+

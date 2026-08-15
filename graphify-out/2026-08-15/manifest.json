@@ -2425,8 +2425,8 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1786804043.7460227,
-    "ast_hash": "012fd1c53f81845c6ddcb4105ad5f334",
+    "mtime": 1785753839.6658149,
+    "ast_hash": "b690220dadbffb882447e2d27ec79e33",
     "semantic_hash": ""
   },
   "playwright.config.ts": {
@@ -2460,8 +2460,8 @@
     "semantic_hash": ""
   },
   "AGENTS.md": {
-    "mtime": 1786803538.9997187,
-    "ast_hash": "791fb16784cb4083d65edb0640647f2e",
+    "mtime": 1785417159.8880508,
+    "ast_hash": "ed6f034b3b38dca7bcffbe4815d0d604",
     "semantic_hash": ""
   },
   "CLAUDE.md": {
@@ -4990,8 +4990,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/package.json": {
-    "mtime": 1786803305.2641509,
-    "ast_hash": "d16e1febdd78d1c42f32ac08790d641e",
+    "mtime": 1785580405.767967,
+    "ast_hash": "0edc9f841f67bd89b5d4885583e06b53",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/playwright.config.ts": {
@@ -8355,8 +8355,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/runtime/index.ts": {
-    "mtime": 1786805864.6400847,
-    "ast_hash": "cb9ac377b98445537320f326c7a2921f",
+    "mtime": 1785311019.2039335,
+    "ast_hash": "19b17046aed9006f8738f6b75377a676",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/runtime/register-collection.test.ts": {
@@ -8430,8 +8430,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/types/index.ts": {
-    "mtime": 1786806080.989435,
-    "ast_hash": "465c5ecbf04fd56b120064f398fe0198",
+    "mtime": 1785311019.2064698,
+    "ast_hash": "b993c75dd59ef2f5a759639f3e562037",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/types/partial-blocks.ts": {
@@ -8710,7 +8710,7 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/layout.tsx": {
-    "mtime": 1786804086.038113,
+    "mtime": 1785314866.430603,
     "ast_hash": "d5c750eabc2629f62e8983d161942ed8",
     "semantic_hash": ""
   },
@@ -8720,8 +8720,8 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/tailwind.config.ts": {
-    "mtime": 1786804201.3820262,
-    "ast_hash": "1afd19cebafae6edd82b1352e1dcab91",
+    "mtime": 1785315017.3653026,
+    "ast_hash": "53e2a9b68e462d75dde20bcac184f792",
     "semantic_hash": ""
   },
   "src/app/(public)/cms-page/[[...slug]]/client-page-renderer.tsx": {
@@ -8820,8 +8820,8 @@
     "semantic_hash": ""
   },
   "src/blocks/index.ts": {
-    "mtime": 1786805879.1891587,
-    "ast_hash": "a9bc60b5cfbca333b24a64b5157ccf2d",
+    "mtime": 1785763444.6888714,
+    "ast_hash": "36bbb2d236ba6b6d81cb7da3d1eefe97",
     "semantic_hash": ""
   },
   "src/blocks/widgets/group-type-picker.tsx": {
@@ -10555,8 +10555,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/builder-layout.tsx": {
-    "mtime": 1786805610.2897663,
-    "ast_hash": "7ccbba4654bc48ed4de4ee40a3a0a3b5",
+    "mtime": 1785771005.233186,
+    "ast_hash": "ed37baa5b34ac5ef22cfa48b0f8772f7",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/layout/index.ts": {
@@ -10600,8 +10600,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-groups.ts": {
-    "mtime": 1786805941.4040372,
-    "ast_hash": "158b364c01f76efda407af68b6f8d8a5",
+    "mtime": 1785586299.1527398,
+    "ast_hash": "c2c71e4ac319f2f0edd055a36c6a498b",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-tree.tsx": {
@@ -11167,61 +11167,6 @@
   "docs/shopify-like/implementation.md": {
     "mtime": 1785774430.9887807,
     "ast_hash": "c78ae7c50fa45864c5b10c2976c6fe81",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-catalog.test.ts": {
-    "mtime": 1786805914.6687582,
-    "ast_hash": "8a0497edb253dea72785d14ebc3ba3f7",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-catalog.ts": {
-    "mtime": 1786805851.7435656,
-    "ast_hash": "4760d2d4496bac63b03c56f1084c8b4e",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-groups.catalog.test.ts": {
-    "mtime": 1786805905.8345776,
-    "ast_hash": "f11d21d21f7ea7af208c82a1cce005e1",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-preview.test.tsx": {
-    "mtime": 1786806422.4889839,
-    "ast_hash": "0bf0d504662d2edccee7e4c6228536b4",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-preview.tsx": {
-    "mtime": 1786806310.4566848,
-    "ast_hash": "066922c8ebf14bc5cb9e5686ede676ff",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/pages/client/layouts/tokens/shopify-tokens.test.ts": {
-    "mtime": 1786805654.6303892,
-    "ast_hash": "0c1cf674769a63a5b4752d53e0d4430f",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/pages/client/layouts/tokens/shopify-tokens.ts": {
-    "mtime": 1786805606.7855318,
-    "ast_hash": "15550bc7aad9503f59806f6cf9982b05",
-    "semantic_hash": ""
-  },
-  "packages/chaibuilder-sdk/src/types/section-catalog.ts": {
-    "mtime": 1786805844.4662137,
-    "ast_hash": "c923f5406c274d84417c89d3c4b81e1a",
-    "semantic_hash": ""
-  },
-  "src/lib/section-catalog.ts": {
-    "mtime": 1786805872.2706237,
-    "ast_hash": "3d118fa2184722f032834256eb874e7b",
-    "semantic_hash": ""
-  },
-  "docs/modular-builder-implementation-plan.md": {
-    "mtime": 1786802900.0675113,
-    "ast_hash": "8fc91e7675d9bc90c38b71838315cba8",
-    "semantic_hash": ""
-  },
-  "docs/sdk-test-baseline.md": {
-    "mtime": 1786806619.2178557,
-    "ast_hash": "dbf921a82223c8340cbeb2bf618d1c55",
     "semantic_hash": ""
   }
 }

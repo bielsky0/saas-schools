@@ -1,4 +1,4 @@
-import { registerChaiBlock } from "@chaibuilder/sdk/runtime";
+import { registerChaiBlock, registerSectionCatalogEntries } from "@chaibuilder/sdk/runtime";
 
 import { Component as GroupTypeCard, Config as GroupTypeCardConfig } from "./GroupTypeCard/config";
 import { Component as UpcomingEvents, Config as UpcomingEventsConfig } from "./UpcomingEvents/config";
@@ -14,6 +14,7 @@ import { Component as BlogPostExcerpt, Config as BlogPostExcerptConfig } from ".
 import { Component as BlogPostTags, Config as BlogPostTagsConfig } from "./blog/BlogPostTags/config";
 import { Component as BlogPostList, Config as BlogPostListConfig } from "./blog/BlogPostList/config";
 import { Component as BlogPagination, Config as BlogPaginationConfig } from "./blog/BlogPagination/config";
+import { langlionSectionCatalogEntries } from "@/lib/section-catalog";
 
 registerChaiBlock(GroupTypeCard, GroupTypeCardConfig);
 registerChaiBlock(UpcomingEvents, UpcomingEventsConfig);
@@ -28,3 +29,5 @@ registerChaiBlock(BlogPostExcerpt, BlogPostExcerptConfig);
 registerChaiBlock(BlogPostTags, BlogPostTagsConfig);
 registerChaiBlock(BlogPostList, BlogPostListConfig);
 registerChaiBlock(BlogPagination, BlogPaginationConfig);
+
+registerSectionCatalogEntries(langlionSectionCatalogEntries);

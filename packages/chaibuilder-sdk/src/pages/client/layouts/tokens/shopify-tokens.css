@@ -1,0 +1,79 @@
+/**
+ * Shopify-look design tokens for the ChaiBuilder editor chrome.
+ *
+ * Two layers:
+ *  (a) `--chai-*`  — editor "chrome" tokens. Derived from the existing
+ *      shadcn CSS variables so light/dark themes and the editor theme
+ *      stay in sync (aliasing layer, zero component regressions).
+ *  (b) `--cmp-*`   — component tokens (buttons, form fields, cards,
+ *      typography scale). Kept OUT of ChaiTheme on purpose; they are
+ *      the inputs for the component theme editors (Phase 3).
+ */
+
+:root {
+  /* ---- (a) Chrome tokens -------------------------------------------- */
+  /* Surfaces */
+  --chai-surface: hsl(var(--background));
+  --chai-surface-subdued: hsl(var(--muted));
+  --chai-surface-hover: hsl(var(--accent));
+
+  /* Accent / status */
+  --chai-accent: hsl(var(--primary));
+  --chai-accent-foreground: hsl(var(--primary-foreground));
+  --chai-success: #34a853;
+  --chai-danger: hsl(var(--destructive));
+
+  /* Text */
+  --chai-text: hsl(var(--foreground));
+  --chai-text-subdued: hsl(var(--muted-foreground));
+
+  /* Borders */
+  --chai-border: hsl(var(--border));
+
+  /* Geometry — radius */
+  --chai-radius-card: 8px;
+  --chai-radius-button: 4px;
+  --chai-radius-modal: 12px;
+  --chai-radius-input: 4px;
+
+  /* Geometry — spacing scale (4/8/12/16/24/32) */
+  --chai-space-1: 4px;
+  --chai-space-2: 8px;
+  --chai-space-3: 12px;
+  --chai-space-4: 16px;
+  --chai-space-6: 24px;
+  --chai-space-8: 32px;
+
+  /* Typography */
+  --chai-font-panel-heading-size: 16px;
+  --chai-font-panel-heading-weight: 600;
+  --chai-font-label-size: 13px;
+  --chai-font-label-weight: 500;
+  --chai-font-value-size: 14px;
+  --chai-font-value-weight: 400;
+
+  /* ---- (b) Component tokens ----------------------------------------- */
+  /* Buttons */
+  --cmp-btn-radius: 4px;
+  --cmp-btn-padding: 8px 16px;
+  --cmp-btn-font-size: 14px;
+  --cmp-btn-height: 40px;
+
+  /* Form fields */
+  --cmp-field-radius: 4px;
+  --cmp-field-padding: 8px 12px;
+  --cmp-field-font-size: 14px;
+  --cmp-field-height: 40px;
+
+  /* Cards */
+  --cmp-card-radius: 8px;
+  --cmp-card-padding: 16px;
+
+  /* Typography */
+  --cmp-heading-size: 28px;
+  --cmp-body-size: 16px;
+
+  /* Layout */
+  --cmp-section-gap: 32px;
+  --cmp-container-max-width: 1200px;
+}

@@ -91,3 +91,14 @@ export * from "./register-global-data-provider";
 export * from "./register-page-type";
 export * from "./register-partial-type";
 export * from "./v2/runtime";
+export {
+  getSectionCatalog,
+  registerSectionCatalogEntries,
+  registerSectionCatalogEntry,
+} from "~/pages/client/layouts/left-panel/section-catalog";
+export type {
+  SectionCatalog,
+  SectionCatalogEntry,
+  SectionCategory,
+  SectionRole,
+} from "~/types/section-catalog";

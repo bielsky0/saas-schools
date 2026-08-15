@@ -1,5 +1,6 @@
 import { lazy, Suspense, useCallback, type MouseEvent } from "react";
 import { useTranslation } from "react-i18next";
+import "./tokens/shopify-tokens.css";
 import { Cross1Icon, LightningBoltIcon } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
 import { Button } from "~/components/ui/button";

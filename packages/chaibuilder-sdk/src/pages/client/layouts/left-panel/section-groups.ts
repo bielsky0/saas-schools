@@ -1,4 +1,7 @@
-export type SectionGroupId = "header" | "template" | "footer";
+import type { SectionRole as CatalogSectionGroupId } from "~/types/section-catalog";
+import { getSectionCatalog } from "./section-catalog";
+
+export type SectionGroupId = CatalogSectionGroupId;
 
 export interface SectionTreeNode {
   _id: string;
@@ -32,6 +35,7 @@ const matchesAnyRule = (node: SectionTreeNode, rules: string[]): boolean => {
 };
 
 export const groupSections = (nodes: SectionTreeNode[]): SectionGroup[] => {
+  const catalog = getSectionCatalog();
   const buckets: Record<SectionGroupId, SectionTreeNode[]> = {
     header: [],
     template: [],
@@ -39,7 +43,10 @@ export const groupSections = (nodes: SectionTreeNode[]): SectionGroup[] => {
   };
 
   for (const node of nodes) {
-    if (matchesAnyRule(node, SECTION_GROUP_RULES.header)) {
+    const catalogRole = node._type ? catalog.getByType(node._type)?.role : undefined;
+    if (catalogRole && catalogRole in buckets) {
+      buckets[catalogRole].push(node);
+    } else if (matchesAnyRule(node, SECTION_GROUP_RULES.header)) {
       buckets.header.push(node);
     } else if (matchesAnyRule(node, SECTION_GROUP_RULES.footer)) {
       buckets.footer.push(node);
