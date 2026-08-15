@@ -55,6 +55,7 @@ const AiPanel = () => {
 };
 
 const DesktopBuilderLayout = () => {
+  const { t } = useTranslation();
   const TopBar = useTopBarComponent();
   const htmlDir = useBuilderProp("htmlDir", "ltr");
 
@@ -65,6 +66,11 @@ const DesktopBuilderLayout = () => {
   return (
     <div dir={htmlDir} className="h-screen max-h-full w-screen overflow-x-hidden bg-background text-foreground">
       <TooltipProvider>
+        <a
+          href="#canvas-container"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-[9999] focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-white">
+          {t("Skip to canvas")}
+        </a>
         <div onContextMenu={preventContextMenu} className="flex h-full max-h-full flex-col">
           <div className="flex h-[50px] w-screen items-center border-b border-gray-200 bg-gray-50 text-gray-900">
             <Suspense>

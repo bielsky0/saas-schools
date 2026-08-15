@@ -61,3 +61,8 @@ selectedLibraryAtom.debugLabel = "selectedLibraryAtom";
 export const dataBindingActiveAtom = atom(true);
 dataBindingActiveAtom.debugLabel = "dataBindingActiveAtom";
 export const lsThemeAtom = atomWithStorage<ChaiTheme>("chai-builder-theme", defaultThemeValues);
+
+// Faza 2 (§3.1): true gdy aktualny drop target jest niedozwolony → DefaultCursor
+// renderuje czerwoną linię. Ustawiany wewnątrz `debouncedDisableDrop` w section-tree.tsx.
+export const dropCursorInvalidAtom = atom<boolean>(false);
+dropCursorInvalidAtom.debugLabel = "dropCursorInvalidAtom";

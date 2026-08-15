@@ -1,7 +1,9 @@
 # Plan implementacji: Modułowy Kreator Stron (wersja rozszerzona)
 
-> **Status:** plan zatwierdzony do analizy zespołowej — **Faza 1 NIE rozpoczęta** (2026-08-15).
+> **Status:** **Faza 1 zakończona** (2026-08-15, commit `109b6ad7`). **Faza 2 — w trakcie** (2026-08-15).
 > Źródło speca: *"Specyfikacja Funkcjonalna UI/UX – Modułowy Kreator Stron (wersja rozszerzona)"* (Shopify Online Store 2.0, block-based editing).
+>
+> **Korekta architektoniczna (2026-08-15):** edytor używa **dolnego panelu wysuwanego wewnątrz lewego panelu** (`leftPanelBottomAtom`/`useLeftPanelBottom()`, stany `block|page|template|theme|null`), **nie** prawego panelu (`rightPanelAtom` jest martwym kodem — tylko definicja w `use-theme.ts:65`). Sekcje §3.4 i pliki z §1.2 zostały zaktualizowane pod rzeczywisty kod. Nagłówek z przyciskiem powrotu istnieje w `builder-left-panel.tsx:171-186` (`handleBack`).
 
 ---
 
@@ -48,35 +50,48 @@
 
 ### 1.2 Kluczowe pliki (punkt zaczepienia)
 
+> **Aktualizacja (2026-08-15):** panele `right-panel/*` zostały zastąpione przez **dolny slide-up panel** w lewym panelu (`builder-left-panel.tsx`). `empty-right-panel.tsx`, `page-settings.tsx`, `template-settings.tsx` są dalej renderowane, ale **wewnątrz dolnej sekcji lewego panelu**, sterowane przez `useLeftPanelBottom()`.
+
 ```
 packages/chaibuilder-sdk/src/
   pages/client/layouts/
-    builder-layout.tsx          # routing stref + rightPanelAtom
+    builder-layout.tsx          # routing stref (left panel / canvas / AI panel)
     left-panel/
-      builder-left-panel.tsx    # render wg leftPanelModeAtom ("sections"|"template-settings"|"seo")
+      builder-left-panel.tsx    # render wg leftPanelModeAtom; dolny slide-up panel wg leftPanelBottomAtom
       sections-tab.tsx          # drzewo + AddSectionDialog + GenerateSectionDialog
-      section-tree.tsx          # wrapper react-arborist
-      section-groups.ts         # heurystyka Nagłówek/Szablon/Stopka
+      section-tree.tsx          # wrapper react-arborist (osobna instancja per grupa)
+      section-groups.ts         # grupowanie wg roli z section-catalog (Faza 1)
+      section-catalog.ts        # katalog sekcji (Faza 1)
+      section-preview.tsx       # hover-preview (Faza 1)
       theme-tab.tsx / pages-tab.tsx / seo-left-panel.tsx
+    tokens/
+      shopify-tokens.css        # tokeny chrome + komponentowe --cmp-* (Faza 1)
     right-panel/
-      page-settings.tsx / empty-right-panel.tsx / template-settings.tsx
+      page-settings.tsx / template-settings.tsx / empty-right-panel.tsx   # renderowane w dolnym panelu
     theme/
       theme-groups.ts / theme-editor.tsx / use-theme-editor.tsx / token-editors/*
   core/components/sidepanels/panels/
     outline/node.tsx            # węzeł drzewa (hover icons, drop indicator)
+    outline/default-cursor.tsx  # kursor drop (zielony 1px → niebieski 2px w Fazie 2)
+    outline/block-more-options.tsx # menu "⋯" (duplikuj/zmień nazwę/usuń)
     add-blocks/add-blocks.tsx   # biblioteka bloków
   hooks/history/use-undo-manager.ts   # limit 50 ✅
+  hooks/use-key-event-watcher.ts      # Ctrl+Z/Ctrl+Y/copy/paste/del (Faza 2 rozszerza o Ctrl+Shift+Z, Ctrl+S)
+  hooks/use-save-page.ts              # savePageAsync → mapowanie Ctrl+S
+  hooks/use-remove-blocks.ts          # usunięcie bloków (reużycie w dialogu kosza, Faza 2)
   core/components/canvas/static/static-canvas.tsx  # lokalny iframe
 ```
 
 ### 1.3 Najważniejsze luki (Gap Analysis)
 
-1. **Wskaźnik drop jest zielony** (linia 1px + kropka w `default-cursor.tsx`), spec chce niebieskiej linii 2px z okrągłymi końcami; brak stanu czerwonego przy niedozwolonym dropie — §3.3, §8.5.
-2. **Brak bezpośredniego kosza** na hover węzła (usunięcie jest w menu "⋯" przez `useRemoveBlocks`, bez dialogu potwierdzenia) + **brak uchwytu 6-kropek** (dragHandle jest na całym wierszu) — §4.1.
-3. **Kolorystyka stanów** (aktywny = jednolite niebieskie tło + biały tekst) — §4.2, §8.
-4. **Biblioteka sekcji bez zakładek wg roli** (Wszystkie/Hero/Cennik/Formularze/Referencje/Stopki) i **bez hover-preview** — §6.2–6.3.
-5. **6 placeholderów motywu** (spacing-width, buttons, form-fields, course-cards, logo-favicon, icons) — §7.1.
-6. **WCAG**: skip-link, `aria-pressed`/`aria-expanded`/`aria-live`, audyt kontrastu — §11.
+> **Status po Fazie 1 + wstęp do Fazy 2 (2026-08-15):** punkty 1–3 to zakres Fazy 2; punkt 4 częściowo domknięty (hover-preview z Fazy 1, brak zakładek); punkty 5–6 → Fazy 3–4; punkt 7 rozstrzygnięty.
+
+1. **Wskaźnik drop jest zielony** (linia 1px + kropka w `default-cursor.tsx`), spec chce niebieskiej linii 2px z okrągłymi końcami; brak stanu czerwonego przy niedozwolonym dropie — §3.3, §8.5. **→ Faza 2, zad. 2.1.**
+2. **Brak bezpośredniego kosza** na hover węzła (usunięcie jest w menu "⋯" przez `useRemoveBlocks`, bez dialogu potwierdzenia) + **brak uchwytu 6-kropek** (dragHandle jest na całym wierszu) — §4.1. **→ Faza 2, zad. 2.2.**
+3. **Kolorystyka stanów** (aktywny = jednolite niebieskie tło + biały tekst) — §4.2, §8. **→ Faza 2, zad. 2.3.**
+4. **Biblioteka sekcji bez zakładek wg roli** (Wszystkie/Hero/Cennik/Formularze/Referencje/Stopki) — §6.2–6.3; hover-preview **dodane w Fazie 1**. **→ Faza 3.**
+5. **6 placeholderów motywu** (spacing-width, buttons, form-fields, course-cards, logo-favicon, icons) — §7.1. **→ Faza 3.**
+6. **WCAG**: skip-link, `aria-pressed` (✅ zrobione w `topbar-mode-switcher.tsx`), `aria-expanded`/`aria-live`, audyt kontrastu — §11. **→ Faza 2 (skip-link) + Faza 4.**
 7. **Odchylenie architektoniczne**: pionowy rail 44px — rozstrzygnięte (zostać przy topbarze).
 
 ---
@@ -160,6 +175,8 @@ export interface SectionCatalog {
 
 ## 3. Faza 2 — Rdzeń interakcji (DnD, nawigacja panelu)
 
+> **Korekta architektoniczna (2026-08-15):** sekcje 3.4/3.5 aktualizowane pod **dolny slide-up panel** w lewym panelu (`useLeftPanelBottom()`), nie pod `rightPanelAtom`. Część zadań jest już częściowo gotowa (back-button, `aria-pressed`, Ctrl+Z/Ctrl+Y) — oznaczono ✅.
+
 ### 3.1 Wskaźnik drop target — niebieska linia 2px
 
 > **Korekta po audycie:** `DefaultCursor` już istnieje (`core/components/sidepanels/panels/outline/default-cursor.tsx`) i jest podpięty przez `renderCursor={DefaultCursor}` w `section-tree.tsx:224`. Zadanie to **restyle istniejącego kursora**, nie budowa od zera.
@@ -167,7 +184,8 @@ export interface SectionCatalog {
 **Plik:** `core/components/sidepanels/panels/outline/default-cursor.tsx` (współdzielony z `list-tree.tsx` — zmiana dotknie oba drzewa, co jest pożądane).
 
 - Kursor: niebieska linia `h-[2px] bg-primary` z okrągłymi końcami (kropki `before:`/`after:`), zamiast zielonej `h-[1px] border-green-500` + kropki.
-- Stan niedozwolony: `disableDrop` już blokuje drop (300ms debounce w `section-tree.tsx:114`), ale **brak wizualnego stanu czerwonego** — dodać do `DefaultCursor` (prop/atom z walidacji `canAcceptChildBlock`).
+- Stan niedozwolony: `disableDrop` już blokuje drop (300ms debounce w `section-tree.tsx:114`), ale **brak wizualnego stanu czerwonego**. `CursorProps` react-arborist nie niesie informacji o walidacji — dodać atom `dropCursorInvalidAtom` (Jotai), ustawiany wewnątrz `debouncedDisableDrop` w `section-tree.tsx`, czytany w `DefaultCursor` → czerwona linia.
+- **Uwaga:** drugi wskaźnik drop — zielone tło `bg-green-200` na węźle rodzica (`node.tsx:268`, `willReceiveDrop`) — wyrównać do nowej konwencji (niebieski tint lub usunięcie zielonego).
 
 **AC:** przeciąganie **w obrębie grupy** (Nagłówek / Szablon / Stopka — osobno) pokazuje niebieską linię; niedozwolony target → czerwony + blokada (już działa przez `disableDrop`); drop nie dotyka canvasu (wyłącznie panel). E2E smoke DnD.
 
@@ -178,8 +196,9 @@ export interface SectionCatalog {
 **Pliki:** `core/components/sidepanels/panels/outline/node.tsx` + nowy `drag-handle.tsx` + nowy `confirm-delete-section-dialog.tsx`.
 
 - `DragHandle` (6 kropek, SVG) po lewej, `opacity-0 group-hover:opacity-100`.
-- **Uwaga (dragHandle):** obecnie `ref={dragHandle}` siedzi na całym wierszu (`node.tsx:211`). Przeniesienie na mały uchwyt zmienia UX (chwyt trzeba trafić w 6 kropek) — wymaga weryfikacji w react-arborist 3.4.3, czy `dragHandle` przyjęty na pod-element nie psuje `onDragStart`/`willReceiveDrop` wiersza.
-- **Reużycie zamiast duplikacji:** kosz wywołuje istniejący `useRemoveBlocks` (gated `PERMISSIONS.DELETE_BLOCK`) — **ale** obecnie usunięcie jest natychmiastowe, bez potwierdzenia. Dodać `confirm-delete-section-dialog.tsx` (`AlertDialog` shadcn) wokół tego samego hooka. Zostaje `BlockMoreOptions` ("⋯" — duplikuj/zmień nazwę/usuń).
+- **Uwaga (dragHandle):** obecnie `ref={dragHandle}` siedzi na całym wierszu (`node.tsx:211`). Przeniesienie na mały uchwyt zmienia UX (chwyt trzeba trafić w 6 kropek) — wymaga weryfikacji w react-arborist 3.4.3, czy `dragHandle` przyjęty na pod-element nie psuje `onDragStart`/`willReceiveDrop` wiersza. **Traktować jako spike:** jeśli łamie DnD, zostawić drag na całym wierszu, uchwyt 6-kropek jako wskaźnik wizualny.
+- **Reużycie zamiast duplikacji:** kosz wywołuje istniejący `useRemoveBlocks` (gated `PERMISSIONS.DELETE_BLOCK`) — **ale** obecnie usunięcie jest natychmiastowe, bez potwierdzenia. Dodać `confirm-delete-section-dialog.tsx` (`AlertDialog` shadcn, wzorzec: `delete-page.tsx`/`clear-canvas.tsx`) wokół tego samego hooka. Zostaje `BlockMoreOptions` ("⋯" — duplikuj/zmień nazwę/usuń).
+- **Ryzyko #8:** `use-remove-blocks.ts:87` czyści selekcję po 200ms (`setTimeout`) — w dialogu potwierdzenia trzymać `ids` bloków przed wywołaniem `useRemoveBlocks`, nie polegać na selekcji.
 
 **AC:** hover ujawnia 6-kropek + oko + kosz; kosz otwiera dialog potwierdzenia; usunięcie przez `useRemoveBlocks` (wchodzi do historii undo przez `setNewBlocks`); permission gate zachowany.
 
@@ -187,9 +206,9 @@ export interface SectionCatalog {
 
 **Plik:** `node.tsx`.
 
-- Aktywny (selected): `bg-primary text-white` (jednolite), ikony/tekst białe.
-- Hover (niezaznaczony): `bg-[#f0f0f1]`.
-- Przeciągany: `opacity-50` (obecnie `opacity-20`).
+- Aktywny (selected): `bg-primary/20` → `bg-primary text-white` (jednolite), ikony/tekst białe.
+- Hover (niezaznaczony): `hover:bg-gray-100` → `hover:bg-[#f0f0f1]`.
+- Przeciągany: `opacity-20` → `opacity-50` (obecnie `opacity-20`).
 - Drop target: obsłużony w 3.1.
 - `aria-current`/`aria-selected` zsynchronizowane z `node.isSelected`.
 
@@ -197,30 +216,34 @@ export interface SectionCatalog {
 
 ### 3.4 Drill-down: przycisk powrotu "‹ Struktura"
 
-**Pliki:** `right-panel/empty-right-panel.tsx` (rozszerzyć), nowy `right-panel/block-settings-header.tsx`.
+> **Korekta (2026-08-15):** nie ma już prawego panelu. Back-button **istnieje** w nagłówku dolnego panelu — `builder-left-panel.tsx:171-186` (`handleBack` ustawia `setBlockIds([])` + `setBottomPanel(null)`).
 
-- Blok zaznaczony + `rightPanelAtom === "block"` → header prawy panelu z przyciskiem powrotu (strzałka + "Struktura") ustawiającym `rightPanelAtom = null`/`"page"` i odznaczającym blok (`setIds([])`).
-- Zachować auto-powrót przy kliknięciu w drzewo (istniejący efekt w `builder-layout.tsx`).
-- Analogicznie "‹ Motyw" dla edytora grupy motywu.
+**Plik:** `pages/client/layouts/left-panel/builder-left-panel.tsx` (nagłówek dolnego panelu).
+
+- Rozszerzyć nagłówek o tekstową etykietę breadcrumb: dla bloku `‹ Struktura`, dla edytora motywu `‹ Motyw` (obok istniejącej `ArrowLeft`).
+- Po powrocie: fokus wraca do zaznaczonego węzła drzewa (a11y) — uzupełnić o `focus()` na `[data-node-id]`.
+- Zachować auto-powrót przy kliknięciu w drzewo (istniejący efekt w `builder-left-panel.tsx`).
 
 **AC:** powrót nie zapisuje (zapis tylko przez autosave/Zapisz); fokus wraca do wybranego węzła (a11y).
 
 ### 3.5 Klawiatura + focus management (część §11)
 
-**Pliki:** `core/components/canvas/keyboar-handler.tsx` (rozszerzyć), nowy `hooks/use-editor-keyboard.ts`.
+> **Korekta (2026-08-15):** obsługa klawiatury jest w `hooks/use-key-event-watcher.ts` (nie w `keyboar-handler.tsx`). ✅ już jest: `Ctrl+Z` undo, `Ctrl+Y` redo, cut/copy/paste, `Del`/`Backspace` (przez `useRemoveBlocks`), `Esc`, `Ctrl+D` duplicate; `aria-pressed` na przyciskach trybów (`topbar-mode-switcher.tsx:70`).
 
-- Potwierdzić/uzupełnić: `Ctrl+Z` undo, `Ctrl+Shift+Z`/`Ctrl+Y` redo, `Ctrl+S` zapis (mapowanie do `useUndoManager` + `savePage`).
+**Pliki:** `hooks/use-key-event-watcher.ts` (rozszerzyć), `builder-layout.tsx` (skip-link).
+
+- Dodać: `Ctrl+Shift+Z` redo (obok istniejącego `Ctrl+Y`), `Ctrl+S` zapis (`preventDefault` + `savePageAsync()` z `hooks/use-save-page.ts`).
 - Skip-link "Przejdź do edycji sekcji" (`sr-only focus:not-sr-only`) jako pierwszy focusowalny element w `builder-layout.tsx`.
-- `aria-pressed` na przyciskach trybów (`topbar-mode-switcher.tsx`), `aria-expanded` na akordeonach motywu.
+- `aria-expanded` na akordeonach motywu → odroczone do Fazy 3 (edytory tokenów), tu tylko TODO.
 
-**AC:** Tab pokrywa topbar → left panel → right panel; skip-link pomija iframe; testy a11y (axe) w Fazie 4.
+**AC:** Tab pokrywa topbar → left panel → canvas; skip-link pomija iframe; testy a11y (axe) w Fazie 4.
 
 ### Zależności Fazy 2
-- 3.1 wymaga 2.2 (katalog → walidacja `canAcceptChildBlock`).
-- 3.4 wymaga istniejącego modelu `rightPanelAtom`.
+- 3.1 wymaga 2.2 (katalog → walidacja `canAcceptChildBlock`); faktyczna walidacja idzie przez istniejący `canAcceptChildBlock` w `block-helpers.ts`.
+- 3.4 wymaga istniejącego modelu `leftPanelBottomAtom` (`use-theme.ts:77`).
 - 3.3 wymaga tokenów z 2.1.
 
-**Szacunek: 10–12 man-days** (bez cross-group DnD).
+**Szacunek: 10–12 man-days** (bez cross-group DnD). Przy realizacji wg korekty architektonicznej i częściowo gotowych elementach: **~7–9 man-days** (2.2 spike react-arborist ≈ 3 dni).
 
 ---
 
@@ -251,7 +274,7 @@ export interface SectionCatalog {
 
 ### 4.3 Edycja bloków wewnętrznych (podbloki) — weryfikacja drill-down
 
-**Pliki:** `right-panel/` + `SettingsPanel` (3 zakładki Treść/Styl/Zaawansowane — istnieją).
+**Pliki:** `SettingsPanel` (`core/components/settings/settings-panel.tsx`, 3 zakładki Treść/Styl/Zaawansowane — istnieją) + dolny panel (`builder-left-panel.tsx`).
 
 - Weryfikacja drill-down do podbloków (karty w sekcji) — klik węzła wewnętrznego otwiera jego `SettingsPanel`; nawigacja wstecz przez 3.4.
 - Dodać listę podbloków z DnD na dole `SettingsPanel` (jeśli brak) — reużycie `SectionTree` dla `children`.
@@ -324,8 +347,8 @@ export interface SectionCatalog {
 
 | Faza | Zakres | Man-days |
 |---|---|---|
-| **Faza 1 — Fundamenty** | tokeny (chrome + komponentowe), katalog sekcji, hover-preview | 5–6 |
-| **Faza 2 — Rdzeń interakcji** | drop line, uchwyty, stany, drill-down back, klawiatura (DnD tylko wewnątrz grup) | 10–12 |
+| **Faza 1 — Fundamenty** | tokeny (chrome + komponentowe), katalog sekcji, hover-preview — **✅ ukończone** | 5–6 |
+| **Faza 2 — Rdzeń interakcji** | drop line, uchwyty, stany, drill-down back, klawiatura (DnD tylko wewnątrz grup) | 10–12 *(7–9 przy częściowo gotowych elementach)* |
 | **Faza 3 — Edycja treści** | biblioteka sekcji (popover+tabs), motyw placeholders, podbloki, debounce, **`--cmp-*` na stronie publicznej** | 12–14 |
 | **Faza 4 — Dopracowanie** | WCAG, wydajność, testy, docs | 8–10 |
 | **Razem** | | **35–42** |

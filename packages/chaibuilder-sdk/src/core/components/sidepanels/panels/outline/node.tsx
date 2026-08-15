@@ -5,6 +5,7 @@ import {
   EyeClosedIcon,
   EyeOpenIcon,
   PlusIcon,
+  TrashIcon,
 } from "@radix-ui/react-icons";
 import { atom, useAtom } from "jotai";
 import { get, has, isEmpty, startCase } from "lodash-es";
@@ -25,6 +26,8 @@ import { useBlockHighlight } from "~/hooks/use-block-highlight";
 import { useBuilderProp } from "~/hooks/use-builder-prop";
 import { useStructureValidation } from "~/hooks/use-structure-validation";
 import { useUpdateBlocksProps } from "~/hooks/use-update-blocks-props";
+import { ConfirmDeleteSectionDialog } from "./confirm-delete-section-dialog";
+import { DragHandle } from "./drag-handle";
 
 const Input = ({ node }: { node: NodeRendererProps<any>["node"] }) => {
   return (
@@ -32,7 +35,7 @@ const Input = ({ node }: { node: NodeRendererProps<any>["node"] }) => {
       autoFocus
       className={cn(
         "ml-2 !h-4 w-full rounded-sm border border-border bg-background px-1 text-[11px] leading-tight outline-none",
-        node.isSelected ? "text-black dark:text-white" : "",
+        node.isSelected ? "border-white/40 text-black dark:text-white" : "",
       )}
       type="text"
       defaultValue={node.data?._name || node.data?._type}
@@ -200,7 +203,12 @@ export const Node = memo(({ node, style, dragHandle }: NodeRendererProps<any>) =
   }
 
   return (
-    <div className={cn("relative flex h-full w-full items-center", isSelected ? "bg-primary/20" : "hover:bg-gray-100")}>
+    <div
+      className={cn(
+        "relative flex h-full w-full items-center",
+        isSelected ? "bg-primary text-white" : "hover:bg-[#f0f0f1]",
+      )}
+      aria-current={isSelected ? "true" : undefined}>
       <div
         className="w-full"
         onMouseEnter={() => highlightBlock(id)}
@@ -208,7 +216,6 @@ export const Node = memo(({ node, style, dragHandle }: NodeRendererProps<any>) =
         onClick={handleNodeClickWithoutPropagating}
         style={style}
         data-node-id={id}
-        ref={dragHandle}
         onDragStart={() => handleDragStart(node)}
         onDragEnd={() => handleDragEnd(node)}
         onDragOver={(e) => {
@@ -265,7 +272,7 @@ export const Node = memo(({ node, style, dragHandle }: NodeRendererProps<any>) =
           <div
             className={cn(
               "h-full transition-colors",
-              willReceiveDrop && canAcceptChildBlock(data._type, "Icon") ? "bg-green-200" : "",
+              willReceiveDrop && canAcceptChildBlock(data._type, "Icon") ? "bg-primary/15" : "",
               node?.id === addSelectParentHighlight ? "bg-gray-100 dark:bg-gray-900" : "",
             )}
           />
@@ -273,11 +280,12 @@ export const Node = memo(({ node, style, dragHandle }: NodeRendererProps<any>) =
         <div
           className={cn(
             "group relative flex w-full cursor-pointer items-center justify-between space-x-px p-1 py-0 outline-none",
-            isDragging && "opacity-20",
+            isDragging && "opacity-50",
             !isShown ? "line-through opacity-50" : "",
             isLibBlock && isSelected && "text-primary",
           )}>
           <div className="flex items-center">
+            <DragHandle ref={dragHandle} className={isSelected ? "text-white" : "text-gray-500"} />
             <div
               className={`flex h-4 w-4 rotate-0 transform cursor-pointer items-center justify-center transition-transform duration-100 ${
                 node.isOpen ? "rotate-90" : ""
@@ -292,12 +300,12 @@ export const Node = memo(({ node, style, dragHandle }: NodeRendererProps<any>) =
               className={cn(
                 "leading-1 flex w-full items-center",
                 isLibBlock && "text-orange-600/90",
-                isLibBlock && isSelected && "text-orange-800",
+                isLibBlock && isSelected && "text-orange-100",
                 isPartialBlock && "text-purple-600/90",
-                isPartialBlock && isSelected && "text-purple-800",
+                isPartialBlock && isSelected && "text-purple-100",
               )}>
               {errors.length > 0 ? (
-                <div className="text-red-500">
+                <div className={isSelected ? "text-white/90" : "text-red-500"}>
                   <ExclamationTriangleIcon className="h-3 w-3" />
                 </div>
               ) : (
@@ -352,6 +360,19 @@ export const Node = memo(({ node, style, dragHandle }: NodeRendererProps<any>) =
                 {t(isShown ? "Hide the block from page" : "Show the block on page")}
               </TooltipContent>
             </Tooltip>
+            <ConfirmDeleteSectionDialog
+              blockId={id}
+              blockName={getBlockDisplayName(data)}
+              trigger={
+                <span
+                  onClick={(event) => event.stopPropagation()}
+                  role="button"
+                  aria-label={t("Delete")}
+                  className="cursor-pointer rounded bg-transparent p-px hover:bg-primary/10">
+                  <TrashIcon className="h-3.5 w-3.5" />
+                </span>
+              }
+            />
             <BlockMoreOptions node={node} id={id}>
               <div className="cursor-pointer rounded bg-transparent p-px hover:bg-primary/10">
                 <DotsVerticalIcon className="h-3 w-3" />

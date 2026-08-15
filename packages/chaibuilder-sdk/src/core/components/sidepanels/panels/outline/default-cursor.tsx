@@ -1,5 +1,8 @@
 import React, { CSSProperties } from "react";
+import { useAtomValue } from "jotai";
 import { CursorProps } from "react-arborist";
+import { dropCursorInvalidAtom } from "~/atoms/ui";
+import { cn } from "~/core/utils/cn";
 
 const placeholderStyle = {
   display: "flex",
@@ -8,6 +11,7 @@ const placeholderStyle = {
 };
 
 export const DefaultCursor = React.memo(function DefaultCursor({ top, left, indent }: CursorProps) {
+  const isInvalid = useAtomValue(dropCursorInvalidAtom);
   const style: CSSProperties = {
     position: "absolute",
     pointerEvents: "none",
@@ -19,8 +23,24 @@ export const DefaultCursor = React.memo(function DefaultCursor({ top, left, inde
 
   return (
     <div style={{ ...placeholderStyle, ...style }}>
-      <div className="h-1 w-1 rounded-full bg-green-500"></div>
-      <div className="h-[1px] flex-1 rounded-[1px] border-t border-green-500"></div>
+      <div
+        className={cn(
+          "h-[2px] w-[6px] rounded-full",
+          isInvalid ? "bg-red-500" : "bg-primary",
+        )}
+      />
+      <div
+        className={cn(
+          "h-[2px] flex-1 rounded-full",
+          isInvalid ? "bg-red-500" : "bg-primary",
+        )}
+      />
+      <div
+        className={cn(
+          "h-[2px] w-[6px] rounded-full",
+          isInvalid ? "bg-red-500" : "bg-primary",
+        )}
+      />
     </div>
   );
 });

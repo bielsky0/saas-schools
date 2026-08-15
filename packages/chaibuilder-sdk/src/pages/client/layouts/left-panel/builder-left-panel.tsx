@@ -116,8 +116,18 @@ export const BuilderLeftPanel = () => {
   }, [bottomPanel, selectedBlock?._id]);
 
   const handleBack = () => {
+    const nodeId = selectedBlock?._id;
     setBlockIds([]);
     setBottomPanel(null);
+    // Faza 2 (§3.4): zwróć fokus do węzła drzewa, z którego wrócono (a11y).
+    if (nodeId && panelRef.current) {
+      requestAnimationFrame(() => {
+        const row = panelRef.current
+          ?.querySelector(`[data-node-id="${nodeId}"]`)
+          ?.closest("[role='treeitem']") as HTMLElement | null;
+        row?.focus({ preventScroll: true });
+      });
+    }
   };
 
   const panelTitle =
@@ -129,6 +139,18 @@ export const BuilderLeftPanel = () => {
           ? t("Template settings")
           : bottomPanel === "theme"
             ? t("Theme editor")
+            : "";
+
+  // Faza 2 (§3.4): breadcrumb etykiety dla przycisku powrotu.
+  const backLabel =
+    bottomPanel === "block"
+      ? t("Structure")
+      : bottomPanel === "theme"
+        ? t("Theme")
+        : bottomPanel === "page"
+          ? t("Pages")
+          : bottomPanel === "template"
+            ? t("Templates")
             : "";
 
   const isSeoMode = mode === "seo";
@@ -171,11 +193,12 @@ export const BuilderLeftPanel = () => {
           <div className="flex shrink-0 items-center gap-2 border-b border-gray-200 px-2 py-2">
             <Button
               variant="ghost"
-              size="icon"
-              className="h-8 w-8 shrink-0 rounded-md"
-              aria-label={t("Back")}
+              size="sm"
+              className="h-8 shrink-0 rounded-md px-2 text-xs font-medium text-gray-600 hover:text-gray-900"
+              aria-label={t("Back to {{label}}", { label: backLabel })}
               onClick={handleBack}>
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="h-3.5 w-3.5" />
+              <span className="ml-1">{backLabel}</span>
             </Button>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-gray-900">{panelTitle}</p>

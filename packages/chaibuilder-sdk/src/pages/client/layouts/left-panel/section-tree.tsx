@@ -4,7 +4,7 @@ import { find, first } from "lodash-es";
 import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { MoveHandler, NodeRendererProps, RenameHandler, Tree, TreeApi } from "react-arborist";
 import React from "react";
-import { treeRefAtom } from "~/atoms/ui";
+import { treeRefAtom, dropCursorInvalidAtom } from "~/atoms/ui";
 import { DefaultCursor } from "~/core/components/sidepanels/panels/outline/default-cursor";
 import {
   close,
@@ -67,6 +67,7 @@ export const SectionTree = ({ data, height, nodeRenderer }: SectionTreeProps) =>
   const canMove = useCanMove();
   const treeRef = useRef<TreeApi<any>>(null);
   const [, setTreeRef] = useAtom(treeRefAtom);
+  const [, setDropCursorInvalid] = useAtom(dropCursorInvalidAtom);
   const [parentContext, setParentContext] = useState<{ x: number; y: number } | null>(null);
   const NodeRenderer = nodeRenderer ?? Node;
 
@@ -84,6 +85,7 @@ export const SectionTree = ({ data, height, nodeRenderer }: SectionTreeProps) =>
     updateBlockProps([id], { _name: name }, node.data._name);
   };
   const onMove: MoveHandler<any> = ({ dragIds, parentId, index }) => {
+    setDropCursorInvalid(false);
     if (canMove(dragIds, parentId)) moveBlocks(dragIds, parentId ?? undefined, index);
   };
 
@@ -113,10 +115,12 @@ export const SectionTree = ({ data, height, nodeRenderer }: SectionTreeProps) =>
 
   const debouncedDisableDrop = useDebouncedCallback(
     ({ parentNode, dragNodes }) => {
-      return (
-        parentNode?.data._type === ROOT_TEMP_KEY ||
-        !canAcceptChildBlock(parentNode?.data._type, dragNodes[0]?.data._type)
-      );
+      const disabled = !dragNodes?.length
+        ? false
+        : parentNode?.data._type === ROOT_TEMP_KEY ||
+          !canAcceptChildBlock(parentNode?.data._type, dragNodes[0]?.data._type);
+      setDropCursorInvalid(Boolean(disabled));
+      return disabled;
     },
     [],
     300,
