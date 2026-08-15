@@ -229,9 +229,9 @@ export const SectionTree = ({ data, height, nodeRenderer }: SectionTreeProps) =>
             onSelect={onSelect}
             childrenAccessor={(d: any) => d.children}
             width={"100%"}
-            rowHeight={25}
+            rowHeight={30}
             renderDragPreview={() => null}
-            indent={14}
+            indent={18}
             onContextMenu={onContextMenu}
             disableDrop={debouncedDisableDrop as any}
             idAccessor={"_id"}>

@@ -46,7 +46,7 @@ export const SubBlockList = memo(() => {
           {children.length}
         </span>
       </div>
-      <SectionTree data={children} height={countNodes(children) * 25 + 16} />
+      <SectionTree data={children} height={countNodes(children) * 30 + 16} />
     </div>
   );
 });

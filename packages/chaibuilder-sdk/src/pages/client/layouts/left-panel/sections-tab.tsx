@@ -53,9 +53,9 @@ const SectionNode = memo((props: NodeRendererProps<any>) => {
 });
 
 const GroupHeader = ({ label, count }: { label: string; count: number }) => (
-  <div className="mb-1 flex items-center justify-between px-1 pt-2">
-    <span className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{label}</span>
-    <span className="rounded-full bg-muted px-1.5 py-px text-[10px] font-medium text-muted-foreground">{count}</span>
+  <div className="mb-1 flex items-center justify-between border-b border-gray-100 px-1 pb-1 pt-3 first:pt-1">
+    <span className="text-[12px] font-medium text-[#6b6b7a]">{label}</span>
+    <span className="text-[10px] font-medium text-muted-foreground">{count}</span>
   </div>
 );
 
@@ -197,7 +197,7 @@ export const SectionsTab = () => {
             .map((group) => (
               <div key={group.id}>
                 <GroupHeader label={t(group.labelKey)} count={group.nodes.length} />
-                <SectionTree data={group.nodes} height={countNodes(group.nodes) * 25 + 16} nodeRenderer={SectionNode} />
+                <SectionTree data={group.nodes} height={countNodes(group.nodes) * 30 + 16} nodeRenderer={SectionNode} />
               </div>
             ))
         )}

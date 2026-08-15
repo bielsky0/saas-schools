@@ -35,7 +35,7 @@ const Input = ({ node }: { node: NodeRendererProps<any>["node"] }) => {
       autoFocus
       className={cn(
         "ml-2 !h-4 w-full rounded-sm border border-border bg-background px-1 text-[11px] leading-tight outline-none",
-        node.isSelected ? "border-white/40 text-black dark:text-white" : "",
+        node.isSelected ? "border-primary/40 text-black" : "",
       )}
       type="text"
       defaultValue={node.data?._name || node.data?._type}
@@ -205,8 +205,8 @@ export const Node = memo(({ node, style, dragHandle }: NodeRendererProps<any>) =
   return (
     <div
       className={cn(
-        "relative flex h-full w-full items-center",
-        isSelected ? "bg-primary text-white" : "hover:bg-[#f0f0f1]",
+        "relative flex h-full w-full items-center border-l-2",
+        isSelected ? "border-primary bg-[#f0f0f1]" : "border-transparent hover:bg-[#f6f6f7]",
       )}
       aria-current={isSelected ? "true" : undefined}>
       <div
@@ -237,10 +237,10 @@ export const Node = memo(({ node, style, dragHandle }: NodeRendererProps<any>) =
                 <div
                   key={index}
                   className={
-                    "absolute top-0 h-full border-l border-black/5 transition-colors group-hover/parent:border-black/30"
+                    "absolute top-0 h-full border-l border-black/10 transition-colors group-hover/parent:border-black/30"
                   }
                   style={{
-                    left: `${index * 14 + 10}px`,
+                    left: `${index * 18 + 10}px`,
                   }}
                 />
               );
@@ -272,20 +272,20 @@ export const Node = memo(({ node, style, dragHandle }: NodeRendererProps<any>) =
           <div
             className={cn(
               "h-full transition-colors",
-              willReceiveDrop && canAcceptChildBlock(data._type, "Icon") ? "bg-primary/15" : "",
+              willReceiveDrop && canAcceptChildBlock(data._type, "Icon") ? "bg-primary/10" : "",
               node?.id === addSelectParentHighlight ? "bg-gray-100 dark:bg-gray-900" : "",
             )}
           />
         </div>
         <div
           className={cn(
-            "group relative flex w-full cursor-pointer items-center justify-between space-x-px p-1 py-0 outline-none",
-            isDragging && "opacity-50",
+            "group relative flex w-full cursor-pointer items-center justify-between space-x-px px-2 py-1 outline-none",
+            isDragging && "bg-[#f6f6f7] opacity-50",
             !isShown ? "line-through opacity-50" : "",
             isLibBlock && isSelected && "text-primary",
           )}>
           <div className="flex items-center">
-            <DragHandle ref={dragHandle} className={isSelected ? "text-white" : "text-gray-500"} />
+            <DragHandle ref={dragHandle} className={isSelected ? "opacity-100 text-gray-700" : "text-gray-500"} />
             <div
               className={`flex h-4 w-4 rotate-0 transform cursor-pointer items-center justify-center transition-transform duration-100 ${
                 node.isOpen ? "rotate-90" : ""
@@ -300,12 +300,10 @@ export const Node = memo(({ node, style, dragHandle }: NodeRendererProps<any>) =
               className={cn(
                 "leading-1 flex w-full items-center",
                 isLibBlock && "text-orange-600/90",
-                isLibBlock && isSelected && "text-orange-100",
                 isPartialBlock && "text-purple-600/90",
-                isPartialBlock && isSelected && "text-purple-100",
               )}>
               {errors.length > 0 ? (
-                <div className={isSelected ? "text-white/90" : "text-red-500"}>
+                <div className="text-red-500">
                   <ExclamationTriangleIcon className="h-3 w-3" />
                 </div>
               ) : (
@@ -316,25 +314,28 @@ export const Node = memo(({ node, style, dragHandle }: NodeRendererProps<any>) =
                 <Input node={node} />
               ) : (
                 <div
-                  className={"ml-1.5 flex items-center gap-x-1 truncate text-[13px]"}
+                  className={cn(
+                    "ml-1.5 flex items-center gap-x-1 truncate text-[13px]",
+                    node.level === 0 ? "font-medium" : "font-normal",
+                  )}
                   onDoubleClick={(e) => {
                     e.stopPropagation();
                     node.edit();
                     node.deselect();
                   }}>
-                  <span title={getBlockDisplayName(data).length > 17 ? getBlockDisplayName(data) : ""}>
-                    {truncateText(getBlockDisplayName(data), 17)}
+                  <span title={getBlockDisplayName(data).length > 24 ? getBlockDisplayName(data) : ""}>
+                    {truncateText(getBlockDisplayName(data), 24)}
                   </span>
                 </div>
               )}
             </div>
           </div>
-          <div className="invisible flex items-center space-x-1.5 pr-px group-hover:visible">
+          <div className="flex items-center space-x-0.5 pr-px opacity-0 transition-opacity group-hover:opacity-100">
             {canAddChildBlock(data?._type) && isShown ? (
               <Tooltip>
                 <TooltipTrigger
                   onClick={() => pubsub.publish(CHAI_BUILDER_EVENTS.OPEN_ADD_BLOCK, { _id: id })}
-                  className="cursor-pointer rounded bg-transparent p-px hover:bg-primary/10"
+                  className="cursor-pointer rounded p-1 hover:bg-black/5"
                   asChild>
                   <PlusIcon className="h-4 w-4" />
                 </TooltipTrigger>
@@ -352,7 +353,7 @@ export const Node = memo(({ node, style, dragHandle }: NodeRendererProps<any>) =
                     node.toggle();
                   }
                 }}
-                className="cursor-pointer rounded bg-transparent p-0.5 hover:bg-primary/10"
+                className="cursor-pointer rounded p-1 hover:bg-black/5"
                 asChild>
                 {isShown ? <EyeClosedIcon className="h-4 w-4" /> : <EyeOpenIcon className="h-4 w-4" />}
               </TooltipTrigger>
@@ -368,13 +369,13 @@ export const Node = memo(({ node, style, dragHandle }: NodeRendererProps<any>) =
                   onClick={(event) => event.stopPropagation()}
                   role="button"
                   aria-label={t("Delete")}
-                  className="cursor-pointer rounded bg-transparent p-px hover:bg-primary/10">
+                  className="cursor-pointer rounded p-1 hover:bg-black/5">
                   <TrashIcon className="h-3.5 w-3.5" />
                 </span>
               }
             />
             <BlockMoreOptions node={node} id={id}>
-              <div className="cursor-pointer rounded bg-transparent p-px hover:bg-primary/10">
+              <div className="cursor-pointer rounded p-1 hover:bg-black/5">
                 <DotsVerticalIcon className="h-3 w-3" />
               </div>
             </BlockMoreOptions>
