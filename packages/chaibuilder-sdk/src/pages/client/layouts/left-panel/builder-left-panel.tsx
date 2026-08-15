@@ -12,6 +12,7 @@ import { TemplateSettings } from "~/pages/client/layouts/right-panel/template-se
 import { ThemeEditor } from "~/pages/client/layouts/theme/theme-editor";
 import { SeoLeftPanel } from "./seo-left-panel";
 import { SectionsTab } from "./sections-tab";
+import { SubBlockList } from "./sub-block-list";
 import { ThemeTab } from "./theme-tab";
 
 const MIN_PANEL_WIDTH = 320;
@@ -209,7 +210,12 @@ export const BuilderLeftPanel = () => {
           </div>
           <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto p-3">
             <Suspense fallback={<div>Loading...</div>}>
-              {bottomPanel === "block" && <SettingsPanel />}
+              {bottomPanel === "block" && (
+                <>
+                  <SettingsPanel />
+                  <SubBlockList />
+                </>
+              )}
               {bottomPanel === "page" && <PageSettings />}
               {bottomPanel === "template" && <TemplateSettings />}
               {bottomPanel === "theme" && <ThemeEditor />}
