@@ -3,8 +3,13 @@ import { useTranslation } from "react-i18next";
 import { useDarkMode } from "~/hooks/use-dark-mode";
 import { getThemeGroup, selectedThemeGroupAtom } from "./theme-groups";
 import { BorderRadiusEditor } from "./token-editors/border-radius";
+import { ButtonsEditor } from "./token-editors/buttons";
 import { ColorTokensEditor } from "./token-editors/color-tokens";
+import { CourseCardsEditor } from "./token-editors/course-cards";
+import { FormFieldsEditor } from "./token-editors/form-fields";
+import { LogoFaviconEditor } from "./token-editors/logo-favicon";
 import { PlaceholderEditor } from "./token-editors/placeholder";
+import { SpacingWidthEditor } from "./token-editors/spacing-width";
 import { TypographyEditor } from "./token-editors/typography";
 
 export const ThemeEditor = () => {
@@ -21,6 +26,16 @@ export const ThemeEditor = () => {
         return <TypographyEditor />;
       case "radius-shadows":
         return <BorderRadiusEditor />;
+      case "spacing-width":
+        return <SpacingWidthEditor />;
+      case "buttons":
+        return <ButtonsEditor />;
+      case "form-fields":
+        return <FormFieldsEditor />;
+      case "course-cards":
+        return <CourseCardsEditor />;
+      case "logo-favicon":
+        return <LogoFaviconEditor />;
       default:
         return <PlaceholderEditor labelKey={group?.labelKey ?? "Theme"} />;
     }

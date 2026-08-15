@@ -25,12 +25,12 @@ export const THEME_SECTIONS: { id: ThemeSectionId; labelKey: string }[] = [
 export const THEME_GROUPS: ThemeGroup[] = [
   { id: "colors", labelKey: "Colors", section: "basics", kind: "editor" },
   { id: "typography", labelKey: "Typography", section: "basics", kind: "editor" },
-  { id: "spacing-width", labelKey: "Spacing and width", section: "basics", kind: "placeholder" },
+  { id: "spacing-width", labelKey: "Spacing and width", section: "basics", kind: "editor" },
   { id: "radius-shadows", labelKey: "Radius and shadows", section: "basics", kind: "editor" },
-  { id: "buttons", labelKey: "Buttons", section: "components", kind: "placeholder" },
-  { id: "form-fields", labelKey: "Form fields", section: "components", kind: "placeholder" },
-  { id: "course-cards", labelKey: "Course cards", section: "components", kind: "placeholder" },
-  { id: "logo-favicon", labelKey: "Logo and favicon", section: "brand", kind: "placeholder" },
+  { id: "buttons", labelKey: "Buttons", section: "components", kind: "editor" },
+  { id: "form-fields", labelKey: "Form fields", section: "components", kind: "editor" },
+  { id: "course-cards", labelKey: "Course cards", section: "components", kind: "editor" },
+  { id: "logo-favicon", labelKey: "Logo and favicon", section: "brand", kind: "editor" },
   { id: "icons", labelKey: "Icons", section: "brand", kind: "placeholder" },
 ];
 

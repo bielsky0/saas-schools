@@ -29,14 +29,23 @@ describe("theme-groups", () => {
 
   it("marks component/brand token groups as placeholders", () => {
     const placeholderIds = THEME_GROUPS.filter((g) => g.kind === "placeholder").map((g) => g.id);
-    expect(placeholderIds).toEqual([
-      "spacing-width",
-      "buttons",
-      "form-fields",
-      "course-cards",
-      "logo-favicon",
-      "icons",
-    ]);
+    expect(placeholderIds).toEqual(["icons"]);
+  });
+
+  it("marks the Phase 3 token editors as editors", () => {
+    const editorIds = THEME_GROUPS.filter((g) => g.kind === "editor").map((g) => g.id);
+    expect(editorIds).toEqual(
+      expect.arrayContaining([
+        "colors",
+        "typography",
+        "spacing-width",
+        "radius-shadows",
+        "buttons",
+        "form-fields",
+        "course-cards",
+        "logo-favicon",
+      ]),
+    );
   });
 
   it("groups sections correctly", () => {

@@ -11,6 +11,7 @@ import {
   getThemeFontsUrls,
 } from "~/core/components/canvas/static/chai-theme-helpers";
 import { CssThemeVariables } from "~/core/components/css-theme-var";
+import { ComponentTokensCssVariables } from "~/core/components/component-tokens-css-vars";
 import { useFrame } from "~/core/frame";
 import { useDarkMode } from "~/hooks/use-dark-mode";
 import { useSelectedBlockIds } from "~/hooks/use-selected-blockIds";
@@ -73,6 +74,7 @@ export const HeadTags = () => {
   return (
     <>
       <CssThemeVariables theme={chaiTheme as ChaiTheme} />
+      <ComponentTokensCssVariables />
       <Fonts />
       <SelectedBlocks />
       <SelectedStylingBlocks />
