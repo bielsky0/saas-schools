@@ -1,6 +1,6 @@
 # Plan implementacji: Modułowy Kreator Stron (wersja rozszerzona)
 
-> **Status:** **Faza 1 zakończona** (2026-08-15, commit `109b6ad7`). **Faza 2 — w trakcie** (2026-08-15).
+> **Status:** **Faza 1 zakończona** (2026-08-15, commit `109b6ad7`). **Faza 2 zakończona** (2026-08-15, commit `bcda916b`). **Faza 3 zakończona** (2026-08-15, commity `a711d6c9`, `7ba10f37`, `c8cc84b7`, `5024ee3a`, `0e0f3c8a`, `b6526abe`).
 > Źródło speca: *"Specyfikacja Funkcjonalna UI/UX – Modułowy Kreator Stron (wersja rozszerzona)"* (Shopify Online Store 2.0, block-based editing).
 >
 > **Korekta architektoniczna (2026-08-15):** edytor używa **dolnego panelu wysuwanego wewnątrz lewego panelu** (`leftPanelBottomAtom`/`useLeftPanelBottom()`, stany `block|page|template|theme|null`), **nie** prawego panelu (`rightPanelAtom` jest martwym kodem — tylko definicja w `use-theme.ts:65`). Sekcje §3.4 i pliki z §1.2 zostały zaktualizowane pod rzeczywisty kod. Nagłówek z przyciskiem powrotu istnieje w `builder-left-panel.tsx:171-186` (`handleBack`).
@@ -84,13 +84,13 @@ packages/chaibuilder-sdk/src/
 
 ### 1.3 Najważniejsze luki (Gap Analysis)
 
-> **Status po Fazie 1 + wstęp do Fazy 2 (2026-08-15):** punkty 1–3 to zakres Fazy 2; punkt 4 częściowo domknięty (hover-preview z Fazy 1, brak zakładek); punkty 5–6 → Fazy 3–4; punkt 7 rozstrzygnięty.
+> **Status po Faza 1–3 (2026-08-15):** punkty 1–3 (Faza 2), 4 (Faza 3 §4.1) i 5 (Faza 3 §4.2) zamknięte; punkty 6–7 do Fazy 4/rozstrzygnięte.
 
-1. **Wskaźnik drop jest zielony** (linia 1px + kropka w `default-cursor.tsx`), spec chce niebieskiej linii 2px z okrągłymi końcami; brak stanu czerwonego przy niedozwolonym dropie — §3.3, §8.5. **→ Faza 2, zad. 2.1.**
-2. **Brak bezpośredniego kosza** na hover węzła (usunięcie jest w menu "⋯" przez `useRemoveBlocks`, bez dialogu potwierdzenia) + **brak uchwytu 6-kropek** (dragHandle jest na całym wierszu) — §4.1. **→ Faza 2, zad. 2.2.**
-3. **Kolorystyka stanów** (aktywny = jednolite niebieskie tło + biały tekst) — §4.2, §8. **→ Faza 2, zad. 2.3.**
-4. **Biblioteka sekcji bez zakładek wg roli** (Wszystkie/Hero/Cennik/Formularze/Referencje/Stopki) — §6.2–6.3; hover-preview **dodane w Fazie 1**. **→ Faza 3.**
-5. **6 placeholderów motywu** (spacing-width, buttons, form-fields, course-cards, logo-favicon, icons) — §7.1. **→ Faza 3.**
+1. **Wskaźnik drop jest zielony** (linia 1px + kropka w `default-cursor.tsx`), spec chce niebieskiej linii 2px z okrągłymi końcami; brak stanu czerwonego przy niedozwolonym dropie — §3.3, §8.5. **✅ Faza 2, zad. 2.1.**
+2. **Brak bezpośredniego kosza** na hover węzła (usunięcie jest w menu "⋯" przez `useRemoveBlocks`, bez dialogu potwierdzenia) + **brak uchwytu 6-kropek** (dragHandle jest na całym wierszu) — §4.1. **✅ Faza 2, zad. 2.2.**
+3. **Kolorystyka stanów** (aktywny = jednolite niebieskie tło + biały tekst) — §4.2, §8. **✅ Faza 2, zad. 2.3.**
+4. **Biblioteka sekcji bez zakładek wg roli** (Wszystkie/Hero/Cennik/Formularze/Referencje/Stopki) — §6.2–6.3; hover-preview **dodane w Fazie 1**. **✅ Faza 3, zad. 4.1 (Sheet side="right" + zakładki + search + hover-preview).**
+5. **6 placeholderów motywu** (spacing-width, buttons, form-fields, course-cards, logo-favicon, icons) — §7.1. **✅ Faza 3, zad. 4.2 (edytory tokenów `--cmp-*` + persystencja COMPONENT_TOKENS + wstrzyknięcie na stronie publicznej; `icons` zostaje placeholderem).**
 6. **WCAG**: skip-link, `aria-pressed` (✅ zrobione w `topbar-mode-switcher.tsx`), `aria-expanded`/`aria-live`, audyt kontrastu — §11. **→ Faza 2 (skip-link) + Faza 4.**
 7. **Odchylenie architektoniczne**: pionowy rail 44px — rozstrzygnięte (zostać przy topbarze).
 

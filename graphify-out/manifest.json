@@ -4255,8 +4255,8 @@
     "semantic_hash": ""
   },
   "src/features/cms/components/theme-injector.tsx": {
-    "mtime": 1785413915.8976781,
-    "ast_hash": "306cf4881ceaf377b732bbc6c6804545",
+    "mtime": 1786827008.9651282,
+    "ast_hash": "e0132c40a6b3eb40d076a4fa0fb1afcc",
     "semantic_hash": ""
   },
   "src/features/cms/contact-form-actions.test.ts": {
@@ -5325,8 +5325,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/atoms/builder.ts": {
-    "mtime": 1785765183.6725004,
-    "ast_hash": "cf775df484f68d10c01f89540a48e168",
+    "mtime": 1786826559.6510112,
+    "ast_hash": "423888447f9fa56c6e1868b3f9202f8a",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/atoms/click-detection.ts": {
@@ -5660,8 +5660,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/static/head-tags.tsx": {
-    "mtime": 1785311019.1078508,
-    "ast_hash": "32168071ec756cb64b2b6ecdd7b4a94c",
+    "mtime": 1786827152.9772778,
+    "ast_hash": "1719222302bc7a9a98493f825c51de60",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/static/new-blocks-render-helpers.ts": {
@@ -5760,8 +5760,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/chaibuilder-editor.tsx": {
-    "mtime": 1785311019.1116335,
-    "ast_hash": "6b5462f1d8f9c9e6171f018abc1fc950",
+    "mtime": 1786826575.097485,
+    "ast_hash": "08443e1ec242d6f14e33a7e822902f47",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/count-down.tsx": {
@@ -6030,8 +6030,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/node.tsx": {
-    "mtime": 1786807832.6081963,
-    "ast_hash": "fae8f27911ecb3a1cb52833852fd84d6",
+    "mtime": 1786808337.0272925,
+    "ast_hash": "2f9a61f9769952809d4ba3072b44baf7",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/paste-into-root.tsx": {
@@ -6055,8 +6055,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/sidepanels/panels/theme-configuration/border-radius-input.tsx": {
-    "mtime": 1785311019.1249182,
-    "ast_hash": "35278c444f0028bb67f2665a173d07ec",
+    "mtime": 1786827506.315367,
+    "ast_hash": "f317507a7f28a46510a08c45eb213231",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/sidepanels/panels/theme-configuration/color-picker-input.tsx": {
@@ -6350,8 +6350,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/en.json": {
-    "mtime": 1786808050.9978838,
-    "ast_hash": "1dda2a5fa8447016e00e4bdf4c75ca64",
+    "mtime": 1786827210.6489775,
+    "ast_hash": "3c78fb588864b7f560139d4d7d519ba8",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/load.ts": {
@@ -6965,8 +6965,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/hooks/use-query-sync.ts": {
-    "mtime": 1785311019.1607614,
-    "ast_hash": "8ef0849591bf42306ea666342e610a67",
+    "mtime": 1786826668.2841961,
+    "ast_hash": "0f2782a513ec6f35a171318a2baab78b",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/hooks/use-remove-blocks.ts": {
@@ -6995,8 +6995,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/hooks/use-save-website-data.ts": {
-    "mtime": 1785311019.1615198,
-    "ast_hash": "0422c978abc90f18035e36fa89c1fefb",
+    "mtime": 1786826584.9132195,
+    "ast_hash": "53045b4db87739e9d3c09217bd2c9845",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/hooks/use-screen-size-width.ts": {
@@ -7095,8 +7095,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/chaibuilder-pages.tsx": {
-    "mtime": 1785773566.9684348,
-    "ast_hash": "f48cfe2ce0670d1f6150c2ac5c77f321",
+    "mtime": 1786826610.0514822,
+    "ast_hash": "ba94f57eb3550001ff247b472b2722f5",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/add-new-language-page.tsx": {
@@ -8085,8 +8085,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/render/index.ts": {
-    "mtime": 1785311019.196729,
-    "ast_hash": "522850af374376044218e9a9372e122d",
+    "mtime": 1786826567.3986719,
+    "ast_hash": "622235258e0aad7726c1ea430482da95",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/render/render-chai-blocks.tsx": {
@@ -8405,8 +8405,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/types/actions.ts": {
-    "mtime": 1785311019.2058818,
-    "ast_hash": "87e94f9e25932fe748a9e791d65e8771",
+    "mtime": 1786826627.3244553,
+    "ast_hash": "b7c8f83c428dd511bc585ecc012993b5",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/types/blocks.ts": {
@@ -8415,8 +8415,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/types/chaibuilder-editor-props.ts": {
-    "mtime": 1785659154.3632932,
-    "ast_hash": "1d7935788810db2061e683bf52f61092",
+    "mtime": 1786826552.696976,
+    "ast_hash": "1f7ec9724f6559f2f69a3b2c9666667c",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/types/collections.ts": {
@@ -8440,8 +8440,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/types/types.ts": {
-    "mtime": 1785311019.2066858,
-    "ast_hash": "7870a8bb60e4c9019973e6950bbb131a",
+    "mtime": 1786826542.078867,
+    "ast_hash": "c2e829e3aebcd291fbde0e6e34068e72",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/utils/get-chai-builder-tailwind-config.ts": {
@@ -8700,8 +8700,8 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/api/route.ts": {
-    "mtime": 1785763444.6866026,
-    "ast_hash": "e6bc465e8af4db618dffb70b5f7b9b4c",
+    "mtime": 1786827008.9643326,
+    "ast_hash": "bfce9b50c57d2ac44e1b5accf44a36d3",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/editor.tsx": {
@@ -8920,8 +8920,8 @@
     "semantic_hash": ""
   },
   "src/features/cms/components/theme-injector.test.ts": {
-    "mtime": 1785353838.3917153,
-    "ast_hash": "daa5a6b9da0d752b26d7f756a69aedb7",
+    "mtime": 1786827008.964862,
+    "ast_hash": "f37903e3ea9a5f838e6153d0410b8bdb",
     "semantic_hash": ""
   },
   "src/features/cms/contact-form-actions.ts": {
@@ -9725,8 +9725,8 @@
     "semantic_hash": ""
   },
   "src/features/cms/builder-theme-data.ts": {
-    "mtime": 1785415781.975216,
-    "ast_hash": "8026e1cd91565dace464d8e950f6df02",
+    "mtime": 1786827008.9646251,
+    "ast_hash": "21187d9896ae3787ba833869c16ba0d6",
     "semantic_hash": ""
   },
   "docs/archive/spike-30/generated-schema.ts": {
@@ -10580,8 +10580,8 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/pl.json": {
-    "mtime": 1786808151.8500524,
-    "ast_hash": "bdcfc9d4a37883b0688a584dab987243",
+    "mtime": 1786827243.0135233,
+    "ast_hash": "60eb83760a6f4261e13999e885ae381e",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/topbar/builder-top-bar.tsx": {
@@ -10590,8 +10590,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/builder-left-panel.tsx": {
-    "mtime": 1786807674.5962334,
-    "ast_hash": "cb1d7a7958295b261325b4b639bc6252",
+    "mtime": 1786827374.7297392,
+    "ast_hash": "a8e341abe8758b8e8e1bc2921df44aec",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-groups.test.ts": {
@@ -10610,8 +10610,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/sections-tab.tsx": {
-    "mtime": 1785773431.9241264,
-    "ast_hash": "4ee14c55dc395b8b31bf96146e829c84",
+    "mtime": 1786826396.506516,
+    "ast_hash": "e697ff079f236546a483197956b016c5",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/theme-tab.tsx": {
@@ -10620,18 +10620,18 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/theme/theme-editor.tsx": {
-    "mtime": 1785587380.4669728,
-    "ast_hash": "b57ea4713b84bebf534a8bf3b6c05f48",
+    "mtime": 1786827141.4081407,
+    "ast_hash": "531d8f4d933c5ca2405ef9b5e8a81e4e",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/theme/theme-groups.test.ts": {
-    "mtime": 1785587296.2103007,
-    "ast_hash": "77980f543f8a6383ffbffe4f2972ddda",
+    "mtime": 1786827158.8720558,
+    "ast_hash": "216d8f420c244179c9fe706170d2b5d3",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/theme/theme-groups.ts": {
-    "mtime": 1785587290.8367252,
-    "ast_hash": "a2b6157f9107754e2ce47f0b8ed2a327",
+    "mtime": 1786827134.5906985,
+    "ast_hash": "77ed480092347887fa4192cc54c19612",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/theme/token-editors/border-radius.tsx": {
@@ -10750,8 +10750,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/hooks/__tests__/use-save-website-data.test.ts": {
-    "mtime": 1785665998.7952435,
-    "ast_hash": "d43841f252713cc1df16d1e1bd592f2a",
+    "mtime": 1786826739.9459734,
+    "ast_hash": "6c9c891b6c3b1c008a593bd9ad2ad96e",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/hooks/history/use-undo-manager.test.ts": {
@@ -11215,8 +11215,8 @@
     "semantic_hash": ""
   },
   "docs/modular-builder-implementation-plan.md": {
-    "mtime": 1786807285.3706179,
-    "ast_hash": "34900cbf18439feed4090a1a7aa7a260",
+    "mtime": 1786827654.584597,
+    "ast_hash": "dfb23737a098f814e0c96a807692177b",
     "semantic_hash": ""
   },
   "docs/sdk-test-baseline.md": {
@@ -11232,6 +11232,71 @@
   "packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/drag-handle.tsx": {
     "mtime": 1786807583.3898184,
     "ast_hash": "c3a26a292c3cdad9dd4a125a254ae64f",
+    "semantic_hash": ""
+  },
+  "migrations/010-add-builder-component-tokens.sql": {
+    "mtime": 1786826833.9740539,
+    "ast_hash": "df7b9a540713c82044693375a92e519a",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/core/components/component-tokens-css-vars.tsx": {
+    "mtime": 1786827145.6922572,
+    "ast_hash": "9533bbdf1bc7a3348fe587097af2f6ef",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-library.test.ts": {
+    "mtime": 1786826139.6726465,
+    "ast_hash": "76210aa6b2b3449feca99812ec756a89",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-library.tsx": {
+    "mtime": 1786826381.7022302,
+    "ast_hash": "91a471f7011e64676dfc1458110f295d",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/sub-block-list.tsx": {
+    "mtime": 1786827367.1376343,
+    "ast_hash": "45f0416886d37d66761be9679b85f787",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/layouts/theme/token-editors/buttons.tsx": {
+    "mtime": 1786827110.9335618,
+    "ast_hash": "fff1259212aad71a7ac4d80c46c62fe8",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/layouts/theme/token-editors/component-token-editor.tsx": {
+    "mtime": 1786827102.3079145,
+    "ast_hash": "35889dc8ec4c523492a1ad13c910647b",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/layouts/theme/token-editors/course-cards.tsx": {
+    "mtime": 1786827119.450005,
+    "ast_hash": "b8f7496499bd4d0a06fe568de3a648a7",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/layouts/theme/token-editors/form-fields.tsx": {
+    "mtime": 1786827115.1592643,
+    "ast_hash": "07c36926db3b1c6e6d2cd4ffda518ff2",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/layouts/theme/token-editors/logo-favicon.tsx": {
+    "mtime": 1786827124.9050448,
+    "ast_hash": "ebbbccf12f0e7cae999092cbfd023bc4",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/layouts/theme/token-editors/spacing-width.tsx": {
+    "mtime": 1786827269.8006346,
+    "ast_hash": "c0f7178ffd08b29bdc39b3a71de43498",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/render/component-tokens.test.ts": {
+    "mtime": 1786826744.8673694,
+    "ast_hash": "273c10f62eb75dc78c12c5a4d5dc878b",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/render/component-tokens.ts": {
+    "mtime": 1786826563.8540998,
+    "ast_hash": "e8f24e8e8f1a762ab04f9b77e3f2953d",
     "semantic_hash": ""
   }
 }
