@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getChaiThemeCssVariables } from "@chaibuilder/sdk/render";
+import { componentTokensToCssVars, getChaiThemeCssVariables } from "@chaibuilder/sdk/render";
 import type { ChaiTheme } from "@chaibuilder/sdk/types";
 
 function makeTheme(overrides?: Partial<ChaiTheme>): ChaiTheme {
@@ -66,5 +66,18 @@ describe("getChaiThemeCssVariables", () => {
     const css = getChaiThemeCssVariables({ theme });
     expect(css).toContain(":root");
     expect(css).toContain(".dark");
+  });
+});
+
+describe("componentTokensToCssVars", () => {
+  it("serializes --cmp-* tokens into a :root block for the public page", () => {
+    const css = componentTokensToCssVars({ "--cmp-btn-radius": "8px", "--cmp-container-max-width": "1200px" });
+    expect(css).toContain(":root {");
+    expect(css).toContain("--cmp-btn-radius: 8px;");
+    expect(css).toContain("--cmp-container-max-width: 1200px;");
+  });
+
+  it("returns empty string when no tokens are present", () => {
+    expect(componentTokensToCssVars({})).toBe("");
   });
 });

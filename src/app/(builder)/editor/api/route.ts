@@ -18,7 +18,12 @@ import {
 import { ORG_SUBDOMAIN_HEADER } from "@/lib/tenant-host";
 import { getOrgBySubdomain } from "@/features/organizations/data";
 import { resolveUniqueSlug, slugify } from "@/features/organizations/slug";
-import { getActiveBuilderTheme, upsertBuilderTheme } from "@/features/cms/builder-theme-data";
+import {
+  getActiveBuilderComponentTokens,
+  getActiveBuilderTheme,
+  upsertBuilderComponentTokens,
+  upsertBuilderTheme,
+} from "@/features/cms/builder-theme-data";
 import { getBlogPost } from "@/features/blog/data";
 
 // ── Validation constants (F2.5) ─────────────────────────────────────────
@@ -222,10 +227,15 @@ export async function POST(req: NextRequest) {
             .where(eq(organization.id, organizationId))
             .limit(1);
 
-          const builderTheme = await getActiveBuilderTheme(tx, organizationId);
-          const websiteSettings = builderTheme
-            ? { ...defaultWebsiteSettings, theme: builderTheme }
-            : defaultWebsiteSettings;
+          const [builderTheme, componentTokens] = await Promise.all([
+            getActiveBuilderTheme(tx, organizationId),
+            getActiveBuilderComponentTokens(tx, organizationId),
+          ]);
+          const websiteSettings = {
+            ...defaultWebsiteSettings,
+            ...(builderTheme ? { theme: builderTheme } : {}),
+            ...(componentTokens ? { componentTokens } : {}),
+          };
           const collections = await buildCollections(tx, organizationId);
 
           return NextResponse.json({
@@ -244,10 +254,15 @@ export async function POST(req: NextRequest) {
 
         case "GET_WEBSITE_SETTINGS":
         case "GET_WEBSITE_DRAFT_SETTINGS": {
-          const builderTheme = await getActiveBuilderTheme(tx, organizationId);
-          const websiteSettings = builderTheme
-            ? { ...defaultWebsiteSettings, theme: builderTheme }
-            : defaultWebsiteSettings;
+          const [builderTheme, componentTokens] = await Promise.all([
+            getActiveBuilderTheme(tx, organizationId),
+            getActiveBuilderComponentTokens(tx, organizationId),
+          ]);
+          const websiteSettings = {
+            ...defaultWebsiteSettings,
+            ...(builderTheme ? { theme: builderTheme } : {}),
+            ...(componentTokens ? { componentTokens } : {}),
+          };
           return NextResponse.json(websiteSettings);
         }
 
@@ -1105,6 +1120,10 @@ export async function POST(req: NextRequest) {
           const theme = data?.settings?.theme;
           if (theme) {
             await upsertBuilderTheme(tx, organizationId, theme, userId);
+          }
+          const componentTokens = data?.settings?.componentTokens;
+          if (componentTokens !== undefined && componentTokens !== null) {
+            await upsertBuilderComponentTokens(tx, organizationId, componentTokens, userId);
           }
           return NextResponse.json({ success: true });
         }

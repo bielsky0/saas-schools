@@ -1,8 +1,11 @@
-import { getChaiThemeCssVariables } from "@chaibuilder/sdk/render";
+import { componentTokensToCssVars, getChaiThemeCssVariables } from "@chaibuilder/sdk/render";
 import type { ChaiTheme } from "@chaibuilder/sdk/types";
 import { withTenant } from "@/lib/db/tenant";
 import { getTheme } from "@/features/cms/theme-data";
-import { getActiveBuilderTheme } from "@/features/cms/builder-theme-data";
+import {
+  getActiveBuilderComponentTokens,
+  getActiveBuilderTheme,
+} from "@/features/cms/builder-theme-data";
 
 const GOOGLE_FONTS: Record<string, string> = {
   Inter: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap",
@@ -61,9 +64,12 @@ export async function ThemeInjector({ organizationId, children }: Props) {
   }
 
   // 1. Try the builder theme (full ChaiTheme from JSONB)
-  const builderTheme = await withTenant(organizationId, async (tx) =>
-    getActiveBuilderTheme(tx, organizationId),
-  );
+  const [builderTheme, componentTokens] = await Promise.all([
+    withTenant(organizationId, async (tx) => getActiveBuilderTheme(tx, organizationId)),
+    withTenant(organizationId, async (tx) => getActiveBuilderComponentTokens(tx, organizationId)),
+  ]);
+
+  const componentCss = componentTokensToCssVars(componentTokens ?? {});
 
   if (builderTheme) {
     const cssVars = getChaiThemeCssVariables({ theme: builderTheme });
@@ -79,6 +85,7 @@ export async function ThemeInjector({ organizationId, children }: Props) {
           <link key={url} rel="stylesheet" href={url} />
         ))}
         <style dangerouslySetInnerHTML={{ __html: forcedCss }} />
+        {componentCss && <style dangerouslySetInnerHTML={{ __html: componentCss }} />}
         {children}
       </>
     );
@@ -111,6 +118,7 @@ export async function ThemeInjector({ organizationId, children }: Props) {
         <link key={url} rel="stylesheet" href={url} />
       ))}
       <style dangerouslySetInnerHTML={{ __html: forcedCss }} />
+      {componentCss && <style dangerouslySetInnerHTML={{ __html: componentCss }} />}
       <script
         dangerouslySetInnerHTML={{
           __html: `console.log("[ThemeInjector] borderRadius:", ${JSON.stringify(t.borderRadius)});console.log("[ThemeInjector] CSS:", ${JSON.stringify(forcedCss)});`,
