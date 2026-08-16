@@ -1,6 +1,4 @@
 import {
-  ChevronRightIcon,
-  DotsVerticalIcon,
   ExclamationTriangleIcon,
   EyeClosedIcon,
   EyeOpenIcon,
@@ -15,7 +13,6 @@ import { useTranslation } from "react-i18next";
 import { canvasIframeAtom } from "~/atoms/ui";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { useIsDragAndDropEnabled } from "~/core/components/canvas/dnd/drag-and-drop/hooks";
-import { BlockMoreOptions } from "~/core/components/sidepanels/panels/outline/block-more-options";
 import { TypeIcon } from "~/core/components/sidepanels/panels/outline/block-type-icon";
 import { ROOT_TEMP_KEY } from "~/core/constants/STRINGS";
 import { CHAI_BUILDER_EVENTS } from "~/core/events";
@@ -65,14 +62,15 @@ const truncateText = (text: string, maxLength: number) => {
   return text;
 };
 
-type NodeProps = NodeRendererProps<any> & { showAddBlockLabel?: boolean };
+type NodeProps = NodeRendererProps<any>;
 
-export const Node = memo(({ node, style, dragHandle, showAddBlockLabel = false }: NodeProps) => {
+export const Node = memo(({ node, style, dragHandle }: NodeProps) => {
   const { t } = useTranslation();
   const updateBlockProps = useUpdateBlocksProps();
   const [iframe] = useAtom<HTMLIFrameElement>(canvasIframeAtom);
   let previousState: boolean | null = null;
   const hasChildren = node.children && node.children.length > 0;
+  const isTopLevel = node.level === 0;
   const { highlightBlock, clearHighlight } = useBlockHighlight();
   const isDragAndDropEnabled = useIsDragAndDropEnabled();
   const { id, data, isSelected, willReceiveDrop, isDragging, isEditing, handleClick } = node;
@@ -263,24 +261,36 @@ export const Node = memo(({ node, style, dragHandle, showAddBlockLabel = false }
           />
         </div>
         <div
+          ref={isTopLevel ? (dragHandle as any) : undefined}
           className={cn(
             "group relative flex w-full cursor-pointer items-center justify-between gap-1 px-1 outline-none",
             isDragging && "opacity-50",
-            !isShown ? "line-through opacity-50" : "",
+            !isShown ? "opacity-[0.45]" : "",
             isLibBlock && isSelected && "text-primary",
           )}>
           <div className="flex items-center gap-1">
-            <DragHandle ref={dragHandle} className={isSelected ? "opacity-100 text-white" : "text-[#4A4A4A]"} />
-            <div
-              className={`flex w-5 shrink-0 rotate-0 transform cursor-pointer items-center justify-center transition-transform duration-100 ${
-                isSelected ? "text-white" : "text-[#4A4A4A] group-hover:text-[#303030]"
-              } ${node.isOpen ? "rotate-90" : ""}`}>
-              {hasChildren && (
-                <button onClick={handleToggle} type="button">
-                  <ChevronRightIcon className="h-4 w-4" />
-                </button>
-              )}
-            </div>
+            {!isTopLevel && (
+              <DragHandle ref={dragHandle} className={isSelected ? "opacity-100 text-white" : "text-[#4A4A4A]"} />
+            )}
+            {(isTopLevel || hasChildren) && (
+              <button
+                onClick={handleToggle}
+                type="button"
+                className={cn(
+                  "flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center",
+                  isSelected ? "text-white" : "text-[#4A4A4A] group-hover:text-[#303030]",
+                  hasChildren ? "" : "invisible",
+                )}>
+                <span className={cn("inline-flex transition-transform duration-200", node.isOpen && "rotate-180")}>
+                  <svg viewBox="0 0 16 16" className="h-4 w-4 fill-current" aria-hidden="true">
+                    <path
+                      fillRule="evenodd"
+                      d="M4.24 6.2a.75.75 0 0 1 1.06.04l2.7 2.908 2.7-2.908a.75.75 0 0 1 1.1 1.02l-3.25 3.5a.75.75 0 0 1-1.1 0l-3.25-3.5a.75.75 0 0 1 .04-1.06"
+                    />
+                  </svg>
+                </span>
+              </button>
+            )}
             <div
               className={cn(
                 "leading-1 flex w-full items-center",
@@ -305,7 +315,9 @@ export const Node = memo(({ node, style, dragHandle, showAddBlockLabel = false }
                     node.edit();
                     node.deselect();
                   }}>
-                  <span title={getBlockDisplayName(data).length > 24 ? getBlockDisplayName(data) : ""}>
+                  <span
+                    className={!isShown ? "line-through decoration-[#9CA3AF]" : undefined}
+                    title={getBlockDisplayName(data).length > 24 ? getBlockDisplayName(data) : ""}>
                     {truncateText(getBlockDisplayName(data), 24)}
                   </span>
                 </div>
@@ -313,31 +325,6 @@ export const Node = memo(({ node, style, dragHandle, showAddBlockLabel = false }
             </div>
           </div>
           <div className="flex items-center space-x-0.5 pr-px opacity-0 transition-opacity group-hover:opacity-100">
-            {canAddChildBlock(data?._type) && isShown ? (
-              showAddBlockLabel ? (
-                <button
-                  type="button"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    pubsub.publish(CHAI_BUILDER_EVENTS.OPEN_ADD_BLOCK, { _id: id });
-                  }}
-                  className="cursor-pointer whitespace-nowrap text-xs text-[#005BD3] hover:underline">
-                  + {t("Add block")}
-                </button>
-              ) : (
-                <Tooltip>
-                  <TooltipTrigger
-                    onClick={() => pubsub.publish(CHAI_BUILDER_EVENTS.OPEN_ADD_BLOCK, { _id: id })}
-                    className="cursor-pointer rounded p-1 hover:bg-black/5"
-                    asChild>
-                    <PlusIcon className="h-4 w-4" />
-                  </TooltipTrigger>
-                  <TooltipContent className="isolate z-[9999]" side="bottom">
-                    {t("Add block inside")}
-                  </TooltipContent>
-                </Tooltip>
-              )
-            ) : null}
             <Tooltip>
               <TooltipTrigger
                 onClick={(event) => {
@@ -349,7 +336,7 @@ export const Node = memo(({ node, style, dragHandle, showAddBlockLabel = false }
                 }}
                 className="cursor-pointer rounded p-1 hover:bg-black/5"
                 asChild>
-                {isShown ? <EyeClosedIcon className="h-4 w-4" /> : <EyeOpenIcon className="h-4 w-4" />}
+                {isShown ? <EyeOpenIcon className="h-4 w-4" /> : <EyeClosedIcon className="h-4 w-4" />}
               </TooltipTrigger>
               <TooltipContent className="isolate z-[9999] text-xs" side="bottom">
                 {t(isShown ? "Hide the block from page" : "Show the block on page")}
@@ -368,11 +355,6 @@ export const Node = memo(({ node, style, dragHandle, showAddBlockLabel = false }
                 </span>
               }
             />
-            <BlockMoreOptions node={node} id={id}>
-              <div className="cursor-pointer rounded p-1 hover:bg-black/5">
-                <DotsVerticalIcon className="h-3 w-3" />
-              </div>
-            </BlockMoreOptions>
           </div>
         </div>
       </div>

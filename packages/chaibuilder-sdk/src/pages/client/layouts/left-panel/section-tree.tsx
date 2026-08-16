@@ -244,7 +244,7 @@ export const SectionTree = ({ data, nodeRenderer }: SectionTreeProps) => {
             width={"100%"}
             rowHeight={30}
             renderDragPreview={() => null}
-            indent={18}
+            indent={24}
             onContextMenu={onContextMenu}
             disableDrop={debouncedDisableDrop as any}
             idAccessor={"_id"}>

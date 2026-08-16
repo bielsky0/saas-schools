@@ -1,8 +1,9 @@
-import { ArrowLeft } from "lucide-react";
+import { Cross1Icon, MixerHorizontalIcon } from "@radix-ui/react-icons";
+import { Globe, LayoutTemplate } from "lucide-react";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button } from "~/components/ui/button";
 import SettingsPanel from "~/core/components/settings/settings-panel";
+import { TypeIcon } from "~/core/components/sidepanels/panels/outline/block-type-icon";
 import { cn } from "~/core/functions/common-functions";
 import { useEditorContext } from "~/hooks/use-editor-mode";
 import { useSelectedBlock, useSelectedBlockIds } from "~/hooks/use-selected-blockIds";
@@ -144,17 +145,17 @@ export const BuilderLeftPanel = () => {
             ? t("Theme editor")
             : "";
 
-  // Faza 2 (§3.4): breadcrumb etykiety dla przycisku powrotu.
-  const backLabel =
-    bottomPanel === "block"
-      ? t("Structure")
-      : bottomPanel === "theme"
-        ? t("Theme")
-        : bottomPanel === "page"
-          ? t("Pages")
-          : bottomPanel === "template"
-            ? t("Templates")
-            : "";
+  // Ikona w nagłówku panelu ustawień (Shopify-like secondary panel).
+  const panelIcon =
+    bottomPanel === "block" && selectedBlock ? (
+      <TypeIcon type={selectedBlock._type} />
+    ) : bottomPanel === "page" ? (
+      <Globe className="h-4 w-4" />
+    ) : bottomPanel === "template" ? (
+      <LayoutTemplate className="h-4 w-4" />
+    ) : bottomPanel === "theme" ? (
+      <MixerHorizontalIcon className="h-4 w-4" />
+    ) : null;
 
   const isSeoMode = mode === "seo";
   const bottomPanelVisible = bottomPanel && !isSeoMode;
@@ -203,24 +204,18 @@ export const BuilderLeftPanel = () => {
         )}
         style={{ height: bottomPanelVisible ? (bottomPanel === "block" ? BLOCK_PANEL_HEIGHT : CONTEXT_PANEL_HEIGHT) : 0 }}>
         <div className="flex h-full min-h-0 flex-col">
-          <div className="flex shrink-0 items-center gap-2 border-b border-gray-200 px-2 py-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 shrink-0 rounded-md px-2 text-xs font-medium text-gray-600 hover:text-gray-900"
-              aria-label={t("Back to {{label}}", { label: backLabel })}
-              onClick={handleBack}>
-              <ArrowLeft className="h-3.5 w-3.5" />
-              <span className="ml-1">{backLabel}</span>
-            </Button>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-gray-900">{panelTitle}</p>
-              {bottomPanel === "block" && selectedBlock && (
-                <p className="truncate text-[11px] text-muted-foreground">{selectedBlock._type}</p>
-              )}
-            </div>
+          <div className="flex shrink-0 items-center gap-2 border-b border-[#EBEBEB] px-4 pb-3 pt-4">
+            <span className="flex h-4 w-4 shrink-0 items-center justify-center text-[#4A4A4A]">{panelIcon}</span>
+            <h2 className="flex-1 truncate text-[14px] font-semibold leading-5 text-[#303030]">{panelTitle}</h2>
+            <button
+              type="button"
+              onClick={handleBack}
+              aria-label={t("Close")}
+              className="flex h-6 w-6 shrink-0 items-center justify-center rounded text-[#4A4A4A] hover:bg-black/[.06] hover:text-[#303030]">
+              <Cross1Icon className="h-4 w-4" />
+            </button>
           </div>
-          <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto p-3">
+          <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto px-4 py-3">
             <Suspense fallback={<div>Loading...</div>}>
               {bottomPanel === "block" && (
                 <>

@@ -1,21 +1,18 @@
 import { MagicWandIcon, PlusIcon, ReloadIcon, StackIcon } from "@radix-ui/react-icons";
 import { atom, useAtom } from "jotai";
-import { memo, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import type { NodeRendererProps } from "react-arborist";
 import { toast } from "sonner";
 import { treeDSBlocks } from "~/atoms/blocks";
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "~/components/ui/dialog";
 import { Textarea } from "~/components/ui/textarea";
-import { Node } from "~/core/components/sidepanels/panels/outline/node";
 import { useBlocksStoreUndoableActions } from "~/hooks/history/use-blocks-store-undoable-actions";
 import { useBuilderProp } from "~/hooks/use-builder-prop";
 import { useLanguages } from "~/hooks/use-languages";
-import { getBlockDefaultProps } from "~/runtime";
 import { ChaiBlock } from "~/types/common";
 import { ChaiAskAiResponse } from "~/types/chaibuilder-editor-props";
-import { groupSections, isSectionOverridden } from "./section-groups";
+import { groupSections } from "./section-groups";
 import { SectionLibrarySheet, sectionLibraryOpenAtom } from "./section-library";
 import { SectionTree } from "./section-tree";
 
@@ -28,25 +25,6 @@ type AskAiCallback = (
   blocks: ChaiBlock[],
   lang: string,
 ) => Promise<ChaiAskAiResponse>;
-
-const SectionNode = memo((props: NodeRendererProps<any>) => {
-  const { t } = useTranslation();
-  const overridden = useMemo(
-    () => isSectionOverridden(props.node.data, getBlockDefaultProps(props.node.data._type)),
-    [props.node.data],
-  );
-
-  return (
-    <div className="group relative h-full">
-      <Node {...props} showAddBlockLabel />
-      {overridden && (
-        <span className="pointer-events-none absolute right-8 top-1/2 z-10 -translate-y-1/2 rounded-sm bg-amber-100 px-1 text-[9px] font-medium leading-4 text-amber-700 transition-opacity group-hover:opacity-0">
-          {t("Overridden")}
-        </span>
-      )}
-    </div>
-  );
-});
 
 const GroupHeader = ({ label }: { label: string }) => (
   <div className="flex h-7 items-center px-3 py-1">
@@ -175,13 +153,19 @@ export const SectionsTab = () => {
             .map((group) => (
               <div key={group.id} className="pb-2">
                 <GroupHeader label={t(group.labelKey)} />
-                <SectionTree data={group.nodes} nodeRenderer={SectionNode} />
+                <SectionTree data={group.nodes} />
                 <button
                   type="button"
                   onClick={() => setLibraryOpen(true)}
                   className="mx-2 flex h-[30px] cursor-pointer items-center gap-2 rounded-lg px-1 hover:bg-[#F1F1F1]">
-                  <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-[#005BD3] text-[#005BD3]">
-                    <PlusIcon className="h-2.5 w-2.5" />
+                  <span className="flex h-4 w-4 shrink-0 items-center justify-center text-[#005BD3]">
+                    <svg viewBox="0 0 16 16" className="h-4 w-4 fill-current" aria-hidden="true">
+                      <path d="M4.25 8a.75.75 0 0 1 .75-.75h2.25v-2.25a.75.75 0 0 1 1.5 0v2.25h2.25a.75.75 0 0 1 0 1.5h-2.25v2.25a.75.75 0 0 1-1.5 0v-2.25h-2.25a.75.75 0 0 1-.75-.75" />
+                      <path
+                        fillRule="evenodd"
+                        d="M8 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14m0-1.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 1 0 0 11"
+                      />
+                    </svg>
                   </span>
                   <span className="text-[12px] leading-4 text-[#005BD3]">{t("Add section")}</span>
                 </button>
