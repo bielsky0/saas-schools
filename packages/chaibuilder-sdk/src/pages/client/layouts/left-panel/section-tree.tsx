@@ -207,9 +207,9 @@ export const SectionTree = ({ data, height, nodeRenderer }: SectionTreeProps) =>
   }, [setTreeRef]);
 
   return (
-    <div className="flex h-full flex-col" onClick={() => clearSelection()}>
+    <div className="flex flex-col" onClick={() => clearSelection()}>
       <div
-        className="group relative no-scrollbar h-full overflow-y-auto text-sm"
+        className="group relative text-sm"
         onKeyDown={(e) => {
           if (treeRef.current && !treeRef.current.isEditing) {
             handleKeyDown(e as unknown as KeyboardEvent);
@@ -218,7 +218,7 @@ export const SectionTree = ({ data, height, nodeRenderer }: SectionTreeProps) =>
         <Tree
             ref={treeRef}
             height={height}
-            className="no-scrollbar !h-full max-w-full !overflow-y-auto !overflow-x-hidden"
+            className="max-w-full"
             rowClassName="flex items-center h-full"
             selection={ids[0] || ""}
             onRename={onRename}

@@ -42,7 +42,7 @@ const SectionNode = memo((props: NodeRendererProps<any>) => {
 
   return (
     <div className="group relative h-full">
-      <Node {...props} />
+      <Node {...props} showAddBlockLabel />
       {overridden && (
         <span className="pointer-events-none absolute right-8 top-1/2 z-10 -translate-y-1/2 rounded-sm bg-amber-100 px-1 text-[9px] font-medium leading-4 text-amber-700 transition-opacity group-hover:opacity-0">
           {t("Overridden")}
@@ -52,12 +52,19 @@ const SectionNode = memo((props: NodeRendererProps<any>) => {
   );
 });
 
-const GroupHeader = ({ label, count }: { label: string; count: number }) => (
-  <div className="mb-1 flex items-center justify-between border-b border-gray-100 px-1 pb-1 pt-3 first:pt-1">
-    <span className="text-[12px] font-medium text-[#6b6b7a]">{label}</span>
-    <span className="text-[10px] font-medium text-muted-foreground">{count}</span>
-  </div>
-);
+const GroupHeader = ({ label, onAdd }: { label: string; onAdd: () => void }) => {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center justify-between px-2 py-1">
+      <h3 className="text-[13px] font-semibold uppercase tracking-wide text-[#6b6b7a]">
+        {label}
+      </h3>
+      <button type="button" onClick={onAdd} className="text-xs text-[#006bff] hover:underline">
+        {t("Add section")}
+      </button>
+    </div>
+  );
+};
 
 const EmptyPageState = ({ onAdd }: { onAdd: () => void }) => {
   const { t } = useTranslation();
@@ -195,9 +202,15 @@ export const SectionsTab = () => {
           groups
             .filter((group) => group.nodes.length > 0)
             .map((group) => (
-              <div key={group.id}>
-                <GroupHeader label={t(group.labelKey)} count={group.nodes.length} />
+              <div key={group.id} className="mb-6">
+                <GroupHeader label={t(group.labelKey)} onAdd={() => setLibraryOpen(true)} />
                 <SectionTree data={group.nodes} height={countNodes(group.nodes) * 30 + 16} nodeRenderer={SectionNode} />
+                <button
+                  type="button"
+                  onClick={() => setLibraryOpen(true)}
+                  className="mt-2 w-full rounded-md border border-dashed border-[#d9d9d9] py-2 text-sm text-[#6b6b7a] transition-colors hover:border-[#006bff] hover:bg-[#f6f6f7] hover:text-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-[#006bff] focus:ring-offset-2">
+                  + {t("Add section")}
+                </button>
               </div>
             ))
         )}

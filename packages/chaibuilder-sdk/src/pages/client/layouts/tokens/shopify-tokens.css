@@ -20,15 +20,19 @@
   /* Accent / status */
   --chai-accent: hsl(var(--primary));
   --chai-accent-foreground: hsl(var(--primary-foreground));
+  --chai-accent-blue: #006bff;
+  --chai-accent-blue-hover: #0055cc;
   --chai-success: #34a853;
   --chai-danger: hsl(var(--destructive));
 
   /* Text */
   --chai-text: hsl(var(--foreground));
   --chai-text-subdued: hsl(var(--muted-foreground));
+  --chai-text-subdued-hex: #6b6b7a;
 
   /* Borders */
   --chai-border: hsl(var(--border));
+  --chai-border-dashed: #d9d9d9;
 
   /* Geometry — radius */
   --chai-radius-card: 8px;

@@ -65,7 +65,9 @@ const truncateText = (text: string, maxLength: number) => {
   return text;
 };
 
-export const Node = memo(({ node, style, dragHandle }: NodeRendererProps<any>) => {
+type NodeProps = NodeRendererProps<any> & { showAddBlockLabel?: boolean };
+
+export const Node = memo(({ node, style, dragHandle, showAddBlockLabel = false }: NodeProps) => {
   const { t } = useTranslation();
   const updateBlockProps = useUpdateBlocksProps();
   const [iframe] = useAtom<HTMLIFrameElement>(canvasIframeAtom);
@@ -206,7 +208,7 @@ export const Node = memo(({ node, style, dragHandle }: NodeRendererProps<any>) =
     <div
       className={cn(
         "relative flex h-full w-full items-center border-l-2",
-        isSelected ? "border-primary bg-[#f0f0f1]" : "border-transparent hover:bg-[#f6f6f7]",
+        isSelected ? "border-[#006bff] bg-[#006bff] text-white" : "border-transparent hover:bg-[#f6f6f7]",
       )}
       aria-current={isSelected ? "true" : undefined}>
       <div
@@ -285,7 +287,7 @@ export const Node = memo(({ node, style, dragHandle }: NodeRendererProps<any>) =
             isLibBlock && isSelected && "text-primary",
           )}>
           <div className="flex items-center">
-            <DragHandle ref={dragHandle} className={isSelected ? "opacity-100 text-gray-700" : "text-gray-500"} />
+            <DragHandle ref={dragHandle} className={isSelected ? "opacity-100 text-white" : "text-gray-500"} />
             <div
               className={`flex h-4 w-4 rotate-0 transform cursor-pointer items-center justify-center transition-transform duration-100 ${
                 node.isOpen ? "rotate-90" : ""
@@ -332,17 +334,29 @@ export const Node = memo(({ node, style, dragHandle }: NodeRendererProps<any>) =
           </div>
           <div className="flex items-center space-x-0.5 pr-px opacity-0 transition-opacity group-hover:opacity-100">
             {canAddChildBlock(data?._type) && isShown ? (
-              <Tooltip>
-                <TooltipTrigger
-                  onClick={() => pubsub.publish(CHAI_BUILDER_EVENTS.OPEN_ADD_BLOCK, { _id: id })}
-                  className="cursor-pointer rounded p-1 hover:bg-black/5"
-                  asChild>
-                  <PlusIcon className="h-4 w-4" />
-                </TooltipTrigger>
-                <TooltipContent className="isolate z-[9999]" side="bottom">
-                  {t("Add block inside")}
-                </TooltipContent>
-              </Tooltip>
+              showAddBlockLabel ? (
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    pubsub.publish(CHAI_BUILDER_EVENTS.OPEN_ADD_BLOCK, { _id: id });
+                  }}
+                  className="cursor-pointer whitespace-nowrap text-xs text-[#006bff] hover:underline">
+                  + {t("Add block")}
+                </button>
+              ) : (
+                <Tooltip>
+                  <TooltipTrigger
+                    onClick={() => pubsub.publish(CHAI_BUILDER_EVENTS.OPEN_ADD_BLOCK, { _id: id })}
+                    className="cursor-pointer rounded p-1 hover:bg-black/5"
+                    asChild>
+                    <PlusIcon className="h-4 w-4" />
+                  </TooltipTrigger>
+                  <TooltipContent className="isolate z-[9999]" side="bottom">
+                    {t("Add block inside")}
+                  </TooltipContent>
+                </Tooltip>
+              )
             ) : null}
             <Tooltip>
               <TooltipTrigger
