@@ -7,6 +7,7 @@ import { cn } from "~/core/functions/common-functions";
 import { useEditorContext } from "~/hooks/use-editor-mode";
 import { useSelectedBlock, useSelectedBlockIds } from "~/hooks/use-selected-blockIds";
 import { useLeftPanelBottom, useLeftPanelMode } from "~/hooks/use-theme";
+import { usePrimaryPage } from "~/pages/hooks/pages/use-current-page";
 import { PageSettings } from "~/pages/client/layouts/right-panel/page-settings";
 import { TemplateSettings } from "~/pages/client/layouts/right-panel/template-settings";
 import { ThemeEditor } from "~/pages/client/layouts/theme/theme-editor";
@@ -30,6 +31,7 @@ export const BuilderLeftPanel = () => {
   const selectedBlock = useSelectedBlock();
   const [, setBlockIds] = useSelectedBlockIds();
   const { context: editorContext } = useEditorContext();
+  const { data: currentPage } = usePrimaryPage();
   const prevContextRef = useRef(editorContext);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -170,6 +172,16 @@ export const BuilderLeftPanel = () => {
       />
       {/* Górna sekcja — zawartość wg wybranego trybu topbaru */}
       <div ref={panelRef} className={cn("flex min-h-0 flex-1 flex-col", bottomPanelVisible && "border-b border-gray-200")}>
+        {mode !== "template-settings" && mode !== "seo" && (
+          <>
+            <div className="px-4 pt-4 pb-3">
+              <h1 className="text-[14px] font-semibold leading-5 text-[#303030]">
+                {currentPage?.name || t("Page")}
+              </h1>
+            </div>
+            <div className="h-px bg-[#EBEBEB]" />
+          </>
+        )}
         <div className="min-h-0 flex-1 px-3 py-2">
           <Suspense fallback={<div>Loading...</div>}>
             {mode === "template-settings" ? (

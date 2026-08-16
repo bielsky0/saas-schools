@@ -7,7 +7,7 @@ type Props = {
   type: string;
 };
 
-const ICON_CLASS = "h-3 w-3 flex-shrink-0";
+const ICON_CLASS = "h-4 w-4 flex-shrink-0";
 
 export const TypeIcon: React.FC<Props> = (props) => {
   const allChaiBlocks = useRegisteredChaiBlocks();

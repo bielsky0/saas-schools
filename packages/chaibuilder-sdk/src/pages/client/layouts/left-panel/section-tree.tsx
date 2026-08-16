@@ -1,7 +1,7 @@
 import { useDebouncedCallback } from "@react-hookz/web";
 import { useAtom } from "jotai";
 import { find, first } from "lodash-es";
-import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MoveHandler, NodeRendererProps, RenameHandler, Tree, TreeApi } from "react-arborist";
 import React from "react";
 import { treeRefAtom, dropCursorInvalidAtom } from "~/atoms/ui";
@@ -31,9 +31,11 @@ import { SectionTreeNode } from "./section-groups";
 
 interface SectionTreeProps {
   data: SectionTreeNode[];
-  height: number;
   nodeRenderer?: React.ComponentType<NodeRendererProps<any>>;
 }
+
+const ROW_HEIGHT = 30;
+const TREE_PADDING = 8;
 
 const useCanMove = () => {
   const [blocks] = useBlocksStore();
@@ -58,7 +60,7 @@ const filterOutCutBlocks = (data: SectionTreeNode[], cutIds: string[]): SectionT
       children: node.children ? filterOutCutBlocks(node.children, cutIds) : [],
     }));
 
-export const SectionTree = ({ data, height, nodeRenderer }: SectionTreeProps) => {
+export const SectionTree = ({ data, nodeRenderer }: SectionTreeProps) => {
   const [ids, setIds] = useSelectedBlockIds();
   const [cutBlocksIds] = useCutBlockIds();
   const updateBlockProps = useUpdateBlocksProps();
@@ -69,12 +71,22 @@ export const SectionTree = ({ data, height, nodeRenderer }: SectionTreeProps) =>
   const [, setTreeRef] = useAtom(treeRefAtom);
   const [, setDropCursorInvalid] = useAtom(dropCursorInvalidAtom);
   const [parentContext, setParentContext] = useState<{ x: number; y: number } | null>(null);
+  const [treeHeight, setTreeHeight] = useState(() => data.length * ROW_HEIGHT + TREE_PADDING);
   const NodeRenderer = nodeRenderer ?? Node;
 
   const treeData = useMemo(
     () => filterOutCutBlocks(data, cutBlocksIds),
     [data, cutBlocksIds],
   );
+
+  const syncHeight = useCallback(() => {
+    const visible = treeRef.current?.visibleNodes?.length;
+    if (visible) setTreeHeight(visible * ROW_HEIGHT + TREE_PADDING);
+  }, []);
+
+  useEffect(() => {
+    syncHeight();
+  }, [treeData, syncHeight]);
 
   const clearSelection = () => {
     setIds([]);
@@ -217,13 +229,14 @@ export const SectionTree = ({ data, height, nodeRenderer }: SectionTreeProps) =>
         }}>
         <Tree
             ref={treeRef}
-            height={height}
+            height={treeHeight}
             className="max-w-full"
             rowClassName="flex items-center h-full"
             selection={ids[0] || ""}
             onRename={onRename}
             openByDefault={false}
             onMove={onMove}
+            onToggle={() => setTimeout(syncHeight, 0)}
             data={treeData}
             renderCursor={DefaultCursor}
             onSelect={onSelect}

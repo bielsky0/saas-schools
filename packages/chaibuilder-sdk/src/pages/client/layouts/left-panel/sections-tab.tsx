@@ -15,15 +15,12 @@ import { useLanguages } from "~/hooks/use-languages";
 import { getBlockDefaultProps } from "~/runtime";
 import { ChaiBlock } from "~/types/common";
 import { ChaiAskAiResponse } from "~/types/chaibuilder-editor-props";
-import { groupSections, isSectionOverridden, type SectionTreeNode } from "./section-groups";
+import { groupSections, isSectionOverridden } from "./section-groups";
 import { SectionLibrarySheet, sectionLibraryOpenAtom } from "./section-library";
 import { SectionTree } from "./section-tree";
 
 export const generateSectionDialogOpenAtom = atom(false);
 generateSectionDialogOpenAtom.debugLabel = "generateSectionDialogOpenAtom";
-
-const countNodes = (nodes: SectionTreeNode[]): number =>
-  nodes.reduce((sum, node) => sum + 1 + countNodes(node.children ?? []), 0);
 
 type AskAiCallback = (
   type: "styles" | "content",
@@ -52,7 +49,7 @@ const SectionNode = memo((props: NodeRendererProps<any>) => {
 });
 
 const GroupHeader = ({ label }: { label: string }) => (
-  <div className="flex items-center justify-between py-1 pl-3 pr-1">
+  <div className="flex h-7 items-center px-3 py-1">
     <h3 className="text-[13px] font-semibold leading-5 text-[#303030]">{label}</h3>
   </div>
 );
@@ -176,14 +173,17 @@ export const SectionsTab = () => {
           groups
             .filter((group) => group.nodes.length > 0)
             .map((group) => (
-              <div key={group.id} className="mb-6">
+              <div key={group.id} className="pb-2">
                 <GroupHeader label={t(group.labelKey)} />
-                <SectionTree data={group.nodes} height={countNodes(group.nodes) * 30 + 16} nodeRenderer={SectionNode} />
+                <SectionTree data={group.nodes} nodeRenderer={SectionNode} />
                 <button
                   type="button"
                   onClick={() => setLibraryOpen(true)}
-                  className="mt-0.5 pl-5 text-xs text-[#005BD3] hover:underline">
-                  {t("Add section")}
+                  className="mx-2 flex h-[30px] cursor-pointer items-center gap-2 rounded-lg px-1 hover:bg-[#F1F1F1]">
+                  <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-[#005BD3] text-[#005BD3]">
+                    <PlusIcon className="h-2.5 w-2.5" />
+                  </span>
+                  <span className="text-[12px] leading-4 text-[#005BD3]">{t("Add section")}</span>
                 </button>
               </div>
             ))

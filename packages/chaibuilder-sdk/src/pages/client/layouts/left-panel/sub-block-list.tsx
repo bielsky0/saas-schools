@@ -6,9 +6,6 @@ import { useSelectedBlock } from "~/hooks/use-selected-blockIds";
 import type { SectionTreeNode } from "./section-groups";
 import { SectionTree } from "./section-tree";
 
-const countNodes = (nodes: SectionTreeNode[]): number =>
-  nodes.reduce((sum, node) => sum + 1 + countNodes(node.children ?? []), 0);
-
 const findNode = (nodes: SectionTreeNode[], id: string): SectionTreeNode | undefined => {
   for (const node of nodes) {
     if (node._id === id) return node;
@@ -46,7 +43,7 @@ export const SubBlockList = memo(() => {
           {children.length}
         </span>
       </div>
-      <SectionTree data={children} height={countNodes(children) * 30 + 16} />
+      <SectionTree data={children} />
     </div>
   );
 });

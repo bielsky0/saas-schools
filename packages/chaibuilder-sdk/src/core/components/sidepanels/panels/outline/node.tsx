@@ -207,8 +207,8 @@ export const Node = memo(({ node, style, dragHandle, showAddBlockLabel = false }
   return (
     <div
       className={cn(
-        "relative flex h-full w-full items-center border-l-2",
-        isSelected ? "border-[#005BD3] bg-[#005BD3] text-white" : "border-transparent hover:bg-[#F1F1F1]",
+        "relative mx-2 flex h-full items-center rounded-lg",
+        isSelected ? "bg-[#005BD3] text-white" : "hover:bg-[#F1F1F1]",
       )}
       aria-current={isSelected ? "true" : undefined}>
       <div
@@ -232,23 +232,6 @@ export const Node = memo(({ node, style, dragHandle, showAddBlockLabel = false }
           e.preventDefault();
           setDropAttribute(id, "no");
         }}>
-        {node.level > 0 && (
-          <div className="pointer-events-none absolute left-0 top-0 h-full">
-            {Array.from({ length: node.level }).map((_, index) => {
-              return (
-                <div
-                  key={index}
-                  className={
-                    "absolute top-0 h-full border-l border-black/10 transition-colors group-hover/parent:border-black/30"
-                  }
-                  style={{
-                    left: `${index * 18 + 10}px`,
-                  }}
-                />
-              );
-            })}
-          </div>
-        )}
         {!isDragAndDropEnabled &&
           node?.rowIndex !== null &&
           node?.rowIndex !== undefined &&
@@ -281,20 +264,20 @@ export const Node = memo(({ node, style, dragHandle, showAddBlockLabel = false }
         </div>
         <div
           className={cn(
-            "group relative flex w-full cursor-pointer items-center justify-between space-x-px px-2 py-1 outline-none",
-            isDragging && "bg-[#f6f6f7] opacity-50",
+            "group relative flex w-full cursor-pointer items-center justify-between gap-1 px-1 outline-none",
+            isDragging && "opacity-50",
             !isShown ? "line-through opacity-50" : "",
             isLibBlock && isSelected && "text-primary",
           )}>
-          <div className="flex items-center">
+          <div className="flex items-center gap-1">
             <DragHandle ref={dragHandle} className={isSelected ? "opacity-100 text-white" : "text-[#4A4A4A]"} />
             <div
-              className={`flex h-4 w-4 rotate-0 transform cursor-pointer items-center justify-center transition-transform duration-100 ${
-                node.isOpen ? "rotate-90" : ""
-              }`}>
+              className={`flex w-5 shrink-0 rotate-0 transform cursor-pointer items-center justify-center transition-transform duration-100 ${
+                isSelected ? "text-white" : "text-[#4A4A4A] group-hover:text-[#303030]"
+              } ${node.isOpen ? "rotate-90" : ""}`}>
               {hasChildren && (
                 <button onClick={handleToggle} type="button">
-                  <ChevronRightIcon className={`h-3 w-3`} />
+                  <ChevronRightIcon className="h-4 w-4" />
                 </button>
               )}
             </div>
@@ -316,7 +299,7 @@ export const Node = memo(({ node, style, dragHandle, showAddBlockLabel = false }
                 <Input node={node} />
               ) : (
                 <div
-                  className="ml-1.5 flex items-center gap-x-1 truncate text-[12px] font-normal"
+                  className="flex flex-1 items-center gap-x-1 truncate text-[12px] font-normal leading-4"
                   onDoubleClick={(e) => {
                     e.stopPropagation();
                     node.edit();
