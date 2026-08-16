@@ -8,7 +8,6 @@ import { treeDSBlocks } from "~/atoms/blocks";
 import { Button } from "~/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "~/components/ui/dialog";
 import { Textarea } from "~/components/ui/textarea";
-import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { Node } from "~/core/components/sidepanels/panels/outline/node";
 import { useBlocksStoreUndoableActions } from "~/hooks/history/use-blocks-store-undoable-actions";
 import { useBuilderProp } from "~/hooks/use-builder-prop";
@@ -52,19 +51,11 @@ const SectionNode = memo((props: NodeRendererProps<any>) => {
   );
 });
 
-const GroupHeader = ({ label, onAdd }: { label: string; onAdd: () => void }) => {
-  const { t } = useTranslation();
-  return (
-    <div className="flex items-center justify-between px-2 py-1">
-      <h3 className="text-[13px] font-semibold uppercase tracking-wide text-[#6b6b7a]">
-        {label}
-      </h3>
-      <button type="button" onClick={onAdd} className="text-xs text-[#006bff] hover:underline">
-        {t("Add section")}
-      </button>
-    </div>
-  );
-};
+const GroupHeader = ({ label }: { label: string }) => (
+  <div className="flex items-center justify-between py-1 pl-3 pr-1">
+    <h3 className="text-[13px] font-semibold leading-5 text-[#303030]">{label}</h3>
+  </div>
+);
 
 const EmptyPageState = ({ onAdd }: { onAdd: () => void }) => {
   const { t } = useTranslation();
@@ -178,23 +169,6 @@ export const SectionsTab = () => {
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex shrink-0 items-center gap-1">
-        <div className="min-w-0 flex-1" />
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label={t("Add section")}
-              className="h-8 w-8 shrink-0 rounded-md"
-              onClick={() => setLibraryOpen(true)}>
-              <PlusIcon className="h-4 w-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent className="isolate z-[9999]">{t("Add section")}</TooltipContent>
-        </Tooltip>
-      </div>
-
       <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto pb-2">
         {isEmptyPage ? (
           <EmptyPageState onAdd={() => setLibraryOpen(true)} />
@@ -203,13 +177,13 @@ export const SectionsTab = () => {
             .filter((group) => group.nodes.length > 0)
             .map((group) => (
               <div key={group.id} className="mb-6">
-                <GroupHeader label={t(group.labelKey)} onAdd={() => setLibraryOpen(true)} />
+                <GroupHeader label={t(group.labelKey)} />
                 <SectionTree data={group.nodes} height={countNodes(group.nodes) * 30 + 16} nodeRenderer={SectionNode} />
                 <button
                   type="button"
                   onClick={() => setLibraryOpen(true)}
-                  className="mt-2 w-full rounded-md border border-dashed border-[#d9d9d9] py-2 text-sm text-[#6b6b7a] transition-colors hover:border-[#006bff] hover:bg-[#f6f6f7] hover:text-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-[#006bff] focus:ring-offset-2">
-                  + {t("Add section")}
+                  className="mt-0.5 pl-5 text-xs text-[#005BD3] hover:underline">
+                  {t("Add section")}
                 </button>
               </div>
             ))

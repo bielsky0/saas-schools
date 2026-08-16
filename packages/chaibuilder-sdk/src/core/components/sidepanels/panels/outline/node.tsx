@@ -208,7 +208,7 @@ export const Node = memo(({ node, style, dragHandle, showAddBlockLabel = false }
     <div
       className={cn(
         "relative flex h-full w-full items-center border-l-2",
-        isSelected ? "border-[#006bff] bg-[#006bff] text-white" : "border-transparent hover:bg-[#f6f6f7]",
+        isSelected ? "border-[#005BD3] bg-[#005BD3] text-white" : "border-transparent hover:bg-[#F1F1F1]",
       )}
       aria-current={isSelected ? "true" : undefined}>
       <div
@@ -287,7 +287,7 @@ export const Node = memo(({ node, style, dragHandle, showAddBlockLabel = false }
             isLibBlock && isSelected && "text-primary",
           )}>
           <div className="flex items-center">
-            <DragHandle ref={dragHandle} className={isSelected ? "opacity-100 text-white" : "text-gray-500"} />
+            <DragHandle ref={dragHandle} className={isSelected ? "opacity-100 text-white" : "text-[#4A4A4A]"} />
             <div
               className={`flex h-4 w-4 rotate-0 transform cursor-pointer items-center justify-center transition-transform duration-100 ${
                 node.isOpen ? "rotate-90" : ""
@@ -316,10 +316,7 @@ export const Node = memo(({ node, style, dragHandle, showAddBlockLabel = false }
                 <Input node={node} />
               ) : (
                 <div
-                  className={cn(
-                    "ml-1.5 flex items-center gap-x-1 truncate text-[13px]",
-                    node.level === 0 ? "font-medium" : "font-normal",
-                  )}
+                  className="ml-1.5 flex items-center gap-x-1 truncate text-[12px] font-normal"
                   onDoubleClick={(e) => {
                     e.stopPropagation();
                     node.edit();
@@ -341,7 +338,7 @@ export const Node = memo(({ node, style, dragHandle, showAddBlockLabel = false }
                     event.stopPropagation();
                     pubsub.publish(CHAI_BUILDER_EVENTS.OPEN_ADD_BLOCK, { _id: id });
                   }}
-                  className="cursor-pointer whitespace-nowrap text-xs text-[#006bff] hover:underline">
+                  className="cursor-pointer whitespace-nowrap text-xs text-[#005BD3] hover:underline">
                   + {t("Add block")}
                 </button>
               ) : (

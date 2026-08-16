@@ -307,7 +307,7 @@ const ListTree = () => {
               <div
                 className={cn(
                   "group flex h-[25px] w-full cursor-pointer items-center justify-between space-x-px px-2 py-0 outline-none",
-                  ids.length === 0 ? "bg-[#006bff] text-white" : "",
+                  ids.length === 0 ? "bg-[#005BD3] text-white" : "",
                 )}>
                 <div className="leading-1 flex items-center">
                   <CardStackIcon className="h-3 w-3 flex-shrink-0 rotate-180" />

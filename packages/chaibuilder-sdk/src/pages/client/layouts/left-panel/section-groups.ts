@@ -18,8 +18,8 @@ export interface SectionGroup {
 }
 
 export const SECTION_GROUP_RULES: Record<Exclude<SectionGroupId, "template">, string[]> = {
-  header: ["Navbar", "Header", "Nav", "Navigation", "StickyHeader", "Announcement"],
-  footer: ["Footer", "FooterNav", "FooterBottom"],
+  header: ["Navbar", "Header", "Nav", "Navigation", "StickyHeader", "Announcement", "nagłówek", "naglowek", "menu", "topbar", "top-bar"],
+  footer: ["Footer", "FooterNav", "FooterBottom", "stopka"],
 };
 
 export const SECTION_GROUP_LABELS: Record<SectionGroupId, string> = {
@@ -43,15 +43,17 @@ export const groupSections = (nodes: SectionTreeNode[]): SectionGroup[] => {
   };
 
   for (const node of nodes) {
-    const catalogRole = node._type ? catalog.getByType(node._type)?.role : undefined;
-    if (catalogRole && catalogRole in buckets) {
-      buckets[catalogRole].push(node);
-    } else if (matchesAnyRule(node, SECTION_GROUP_RULES.header)) {
+    if (matchesAnyRule(node, SECTION_GROUP_RULES.header)) {
       buckets.header.push(node);
     } else if (matchesAnyRule(node, SECTION_GROUP_RULES.footer)) {
       buckets.footer.push(node);
     } else {
-      buckets.template.push(node);
+      const catalogRole = node._type ? catalog.getByType(node._type)?.role : undefined;
+      if (catalogRole === "header" || catalogRole === "footer") {
+        buckets[catalogRole].push(node);
+      } else {
+        buckets.template.push(node);
+      }
     }
   }
 
