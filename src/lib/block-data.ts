@@ -161,7 +161,7 @@ export async function getBlogPostBySlug(
 /**
  * Map a blog post row into the SDK `BlogPostPreview` shape (F5.5 dynamic
  * sources). Mirrors the builder API's `GET_BLOG_POST_PREVIEW` mapping so the
- * public renderer resolves `{{post.*}}` bindings with the same field set.
+ * public renderer resolves `{{blog.*}}` bindings with the same field set.
  */
 export function toBlogPostPreview(
   row: typeof page.$inferSelect,
@@ -246,7 +246,7 @@ const BLOG_POST_PREVIEW_BLOCK_TYPES = new Set([
 /**
  * Enrich template blocks for a blog post page: run the generic enrichment and
  * inject the post preview into the dedicated blog blocks, so they render real
- * content publicly. Generic `{{post.*}}` bindings resolve via `externalData`
+ * content publicly. Generic `{{blog.*}}` bindings resolve via `externalData`
  * passed to `TenantPageRenderer` (F5.5).
  */
 export async function enrichBlogPostBlocks(

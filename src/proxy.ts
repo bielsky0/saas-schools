@@ -257,42 +257,36 @@ function forward(
 }
 
 /**
- * Rewrite to `/cms-page/{bare}` — the public CMS page route group
- * (langlion Faza 38, D94).
+ * Rewrite to `/{locale}/blog-post/{slug}` — the tenant CMS blog-post route.
  *
- * On tenant hosts, an unprefixed path like `/o-nas` must reach
- * `(public)/cms-page/[[...slug]]` and NOT `[locale]`. A rewrite is required
- * because:
+ * On tenant hosts, `/pl/blog/{slug}` must reach the tenant's CMS renderer and
+ * NOT the apex marketing blog. The framework resolves `(marketing)/blog/[slug]`
+ * (a specific segment) before `(cms)/[...cmsSlug]` (a catch-all), so a plain
+ * forward would land on the apex page — which is why the proxy rewrites to a
+ * CMS-owned path the marketing group does not match. The browser URL stays
+ * `/blog/{slug}`.
  *
- *   - `[locale]` is a 1-segment dynamic route (`/o-nas` → locale = "o-nas").
- *   - `(public)/[[...slug]]` is an optional catch-all (`/o-nas` → slug = ["o-nas"]).
- *   - Next.js prefers named dynamic segments over catch-all segments, so
- *     `[locale]` wins — and its layout immediately 404s via `!isLocale()`.
- *
- * Rewriting to `/cms-page/{bare}` (static prefix) gives the CMS catch-all
- * priority over `[locale]` without changing the browser URL.
- *
- * ⚠️ Headers MUST mirror `forward()` exactly (CSP, nonce, org subdomain,
- * locale, request id) — see the warning on that function for why the clone
- * is load-bearing and the delete-before-set is required.
+ * Header handling mirrors `rewriteToPage` exactly (clone-first, delete-before-
+ * set, CSP + nonce + request id) — see the warnings on that function.
  */
-function rewriteToPage(
+function rewriteToBlogPost(
   request: NextRequest,
   bare: string,
   requestId: string,
   nonce: string,
   host: HostContext,
-  locale?: Locale,
+  locale: Locale,
   rateHeaders?: Record<string, string>,
 ): NextResponse {
-  const rewriteUrl = new URL(`/cms-page${bare}`, request.url);
+  const postSlug = bare.replace(/^\/blog\//, "");
+  const rewriteUrl = new URL(withLocale(`/blog-post/${postSlug}`, locale), request.url);
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set(REQUEST_ID_HEADER, requestId);
   requestHeaders.set(NONCE_HEADER, nonce);
   requestHeaders.delete(ORG_SUBDOMAIN_HEADER);
   requestHeaders.delete(LOCALE_HEADER);
   if (host.kind === "tenant") requestHeaders.set(ORG_SUBDOMAIN_HEADER, host.subdomain);
-  if (locale) requestHeaders.set(LOCALE_HEADER, locale);
+  requestHeaders.set(LOCALE_HEADER, locale);
   const response = NextResponse.rewrite(rewriteUrl, { request: { headers: requestHeaders } });
   response.headers.set(REQUEST_ID_HEADER, requestId);
   if (rateHeaders) {
@@ -536,15 +530,28 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
    */
   if (host.kind === "tenant") {
     const reserved = reservedPrefixOf(bare);
+    /*
+     * Tenant blog posts live in the academy's CMS, not the apex marketing blog.
+     * `(marketing)/blog/[slug]` is a specific segment and would shadow the CMS
+     * catch-all `(cms)/[...cmsSlug]` if we merely forwarded — so `/blog/{slug}`
+     * is rewritten to the CMS-owned blog-post route instead. The browser URL
+     * stays `/blog/{slug}`. (`blog` is also in RESERVED_PATH_PREFIXES as
+     * "tenant", which stops a CMS page from claiming the prefix; this rewrite
+     * additionally scopes the post path away from the apex marketing route.)
+     */
+    if (bare.startsWith("/blog/")) {
+      return rewriteToBlogPost(request, bare, requestId, nonce, host, locale, rateHeaders);
+    }
     if (!reserved) {
       /*
         * Not a route the app router owns → this academy's CMS page.
         *
-        * Because `NextResponse.rewrite` is broken in Next.js 16 + Turbopack,
-        * we FORWARD the request instead. By this point the URL already has a
-        * locale prefix (added by the unprefixed→prefixed redirect above), so
-        * the framework resolves [locale]/(site)/[...cmsSlug], which already
+        * Forwarded (not rewritten) because the URL already carries its locale
+        * prefix, so the framework resolves [locale]/(cms)/[...cmsSlug], which
         * serves Drizzle-based CMS pages via servedOrganization() + getPage().
+        * Blog POSTS are the one exception — `/blog/{slug}` would be captured by
+        * the apex marketing route, so the rewrite above sends those to the
+        * CMS-owned blog-post route first.
         */
       return forward(request, requestId, nonce, host, locale, rateHeaders);
     }

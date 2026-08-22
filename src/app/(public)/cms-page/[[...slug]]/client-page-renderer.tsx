@@ -10,9 +10,11 @@ loadWebBlocks();
 export function ClientPageRenderer({
   blocks,
   pageProps,
+  externalData,
 }: {
   blocks: ChaiBlock[];
   pageProps: ChaiPageProps;
+  externalData?: Record<string, unknown>;
 }) {
   return (
     <RenderChaiBlocks
@@ -20,6 +22,7 @@ export function ClientPageRenderer({
       lang="en"
       fallbackLang="en"
       pageProps={pageProps}
+      externalData={externalData}
     />
   );
 }

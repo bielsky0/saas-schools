@@ -31,6 +31,7 @@ function usePageTypeMap() {
 
   useEffect(() => {
     fetch("/editor/api", {
+      credentials: "include",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "GET_WEBSITE_PAGES", data: {} }),
@@ -52,6 +53,7 @@ function useUiLocale() {
 
   useEffect(() => {
     fetch("/editor/api", {
+      credentials: "include",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "GET_WEBSITE_DATA", data: {} }),
@@ -71,6 +73,7 @@ function useDevRole() {
 
   useEffect(() => {
     fetch("/editor/api", {
+      credentials: "include",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action: "GET_WEBSITE_DATA", data: {} }),

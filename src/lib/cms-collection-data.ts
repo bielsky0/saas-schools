@@ -9,8 +9,10 @@
  */
 import { and, eq, or } from "drizzle-orm";
 
-import { cmsCollection, type CmsTemplate, type TemplateConfig } from "@/lib/db/schema/cms-collections";
+import { cmsCollection, type CmsTemplate, type TemplateConfig, DEFAULT_CMS_COLLECTIONS } from "@/lib/db/schema/cms-collections";
 import type { TenantDb } from "@/lib/db/tenant";
+
+export { DEFAULT_CMS_COLLECTIONS };
 
 export type CmsCollectionRow = typeof cmsCollection.$inferSelect;
 

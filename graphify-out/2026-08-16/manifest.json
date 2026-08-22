@@ -130,8 +130,13 @@
     "semantic_hash": "7109ecedac87dbabe61a9a099a6544cf"
   },
   "src/app/[locale]/(marketing)/blog/[slug]/page.tsx": {
-    "mtime": 1787430374.9380229,
-    "ast_hash": "83bb788db5d8f76b2ea3eead71eebb78",
+    "mtime": 1785765183.6745696,
+    "ast_hash": "6df7e87e957a3b1a556fc37870947b27",
+    "semantic_hash": ""
+  },
+  "src/app/[locale]/(marketing)/blog/page.tsx": {
+    "mtime": 1785763444.6877835,
+    "ast_hash": "31a42e757110d082ce83e1baae33e7e1",
     "semantic_hash": ""
   },
   "src/app/[locale]/(marketing)/changelog/page.tsx": {
@@ -180,7 +185,7 @@
     "semantic_hash": "1ff0bed9780e6566d47759ba01215ce9"
   },
   "src/app/[locale]/layout.tsx": {
-    "mtime": 1787428447.6474898,
+    "mtime": 1785337704.828701,
     "ast_hash": "51c698d9f94daf5e7d9add3df69efd46",
     "semantic_hash": ""
   },
@@ -830,8 +835,8 @@
     "semantic_hash": ""
   },
   "src/features/cms/reserved-slugs.ts": {
-    "mtime": 1787430374.938244,
-    "ast_hash": "eecef0da582ba89c61f03550cd2b07b3",
+    "mtime": 1785405524.6816795,
+    "ast_hash": "d43af377bad570c95e4e6cc81bb1242e",
     "semantic_hash": ""
   },
   "src/features/content/authors.ts": {
@@ -2075,8 +2080,8 @@
     "semantic_hash": "e9a316c7c613e5b229dbda88f133fcf4"
   },
   "src/proxy.ts": {
-    "mtime": 1787430559.5877726,
-    "ast_hash": "39d55b9e1c39bdd88f27a179b7fdbde4",
+    "mtime": 1785333866.9093053,
+    "ast_hash": "8524a480fcaf894f92aa6b1453ae8585",
     "semantic_hash": ""
   },
   "docs/ARCHITECTURE.md": {
@@ -4250,8 +4255,8 @@
     "semantic_hash": ""
   },
   "src/features/cms/components/theme-injector.tsx": {
-    "mtime": 1786828988.0909228,
-    "ast_hash": "9ab154c84e636aa1ee4285b4d96299d1",
+    "mtime": 1786827008.9651282,
+    "ast_hash": "e0132c40a6b3eb40d076a4fa0fb1afcc",
     "semantic_hash": ""
   },
   "src/features/cms/contact-form-actions.test.ts": {
@@ -4345,8 +4350,8 @@
     "semantic_hash": ""
   },
   "src/features/cms/sitemap.ts": {
-    "mtime": 1787423187.1523464,
-    "ast_hash": "e4f24782c549d5a776eeb8ec343992e5",
+    "mtime": 1785136349.0383353,
+    "ast_hash": "c01a761614ac35059b03539fc12effb2",
     "semantic_hash": ""
   },
   "src/features/cms/tenant-block-access.ts": {
@@ -4610,8 +4615,8 @@
     "semantic_hash": ""
   },
   "src/payload-generated-schema.ts": {
-    "mtime": 1787421515.8059216,
-    "ast_hash": "2a506761628359ab30fca962d293f493",
+    "mtime": 1785252085.3222077,
+    "ast_hash": "aca84038cb2ba06a23504edc2fdca1a0",
     "semantic_hash": ""
   },
   "src/features/cms/components/blocks-field.client.tsx": {
@@ -5320,8 +5325,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/atoms/builder.ts": {
-    "mtime": 1787410163.9156315,
-    "ast_hash": "d18c4cf6c59496883f8eb0e7778ceb40",
+    "mtime": 1786826559.6510112,
+    "ast_hash": "423888447f9fa56c6e1868b3f9202f8a",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/atoms/click-detection.ts": {
@@ -5995,8 +6000,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/block-type-icon.tsx": {
-    "mtime": 1786883535.6471481,
-    "ast_hash": "02361c872d46f1b2114b364b11d93574",
+    "mtime": 1785311019.122244,
+    "ast_hash": "94d6ec2dc4e76d4228d3512272b0edfa",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/default-cursor.tsx": {
@@ -6020,13 +6025,13 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/list-tree.tsx": {
-    "mtime": 1786881710.5176342,
-    "ast_hash": "4208d1bf62a58ca9a8da04562d6e3123",
+    "mtime": 1785311019.1232996,
+    "ast_hash": "1f66d2bf7440eb9d63a53f72fdc69ba3",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/node.tsx": {
-    "mtime": 1786896304.7449448,
-    "ast_hash": "c2908473ae258114570b62757f9cc29f",
+    "mtime": 1786808337.0272925,
+    "ast_hash": "2f9a61f9769952809d4ba3072b44baf7",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/paste-into-root.tsx": {
@@ -6345,8 +6350,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/en.json": {
-    "mtime": 1787412895.281509,
-    "ast_hash": "1f338b53fbb08d58f85cc1755c2802c0",
+    "mtime": 1786827210.6489775,
+    "ast_hash": "3c78fb588864b7f560139d4d7d519ba8",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/load.ts": {
@@ -8025,8 +8030,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/render/async/async-block-renderer.tsx": {
-    "mtime": 1787428526.5148687,
-    "ast_hash": "8250aa37d8ef1367a26623ddf6530b57",
+    "mtime": 1785311019.1952174,
+    "ast_hash": "c71c00474a7fdec3f0cfce4330026d91",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/render/async/async-blocks-renderer.tsx": {
@@ -8055,8 +8060,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/render/block-renderer.tsx": {
-    "mtime": 1787428506.3182483,
-    "ast_hash": "94bfd1170277612d46e9f672123febdb",
+    "mtime": 1785311019.1961625,
+    "ast_hash": "a870adde6b7aacf3b31aefc57b5d83e2",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/render/blocks-renderer.tsx": {
@@ -8695,13 +8700,13 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/api/route.ts": {
-    "mtime": 1787415550.2552352,
-    "ast_hash": "7018829dc1e16a0e575f2988541113fc",
+    "mtime": 1786827008.9643326,
+    "ast_hash": "bfce9b50c57d2ac44e1b5accf44a36d3",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/editor.tsx": {
-    "mtime": 1787428088.0314956,
-    "ast_hash": "a73200bdc99b5c44c3bf3158e527deae",
+    "mtime": 1785773575.11781,
+    "ast_hash": "112e7a04375542d1ad52a27216cb4029",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/layout.tsx": {
@@ -8715,18 +8720,18 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/tailwind.config.ts": {
-    "mtime": 1787421412.6797018,
-    "ast_hash": "22908bc23f7ee8f6a04a95ae26a730a6",
+    "mtime": 1786804201.3820262,
+    "ast_hash": "1afd19cebafae6edd82b1352e1dcab91",
     "semantic_hash": ""
   },
   "src/app/(public)/cms-page/[[...slug]]/client-page-renderer.tsx": {
-    "mtime": 1787419884.8160317,
-    "ast_hash": "347a376b54fe51b3a830e0384c0a73fe",
+    "mtime": 1785330273.770532,
+    "ast_hash": "f375d3e3b0fb910215dd18e7446d3ce4",
     "semantic_hash": ""
   },
   "src/app/(public)/cms-page/[[...slug]]/page.tsx": {
-    "mtime": 1787418932.8791335,
-    "ast_hash": "5fc1de738f22debc597a9269cb927adf",
+    "mtime": 1785353817.1740625,
+    "ast_hash": "8f2a541989cb5d262acf0a506aa62bce",
     "semantic_hash": ""
   },
   "src/app/(public)/layout.tsx": {
@@ -8740,13 +8745,13 @@
     "semantic_hash": ""
   },
   "src/app/[locale]/(cms)/[...cmsSlug]/page.tsx": {
-    "mtime": 1787431091.4960454,
-    "ast_hash": "68243e18df512ab9a0230123523aaca0",
+    "mtime": 1785765183.6734333,
+    "ast_hash": "ca2098e6d6dbf3adc9c0324abb727b32",
     "semantic_hash": ""
   },
   "src/app/[locale]/(cms)/layout.tsx": {
-    "mtime": 1787425044.6843853,
-    "ast_hash": "aff6100e3a72c61df91cf45001844dcd",
+    "mtime": 1785359076.613313,
+    "ast_hash": "34db4163d42c31d4a10443591c91d356",
     "semantic_hash": ""
   },
   "src/app/api/blocks/group-type/route.ts": {
@@ -8950,7 +8955,7 @@
     "semantic_hash": ""
   },
   "src/features/cms/tenant-page-renderer.client.tsx": {
-    "mtime": 1787421195.1857011,
+    "mtime": 1785765183.6759794,
     "ast_hash": "9f939446c8f1c3633f775ac9036ab947",
     "semantic_hash": ""
   },
@@ -8965,8 +8970,8 @@
     "semantic_hash": ""
   },
   "src/lib/block-data.ts": {
-    "mtime": 1787410384.8875346,
-    "ast_hash": "1cb80c542bb23b918bc53ad48bf65345",
+    "mtime": 1785765183.677166,
+    "ast_hash": "415ea548a57d7ce9a8696a1dc9fd5d5c",
     "semantic_hash": ""
   },
   "src/lib/blocks-library.ts": {
@@ -9720,8 +9725,13 @@
     "semantic_hash": ""
   },
   "src/features/cms/builder-theme-data.ts": {
-    "mtime": 1786829052.865654,
-    "ast_hash": "ec1dcffec834b4950eb5ca8ffda3a5bc",
+    "mtime": 1786827008.9646251,
+    "ast_hash": "21187d9896ae3787ba833869c16ba0d6",
+    "semantic_hash": ""
+  },
+  "docs/archive/spike-30/generated-schema.ts": {
+    "mtime": 1785081646.0831883,
+    "ast_hash": "d27c01a74a4d0668987495f225011839",
     "semantic_hash": ""
   },
   "docs/architecture/chaibuilder-cms.md": {
@@ -9732,6 +9742,391 @@
   "docs/architecture/payload-apex.md": {
     "mtime": 1785417134.896826,
     "ast_hash": "d31cfe1bab4c23031c16150e696d03bb",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan-implementacji.md": {
+    "mtime": 1785240925.229254,
+    "ast_hash": "f88530c09c2ab21954f256f93d1f9519",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/00-rozstrzygniecia-i-audyt.md": {
+    "mtime": 1784658600.372084,
+    "ast_hash": "cb5876b6f79ad9875544218f8dd83ba6",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-0.md": {
+    "mtime": 1784658600.3721879,
+    "ast_hash": "925600b14a4d566845069709ba5187a8",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-1.md": {
+    "mtime": 1784658600.372282,
+    "ast_hash": "ffb52de202ff95f26fa0f661bfd72c4a",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-10.md": {
+    "mtime": 1784890566.4553847,
+    "ast_hash": "6a941be30b271905eccf0ed776022ec7",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-11.md": {
+    "mtime": 1784894766.9264667,
+    "ast_hash": "9579239cc231220e1afcd915da533d82",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-12.md": {
+    "mtime": 1784916166.423214,
+    "ast_hash": "0e53a3bf8a799bc6f97ea31e606d335c",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-13.md": {
+    "mtime": 1784918614.2386801,
+    "ast_hash": "a2943517417f9f54cb0b9084b036b2a9",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-14.md": {
+    "mtime": 1784923668.1686463,
+    "ast_hash": "386ecfc998584ea67ed636b428e8347f",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-15.md": {
+    "mtime": 1784927444.8185563,
+    "ast_hash": "024b2e7c0cdc87d7628f4f62663612e3",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-16.md": {
+    "mtime": 1784931468.4677446,
+    "ast_hash": "c57035ac87b3c8be1e02d0ebd4389fa7",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-17.5.md": {
+    "mtime": 1784938647.4504766,
+    "ast_hash": "5cfec82b5161c273e080fb3b3a2fee3e",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-17.md": {
+    "mtime": 1784936278.0466878,
+    "ast_hash": "d11a91df5197714431bead44778e4c1d",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-18.md": {
+    "mtime": 1784969566.923972,
+    "ast_hash": "e8bc0186a4e4473e66af6aba102d6e42",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-19.md": {
+    "mtime": 1784982744.0701501,
+    "ast_hash": "82c1ca128a512790cbbb57e545df4025",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-2.md": {
+    "mtime": 1784658600.372362,
+    "ast_hash": "2b539053387f30c37086ff26c671d535",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-20.md": {
+    "mtime": 1784985906.7898996,
+    "ast_hash": "9b80b7ca1ec89470037c7e664bb7ea26",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-21.md": {
+    "mtime": 1784996149.4984734,
+    "ast_hash": "73657dd39a1b87009c1f081a63769f29",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-22-25.md": {
+    "mtime": 1785063545.1751375,
+    "ast_hash": "1f3592ab372e2aea48b2bb44c9bb8d55",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-26-28.md": {
+    "mtime": 1785073662.338002,
+    "ast_hash": "13e1cb7c4b542f4cf1f45f9166ba79f6",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-29.md": {
+    "mtime": 1785077676.3080006,
+    "ast_hash": "070916a0b40e7b9d9ce757dd0d269774",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-3.md": {
+    "mtime": 1784658600.3724642,
+    "ast_hash": "6fe77731ae4e10fd1d17efb8802798b5",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-30-32.md": {
+    "mtime": 1785240925.2299683,
+    "ast_hash": "c81da39157ea5474a474e115158f11cb",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-30f.md": {
+    "mtime": 1785240925.2308855,
+    "ast_hash": "e48adacf602d29647d879b9e3dcf09e4",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-33-36.md": {
+    "mtime": 1785146918.1269345,
+    "ast_hash": "8169dbf06bd6c4195938920b09db14b8",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-4.5.md": {
+    "mtime": 1784658600.372638,
+    "ast_hash": "758a389c2308343e26b95222fbde3b08",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-4.6.md": {
+    "mtime": 1784658600.372725,
+    "ast_hash": "ae950984e14f769f59c5ca869c6be25e",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-4.md": {
+    "mtime": 1784658600.3725474,
+    "ast_hash": "23cab9193509be50d0550ca5f92b2a6d",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-5.5.md": {
+    "mtime": 1784671349.6915965,
+    "ast_hash": "a77ec9a67a5bc82c16dbbcb66d95f058",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-5.md": {
+    "mtime": 1784658600.3728182,
+    "ast_hash": "d08f7e093b5acaaeead71fd99f9ce9af",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-6.md": {
+    "mtime": 1784817866.0160654,
+    "ast_hash": "d996458e7796baa2b217842968f846fb",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-7.md": {
+    "mtime": 1784821093.2877564,
+    "ast_hash": "132d109f658c0ffae6a25e7039ca6d8c",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-8.md": {
+    "mtime": 1784826252.4184186,
+    "ast_hash": "f25d8d7856bff6459d093e15fc591fd0",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/faza-9.md": {
+    "mtime": 1784883583.681569,
+    "ast_hash": "5e704d41c7cbe896184fc4f12b18ce97",
+    "semantic_hash": ""
+  },
+  "docs/archive/plan/ryzyka-i-otwarte-pytania.md": {
+    "mtime": 1785076203.0585842,
+    "ast_hash": "2a2281d8c5b9aee91b30aed1fddd8251",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/00-kontekst.md": {
+    "mtime": 1784657872.9587598,
+    "ast_hash": "a225c47bd1e8bc16a39142753be43b7c",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/01-model-danych/01a-diagram-relacji.md": {
+    "mtime": 1784660731.1888912,
+    "ast_hash": "51bbb0fda6859c6cdb784f6070468681",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/01-model-danych/01b-rdzen-organizacje-sesje-rezerwacje.md": {
+    "mtime": 1784660785.2776268,
+    "ast_hash": "f7d5040392e2022265a3d2376efd3ddd",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/01-model-danych/01c-kredyty-platnosci-stawki.md": {
+    "mtime": 1784660835.5877018,
+    "ast_hash": "a16b3e1faa7d2383070872fcf93872a8",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/01-model-danych/01d-regulaminy-powiadomienia-plany.md": {
+    "mtime": 1784660854.9417243,
+    "ast_hash": "1420185d0708e2b88b66a0c0df8da98b",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/01-model-danych/01e-funkcje-v17-v18.md": {
+    "mtime": 1784660909.2553332,
+    "ast_hash": "adbcd9c6502cf3560dd894c191ea2620",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/01-model-danych/01f-relacje-integralnosc.md": {
+    "mtime": 1784660979.5334775,
+    "ast_hash": "989be0c53195ae821591aa9a413c32f4",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02-opis-funkcjonalnosci.md": {
+    "mtime": 1784659890.0925646,
+    "ast_hash": "475378a6e85073922e9f52225c38bf48",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02a-opis-funkcjonalnosci-cz1.md": {
+    "mtime": 1784659861.4062266,
+    "ast_hash": "2f98be5e3e14a2c1d32c2980972c74a3",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02b-opis-funkcjonalnosci-cz2.md": {
+    "mtime": 1784659861.4096005,
+    "ast_hash": "387cd51e54c71d41507d89937f90bbdb",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02c-kryteria-akceptacji-epiki-1-20.md": {
+    "mtime": 1784659861.411912,
+    "ast_hash": "4d18fa8e3bf81037f3609bc891dc4ff6",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-a-epik21-reasygnacja-trenerzy-sesje.md": {
+    "mtime": 1784661077.4033332,
+    "ast_hash": "6407b840ea9f10d1cf7d0ed3050be458",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-b-epik22-lokalizacje.md": {
+    "mtime": 1784661031.185007,
+    "ast_hash": "25d0023d885f240181beaa0ae75c042f",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-c-epik23-tryby-zakupu-rozliczenia.md": {
+    "mtime": 1784661031.18508,
+    "ast_hash": "ddf6ab80531dfa5b8964f540c72d5f74",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-d-epik24-waluta-kwoty.md": {
+    "mtime": 1784661031.1851456,
+    "ast_hash": "da397e64029ba1c3ba86a4a6f0b39324",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-e-epik25-nieudana-platnosc-subskrypcyjna.md": {
+    "mtime": 1784661031.185204,
+    "ast_hash": "0f2abb44abe3ddb2438223d740279bc0",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-f-epik26-notification-center.md": {
+    "mtime": 1784661031.185264,
+    "ast_hash": "2dea7656493d9d995eb541e8df06cb43",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-g-epik27-faktury-dokumenty-sprzedazy.md": {
+    "mtime": 1784661031.185326,
+    "ast_hash": "3bfe4a66ca831c43a92bf9d83b04783a",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-h-epik28-regulaminy-akceptacje.md": {
+    "mtime": 1784661031.185383,
+    "ast_hash": "e5b12fe4af53fef46cd5a9d8f157994d",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-i-epik29-limity-planu-feature-gating.md": {
+    "mtime": 1784661077.367563,
+    "ast_hash": "1af1a8d8940b7f7d3adae3d1c6cb0744",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-j-epik30-stripe-connect-platnosci.md": {
+    "mtime": 1784661077.367448,
+    "ast_hash": "2a3faeb9d615201986983c80eec0dd02",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-k-epik31-potwierdzanie-obecnosci.md": {
+    "mtime": 1784661031.1855652,
+    "ast_hash": "c4fcd26d3a4f68909d50d2876632ccfb",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-l-epik32-wynagrodzenia-trenerow.md": {
+    "mtime": 1784661031.1856508,
+    "ast_hash": "841ad345c4b8f52037b3be4093018549",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-m-epik33-indywidualne-ceny-klienta.md": {
+    "mtime": 1784661031.1857321,
+    "ast_hash": "e11c537c53d7bffc5a3fffdc7a43ed26",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-n-epik34-dyspozycyjnosc-trenerow.md": {
+    "mtime": 1784661031.185798,
+    "ast_hash": "6b2b613ad5721c7d74cd7c1e23775155",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-o-epik35-e-dziennik-oceny-notatki.md": {
+    "mtime": 1784661077.367097,
+    "ast_hash": "43bc882fe3acd42df99ceec77ddd9287",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-p-epik36-zapisy-przed-harmonogramem.md": {
+    "mtime": 1784661031.185955,
+    "ast_hash": "317f34be8dee95de77d892f96ebd18e8",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-q-epik37-profil-uczestnika-zdrowie-zgody.md": {
+    "mtime": 1784661031.1860232,
+    "ast_hash": "ebe99a5ca7c4ec5bc7bfb6e35a9fa2cd",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-r-epik38-granularne-uprawnienia.md": {
+    "mtime": 1784661031.1860967,
+    "ast_hash": "a0a365267638b61c42a8a93fc9b68c59",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-s-epik39-import-masowy-onboarding.md": {
+    "mtime": 1784661031.1861694,
+    "ast_hash": "e60df208d471253bca7aee87617463e6",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-t-epik40-zapis-wielu-uczestnikow.md": {
+    "mtime": 1784661031.18623,
+    "ast_hash": "648323c92b9666782a02ff55b50af0be",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-u-epik41-modul-obozow-karta-kwalifikacyjna.md": {
+    "mtime": 1784661031.1862829,
+    "ast_hash": "95c1ac0352be4e2b3a690e1697053a62",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-v-epik42-oplaty-dodatkowe-ad-hoc.md": {
+    "mtime": 1784661031.186334,
+    "ast_hash": "e15b4fb43a11b16d5758a790cda42e3e",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-w-epik43-tematy-lekcji-prace-domowe.md": {
+    "mtime": 1784661077.367277,
+    "ast_hash": "e8d22a312d6d8a8d935e54a965e65c3d",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/02d-kryteria-akceptacji-epiki-21-44/02d-x-epik44-haslo-klienta-logowanie.md": {
+    "mtime": 1784661031.186442,
+    "ast_hash": "18f25b13f468c51e72493532e7f21f78",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/04-tabela-porownawcza.md": {
+    "mtime": 1784657872.9666946,
+    "ast_hash": "d7af87633e76063a2ae5f746c03c0af3",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/05-kolejnosc-implementacji.md": {
+    "mtime": 1784657872.968657,
+    "ast_hash": "6bf6b63aec8a81a479a142188de4548b",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/06-odlozone-poza-mvp.md": {
+    "mtime": 1784657872.9705849,
+    "ast_hash": "15d13a738b68e1d53b1e29fa610bf687",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/07-rozstrzygniete-decyzje.md": {
+    "mtime": 1784657872.9724784,
+    "ast_hash": "708ca986805f1cc0f8b0e39c0edb5f13",
+    "semantic_hash": ""
+  },
+  "docs/archive/spec/08-otwarte-punkty.md": {
+    "mtime": 1784657872.9745107,
+    "ast_hash": "07ce40b813fd1adc9164442f994c7a69",
+    "semantic_hash": ""
+  },
+  "docs/archive/specyfikacja.md": {
+    "mtime": 1784657909.5571613,
+    "ast_hash": "4a5aedeca7bcbe672316cb5275a1c33e",
+    "semantic_hash": ""
+  },
+  "docs/archive/spike-30/raport.md": {
+    "mtime": 1785092741.6662076,
+    "ast_hash": "d13dfa0f31a5b3a7b63e1176ba570414",
     "semantic_hash": ""
   },
   "docs/known-issues.md": {
@@ -9974,6 +10369,51 @@
     "ast_hash": "cdde573de639b8c3f7c71d4850ad8b05",
     "semantic_hash": ""
   },
+  "docs/phases/00-shadcn-components.md": {
+    "mtime": 1785442285.6807175,
+    "ast_hash": "90182944cc9f70b5957a6b23009c61a5",
+    "semantic_hash": ""
+  },
+  "docs/phases/01-layout-sidebar.md": {
+    "mtime": 1785442312.792447,
+    "ast_hash": "2da9c8363bcb84d9f7abc76333bbd3d4",
+    "semantic_hash": ""
+  },
+  "docs/phases/02-admin-missing-pages.md": {
+    "mtime": 1785442349.9789953,
+    "ast_hash": "22f1e73df153400cd53e19a9d8fec54a",
+    "semantic_hash": ""
+  },
+  "docs/phases/03-trainer-panel.md": {
+    "mtime": 1785442385.297244,
+    "ast_hash": "00441273fcf36f2db1f73e984b02b706",
+    "semantic_hash": ""
+  },
+  "docs/phases/04-leave-request-system.md": {
+    "mtime": 1785442434.69485,
+    "ast_hash": "084064df621c8aa5e7ed405b4a33f04c",
+    "semantic_hash": ""
+  },
+  "docs/phases/05-individual-sessions-client.md": {
+    "mtime": 1785486179.3417017,
+    "ast_hash": "a752c36215eed23d10237bc14512db4a",
+    "semantic_hash": ""
+  },
+  "docs/phases/06-client-settings.md": {
+    "mtime": 1785442507.9186282,
+    "ast_hash": "2a0544b85bb4a5508ed415c1f8d7a6e3",
+    "semantic_hash": ""
+  },
+  "docs/phases/07-dashboard-polish.md": {
+    "mtime": 1785442552.5333076,
+    "ast_hash": "b704d5d31addf841c7145170848bc36f",
+    "semantic_hash": ""
+  },
+  "docs/phases/README.md": {
+    "mtime": 1785442578.673873,
+    "ast_hash": "9249d2c150a68838aea68bfb138aa37a",
+    "semantic_hash": ""
+  },
   "e2e/langlion-client-settings.spec.ts": {
     "mtime": 1785498220.7234538,
     "ast_hash": "20a698bd05c65f465c2c06cdad9157c7",
@@ -10140,8 +10580,8 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/pl.json": {
-    "mtime": 1787412976.8058763,
-    "ast_hash": "fd4522d8ef0b8bd9f2f0a914e857c389",
+    "mtime": 1786827243.0135233,
+    "ast_hash": "60eb83760a6f4261e13999e885ae381e",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/topbar/builder-top-bar.tsx": {
@@ -10150,8 +10590,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/builder-left-panel.tsx": {
-    "mtime": 1786894598.5020528,
-    "ast_hash": "66dadd9a79d3062c40064c49bbb67813",
+    "mtime": 1786827374.7297392,
+    "ast_hash": "a8e341abe8758b8e8e1bc2921df44aec",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-groups.test.ts": {
@@ -10160,18 +10600,18 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-groups.ts": {
-    "mtime": 1786881803.3471584,
-    "ast_hash": "1ba82de53bd50ff17b2cf32aa0d6ce49",
+    "mtime": 1786805941.4040372,
+    "ast_hash": "158b364c01f76efda407af68b6f8d8a5",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-tree.tsx": {
-    "mtime": 1786894598.502212,
-    "ast_hash": "87097df2c7c19be8b0851cc1f33f02d5",
+    "mtime": 1786807400.2638135,
+    "ast_hash": "ad29315b31cc3c77ccc9ae0895ef4ba7",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/sections-tab.tsx": {
-    "mtime": 1786894598.502366,
-    "ast_hash": "b9ed1e82ccea560eb56ffa24dd5f992a",
+    "mtime": 1786826396.506516,
+    "ast_hash": "e697ff079f236546a483197956b016c5",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/theme-tab.tsx": {
@@ -10410,8 +10850,8 @@
     "semantic_hash": ""
   },
   "src/lib/cms-collection-data.ts": {
-    "mtime": 1787416251.2857265,
-    "ast_hash": "c69e4a67a00a713d433cd5948bd60a03",
+    "mtime": 1785751596.138224,
+    "ast_hash": "deaecc60386a27992ac64b68732c9fc4",
     "semantic_hash": ""
   },
   "src/lib/db/migrations/0077_cms_collections.sql": {
@@ -10695,8 +11135,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/page-selector-in-header.tsx": {
-    "mtime": 1787414147.7046568,
-    "ast_hash": "1318d14926c9e4350ede93ba24cdbf20",
+    "mtime": 1785774030.426785,
+    "ast_hash": "de5b52a3da97396c3de8080212f0d92f",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/seo-icon.tsx": {
@@ -10760,8 +11200,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/tokens/shopify-tokens.ts": {
-    "mtime": 1786881887.217704,
-    "ast_hash": "afa0d22360537a1e2fabe3e0799a41dd",
+    "mtime": 1786805606.7855318,
+    "ast_hash": "15550bc7aad9503f59806f6cf9982b05",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/types/section-catalog.ts": {
@@ -10815,8 +11255,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/sub-block-list.tsx": {
-    "mtime": 1786883706.495458,
-    "ast_hash": "efe0f1852e9eae21bf894532208a5f30",
+    "mtime": 1786827367.1376343,
+    "ast_hash": "45f0416886d37d66761be9679b85f787",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/theme/token-editors/buttons.tsx": {
@@ -10857,46 +11297,6 @@
   "packages/chaibuilder-sdk/src/render/component-tokens.ts": {
     "mtime": 1786826563.8540998,
     "ast_hash": "e8f24e8e8f1a762ab04f9b77e3f2953d",
-    "semantic_hash": ""
-  },
-  "docs/architecture/shopify-tree-spec.md": {
-    "mtime": 1786881609.6627984,
-    "ast_hash": "fc3d1aa564eb13ec008d1e8798cc98c3",
-    "semantic_hash": ""
-  },
-  "docs/shopify-screens/shopify-tree.png": {
-    "mtime": 1786880484.3587267,
-    "ast_hash": "23ead3e54f7974443bae9cd13aa1e0e4",
-    "semantic_hash": ""
-  },
-  "src/features/cms/builder-providers.ts": {
-    "mtime": 1787410420.9857533,
-    "ast_hash": "a858fe825cafd22155bd032934d423c5",
-    "semantic_hash": ""
-  },
-  "src/app/(site)/feed.atom/route.ts": {
-    "mtime": 1787424949.7783291,
-    "ast_hash": "df500a83f6ea15a97b1062903d5134fd",
-    "semantic_hash": ""
-  },
-  "src/app/(site)/feed.json/route.ts": {
-    "mtime": 1787425020.3500896,
-    "ast_hash": "a3e23c9e63ea54e9c1a0e88076116f93",
-    "semantic_hash": ""
-  },
-  "src/app/(site)/feed.xml/route.ts": {
-    "mtime": 1787424936.9661362,
-    "ast_hash": "9e0ea19a8b200b0dcb04c566e3690fd7",
-    "semantic_hash": ""
-  },
-  "src/app/[locale]/(cms)/blog-post/[slug]/page.tsx": {
-    "mtime": 1787431085.7906468,
-    "ast_hash": "5644e4aa96eefef3697f1efab120338b",
-    "semantic_hash": ""
-  },
-  "src/features/cms/feeds.ts": {
-    "mtime": 1787423304.2419143,
-    "ast_hash": "20828f99f4000c063970299260976b59",
     "semantic_hash": ""
   }
 }

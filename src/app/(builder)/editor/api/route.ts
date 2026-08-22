@@ -14,6 +14,7 @@ import {
   getTemplateNameOf,
   getTemplateOf,
   listCollections,
+  DEFAULT_CMS_COLLECTIONS,
 } from "@/lib/cms-collection-data";
 import { ORG_SUBDOMAIN_HEADER } from "@/lib/tenant-host";
 import { getOrgBySubdomain } from "@/features/organizations/data";
@@ -24,6 +25,12 @@ import {
   upsertBuilderTheme,
 } from "@/features/cms/builder-theme-data";
 import { getBlogPost } from "@/features/blog/data";
+import { registerBuilderProviders } from "@/features/cms/builder-providers";
+import { getChaiGlobalData } from "@chaibuilder/sdk/runtime";
+
+// ── Builder data providers (data-binding) ───────────────────────────────
+
+registerBuilderProviders();
 
 // ── Validation constants (F2.5) ─────────────────────────────────────────
 
@@ -233,6 +240,11 @@ export async function POST(req: NextRequest) {
             ...(activeTheme?.componentTokens ? { componentTokens: activeTheme.componentTokens } : {}),
           };
           const collections = await buildCollections(tx, organizationId);
+          const global = await getChaiGlobalData({
+            lang: "en",
+            draft: true,
+            inBuilder: true,
+          });
 
           return NextResponse.json({
             websiteSettings,
@@ -240,6 +252,7 @@ export async function POST(req: NextRequest) {
             pageTypes: buildPageTypes(collections),
             libraries: [],
             collections,
+            global,
             // UI locale for the editor chrome. Tenant-level default for now; a
             // per-organization `locale` column should flow through here later.
             uiLocale: "pl",
@@ -274,9 +287,14 @@ export async function POST(req: NextRequest) {
             const row = await getPageById(tx, organizationId, data.id);
             if (row) draftPage = toChaiPage(row);
           }
+          const global = await getChaiGlobalData({
+            lang: String(data?.lang ?? "en"),
+            draft: true,
+            inBuilder: true,
+          });
           return NextResponse.json({
             draftPage,
-            builderPageData: { global: {} },
+            builderPageData: { global },
             languagePages: [],
           });
         }
@@ -316,8 +334,13 @@ export async function POST(req: NextRequest) {
             }
           }
 
+          const global = await getChaiGlobalData({
+            lang: String(data?.lang ?? "en"),
+            draft: true,
+            inBuilder: true,
+          });
           return NextResponse.json({
-            global: {},
+            global,
             ...(blogData ? { blog: blogData } : {}),
           });
         }
@@ -641,6 +664,15 @@ export async function POST(req: NextRequest) {
           const templates = Array.isArray(data?.templates)
             ? data.templates
             : [];
+
+          // Auto-seed default templates for known collections (blog, courses)
+          let finalTemplates = templates;
+          if (templates.length === 0) {
+            const defaultCollection = DEFAULT_CMS_COLLECTIONS.find((c) => c.key === key);
+            if (defaultCollection) {
+              finalTemplates = defaultCollection.templates;
+            }
+          }
           const inserted = await tx
             .insert(cmsCollection)
             .values({
@@ -649,7 +681,7 @@ export async function POST(req: NextRequest) {
               name,
               pageType,
               templatePageType,
-              templates,
+              templates: finalTemplates,
               position,
             })
             .returning();

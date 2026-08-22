@@ -8740,8 +8740,8 @@
     "semantic_hash": ""
   },
   "src/app/[locale]/(cms)/[...cmsSlug]/page.tsx": {
-    "mtime": 1787431091.4960454,
-    "ast_hash": "68243e18df512ab9a0230123523aaca0",
+    "mtime": 1787430374.9377968,
+    "ast_hash": "535c57e48ae02a96029135e66ab765ab",
     "semantic_hash": ""
   },
   "src/app/[locale]/(cms)/layout.tsx": {
@@ -10890,8 +10890,8 @@
     "semantic_hash": ""
   },
   "src/app/[locale]/(cms)/blog-post/[slug]/page.tsx": {
-    "mtime": 1787431085.7906468,
-    "ast_hash": "5644e4aa96eefef3697f1efab120338b",
+    "mtime": 1787430267.053906,
+    "ast_hash": "b280a217fd0e821f01f7cf6705b53b63",
     "semantic_hash": ""
   },
   "src/features/cms/feeds.ts": {

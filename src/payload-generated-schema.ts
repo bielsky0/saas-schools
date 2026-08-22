@@ -409,7 +409,6 @@ type DatabaseSchema = {
 
 declare module "@payloadcms/db-postgres" {
   export interface GeneratedDatabaseSchema {
-    // @ts-expect-error — Payload-generated schema; TypeScript sees duplicate DatabaseSchema (kosmetyka)
     schema: DatabaseSchema;
   }
 }

@@ -55,11 +55,11 @@ export const RenderBlock = (
     ...blockWithBinding,
     ...blockAttributesProps,
     ...runtimeProps,
+    inBuilder: false,
   };
 
   const blockProps = {
     blockProps: {},
-    inBuilder: false,
     lang: lang || fallbackLang || "en",
     draft: draft ?? false,
     pageData: externalData ?? {},

@@ -7,12 +7,13 @@ import { ThemeInjector } from "@/features/cms/components/theme-injector";
 import { RefreshRouteOnSave } from "@/features/cms/components/refresh-route-on-save.client";
 import { buildTenantOriginUrl } from "@/features/cms/preview-url";
 import { withTenant } from "@/lib/db/tenant";
-import { getPageBySlug } from "@/lib/page-service";
+import { getPageBySlug, getBlogIndexPage } from "@/lib/page-service";
 import { TenantPageRenderer } from "@/features/cms/tenant-page-renderer.client";
 import { getBlocksCss } from "@/features/cms/get-blocks-css";
 import { PageStyles } from "@/features/cms/components/page-styles.client";
-import { enrichBlocksWithData, getBlogPostBySlug, getBlogPosts, getBlogPostPreviewForPost } from "@/lib/block-data";
+import { enrichBlocksWithData, enrichBlogPostBlocks, getBlogPostBySlug, getBlogPosts, getBlogPostPreviewForPost } from "@/lib/block-data";
 import { BlogList } from "@/features/cms/components/blog-list";
+import { loadGlobalData } from "@/features/cms/builder-providers";
 
 export const dynamic = "force-dynamic";
 
@@ -52,7 +53,7 @@ export async function generateMetadata({ params }: CmsPageProps): Promise<Metada
 
   if (parsed.kind === "blog-post") {
     const post = await withTenant(org.id, (tx) =>
-      getBlogPostBySlug(tx, org.id, "/" + parsed.blogSlug),
+      getBlogPostBySlug(tx, org.id, parsed.blogSlug.replace(/^\//, "")),
     );
     if (!post) return {};
     const seo = (post.seo ?? {}) as {
@@ -94,31 +95,53 @@ export default async function CmsPage({ params }: CmsPageProps) {
   const parsed = parseSlug(cmsSlug);
 
   if (parsed.kind === "blog-index") {
-    const posts = await withTenant(org.id, (tx) => getBlogPosts(tx, org.id));
+    const blogIndexPage = await withTenant(org.id, (tx) => getBlogIndexPage(tx, org.id));
+    if (!blogIndexPage) {
+      const posts = await withTenant(org.id, (tx) => getBlogPosts(tx, org.id));
+      return (
+        <ThemeInjector organizationId={org.id}>
+          <BlogList posts={posts} />
+        </ThemeInjector>
+      );
+    }
+
+    const enrichedBlocks = await withTenant(org.id, (tx) =>
+      enrichBlocksWithData(tx, org.id, blogIndexPage.blocks),
+    );
+    const global = await loadGlobalData();
+    const pageCss = await getBlocksCss(blogIndexPage.blocks);
+
     return (
       <ThemeInjector organizationId={org.id}>
-        <BlogList posts={posts} />
+        <PageStyles css={pageCss} />
+        <TenantPageRenderer
+          blocks={enrichedBlocks}
+          slug="blog"
+          pageType="blog_index"
+          externalData={{ global }}
+        />
       </ThemeInjector>
     );
   }
 
   if (parsed.kind === "blog-post") {
     const post = await withTenant(org.id, (tx) =>
-      getBlogPostBySlug(tx, org.id, "/" + parsed.blogSlug),
+      getBlogPostBySlug(tx, org.id, parsed.blogSlug.replace(/^\//, "")),
     );
     if (!post || post.status !== "published") notFound();
 
-    const enrichedBlocks = await withTenant(org.id, (tx) =>
-      enrichBlocksWithData(tx, org.id, post.blocks),
-    );
     const preview = await withTenant(org.id, (tx) =>
       getBlogPostPreviewForPost(tx, post),
     );
+    const enrichedBlocks = await withTenant(org.id, (tx) =>
+      enrichBlogPostBlocks(tx, org.id, post.blocks, preview),
+    );
+    const global = await loadGlobalData();
 
     const h = await headers();
     const host = h.get("host") || "";
     const serverURL = buildTenantOriginUrl(host, "") || `http://${host}`;
-    const pageCss = await getBlocksCss(post.blocks);
+    const pageCss = await getBlocksCss(enrichedBlocks);
 
     return (
       <ThemeInjector organizationId={org.id}>
@@ -128,7 +151,7 @@ export default async function CmsPage({ params }: CmsPageProps) {
           blocks={enrichedBlocks}
           slug={post.slug}
           pageType={post.pageType}
-          externalData={{ post: preview }}
+          externalData={{ blog: preview, global }}
         />
       </ThemeInjector>
     );
@@ -140,6 +163,8 @@ export default async function CmsPage({ params }: CmsPageProps) {
   const enrichedBlocks = await withTenant(org.id, (tx) =>
     enrichBlocksWithData(tx, org.id, page.blocks),
   );
+
+  const global = await loadGlobalData();
 
   const h = await headers();
   const host = h.get("host") || "";
@@ -155,6 +180,7 @@ export default async function CmsPage({ params }: CmsPageProps) {
         blocks={enrichedBlocks}
         slug={page.slug}
         pageType={page.pageType}
+        externalData={{ global }}
       />
     </ThemeInjector>
   );

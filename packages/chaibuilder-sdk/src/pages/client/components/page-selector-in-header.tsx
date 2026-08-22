@@ -1,10 +1,18 @@
-import { ChevronDown, File, Hash, Loader, Plus, Search } from "lucide-react";
+import { ChevronDown, File, Hash, LayoutTemplate, Loader, Plus, Search } from "lucide-react";
 import { filter, find, get, isEmpty, startCase } from "lodash-es";
-import { Suspense, lazy, useCallback, useMemo, useState } from "react";
+import { Suspense, lazy, useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "~/components/ui/dialog";
 import { cn } from "~/core/functions/common-functions";
 import { useEditorContext } from "~/hooks/use-editor-mode";
 import { useSelectedBlockIds } from "~/hooks/use-selected-blockIds";
@@ -13,7 +21,10 @@ import { useCurrentActivePage } from "~/pages/hooks/pages/use-current-page";
 import { useWebsitePrimaryPages } from "~/pages/hooks/pages/use-project-pages";
 import { usePageTypes } from "~/pages/hooks/project/use-page-types";
 import { useChangePage } from "~/pages/hooks/use-change-page";
+import { useCollections } from "~/pages/hooks/pages/use-collections";
+import { useCollectionActions } from "~/pages/hooks/pages/use-collection-actions";
 import { ChaiPageType } from "~/types/actions";
+import { CmsCollectionVm, CmsTemplateVm } from "~/types/collections";
 
 const AddNewPage = lazy(() => import("./add-new-page"));
 
@@ -23,19 +34,124 @@ const pageTypeLabel = (pageType: ChaiPageType, fallback: string) => {
   return startCase(fallback);
 };
 
+/**
+ * Template creation modal (Shopify-like): a template is a layout designed once
+ * in the editor and reused by many posts. Posts themselves are authored in the
+ * dashboard, never in the builder — the editor only edits templates.
+ */
+const AddTemplateModal = ({
+  open,
+  onClose,
+  collections,
+  onCreated,
+}: {
+  open: boolean;
+  onClose: () => void;
+  collections: CmsCollectionVm[];
+  onCreated: (templateId: string, collectionId: string) => void;
+}) => {
+  const { t } = useTranslation();
+  const { addTemplate } = useCollectionActions();
+  const templateCounter = useRef(1);
+  const [name, setName] = useState("");
+  const [collectionId, setCollectionId] = useState(collections[0]?.id ?? "");
+
+  // For now only the blog collection offers templates (per product decision).
+  const templateCollections = collections.filter((c) => c.id === "blog");
+  const effectiveCollectionId = templateCollections.some((c) => c.id === collectionId)
+    ? collectionId
+    : templateCollections[0]?.id ?? "";
+
+  const handleSubmit = () => {
+    const trimmed = name.trim();
+    if (!trimmed || !effectiveCollectionId) return;
+    const template = {
+      id: `tpl-${effectiveCollectionId}-${templateCounter.current++}`,
+      name: trimmed,
+      layout: "single" as const,
+    };
+    addTemplate.mutate(
+      { collectionId: effectiveCollectionId, template },
+      {
+        onSuccess: (updatedCollection) => {
+          const created = (updatedCollection?.templates ?? []).find(
+            (t: CmsTemplateVm) => t.id === template.id,
+          );
+          setName("");
+          onClose();
+          if (created) onCreated(created.id, effectiveCollectionId);
+        },
+      },
+    );
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
+      <DialogContent className="sm:max-w-[400px]">
+        <DialogHeader>
+          <DialogTitle>{t("Add template")}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="tpl-name" className="text-xs font-medium">
+              {t("Name")}
+            </Label>
+            <Input
+              id="tpl-name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={t("Template name")}
+              autoFocus
+            />
+          </div>
+          {templateCollections.length > 1 && (
+            <div className="space-y-1.5">
+              <Label htmlFor="tpl-collection" className="text-xs font-medium">
+                {t("Collection")}
+              </Label>
+              <select
+                id="tpl-collection"
+                value={effectiveCollectionId}
+                onChange={(e) => setCollectionId(e.target.value)}
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm">
+                {templateCollections.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>
+            {t("Cancel")}
+          </Button>
+          <Button disabled={!name.trim() || addTemplate.isPending} onClick={handleSubmit}>
+            {addTemplate.isPending ? t("Adding") : t("Create")}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 export const PageSelector = () => {
   const { t } = useTranslation();
   const { data: pages, isFetching } = useWebsitePrimaryPages();
   const { data: pageTypes } = usePageTypes();
   const { data: currentPage } = useCurrentActivePage();
+  const { data: collections = [] } = useCollections();
   const changePage = useChangePage();
   const [, setIds] = useSelectedBlockIds();
   const [, setStyleBlocks] = useSelectedStylingBlocks();
   const { setContext: setEditorContext } = useEditorContext();
+  const { createCollection } = useCollectionActions();
 
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [addEditPage, setAddEditPage] = useState<any>(null);
+  const [addTemplateOpen, setAddTemplateOpen] = useState(false);
 
   const filteredPages = useMemo(() => {
     if (!pages) return [];
@@ -59,6 +175,19 @@ export const PageSelector = () => {
     return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
   }, [filteredPages, pageTypes]);
 
+  // Templates are edited in the builder; posts are authored in the dashboard.
+  const templateCollections = useMemo(() => collections.filter((c) => c.id === "blog"), [collections]);
+
+  // Fallback: create blog collection if none exists
+  const handleCreateBlogCollection = useCallback(() => {
+    createCollection.mutate({
+      key: "blog",
+      name: "Blog",
+      pageType: "blog_post",
+      templatePageType: "blog_post_template",
+    });
+  }, [createCollection]);
+
   const onPageSelect = useCallback(
     (pageId: string) => {
       setIds([]);
@@ -68,6 +197,18 @@ export const PageSelector = () => {
       setOpen(false);
     },
     [setIds, setStyleBlocks, changePage, setEditorContext],
+  );
+
+  // Enter template editing mode (context.type === "template") so the
+  // TemplateSettings panel with the post-preview dropdown becomes available.
+  const onOpenTemplate = useCallback(
+    (templateId: string, collectionId: string) => {
+      setIds([]);
+      setStyleBlocks([]);
+      setEditorContext({ type: "template", templateId, collectionId });
+      setOpen(false);
+    },
+    [setIds, setStyleBlocks, setEditorContext],
   );
 
   const isPartial = !currentPage?.slug;
@@ -139,6 +280,52 @@ export const PageSelector = () => {
                 </div>
               ))
             )}
+
+{templateCollections.length > 0 ? (
+                <>
+                  <div className="mt-1 border-t border-gray-100" />
+                  <div className="flex items-center justify-between px-2 pb-1 pt-2">
+                    <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                      {t("Templates")}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-5 w-5 rounded-md"
+                      aria-label={t("Add template")}
+                      title={t("Add template")}
+                      onClick={() => setAddTemplateOpen(true)}>
+                      <Plus className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                  {templateCollections.map((collection) =>
+                    collection.templates.map((template) => (
+                      <button
+                        key={`${collection.id}:${template.id}`}
+                        type="button"
+                        onClick={() => onOpenTemplate(template.id, collection.id)}
+                        className="flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-left text-xs text-gray-700 transition-colors hover:bg-gray-100">
+                        <LayoutTemplate className="h-3.5 w-3.5 shrink-0 text-gray-400" />
+                        <span className="min-w-0 flex-1 truncate">{template.name}</span>
+                        <span className="truncate font-mono text-[10px] text-muted-foreground">{collection.name}</span>
+                      </button>
+                    )),
+                  )}
+                </>
+              ) : (
+                // Fallback: no blog collection exists yet
+                <div className="mt-1 border-t border-gray-100 px-2 py-2 text-center text-xs text-muted-foreground">
+                  <p className="mb-2">{t("No blog collection found.")}</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
+                    onClick={handleCreateBlogCollection}
+                    disabled={createCollection.isPending}>
+                    {createCollection.isPending ? t("Creating...") : t("Create blog")}
+                  </Button>
+                </div>
+              )}
           </div>
         </PopoverContent>
       </Popover>
@@ -153,6 +340,13 @@ export const PageSelector = () => {
           />
         </Suspense>
       )}
+
+      <AddTemplateModal
+        open={addTemplateOpen}
+        onClose={() => setAddTemplateOpen(false)}
+        collections={collections}
+        onCreated={onOpenTemplate}
+      />
     </>
   );
 };

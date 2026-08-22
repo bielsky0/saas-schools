@@ -7,9 +7,13 @@ import { ThemeInjector } from "@/features/cms/components/theme-injector";
 import { withTenant } from "@/lib/db/tenant";
 import { getPageBySlug, getHomePage } from "@/lib/page-service";
 import { getBlocksCss } from "@/features/cms/get-blocks-css";
+import { loadGlobalData, registerBuilderProviders } from "@/features/cms/builder-providers";
+import { getBlogPostBySlug, getBlogPostPreviewForPost } from "@/lib/block-data";
 import { PageStyles } from "@/features/cms/components/page-styles.client";
 
 import { ClientPageRenderer } from "./client-page-renderer";
+
+registerBuilderProviders();
 
 type PublicPageProps = {
   params: Promise<{ slug?: string[] | undefined }>;
@@ -61,6 +65,17 @@ export default async function PublicPage({ params }: PublicPageProps) {
   if (!page || page.status !== "published") notFound();
 
   const pageCss = await getBlocksCss(page.blocks);
+  const global = await loadGlobalData();
+
+  // Fetch page-type-specific data (e.g., blog post for "blog" pages)
+  let externalData: Record<string, unknown> = { global };
+  if (page.pageType === "blog") {
+    const post = await withTenant(org.id, (tx) => getBlogPostBySlug(tx, org.id, slug));
+    if (post) {
+      const preview = await withTenant(org.id, (tx) => getBlogPostPreviewForPost(tx, post));
+      externalData = { global, blog: preview };
+    }
+  }
 
   const pageProps: ChaiPageProps = {
     slug: slug || "/",
@@ -72,7 +87,7 @@ export default async function PublicPage({ params }: PublicPageProps) {
   return (
     <ThemeInjector organizationId={org.id}>
       <PageStyles css={pageCss} />
-      <ClientPageRenderer blocks={page.blocks} pageProps={pageProps} />
+      <ClientPageRenderer blocks={page.blocks} pageProps={pageProps} externalData={externalData} />
     </ThemeInjector>
   );
 }

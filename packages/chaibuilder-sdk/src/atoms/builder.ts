@@ -46,13 +46,13 @@ export const usePageExternalData = () => {
     return result;
   }, [blockRepeaterData]);
   const pageExternalData = useAtomValue(chaiPageExternalDataAtom);
-  // F5.5 — dynamic sources: expose the selected blog post under `post` while a
+  // F5.5 — dynamic sources: expose the selected blog post under `blog` while a
   // blog template is being edited, so (a) the data binding selector shows
-  // `post.*` fields and (b) `{{post.*}}` bindings resolve on the canvas.
+  // `blog.*` fields and (b) `{{blog.*}}` bindings resolve on the canvas.
   const blogPostData = useMemo(() => {
     const isBlogTemplate = context.type === "template" && context.collectionId === "blog";
     if (!isBlogTemplate || !preview) return {};
-    return { post: preview };
+    return { blog: preview };
   }, [context, preview]);
   return { ...pageExternalData, ...repeaterItems, ...blogPostData };
 };

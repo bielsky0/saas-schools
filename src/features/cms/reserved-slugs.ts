@@ -132,6 +132,13 @@ export const RESERVED_PATH_PREFIXES: Readonly<Record<string, PathStage>> = {
   settings: "apex",
   invitations: "apex",
   unsubscribe: "apex",
+  /*
+   * The academy's own blog. `/blog` and `/blog/{slug}` are owned by the blog
+   * feature on tenant hosts (index via `(cms)/[...cmsSlug]`, posts via the
+   * proxy's `/blog/{slug}` → `/{locale}/blog-post/{slug}` rewrite), so a CMS
+   * page may not claim the prefix. On the apex `/blog` is the platform's
+   * marketing blog, which is already a public page route.
+   */
   blog: "tenant",
   changelog: "apex",
   docs: "apex",
