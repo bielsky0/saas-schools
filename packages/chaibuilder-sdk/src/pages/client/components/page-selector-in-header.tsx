@@ -1,5 +1,5 @@
-import { ChevronDown, File, Hash, LayoutTemplate, Loader, Plus, Search } from "lucide-react";
-import { filter, find, get, isEmpty, startCase } from "lodash-es";
+import { BookOpen, ChevronDown, ChevronLeft, ChevronRight, File, FileText, LayoutTemplate, Loader, Plus, Search } from "lucide-react";
+import { filter, find, get, isEmpty } from "lodash-es";
 import { Suspense, lazy, useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "~/components/ui/button";
@@ -19,19 +19,35 @@ import { useSelectedBlockIds } from "~/hooks/use-selected-blockIds";
 import { useSelectedStylingBlocks } from "~/hooks/use-selected-styling-blocks";
 import { useCurrentActivePage } from "~/pages/hooks/pages/use-current-page";
 import { useWebsitePrimaryPages } from "~/pages/hooks/pages/use-project-pages";
-import { usePageTypes } from "~/pages/hooks/project/use-page-types";
 import { useChangePage } from "~/pages/hooks/use-change-page";
 import { useCollections } from "~/pages/hooks/pages/use-collections";
 import { useCollectionActions } from "~/pages/hooks/pages/use-collection-actions";
-import { ChaiPageType } from "~/types/actions";
 import { CmsCollectionVm, CmsTemplateVm } from "~/types/collections";
 
 const AddNewPage = lazy(() => import("./add-new-page"));
 
-const pageTypeLabel = (pageType: ChaiPageType, fallback: string) => {
-  const name = pageType?.name;
-  if (typeof name === "string") return name;
-  return startCase(fallback);
+type PickerItem = {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  count?: number;
+  active?: boolean;
+  disabled?: boolean;
+  onSelect?: () => void;
+};
+
+type PickerSection = {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  items: PickerItem[];
+  /** Drill-down items (detail view). When present the section is a chevron row. */
+  children?: PickerItem[];
+  createLabel?: string;
+  onCreate?: () => void;
+  emptyMessage?: string;
+  emptyActionLabel?: string;
+  onEmptyAction?: () => void;
 };
 
 /**
@@ -136,57 +152,50 @@ const AddTemplateModal = ({
   );
 };
 
+const PickerItemRow = ({ item }: { item: PickerItem }) => (
+  <button
+    type="button"
+    disabled={item.disabled}
+    onClick={item.onSelect}
+    className={cn(
+      "flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-left text-xs text-gray-700 transition-colors hover:bg-gray-100",
+      item.active && "bg-gray-100 font-medium text-gray-900",
+      item.disabled && "cursor-not-allowed opacity-50 hover:bg-transparent",
+    )}>
+    <span className={cn("shrink-0", item.active ? "text-primary" : "text-gray-400")}>{item.icon}</span>
+    <span className="min-w-0 flex-1 truncate">{item.label}</span>
+    {typeof item.count === "number" && (
+      <span className="shrink-0 rounded-full bg-muted px-1.5 py-px text-[10px] font-medium text-muted-foreground">
+        {item.count}
+      </span>
+    )}
+  </button>
+);
+
 export const PageSelector = () => {
   const { t } = useTranslation();
   const { data: pages, isFetching } = useWebsitePrimaryPages();
-  const { data: pageTypes } = usePageTypes();
   const { data: currentPage } = useCurrentActivePage();
   const { data: collections = [] } = useCollections();
   const changePage = useChangePage();
   const [, setIds] = useSelectedBlockIds();
   const [, setStyleBlocks] = useSelectedStylingBlocks();
-  const { setContext: setEditorContext } = useEditorContext();
+  const { context: editorContext, setContext: setEditorContext } = useEditorContext();
   const { createCollection } = useCollectionActions();
 
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [addEditPage, setAddEditPage] = useState<any>(null);
   const [addTemplateOpen, setAddTemplateOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
 
-  const filteredPages = useMemo(() => {
-    if (!pages) return [];
-    const query = search.trim().toLowerCase();
-    return filter(pages, (page) => {
-      if (query && !(page.name || "").toLowerCase().includes(query) && !(page.slug || "").toLowerCase().includes(query)) {
-        return false;
-      }
-      return true;
-    });
-  }, [pages, search]);
-
-  const groups = useMemo(() => {
-    const map = new Map<string, any[]>();
-    for (const page of filteredPages) {
-      const key = page.pageType || "page";
-      const label = pageTypeLabel(find(pageTypes, { key }), key);
-      if (!map.has(label)) map.set(label, []);
-      map.get(label)!.push(page);
+  const handleOpenChange = (v: boolean) => {
+    setOpen(v);
+    if (v) {
+      setSearch("");
+      setActiveSection(null);
     }
-    return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
-  }, [filteredPages, pageTypes]);
-
-  // Templates are edited in the builder; posts are authored in the dashboard.
-  const templateCollections = useMemo(() => collections.filter((c) => c.id === "blog"), [collections]);
-
-  // Fallback: create blog collection if none exists
-  const handleCreateBlogCollection = useCallback(() => {
-    createCollection.mutate({
-      key: "blog",
-      name: "Blog",
-      pageType: "blog_post",
-      templatePageType: "blog_post_template",
-    });
-  }, [createCollection]);
+  };
 
   const onPageSelect = useCallback(
     (pageId: string) => {
@@ -194,6 +203,7 @@ export const PageSelector = () => {
       setStyleBlocks([]);
       changePage(pageId);
       setEditorContext({ type: "page", pageId });
+      setActiveSection(null);
       setOpen(false);
     },
     [setIds, setStyleBlocks, changePage, setEditorContext],
@@ -206,16 +216,147 @@ export const PageSelector = () => {
       setIds([]);
       setStyleBlocks([]);
       setEditorContext({ type: "template", templateId, collectionId });
+      setActiveSection(null);
       setOpen(false);
     },
     [setIds, setStyleBlocks, setEditorContext],
   );
 
+  // Fallback: create blog collection if none exists
+  const handleCreateBlogCollection = useCallback(() => {
+    createCollection.mutate({
+      key: "blog",
+      name: "Blog",
+      pageType: "blog_post",
+      templatePageType: "blog_post_template",
+    });
+  }, [createCollection]);
+
+  const blogCollection = useMemo(() => find(collections, { id: "blog" }), [collections]);
+
+  /**
+   * Only regular pages are editable page-by-page in the builder. Collection
+   * entries (`blog_post`, …) are authored in the dashboard, so they stay out of
+   * the picker. The blog listing page gets its own "Blogi" section, and the
+   * post templates are exposed via the "Posty na blogu" drill-down.
+   */
+  const listingPages = useMemo(() => {
+    if (!pages) return [];
+    return filter(pages, (p) => p.pageType === "page" || !p.pageType);
+  }, [pages]);
+
+  const blogIndexPage = useMemo(
+    () => find(pages, (p) => p.pageType === "blog_index") ?? null,
+    [pages],
+  );
+
+  const sections = useMemo<PickerSection[]>(() => {
+    const result: PickerSection[] = [];
+
+    if (!isEmpty(listingPages)) {
+      result.push({
+        id: "pages",
+        label: t("Pages"),
+        icon: <FileText className="h-4 w-4" />,
+        items: listingPages.map((page) => ({
+          id: page.id,
+          label: page.name,
+          icon: <File className="h-3.5 w-3.5" />,
+          active: editorContext.type === "page" && currentPage?.id === page.id,
+          onSelect: () => onPageSelect(page.id),
+        })),
+      });
+    }
+
+    if (blogIndexPage) {
+      result.push({
+        id: "blogs",
+        label: t("Blogs"),
+        icon: <BookOpen className="h-4 w-4" />,
+        items: [
+          {
+            id: blogIndexPage.id,
+            label: t("Blogs"),
+            icon: <BookOpen className="h-3.5 w-3.5" />,
+            count: blogCollection?.postCount,
+            active: editorContext.type === "page" && currentPage?.id === blogIndexPage.id,
+            onSelect: () => onPageSelect(blogIndexPage.id),
+          },
+        ],
+      });
+    }
+
+    const blogTemplates = blogCollection?.templates ?? [];
+
+    result.push({
+      id: "blog-posts",
+      label: t("Blog posts"),
+      icon: <LayoutTemplate className="h-4 w-4" />,
+      items: [],
+      children: blogTemplates.map((template) => ({
+        id: template.id,
+        label: template.name,
+        icon: <LayoutTemplate className="h-3.5 w-3.5" />,
+        active: editorContext.type === "template" && editorContext.templateId === template.id,
+        onSelect: () => blogCollection && onOpenTemplate(template.id, blogCollection.id),
+      })),
+      createLabel: t("Create template"),
+      onCreate: () => {
+        setOpen(false);
+        setAddTemplateOpen(true);
+      },
+      emptyMessage: blogCollection ? undefined : t("No blog collection found."),
+      emptyActionLabel: blogCollection ? undefined : t("Create blog"),
+      onEmptyAction: blogCollection ? undefined : handleCreateBlogCollection,
+    });
+
+    return result;
+  }, [
+    listingPages,
+    blogIndexPage,
+    blogCollection,
+    t,
+    editorContext,
+    currentPage,
+    onPageSelect,
+    onOpenTemplate,
+    handleCreateBlogCollection,
+  ]);
+
+  const query = search.trim().toLowerCase();
+
+  const visibleSections = useMemo(() => {
+    if (!query) return sections;
+    return sections
+      .map((section) => {
+        if (section.children) {
+          return section.label.toLowerCase().includes(query) ? section : null;
+        }
+        const items = section.items.filter((item) => item.label.toLowerCase().includes(query));
+        return items.length ? { ...section, items } : null;
+      })
+      .filter(Boolean) as PickerSection[];
+  }, [sections, query]);
+
+  const activeSectionData = activeSection ? sections.find((s) => s.id === activeSection) ?? null : null;
+
+  const detailItems = useMemo(() => {
+    if (!activeSectionData?.children) return [];
+    if (!query) return activeSectionData.children;
+    return activeSectionData.children.filter((item) => item.label.toLowerCase().includes(query));
+  }, [activeSectionData, query]);
+
+  const activeTemplateName = useMemo(() => {
+    if (editorContext.type !== "template") return null;
+    const c = find(collections, { id: editorContext.collectionId });
+    return c?.templates.find((tmpl) => tmpl.id === editorContext.templateId)?.name ?? null;
+  }, [collections, editorContext]);
+
   const isPartial = !currentPage?.slug;
 
   return (
     <>
-      <Popover open={open} onOpenChange={setOpen}>
+      <Popover open={open} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <button
             type="button"
@@ -223,16 +364,25 @@ export const PageSelector = () => {
             className="flex h-7 min-w-0 items-center gap-1 rounded-md border border-gray-200 px-2 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-100">
             {isFetching ? (
               <Loader className="h-4 w-4 animate-spin text-slate-400" />
+            ) : editorContext.type === "template" ? (
+              <span className="flex min-w-0 items-center gap-1">
+                <LayoutTemplate className="h-3.5 w-3.5 shrink-0 text-gray-400" />
+                <span className="max-w-[160px] truncate">{activeTemplateName ?? t("Template")}</span>
+              </span>
             ) : (
               <span className="flex min-w-0 items-center gap-1">
-                {isPartial ? <Hash className="h-3.5 w-3.5 shrink-0 text-gray-400" /> : <File className="h-3.5 w-3.5 shrink-0 text-gray-400" />}
+                {isPartial || currentPage?.pageType !== "blog_index" ? (
+                  <File className="h-3.5 w-3.5 shrink-0 text-gray-400" />
+                ) : (
+                  <BookOpen className="h-3.5 w-3.5 shrink-0 text-gray-400" />
+                )}
                 <span className="max-w-[160px] truncate">{get(currentPage, "name") ?? t("Select page")}</span>
               </span>
             )}
             <ChevronDown className="h-3 w-3 flex-shrink-0 text-gray-400" />
           </button>
         </PopoverTrigger>
-        <PopoverContent align="start" side="bottom" className="w-72 p-0" sideOffset={6}>
+        <PopoverContent align="start" side="bottom" className="w-[320px] p-0" sideOffset={6}>
           <div className="flex items-center gap-1 border-b border-gray-200 p-2">
             <div className="relative min-w-0 flex-1">
               <Search className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
@@ -255,77 +405,95 @@ export const PageSelector = () => {
               <Plus className="h-4 w-4" />
             </Button>
           </div>
-          <div className="no-scrollbar max-h-80 overflow-y-auto p-1">
-            {isEmpty(groups) ? (
-              <p className="px-3 py-6 text-center text-xs text-muted-foreground">{t("No pages found")}</p>
-            ) : (
-              groups.map(([label, groupPages]) => (
-                <div key={label} className="mb-1">
-                  <div className="px-2 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-                    {label}
-                  </div>
-                  {groupPages.map((page) => (
-                    <button
-                      key={page.id}
-                      type="button"
-                      onClick={() => onPageSelect(page.id)}
-                      className={cn(
-                        "flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-left text-xs text-gray-700 transition-colors hover:bg-gray-100",
-                        currentPage?.id === page.id && "bg-gray-100 font-medium",
-                      )}>
-                      {page.slug ? <File className="h-3.5 w-3.5 shrink-0 text-gray-400" /> : <Hash className="h-3.5 w-3.5 shrink-0 text-gray-400" />}
-                      <span className="min-w-0 flex-1 truncate">{page.name}</span>
-                    </button>
-                  ))}
-                </div>
-              ))
-            )}
 
-{templateCollections.length > 0 ? (
+          <div className="relative max-h-[420px]">
+            {/* Main view */}
+            <div
+              className={cn(
+                "no-scrollbar max-h-[420px] overflow-y-auto p-1 transition-all duration-150 ease-out",
+                activeSection && "pointer-events-none -translate-x-4 opacity-0",
+              )}>
+              {isEmpty(visibleSections) ? (
+                <p className="px-3 py-6 text-center text-xs text-muted-foreground">{t("No pages found")}</p>
+              ) : (
+                visibleSections.map((section) => (
+                  <div key={section.id} className="mb-1">
+                    <div className="px-2 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                      {section.label}
+                    </div>
+                    {section.children ? (
+                      <button
+                        type="button"
+                        onClick={() => setActiveSection(section.id)}
+                        className="flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-left text-xs text-gray-700 transition-colors hover:bg-gray-100">
+                        <span className="shrink-0 text-gray-400">{section.icon}</span>
+                        <span className="min-w-0 flex-1 truncate">{section.label}</span>
+                        <ChevronRight className="h-3.5 w-3.5 shrink-0 text-gray-400" />
+                      </button>
+                    ) : (
+                      section.items.map((item) => <PickerItemRow key={item.id} item={item} />)
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* Detail view */}
+            <div
+              aria-hidden={!activeSection}
+              className={cn(
+                "absolute inset-0 bg-white transition-all duration-150 ease-out",
+                activeSection ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-4 opacity-0",
+              )}>
+              {activeSectionData && (
                 <>
-                  <div className="mt-1 border-t border-gray-100" />
-                  <div className="flex items-center justify-between px-2 pb-1 pt-2">
-                    <span className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-                      {t("Templates")}
-                    </span>
+                  <div className="flex items-center gap-1 border-b border-gray-200 p-1">
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-5 w-5 rounded-md"
-                      aria-label={t("Add template")}
-                      title={t("Add template")}
-                      onClick={() => setAddTemplateOpen(true)}>
-                      <Plus className="h-3.5 w-3.5" />
+                      className="h-7 w-7 shrink-0 rounded-md"
+                      aria-label={t("Back")}
+                      onClick={() => {
+                        setSearch("");
+                        setActiveSection(null);
+                      }}>
+                      <ChevronLeft className="h-4 w-4" />
                     </Button>
+                    <span className="truncate text-xs font-semibold text-gray-700">{activeSectionData.label}</span>
                   </div>
-                  {templateCollections.map((collection) =>
-                    collection.templates.map((template) => (
-                      <button
-                        key={`${collection.id}:${template.id}`}
-                        type="button"
-                        onClick={() => onOpenTemplate(template.id, collection.id)}
-                        className="flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-left text-xs text-gray-700 transition-colors hover:bg-gray-100">
-                        <LayoutTemplate className="h-3.5 w-3.5 shrink-0 text-gray-400" />
-                        <span className="min-w-0 flex-1 truncate">{template.name}</span>
-                        <span className="truncate font-mono text-[10px] text-muted-foreground">{collection.name}</span>
-                      </button>
-                    )),
-                  )}
+                  <div className="no-scrollbar max-h-[330px] overflow-y-auto p-1">
+                    {activeSectionData.emptyMessage && isEmpty(detailItems) ? (
+                      <div className="mt-1 border-t border-gray-100 px-2 py-2 text-center text-xs text-muted-foreground">
+                        <p className="mb-2">{activeSectionData.emptyMessage}</p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full"
+                          onClick={activeSectionData.onEmptyAction}
+                          disabled={createCollection.isPending}>
+                          {createCollection.isPending ? t("Creating...") : activeSectionData.emptyActionLabel}
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        {detailItems.map((item) => (
+                          <PickerItemRow key={item.id} item={item} />
+                        ))}
+                        {activeSectionData.createLabel && (
+                          <button
+                            type="button"
+                            onClick={activeSectionData.onCreate}
+                            className="mt-1 flex w-full items-center gap-1.5 rounded-md border-t border-gray-100 px-2 py-2 text-left text-xs font-medium text-gray-700 transition-colors hover:bg-gray-100">
+                            <Plus className="h-3.5 w-3.5 shrink-0 text-gray-400" />
+                            {activeSectionData.createLabel}
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
                 </>
-              ) : (
-                // Fallback: no blog collection exists yet
-                <div className="mt-1 border-t border-gray-100 px-2 py-2 text-center text-xs text-muted-foreground">
-                  <p className="mb-2">{t("No blog collection found.")}</p>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full"
-                    onClick={handleCreateBlogCollection}
-                    disabled={createCollection.isPending}>
-                    {createCollection.isPending ? t("Creating...") : t("Create blog")}
-                  </Button>
-                </div>
               )}
+            </div>
           </div>
         </PopoverContent>
       </Popover>

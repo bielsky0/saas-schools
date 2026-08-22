@@ -10140,8 +10140,8 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/pl.json": {
-    "mtime": 1787412976.8058763,
-    "ast_hash": "fd4522d8ef0b8bd9f2f0a914e857c389",
+    "mtime": 1787432719.716677,
+    "ast_hash": "dd3fcf2177291bc7b97a1d305db75ffc",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/topbar/builder-top-bar.tsx": {
@@ -10695,8 +10695,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/page-selector-in-header.tsx": {
-    "mtime": 1787414147.7046568,
-    "ast_hash": "1318d14926c9e4350ede93ba24cdbf20",
+    "mtime": 1787432834.6146598,
+    "ast_hash": "2febf623f68c30c9246df258917d3c08",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/seo-icon.tsx": {
