@@ -5365,8 +5365,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/components/ui/button.tsx": {
-    "mtime": 1785311019.0932016,
-    "ast_hash": "63e4aad8872e797a890b923afb04aa36",
+    "mtime": 1787434371.445946,
+    "ast_hash": "991626ddf922d526e9137a00d2cd2f29",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/components/ui/card.tsx": {
@@ -5710,8 +5710,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/topbar/ai-assistant.tsx": {
-    "mtime": 1785769539.5005202,
-    "ast_hash": "10fd933c0c0448a1172959ab73a1992a",
+    "mtime": 1787434387.1274447,
+    "ast_hash": "1910bdd8db10cdc9df4a94a4df648138",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/topbar/canvas-breakpoints.tsx": {
@@ -5745,8 +5745,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/topbar/undo-redo.tsx": {
-    "mtime": 1785311019.1113107,
-    "ast_hash": "909e7a81c91219d1d3978e28615e24a2",
+    "mtime": 1787434391.43738,
+    "ast_hash": "331ec9934e12a3a00520a82aee84c837",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/chai-select.tsx": {
@@ -6345,8 +6345,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/en.json": {
-    "mtime": 1787412895.281509,
-    "ast_hash": "1f338b53fbb08d58f85cc1755c2802c0",
+    "mtime": 1787434445.468527,
+    "ast_hash": "0a911ee81e92cd1a44712a888e5ad6d3",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/load.ts": {
@@ -10115,8 +10115,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/builder-layout.tsx": {
-    "mtime": 1786807670.7073221,
-    "ast_hash": "aebad18a99baa3333a50a267cc3de6d3",
+    "mtime": 1787434420.2062166,
+    "ast_hash": "6cc0d45474b20d6abd9013c27199b0df",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/layout/index.ts": {
@@ -10140,13 +10140,13 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/pl.json": {
-    "mtime": 1787412976.8058763,
-    "ast_hash": "fd4522d8ef0b8bd9f2f0a914e857c389",
+    "mtime": 1787432719.716677,
+    "ast_hash": "dd3fcf2177291bc7b97a1d305db75ffc",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/topbar/builder-top-bar.tsx": {
-    "mtime": 1785773556.406273,
-    "ast_hash": "79ecf7c2a96a5deee6e86b94fa2ec456",
+    "mtime": 1787434439.7872272,
+    "ast_hash": "8b60aa8923f78c3465fb80e4573bf96c",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/builder-left-panel.tsx": {
@@ -10690,13 +10690,13 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/topbar/device-preview.tsx": {
-    "mtime": 1785773247.8123498,
-    "ast_hash": "13d7f7a34c59241044f8e90db0d66fa5",
+    "mtime": 1787434389.0001335,
+    "ast_hash": "ebc17f3fce69e84ff4b40b67c450d5ad",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/page-selector-in-header.tsx": {
-    "mtime": 1787414147.7046568,
-    "ast_hash": "1318d14926c9e4350ede93ba24cdbf20",
+    "mtime": 1787434424.370532,
+    "ast_hash": "aea230257a629c54775c71c15d8c85ca",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/seo-icon.tsx": {
@@ -10705,8 +10705,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/topbar-mode-switcher.tsx": {
-    "mtime": 1785773734.3925261,
-    "ast_hash": "ac52a25f3a4ec2ccb54434102f5af3a3",
+    "mtime": 1787434385.1208854,
+    "ast_hash": "3454c219ff62502bf45ae845ebd83954",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/seo-left-panel.tsx": {
@@ -10897,6 +10897,11 @@
   "src/features/cms/feeds.ts": {
     "mtime": 1787423304.2419143,
     "ast_hash": "20828f99f4000c063970299260976b59",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/components/topbar/inspector-toggle.tsx": {
+    "mtime": 1787434374.184035,
+    "ast_hash": "866d34c4c711cb86703d8fb70cb7c51f",
     "semantic_hash": ""
   }
 }

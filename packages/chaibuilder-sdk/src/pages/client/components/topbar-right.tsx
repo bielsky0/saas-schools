@@ -1,19 +1,9 @@
 import { compact, find, isEmpty, upperCase } from "lodash-es";
-import {
-  CheckCircle,
-  ChevronDown,
-  ExternalLink,
-  Loader,
-  Pencil,
-  Play,
-  Rocket,
-  Save,
-  Send,
-  TriangleAlert,
-} from "lucide-react";
+import { CheckCircle, ExternalLink, Loader, Play, Save, TriangleAlert } from "lucide-react";
 import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "~/components/ui/button";
+import { ChevronDownIcon } from "~/core/components/topbar/topbar-icons";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -157,7 +147,6 @@ export const PublishButton = () => {
   const { data: activePage } = useCurrentActivePage();
   const getUnpublishedPartialBlocks = useGetUnpublishedPartialBlocks();
   const [showModal, setShowModal] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const [unpublishPage, setUnpublishPage] = useState(null);
   const { hasUnpublishedSettings, hasUnpublishedTheme } = useUnpublishedWebsiteSettings();
   const [showUnpublishedPartialsWarning, setShowUnpublishedPartialsWarning] = useState(false);
@@ -169,21 +158,17 @@ export const PublishButton = () => {
   const { mutate: publishPage, isPending } = usePublishPages();
   const { needTranslations } = useSavePage();
   const needTranslation = needTranslations();
-  const { buttonText, buttonClassName, isPublished, hasUnpublishedChanges } = useMemo(() => {
+  const { buttonText, isPublished } = useMemo(() => {
     const isPublished = currentPage && currentPage?.online;
     const hasUnpublishedChanges = !isEmpty(currentPage?.changes);
-    let buttonClassName = isPublished ? "hover:bg-green-600 bg-green-500" : "";
     let buttonText = isPublished ? t("Published") : t("Publish");
 
     if (isPublished && hasUnpublishedChanges) {
-      buttonClassName = "hover:bg-blue-600 bg-blue-500";
       buttonText = t("Publish");
     }
 
     return {
-      buttonClassName,
       isPublished,
-      hasUnpublishedChanges,
       buttonText,
     };
   }, [currentPage, t]);
@@ -241,26 +226,8 @@ export const PublishButton = () => {
           size="sm"
           onClick={handlePublishCurrentPage}
           disabled={isPending || !currentPage?.id}
-          className={`relative flex items-center gap-1 overflow-hidden rounded-r-none text-white transition-all duration-300 ease-in-out ${buttonClassName}`}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}>
-          <span
-            className={`flex items-center transition-transform duration-300 ease-in-out ${isHovered ? "-translate-y-10" : ""}`}>
-            {isPublished ? (
-              hasUnpublishedChanges ? (
-                <Pencil className="h-4 w-4" />
-              ) : (
-                <Send className="h-4 w-4" />
-              )
-            ) : (
-              <Rocket className="h-4 w-4" />
-            )}
-          </span>
-          <span
-            className={`absolute inset-0 left-3 flex items-center transition-transform duration-300 ease-in-out ${isHovered ? "" : "translate-y-10"}`}>
-            {isPublished ? <Rocket className="h-4 w-4" /> : <Send className="h-4 w-4" />}
-          </span>
-          <span>{buttonText}</span>
+          className="h-8 rounded-l-md bg-[#005BD3] px-3 py-1.5 text-[13px] font-medium text-white transition-colors hover:bg-[#3F86F2] disabled:pointer-events-none disabled:opacity-50">
+          {buttonText}
           {selectedLang ? `(${upperCase(selectedLang)})` : ""}
         </Button>
         <DropdownMenu>
@@ -268,8 +235,9 @@ export const PublishButton = () => {
             <Button
               size="sm"
               disabled={isPending || !currentPage?.id}
-              className={`relative rounded-l-none border-l border-white/50 px-2 text-white ${hasUnpublishedSettings ? "bg-gray-500 hover:bg-gray-600" : buttonClassName}`}>
-              <ChevronDown className="h-4 w-4" />
+              aria-label={t("More publish options")}
+              className="h-8 rounded-r-md border-l border-white/20 bg-[#005BD3] px-2 py-1.5 text-white transition-colors hover:bg-[#3F86F2] disabled:pointer-events-none disabled:opacity-50">
+              <ChevronDownIcon className="h-4 w-4" />
               {hasUnpublishedSettings && (
                 <>
                   <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-orange-500" />

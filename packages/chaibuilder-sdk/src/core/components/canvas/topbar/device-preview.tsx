@@ -1,6 +1,7 @@
-import { Monitor, Smartphone } from "lucide-react";
+import { Monitor } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "~/components/ui/button";
+import { MobileIcon } from "~/core/components/topbar/topbar-icons";
 import { useCanvasDisplayWidth } from "~/hooks/use-screen-size-width";
 
 const MOBILE_WIDTH = 375;
@@ -20,13 +21,13 @@ export const DevicePreview = () => {
 
   return (
     <Button
-      variant="ghost"
+      variant="plain"
       size="icon"
-      className="h-8 w-8 rounded-md"
+      aria-pressed={isMobile}
       title={isMobile ? t("Desktop preview") : t("Mobile preview")}
       aria-label={isMobile ? t("Desktop preview") : t("Mobile preview")}
       onClick={toggle}>
-      {isMobile ? <Monitor className="h-4 w-4" /> : <Smartphone className="h-4 w-4" />}
+      {isMobile ? <Monitor className="h-5 w-5" /> : <MobileIcon className="h-5 w-5" />}
     </Button>
   );
 };

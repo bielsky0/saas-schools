@@ -361,13 +361,13 @@ export const PageSelector = () => {
           <button
             type="button"
             aria-label={t("Select page")}
-            className="flex h-7 min-w-0 items-center gap-1 rounded-md border border-gray-200 px-2 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-100">
+            className="group flex h-8 min-w-0 max-w-[220px] items-center gap-1 rounded px-2 text-[13px] font-medium text-gray-700 transition-colors hover:bg-gray-100">
             {isFetching ? (
               <Loader className="h-4 w-4 animate-spin text-slate-400" />
             ) : editorContext.type === "template" ? (
               <span className="flex min-w-0 items-center gap-1">
                 <LayoutTemplate className="h-3.5 w-3.5 shrink-0 text-gray-400" />
-                <span className="max-w-[160px] truncate">{activeTemplateName ?? t("Template")}</span>
+                <span className="max-w-[120px] truncate">{activeTemplateName ?? t("Template")}</span>
               </span>
             ) : (
               <span className="flex min-w-0 items-center gap-1">
@@ -376,10 +376,10 @@ export const PageSelector = () => {
                 ) : (
                   <BookOpen className="h-3.5 w-3.5 shrink-0 text-gray-400" />
                 )}
-                <span className="max-w-[160px] truncate">{get(currentPage, "name") ?? t("Select page")}</span>
+                <span className="max-w-[120px] truncate">{get(currentPage, "name") ?? t("Select page")}</span>
               </span>
             )}
-            <ChevronDown className="h-3 w-3 flex-shrink-0 text-gray-400" />
+            <ChevronDown className="h-3 w-3 flex-shrink-0 text-gray-400 transition-opacity opacity-0 group-hover:opacity-100" />
           </button>
         </PopoverTrigger>
         <PopoverContent align="start" side="bottom" className="w-[320px] p-0" sideOffset={6}>

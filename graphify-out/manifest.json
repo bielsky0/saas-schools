@@ -5365,8 +5365,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/components/ui/button.tsx": {
-    "mtime": 1785311019.0932016,
-    "ast_hash": "63e4aad8872e797a890b923afb04aa36",
+    "mtime": 1787434371.445946,
+    "ast_hash": "991626ddf922d526e9137a00d2cd2f29",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/components/ui/card.tsx": {
@@ -5710,8 +5710,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/topbar/ai-assistant.tsx": {
-    "mtime": 1785769539.5005202,
-    "ast_hash": "10fd933c0c0448a1172959ab73a1992a",
+    "mtime": 1787435828.0775938,
+    "ast_hash": "e2b87aa27354cee65b727480b3c07eb4",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/topbar/canvas-breakpoints.tsx": {
@@ -5745,8 +5745,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/topbar/undo-redo.tsx": {
-    "mtime": 1785311019.1113107,
-    "ast_hash": "909e7a81c91219d1d3978e28615e24a2",
+    "mtime": 1787435840.262395,
+    "ast_hash": "510da4a2df5d73612537e50a8e900aef",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/chai-select.tsx": {
@@ -6345,8 +6345,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/en.json": {
-    "mtime": 1787412895.281509,
-    "ast_hash": "1f338b53fbb08d58f85cc1755c2802c0",
+    "mtime": 1787435894.4924557,
+    "ast_hash": "b659aea2e3befe2c9d18962cd367dce9",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/load.ts": {
@@ -7375,8 +7375,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/topbar-right.tsx": {
-    "mtime": 1785768563.728884,
-    "ast_hash": "b9ec03d49204b15359409144c4f65bee",
+    "mtime": 1787435871.5191548,
+    "ast_hash": "5a63cca93d4ca1a7780bc8491c726d7d",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/ui/chai-command-list.tsx": {
@@ -10115,8 +10115,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/builder-layout.tsx": {
-    "mtime": 1786807670.7073221,
-    "ast_hash": "aebad18a99baa3333a50a267cc3de6d3",
+    "mtime": 1787434420.2062166,
+    "ast_hash": "6cc0d45474b20d6abd9013c27199b0df",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/layout/index.ts": {
@@ -10145,8 +10145,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/topbar/builder-top-bar.tsx": {
-    "mtime": 1785773556.406273,
-    "ast_hash": "79ecf7c2a96a5deee6e86b94fa2ec456",
+    "mtime": 1787435890.5790768,
+    "ast_hash": "4195a8709c89ae7db6c8bf6d1c652a27",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/builder-left-panel.tsx": {
@@ -10690,13 +10690,13 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/canvas/topbar/device-preview.tsx": {
-    "mtime": 1785773247.8123498,
-    "ast_hash": "13d7f7a34c59241044f8e90db0d66fa5",
+    "mtime": 1787435837.108989,
+    "ast_hash": "d90e2782473f045f20380dc173557ea8",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/page-selector-in-header.tsx": {
-    "mtime": 1787432834.6146598,
-    "ast_hash": "2febf623f68c30c9246df258917d3c08",
+    "mtime": 1787435169.379167,
+    "ast_hash": "681b162e6c37bc867f7e7313d7163018",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/seo-icon.tsx": {
@@ -10705,8 +10705,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/components/topbar-mode-switcher.tsx": {
-    "mtime": 1785773734.3925261,
-    "ast_hash": "ac52a25f3a4ec2ccb54434102f5af3a3",
+    "mtime": 1787435164.7828577,
+    "ast_hash": "97d6f39f28ed265998850cb83d4fb533",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/seo-left-panel.tsx": {
@@ -10897,6 +10897,16 @@
   "src/features/cms/feeds.ts": {
     "mtime": 1787423304.2419143,
     "ast_hash": "20828f99f4000c063970299260976b59",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/pages/client/components/topbar/inspector-toggle.tsx": {
+    "mtime": 1787435832.198914,
+    "ast_hash": "1209b7445a6bf391f0b400f18e37a5e6",
+    "semantic_hash": ""
+  },
+  "packages/chaibuilder-sdk/src/core/components/topbar/topbar-icons.tsx": {
+    "mtime": 1787435822.7962224,
+    "ast_hash": "95cdefb7f2257a73b87e99199e1bda02",
     "semantic_hash": ""
   }
 }

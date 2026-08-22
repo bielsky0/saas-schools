@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "~/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
-import { cn } from "~/core/functions/common-functions";
 import { LeftPanelMode, useLeftPanelMode } from "~/hooks/use-theme";
 import { usePagesProp } from "~/pages/hooks/project/use-builder-prop";
 import { SeoIcon } from "./seo-icon";
@@ -19,21 +18,13 @@ export const BackToDashboard = () => {
   const backUrl = usePagesProp("getBackUrl", "/dashboard");
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 rounded-md"
-          aria-label={t("Back to dashboard")}
-          onClick={() => {
-            window.location.href = backUrl;
-          }}>
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent>{t("Back to dashboard")}</TooltipContent>
-    </Tooltip>
+    <a
+      href={backUrl}
+      data-polaris-unstyled="true"
+      aria-label={t("Back to dashboard")}
+      className="flex h-8 w-8 items-center justify-center rounded text-gray-700 transition-colors duration-150 hover:bg-black/6">
+      <ArrowLeft className="h-4 w-4" />
+    </a>
   );
 };
 
@@ -64,11 +55,10 @@ export const TopbarModeSwitcher = () => {
         <Tooltip key={id}>
           <TooltipTrigger asChild>
             <Button
-              variant="ghost"
+              variant="plain"
               size="icon"
               aria-label={t(label)}
               aria-pressed={mode === id}
-              className={cn("h-8 w-8 rounded-md", mode === id && "bg-gray-200 text-gray-900")}
               onClick={() => setMode(id)}>
               <Icon className="h-4 w-4" />
             </Button>

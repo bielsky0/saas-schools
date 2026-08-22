@@ -72,12 +72,12 @@ const DesktopBuilderLayout = () => {
           {t("Skip to canvas")}
         </a>
         <div onContextMenu={preventContextMenu} className="flex h-full max-h-full flex-col">
-          <div className="flex h-[50px] w-screen items-center border-b border-gray-200 bg-gray-50 text-gray-900">
+          <div className="flex h-12 w-screen items-center border-b border-gray-200 bg-gray-50 text-gray-900">
             <Suspense>
               <TopBar />
             </Suspense>
           </div>
-          <main className="relative flex h-[calc(100vh-56px)] max-w-full flex-1 flex-row">
+          <main className="relative flex h-[calc(100vh-49px)] max-w-full flex-1 flex-row">
             <BuilderLeftPanel />
             <div id="canvas-container" className="flex h-full max-h-full flex-1 flex-col bg-slate-800/20">
               <Suspense>

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "~/components/ui/button";
-import { AiIcon } from "~/core/components/ai/ai-icon";
+import { SidekickIcon } from "~/core/components/topbar/topbar-icons";
 import { PERMISSIONS } from "~/core/main";
 import { useAiAssistant } from "~/hooks/use-ask-ai";
 import { useBuilderProp } from "~/hooks/use-builder-prop";
@@ -18,12 +18,13 @@ export const AiAssistant = () => {
   if (!askAiCallBack || !hasPermission(PERMISSIONS.EDIT_BLOCK) || !isAiEnabled) return null;
   return (
     <Button
-      variant={aiDrawerOpen ? "default" : "ghost"}
+      variant="plain"
       size="icon"
-      className="h-8 w-8 rounded-md"
+      aria-pressed={aiDrawerOpen}
+      aria-expanded={aiDrawerOpen}
       title={t("Ask AI")}
       onClick={() => setAiAssistantActive(!aiDrawerOpen)}>
-      <AiIcon className="h-4 w-4" />
+      <SidekickIcon className="h-5 w-5" />
     </Button>
   );
 };
