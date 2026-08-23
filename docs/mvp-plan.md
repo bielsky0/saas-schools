@@ -17,10 +17,37 @@ Utrwalone decyzje:
 - Typy zajęć, grupy itp. tworzy się w dashboardzie (w kalendarzu zaznaczając itp.).
 - **Strony zapisów działają jak blogi**: są szablony + elementy/bloki dostępne tylko dla zapisów,
   edytowane w ChaiBuilder.
-- **AI provider ustawiony na sztywno w kodzie** — klient nie zmienia modelu.
+- **AI provider ustawiony na sztywno w kodzie** — klient nie zmienia modelu. Na razie
+  **nie implementujemy logiki AI** — tylko workflow/UI (stub), logika później.
 - **Strona 404** — normalnie edytowalna, ale są gotowe sekcje do niej.
 - **Listing zapisów** — edytowalny w edytorze, z gotowymi sekcjami.
 - **Predefiniowane sekcje mają preview jako PNG** (jak w oryginalnym ChaiLibrary — to działało dobrze).
+  PNG-y generuję **ręcznie**.
+
+## 0a. Builder stron — architektura „Section First"
+
+**Wizja:** bloki nadal można dodawać ręcznie, ale UI **faworyzuje edytowanie sekcji przez AI**,
+a nie precyzyjne ręczne układanie bloków. Sekcje działają tak jak teraz — mechanizm się nie
+zmienia, tylko UI/UX ukierunkowuje użytkownika na sekcje + AI.
+
+| Panel | Rola |
+|-------|------|
+| **Left Panel** | **Bez zmian** — działa jak teraz (block picker, sekcje, dolny panel styli po kliknięciu elementu, mechanizm F7.1/F7.2). Nie dodajemy nowej zakładki „Sekcje" na razie. |
+| **Right Panel** | **Tylko AI Assistant** — brak tam edycji stylów (Style tab NIE jest w right panelu). Na razie placeholder/stub (F7.4 `AiPanel`). |
+| **Canvas** | Section-first: DND sekcji, reorder. Sekcja = Container z predefiniowanymi dziećmi (jak teraz). |
+| **AI (później)** | Operuje na sekcjach przez tool calling: insert, replace, updateStyle, reorder. Model hardcoded. |
+
+Kluczowe decyzje UX (utrwalone):
+
+- **Right panel = wyłącznie AI Assistant.** Nie dodajemy tam zakładki Style.
+- **Edycja stylów** danego bloku/sekcji odbywa się w **left panelu** po kliknięciu elementu na
+  kanwie — **zostawiamy obecny mechanizm** (dolny panel z F7.1/F7.2) **bez zmian w lewym panelu**.
+- **Sekcje działają jak teraz** (SDK `SectionCatalogEntry` + `role: "template"`), bez zmian
+  w mechanizmie — **logika budowania nie zmienia się**. Section-first to tylko faworyzacja
+  w UI/UX (szczegóły jak ma działać opiszę później).
+- **AI na razie nie budujemy** — robimy UI/workflow (gdzie przycisk, jaki panel, jak wygląda),
+  logika podpięta później.
+- **Brak zmian w SDK left panelu** (`builder-left-panel.tsx`) — obecny stan zostaje.
 
 ## 1. Graficzny plan faz
 
@@ -29,7 +56,7 @@ Faza 1 ─── System pages + widoczność w topbarze
    │
 Faza 2 ─── Kolekcja Enrollments (model Shopify: produkt = GroupType, kolekcja = listing)
    │
-Faza 3 ─── Biblioteka sekcji per nisza (PNG preview) + AI w edytorze
+Faza 3 ─── Sekcje per nisza + Section-First UX (PNG preview, stub AI)
    │
 Faza 4 ─── Dashboard UX: Schedule Builder + Kreator Group Type
    │
@@ -94,15 +121,16 @@ Kluczowe pliki:
 - `src/app/[locale]/(site)/zapisy/[[...slug]]/page.tsx` (replace) — renderer CMS
 - `src/app/(builder)/editor/api/route.ts` — data binding dla `enrollment_detail`
 
-## 4. Faza 3 — Biblioteka sekcji per nisza + AI
+## 4. Faza 3 — Sekcje per nisza + Section-First UX (+ stub AI)
 
-**Cel:** predefiniowane sekcje zamiast wymuszania dodawania bloków; AI do zmian w edytorze.
+**Cel:** predefiniowane sekcje zamiast wymuszania dodawania bloków; UI faworyzuje sekcje i AI.
+Logikę AI **odkładamy** — na razie tylko workflow i wygląd.
 
 ### 4.1 Biblioteka sekcji z PNG preview
 
 - SDK wspiera `thumbnail` w `SectionCatalogEntry` (`src/types/section-catalog.ts`):
   `"auto"` = render z default props; **URL** = bezpośredni obrazek.
-- Stworzyć `public/section-previews/{niche}/*.png` — screenshoty sekcji.
+- Stworzyć `public/section-previews/{niche}/*.png` — screenshoty sekcji (**generuję ręcznie**).
 - `src/lib/blocks-library/{swimming,school,dance,general}-sections.ts`:
   - `swimming` — hero z basenem, siatka harmonogramu, karty trenerów, tabela cen
   - `school` — siatka programu, profile nauczycieli, karuzela opinii, formularz kontaktowy
@@ -112,7 +140,22 @@ Kluczowe pliki:
   `testimonials`; każdy wpis ma `thumbnail: "/section-previews/...png"`.
 - Sekcje do 404 i listingu — gotowe warianty.
 
-### 4.2 AI w edytorze
+### 4.2 Section-First UX (bez zmian w lewym panelu)
+
+> **Decyzja (2026-08-23):** lewy panel zostaje jak jest — **żadnych zmian w SDK**
+> (`builder-left-panel.tsx`). Szczegóły jak ma działać faworyzacja sekcji i AI — **do
+> doprecyzowania później** (w osobnym opisie od właściciela projektu).
+
+- **Left panel bez zmian** — obecny stan (block picker + dolny panel styli F7.1/F7.2).
+- **Right panel = tylko AI Assistant** — na razie placeholder (stub z F7.4 `AiPanel`).
+- **Edycja stylów** w left panelu po kliknięciu elementu na kanwie (mechanizm F7.1/F7.2 — bez zmian).
+- Sekcje wylistowane w `section-catalog.ts` + dostępne z biblioteki (`blocks-library`).
+- Faworyzacja sekcji przez UI/UX + szczegóły AI workflow — **poźniej, po doprecyzowaniu**.
+
+### 4.3 AI w edytorze (PÓŹNIEJ — logika, nie teraz)
+
+> **Decyzja (2026-08-23):** logika AI odłożona. Na razie budujemy tylko workflow/UI
+> (gdzie przycisk, jaki panel, jak wygląda). Poniżej zapis planu na przyszłość.
 
 - Przycisk `AiAssistant` w topbarze (SDK) już istnieje — wymaga `askAiCallBack` + `flags.ai`.
   Edytor (`src/app/(builder)/editor/editor.tsx`) już przekazuje `flags.ai: true`.
@@ -190,9 +233,10 @@ Istniejąca infrastruktura (do re-use): `src/features/billing/connect-*.ts`,
 | `src/lib/db/schema/pages.ts` | Tabela `page` — nowe pageType systemowe |
 | `src/lib/db/schema/cms-collections.ts` | `DEFAULT_CMS_COLLECTIONS` + kolekcja `enrollments` |
 | `src/features/organizations/actions.ts` | Seed initial data przy tworzeniu org |
-| `src/app/(builder)/editor/api/route.ts` | API buildera — data binding, AI, akcje |
-| `src/app/(builder)/editor/editor.tsx` | `askAiCallBack` + konfiguracja edytora |
+| `src/app/(builder)/editor/api/route.ts` | API buildera — data binding, (później) AI, akcje |
+| `src/app/(builder)/editor/editor.tsx` | Konfiguracja edytora, (później) `askAiCallBack` |
 | `packages/chaibuilder-sdk/src/pages/client/components/page-selector-in-header.tsx` | Sekcja „Strony systemowe" w topbarze |
+| `packages/chaibuilder-sdk/src/pages/client/layouts/right-panel/` | Right panel = tylko AI Assistant (stub, bez zmian na razie) |
 | `src/lib/section-catalog.ts` | Katalog sekcji per nisza + PNG preview |
 | `src/lib/blocks-library.ts` | Biblioteka szablonów (rozbudowa o nisze) |
 | `src/blocks/` | Bloki zapisów (`Enrollment*`) |
@@ -205,7 +249,7 @@ Istniejąca infrastruktura (do re-use): `src/features/billing/connect-*.ts`,
 |---|---|
 | F1 — System pages + topbar | 4–5h |
 | F2 — Kolekcja Enrollments + bloki | 8–10h |
-| F3 — Sekcje per nisza + AI | 6–8h |
+| F3 — Sekcje per nisza + Section-First UX (stub AI) | 6–8h |
 | F4 — Dashboard UX (Schedule Builder + wizard) | 8–10h |
 | F5 — Stripe Connect E2E + polish | 4–6h |
 | F6 — Initial data / onboarding | 4–5h |
@@ -217,7 +261,7 @@ Istniejąca infrastruktura (do re-use): `src/features/billing/connect-*.ts`,
 |------|--------|------|--------------------|
 | F1 — System pages + topbar | ⬜ | — | — |
 | F2 — Kolekcja Enrollments | ⬜ | — | — |
-| F3 — Sekcje per nisza + AI | ⬜ | — | — |
+| F3 — Sekcje per nisza + Section-First UX | ⬜ | — | — |
 | F4 — Dashboard UX | ⬜ | — | — |
 | F5 — Stripe Connect E2E | ⬜ | — | — |
 | F6 — Initial data / onboarding | ⬜ | — | — |
