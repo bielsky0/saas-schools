@@ -13,7 +13,7 @@ import { useLanguages } from "~/hooks/use-languages";
 import { ChaiBlock } from "~/types/common";
 import { ChaiAskAiResponse } from "~/types/chaibuilder-editor-props";
 import { groupSections } from "./section-groups";
-import { SectionLibrarySheet, sectionLibraryOpenAtom } from "./section-library";
+import { SectionPickerPopover } from "./section-picker";
 import { SectionTree } from "./section-tree";
 
 export const generateSectionDialogOpenAtom = atom(false);
@@ -32,7 +32,7 @@ const GroupHeader = ({ label }: { label: string }) => (
   </div>
 );
 
-const EmptyPageState = ({ onAdd }: { onAdd: () => void }) => {
+const EmptyPageState = () => {
   const { t } = useTranslation();
   return (
     <div className="flex h-full flex-col items-center justify-center p-4 text-center">
@@ -43,10 +43,14 @@ const EmptyPageState = ({ onAdd }: { onAdd: () => void }) => {
       <p className="mt-1 max-w-xs text-xs text-muted-foreground">
         {t("Get started by adding your first block to begin building your page")}
       </p>
-      <Button onClick={onAdd} className="mt-4" size="sm">
-        <PlusIcon className="h-4 w-4" />
-        {t("Add section")}
-      </Button>
+      <SectionPickerPopover
+        trigger={
+          <Button size="sm" className="mt-4">
+            <PlusIcon className="h-4 w-4" />
+            {t("Add section")}
+          </Button>
+        }
+      />
     </div>
   );
 };
@@ -136,35 +140,37 @@ export const GenerateSectionDialog = () => {
 export const SectionsTab = () => {
   const { t } = useTranslation();
   const [treeData] = useAtom(treeDSBlocks);
-  const [, setLibraryOpen] = useAtom(sectionLibraryOpenAtom);
 
   const groups = useMemo(() => groupSections(treeData), [treeData]);
 
   const isEmptyPage = treeData.length === 0;
 
-  const AddSectionButton = (
-    <button
-      type="button"
-      onClick={() => setLibraryOpen(true)}
-      className="mx-2 flex h-[30px] cursor-pointer items-center gap-2 rounded-lg px-1 hover:bg-[#F1F1F1]">
-      <span className="flex h-4 w-4 shrink-0 items-center justify-center text-[#005BD3]">
-        <svg viewBox="0 0 16 16" className="h-4 w-4 fill-current" aria-hidden="true">
-          <path d="M4.25 8a.75.75 0 0 1 .75-.75h2.25v-2.25a.75.75 0 0 1 1.5 0v2.25h2.25a.75.75 0 0 1 0 1.5h-2.25v2.25a.75.75 0 0 1-1.5 0v-2.25h-2.25a.75.75 0 0 1-.75-.75" />
-          <path
-            fillRule="evenodd"
-            d="M8 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14m0-1.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 1 0 0 11"
-          />
-        </svg>
-      </span>
-      <span className="text-[12px] leading-4 text-[#005BD3]">{t("Add section")}</span>
-    </button>
+  const AddSectionPicker = (
+    <SectionPickerPopover
+      trigger={
+        <button
+          type="button"
+          className="mx-2 flex h-[30px] cursor-pointer items-center gap-2 rounded-lg px-1 hover:bg-[#F1F1F1]">
+          <span className="flex h-4 w-4 shrink-0 items-center justify-center text-[#005BD3]">
+            <svg viewBox="0 0 16 16" className="h-4 w-4 fill-current" aria-hidden="true">
+              <path d="M4.25 8a.75.75 0 0 1 .75-.75h2.25v-2.25a.75.75 0 0 1 1.5 0v2.25h2.25a.75.75 0 0 1 0 1.5h-2.25v2.25a.75.75 0 0 1-1.5 0v-2.25h-2.25a.75.75 0 0 1-.75-.75" />
+              <path
+                fillRule="evenodd"
+                d="M8 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14m0-1.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 1 0 0 11"
+              />
+            </svg>
+          </span>
+          <span className="text-[12px] leading-4 text-[#005BD3]">{t("Add section")}</span>
+        </button>
+      }
+    />
   );
 
   return (
     <div className="flex h-full flex-col">
       <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto pb-2">
         {isEmptyPage ? (
-          <EmptyPageState onAdd={() => setLibraryOpen(true)} />
+          <EmptyPageState />
         ) : (
           groups.map((group) => {
             const tree =
@@ -177,15 +183,13 @@ export const SectionsTab = () => {
             return (
               <div key={group.id} className="pb-2">
                 <GroupHeader label={t(group.labelKey)} />
-                {isFooterGroup ? AddSectionButton : tree}
-                {isFooterGroup ? tree : AddSectionButton}
+                {isFooterGroup ? AddSectionPicker : tree}
+                {isFooterGroup ? tree : AddSectionPicker}
               </div>
             );
           })
         )}
       </div>
-
-      <SectionLibrarySheet />
     </div>
   );
 };

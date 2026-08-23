@@ -20,6 +20,15 @@ export type SectionCategory =
   | "cards"
   | "media";
 
+export type SectionPickerCategoryId =
+  | "Banery"
+  | "Formularze"
+  | "Kolekcje"
+  | "Narracja"
+  | "Produkty"
+  | "Tekst"
+  | "Układ";
+
 export interface SectionCatalogEntry {
   /** `_type` of the block, e.g. "GroupTypeCard", "Hero". */
   type: string;
@@ -31,6 +40,8 @@ export interface SectionCatalogEntry {
   descriptionKey?: string;
   /** "auto" renders a thumbnail from the block default props; a URL uses it directly. */
   thumbnail?: string | "auto";
+  /** Optional override for the Section Picker category (defaults to a mapping of `category`). */
+  pickerCategory?: SectionPickerCategoryId;
 }
 
 export interface SectionCatalog {

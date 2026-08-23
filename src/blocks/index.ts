@@ -1,4 +1,4 @@
-import { registerChaiBlock, registerSectionCatalogEntries } from "@chaibuilder/sdk/runtime";
+import { registerChaiBlock, registerBlockPickerCategories, registerSectionCatalogEntries } from "@chaibuilder/sdk/runtime";
 
 import { Component as GroupTypeCard, Config as GroupTypeCardConfig } from "./GroupTypeCard/config";
 import { Component as UpcomingEvents, Config as UpcomingEventsConfig } from "./UpcomingEvents/config";
@@ -31,3 +31,19 @@ registerChaiBlock(BlogPostList, BlogPostListConfig);
 registerChaiBlock(BlogPagination, BlogPaginationConfig);
 
 registerSectionCatalogEntries(langlionSectionCatalogEntries);
+
+registerBlockPickerCategories([
+  ["GroupTypeCard", "Produkt"],
+  ["UpcomingEvents", "Produkt"],
+  ["BookingButton", "Formularze"],
+  ["InstructorCard", "Podstawowe"],
+  ["BlogPostTitle", "Podstawowe"],
+  ["BlogPostContent", "Podstawowe"],
+  ["BlogPostImage", "Podstawowe"],
+  ["BlogPostAuthor", "Podstawowe"],
+  ["BlogPostDate", "Podstawowe"],
+  ["BlogPostExcerpt", "Podstawowe"],
+  ["BlogPostTags", "Podstawowe"],
+  ["BlogPostList", "Podstawowe"],
+  ["BlogPagination", "Podstawowe"],
+]);

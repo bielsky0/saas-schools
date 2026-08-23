@@ -96,6 +96,10 @@ export {
   registerSectionCatalogEntries,
   registerSectionCatalogEntry,
 } from "~/pages/client/layouts/left-panel/section-catalog";
+export {
+  registerBlockPickerCategories,
+  registerBlockPickerCategory,
+} from "~/pages/client/layouts/left-panel/picker/picker-categories";
 export type {
   SectionCatalog,
   SectionCatalogEntry,

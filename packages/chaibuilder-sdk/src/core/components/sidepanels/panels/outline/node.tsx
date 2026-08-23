@@ -25,6 +25,7 @@ import { useStructureValidation } from "~/hooks/use-structure-validation";
 import { useUpdateBlocksProps } from "~/hooks/use-update-blocks-props";
 import { ConfirmDeleteSectionDialog } from "./confirm-delete-section-dialog";
 import { DragHandle } from "./drag-handle";
+import { BlockPickerPopover } from "~/pages/client/layouts/left-panel/block-picker";
 
 export type TreeKind = "sections" | "blocks" | "outline";
 
@@ -257,36 +258,55 @@ export const Node = memo(({ node, style, dragHandle, treeKind = "outline", group
 
   if (data._type === ROOT_TEMP_KEY) {
     const isOutlineRow = treeKind === "outline";
+    const addRow = (
+      <div
+        role="button"
+        tabIndex={-1}
+        onClick={(e) => {
+          if (isOutlineRow) {
+            e.stopPropagation();
+            addBlockOnPosition(-1);
+          }
+        }}
+        className={cn(
+          "flex h-[30px] cursor-pointer items-center rounded-lg px-1 text-[12px] leading-4 text-[#005BD3] hover:bg-[#F1F1F1]",
+          isOutlineRow ? "gap-2" : "gap-1",
+        )}>
+        {!isOutlineRow && (
+          <>
+            <span className="h-5 w-5 shrink-0" />
+            <span className="h-4 w-4 shrink-0" />
+          </>
+        )}
+        <span className="flex h-4 w-4 shrink-0 items-center justify-center text-[#005BD3]">
+          <svg viewBox="0 0 16 16" className="h-4 w-4 fill-current" aria-hidden="true">
+            <path d="M4.25 8a.75.75 0 0 1 .75-.75h2.25v-2.25a.75.75 0 0 1 1.5 0v2.25h2.25a.75.75 0 0 1 0 1.5h-2.25v2.25a.75.75 0 0 1-1.5 0v-2.25h-2.25a.75.75 0 0 1-.75-.75" />
+            <path
+              fillRule="evenodd"
+              d="M8 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14m0-1.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 1 0 0 11"
+            />
+          </svg>
+        </span>
+        <span>{t("Add block")}</span>
+      </div>
+    );
+
+    if (isOutlineRow) {
+      return (
+        <div className="group relative mx-2" style={style}>
+          {addRow}
+        </div>
+      );
+    }
+
+    const parentId = get(node, "parent.id");
     return (
       <div className="group relative mx-2" style={style}>
-        <div
-          role="button"
-          tabIndex={-1}
-          onClick={(e) => {
-            e.stopPropagation();
-            addBlockOnPosition(isOutlineRow ? -1 : 0);
-          }}
-          className={cn(
-            "flex h-[30px] cursor-pointer items-center rounded-lg px-1 text-[12px] leading-4 text-[#005BD3] hover:bg-[#F1F1F1]",
-            isOutlineRow ? "gap-2" : "gap-1",
-          )}>
-          {!isOutlineRow && (
-            <>
-              <span className="h-5 w-5 shrink-0" />
-              <span className="h-4 w-4 shrink-0" />
-            </>
-          )}
-          <span className="flex h-4 w-4 shrink-0 items-center justify-center text-[#005BD3]">
-            <svg viewBox="0 0 16 16" className="h-4 w-4 fill-current" aria-hidden="true">
-              <path d="M4.25 8a.75.75 0 0 1 .75-.75h2.25v-2.25a.75.75 0 0 1 1.5 0v2.25h2.25a.75.75 0 0 1 0 1.5h-2.25v2.25a.75.75 0 0 1-1.5 0v-2.25h-2.25a.75.75 0 0 1-.75-.75" />
-              <path
-                fillRule="evenodd"
-                d="M8 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14m0-1.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 1 0 0 11"
-              />
-            </svg>
-          </span>
-          <span>{t("Add block")}</span>
-        </div>
+        <BlockPickerPopover
+          trigger={addRow}
+          parentId={parentId === "__REACT_ARBORIST_INTERNAL_ROOT__" ? undefined : parentId}
+          position={-1}
+        />
       </div>
     );
   }

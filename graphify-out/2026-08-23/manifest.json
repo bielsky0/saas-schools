@@ -6025,8 +6025,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/node.tsx": {
-    "mtime": 1787503108.4945524,
-    "ast_hash": "8a50ec752610185dd990825a96203ec1",
+    "mtime": 1787512032.3647504,
+    "ast_hash": "03377716ce118d2008a4b0686922f322",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/components/sidepanels/panels/outline/paste-into-root.tsx": {
