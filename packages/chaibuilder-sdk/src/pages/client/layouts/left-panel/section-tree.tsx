@@ -16,39 +16,64 @@ import {
   selectParent,
   selectPrev,
 } from "~/core/components/sidepanels/panels/outline/default-shortcuts";
-import { Node } from "~/core/components/sidepanels/panels/outline/node";
+import { Node, TreeKind } from "~/core/components/sidepanels/panels/outline/node";
 import { SaveToLibraryModal } from "~/core/components/sidepanels/panels/outline/upsert-library-block-modal";
 import { PasteAtRootContextMenu } from "~/core/components/sidepanels/panels/outline/paste-into-root";
 import { ROOT_TEMP_KEY } from "~/core/constants/STRINGS";
-import { canAcceptChildBlock } from "~/core/functions/block-helpers";
+import { canAcceptChildBlock, canAddChildBlock } from "~/core/functions/block-helpers";
 import { useBlocksStore, useBlocksStoreUndoableActions } from "~/hooks/history/use-blocks-store-undoable-actions";
 import { useCutBlockIds } from "~/hooks/use-cut-blockIds";
+import { expandedIdsAtom } from "~/hooks/use-expand-tree";
 import { useSelectedBlockIds } from "~/hooks/use-selected-blockIds";
 import { useSelectedStylingBlocks } from "~/hooks/use-selected-styling-blocks";
 import { useUpdateBlocksProps } from "~/hooks/use-update-blocks-props";
 import { ChaiBlock } from "~/types/common";
-import { SectionTreeNode } from "./section-groups";
+import { SectionGroupId, SectionTreeNode } from "./section-groups";
 
 interface SectionTreeProps {
   data: SectionTreeNode[];
   nodeRenderer?: React.ComponentType<NodeRendererProps<any>>;
+  /**
+   * "sections" → top-level rows are sections (delete, group icons, chevron always);
+   * "blocks" → top-level rows are blocks (no delete, type icons);
+   * "outline" → legacy outline behaviour (default).
+   */
+  treeKind?: TreeKind;
+  /** Group role for section icons (header / template / footer). */
+  groupRole?: SectionGroupId;
 }
 
 const ROW_HEIGHT = 30;
 const TREE_PADDING = 8;
 
+/** Top-level ancestor id of a block (its section). */
+const getTopLevelId = (blocks: ChaiBlock[], id: string): string | undefined => {
+  let current = find(blocks, { _id: id }) as ChaiBlock | undefined;
+  let top: string | undefined = current?._id;
+  while (current?._parent) {
+    current = find(blocks, { _id: current._parent }) as ChaiBlock | undefined;
+    top = current?._id;
+  }
+  return top;
+};
+
 const useCanMove = () => {
   const [blocks] = useBlocksStore();
   return (ids: string[], newParentId: string | null) => {
+    const firstId = first(ids);
+    const blockType = first(ids.map((id) => find(blocks, { _id: id })?._type));
+    if (!blockType || !firstId) return false;
+    const source = find(blocks, { _id: firstId }) as ChaiBlock | undefined;
     if (!newParentId) {
-      const blockType = first(ids.map((id) => find(blocks, { _id: id })?._type));
-      return !!blockType;
+      // Root drop: only top-level nodes (sections) can be reordered at root;
+      // blocks must never leave their section (Shopify §5.6).
+      return !source?._parent;
     }
     const newParentType = find(blocks, { _id: newParentId });
     if (!newParentType) return false;
-    const blockType = first(ids.map((id) => find(blocks, { _id: id })?._type));
-    if (!blockType) return false;
-    return canAcceptChildBlock((newParentType as ChaiBlock)._type, blockType);
+    if (!canAcceptChildBlock((newParentType as ChaiBlock)._type, blockType)) return false;
+    // Blocks stay within their top-level section; sections stay at top level.
+    return getTopLevelId(blocks, firstId) === getTopLevelId(blocks, newParentId);
   };
 };
 
@@ -60,9 +85,10 @@ const filterOutCutBlocks = (data: SectionTreeNode[], cutIds: string[]): SectionT
       children: node.children ? filterOutCutBlocks(node.children, cutIds) : [],
     }));
 
-export const SectionTree = ({ data, nodeRenderer }: SectionTreeProps) => {
+export const SectionTree = ({ data, nodeRenderer, treeKind = "sections", groupRole }: SectionTreeProps) => {
   const [ids, setIds] = useSelectedBlockIds();
   const [cutBlocksIds] = useCutBlockIds();
+  const [expandedIds] = useAtom(expandedIdsAtom);
   const updateBlockProps = useUpdateBlocksProps();
   const [, setStyleBlocks] = useSelectedStylingBlocks();
   const { moveBlocks } = useBlocksStoreUndoableActions();
@@ -73,11 +99,22 @@ export const SectionTree = ({ data, nodeRenderer }: SectionTreeProps) => {
   const [parentContext, setParentContext] = useState<{ x: number; y: number } | null>(null);
   const [treeHeight, setTreeHeight] = useState(() => data.length * ROW_HEIGHT + TREE_PADDING);
   const NodeRenderer = nodeRenderer ?? Node;
+  const userCollapsedRef = useRef<Set<string>>(new Set());
 
-  const treeData = useMemo(
-    () => filterOutCutBlocks(data, cutBlocksIds),
-    [data, cutBlocksIds],
-  );
+  const treeData = useMemo(() => {
+    const filtered = filterOutCutBlocks(data, cutBlocksIds);
+    // Prepend a Shopify-style "Add block" row as the first child of every node
+    // that can accept children (sections and layout blocks).
+    const appendAddRow = (nodes: SectionTreeNode[]): SectionTreeNode[] =>
+      nodes.map((node) => {
+        const children = node.children ? appendAddRow(node.children) : [];
+        const withAdd = canAddChildBlock(node._type ?? "")
+          ? [{ _type: ROOT_TEMP_KEY, _id: `__ADD_BLOCK_${node._id}`, children: [] }, ...children]
+          : children;
+        return { ...node, children: withAdd };
+      });
+    return appendAddRow(filtered);
+  }, [data, cutBlocksIds]);
 
   const syncHeight = useCallback(() => {
     const visible = treeRef.current?.visibleNodes?.length;
@@ -87,6 +124,29 @@ export const SectionTree = ({ data, nodeRenderer }: SectionTreeProps) => {
   useEffect(() => {
     syncHeight();
   }, [treeData, syncHeight]);
+
+  // Shopify: sections are expanded by default and stay expanded until the user
+  // explicitly collapses them (tracked in `userCollapsedRef`).
+  useEffect(() => {
+    const t = treeRef.current;
+    if (!t) return;
+    treeData.forEach((node) => {
+      const n = t.get(node._id);
+      if (n?.children?.length && !n.isOpen && !userCollapsedRef.current.has(node._id)) {
+        t.open(node._id);
+      }
+    });
+  }, [treeData]);
+
+  // Reveal the selected block: expand the path to it (from useExpandTree).
+  useEffect(() => {
+    const t = treeRef.current;
+    if (!t) return;
+    expandedIds.forEach((id) => {
+      const n = t.get(id);
+      if (n?.children?.length && !n.isOpen) t.open(id);
+    });
+  }, [expandedIds]);
 
   const clearSelection = () => {
     setIds([]);
@@ -127,10 +187,10 @@ export const SectionTree = ({ data, nodeRenderer }: SectionTreeProps) => {
 
   const debouncedDisableDrop = useDebouncedCallback(
     ({ parentNode, dragNodes }) => {
+      const dragId = dragNodes?.[0]?.id;
       const disabled = !dragNodes?.length
         ? false
-        : parentNode?.data._type === ROOT_TEMP_KEY ||
-          !canAcceptChildBlock(parentNode?.data._type, dragNodes[0]?.data._type);
+        : parentNode?.data._type === ROOT_TEMP_KEY || !canMove([dragId], parentNode?.id ?? null);
       setDropCursorInvalid(Boolean(disabled));
       return disabled;
     },
@@ -218,6 +278,13 @@ export const SectionTree = ({ data, nodeRenderer }: SectionTreeProps) => {
     return () => observer.disconnect();
   }, [setTreeRef]);
 
+  const RenderNode = useCallback(
+    (props: NodeRendererProps<any>) => (
+      <NodeRenderer {...(props as any)} treeKind={treeKind} groupRole={groupRole} />
+    ),
+    [NodeRenderer, treeKind, groupRole],
+  );
+
   return (
     <div className="flex flex-col" onClick={() => clearSelection()}>
       <div
@@ -236,7 +303,12 @@ export const SectionTree = ({ data, nodeRenderer }: SectionTreeProps) => {
             onRename={onRename}
             openByDefault={false}
             onMove={onMove}
-            onToggle={() => setTimeout(syncHeight, 0)}
+            onToggle={(id) => {
+              const n = treeRef.current?.get(id);
+              if (n?.isOpen) userCollapsedRef.current.delete(id);
+              else userCollapsedRef.current.add(id);
+              setTimeout(syncHeight, 0);
+            }}
             data={treeData}
             renderCursor={DefaultCursor}
             onSelect={onSelect}
@@ -244,11 +316,11 @@ export const SectionTree = ({ data, nodeRenderer }: SectionTreeProps) => {
             width={"100%"}
             rowHeight={30}
             renderDragPreview={() => null}
-            indent={24}
+            indent={28}
             onContextMenu={onContextMenu}
             disableDrop={debouncedDisableDrop as any}
             idAccessor={"_id"}>
-            {NodeRenderer as any}
+            {RenderNode as any}
           </Tree>
       </div>
       <SaveToLibraryModal />

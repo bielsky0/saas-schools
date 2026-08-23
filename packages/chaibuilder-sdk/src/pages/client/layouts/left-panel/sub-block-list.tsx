@@ -43,7 +43,7 @@ export const SubBlockList = memo(() => {
           {children.length}
         </span>
       </div>
-      <SectionTree data={children} />
+      <SectionTree data={children} treeKind="blocks" />
     </div>
   );
 });

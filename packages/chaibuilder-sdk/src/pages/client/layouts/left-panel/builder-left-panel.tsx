@@ -39,7 +39,7 @@ export const BuilderLeftPanel = () => {
   // F7.5: resizable left panel (320-500px). The panel starts at x=0, so the
   // pointer's clientX is the width directly. Document-level listeners survive
   // dragging outside the handle element.
-  const [leftPanelWidth, setLeftPanelWidth] = useState(300);
+  const [leftPanelWidth, setLeftPanelWidth] = useState(344);
 
   const onResizeStart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();

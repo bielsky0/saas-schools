@@ -26,19 +26,19 @@ export const DefaultCursor = React.memo(function DefaultCursor({ top, left, inde
       <div
         className={cn(
           "h-[2px] w-[6px] rounded-full",
-          isInvalid ? "bg-red-500" : "bg-primary",
+          isInvalid ? "bg-red-500" : "bg-[#005BD3]",
         )}
       />
       <div
         className={cn(
           "h-[2px] flex-1 rounded-full",
-          isInvalid ? "bg-red-500" : "bg-primary",
+          isInvalid ? "bg-red-500" : "bg-[#005BD3]",
         )}
       />
       <div
         className={cn(
           "h-[2px] w-[6px] rounded-full",
-          isInvalid ? "bg-red-500" : "bg-primary",
+          isInvalid ? "bg-red-500" : "bg-[#005BD3]",
         )}
       />
     </div>
