@@ -1,4 +1,4 @@
-import { TrashIcon } from "@radix-ui/react-icons";
+import { EyeOpenIcon, TrashIcon } from "@radix-ui/react-icons";
 import { has, isString } from "lodash-es";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -61,15 +61,19 @@ export const VisibilitySettings = () => {
 
   return (
     <div className="my-2 flex items-center justify-between">
-      <p className="text-xs text-gray-500">{t("Visibility")}</p>
-      <div className="group relative">
+      <div className="flex items-center gap-1.5">
+        <p className="text-xs text-gray-500">{t("Visibility")}</p>
         <Popover open={isOpen} onOpenChange={handleOpenChange}>
           <PopoverTrigger asChild>
-            <div
-              className={`absolute -left-2 -top-1.5 z-10 h-3.5 w-3.5 cursor-pointer rounded-full border border-white bg-blue-500 transition-all hover:scale-125 ${
-                isBound ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-              }`}
-            />
+            <button
+              type="button"
+              aria-label={t("Conditional Visibility")}
+              title={t("Conditional Visibility")}
+              className={`flex h-6 w-6 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-black/[.06] hover:text-foreground ${
+                isBound ? "text-blue-500" : ""
+              }`}>
+              <EyeOpenIcon className="h-4 w-4" />
+            </button>
           </PopoverTrigger>
           <PopoverContent side="left" className="w-64 p-3">
             <div className="grid gap-2">
@@ -101,12 +105,12 @@ export const VisibilitySettings = () => {
             </div>
           </PopoverContent>
         </Popover>
-        <Switch
-          checked={isBound ? true : has(selectedBlock, "_show") ? selectedBlock._show : true}
-          onCheckedChange={onToggleShow}
-          disabled={isBound}
-        />
       </div>
+      <Switch
+        checked={isBound ? true : has(selectedBlock, "_show") ? selectedBlock._show : true}
+        onCheckedChange={onToggleShow}
+        disabled={isBound}
+      />
     </div>
   );
 };

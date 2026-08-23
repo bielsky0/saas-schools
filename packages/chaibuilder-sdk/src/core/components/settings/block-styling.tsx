@@ -1,6 +1,7 @@
 import { useThrottledCallback } from "@react-hookz/web";
 import { get, isEmpty, startsWith } from "lodash-es";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Accordion } from "~/components/ui/accordion";
 import { BlockStylingProps } from "~/core/components/settings/block-styling-props";
 import { StylingGroup } from "~/core/components/settings/new-panel/setting-section";
@@ -8,6 +9,10 @@ import { BlockSettingsContext } from "~/core/components/settings/settings-contex
 import { FLEX_CHILD_SECTION, GRID_CHILD_SECTION, SETTINGS_SECTIONS } from "~/core/constants/STYLING_GROUPS";
 import { useSelectedBlocksDisplayChild } from "~/hooks/use-selected-blockIds";
 import { useSelectedStylingBlocks } from "~/hooks/use-selected-styling-blocks";
+import { AiStyleBar } from "~/pages/client/layouts/left-panel/ai-style-bar";
+import { QuickStyles } from "~/pages/client/layouts/left-panel/quick-styles";
+import { StylingSearchInput } from "~/pages/client/layouts/left-panel/styling-search-input";
+import { filterStylingSections } from "~/pages/client/layouts/left-panel/styling-search";
 
 const MAPPER: { [key: string]: number } = {
   px: 1,
@@ -23,8 +28,10 @@ const MAPPER: { [key: string]: number } = {
 };
 
 export default function BlockStyling() {
+  const { t } = useTranslation();
   const { flexChild, gridChild } = useSelectedBlocksDisplayChild();
   const [stylingBlocks] = useSelectedStylingBlocks();
+  const [searchQuery, setSearchQuery] = useState("");
   const [draggedVal, setDraggedVal] = React.useState<any>("");
   const [dragData, setDragData] = React.useState({
     onDrag: (value: string) => value,
@@ -36,6 +43,12 @@ export default function BlockStyling() {
     negative: false,
     cssProperty: "",
   });
+
+  const filteredSections = useMemo(
+    () => filterStylingSections(SETTINGS_SECTIONS, searchQuery, t),
+    [searchQuery, t],
+  );
+  const showNoResults = isEmpty(filteredSections) && isEmpty(searchQuery) === false;
 
   const updateStyle = useThrottledCallback(
     (e: any) => {
@@ -79,9 +92,7 @@ export default function BlockStyling() {
       cssProperty: "",
     });
   }, [dragData, draggedVal, setDragData]);
-  if (isEmpty(stylingBlocks)) {
-    return null;
-  }
+  const hasStylingBlock = !isEmpty(stylingBlocks);
 
   return (
     <BlockSettingsContext.Provider value={{ setDragData }}>
@@ -93,14 +104,24 @@ export default function BlockStyling() {
         />
       ) : null}
       <div className="flex flex-col">
-        <BlockStylingProps />
-        <Accordion defaultValue={["Styles"]} type="multiple" className="w-full">
-          {flexChild && <StylingGroup section={FLEX_CHILD_SECTION} showAccordian={flexChild || gridChild} />}
-          {gridChild && <StylingGroup section={GRID_CHILD_SECTION} showAccordian={flexChild || gridChild} />}
-          {SETTINGS_SECTIONS.map((section) => (
-            <StylingGroup key={section.heading} section={section} showAccordian={flexChild || gridChild} />
-          ))}
-        </Accordion>
+        <AiStyleBar />
+        <QuickStyles />
+        {hasStylingBlock && (
+          <>
+            <StylingSearchInput value={searchQuery} onChange={setSearchQuery} />
+            <BlockStylingProps />
+            <Accordion defaultValue={["Styles"]} type="multiple" className="w-full">
+              {flexChild && <StylingGroup section={FLEX_CHILD_SECTION} showAccordian={flexChild || gridChild} />}
+              {gridChild && <StylingGroup section={GRID_CHILD_SECTION} showAccordian={flexChild || gridChild} />}
+              {filteredSections.map((section) => (
+                <StylingGroup key={section.heading} section={section} showAccordian={flexChild || gridChild} />
+              ))}
+            </Accordion>
+            {showNoResults && (
+              <p className="py-4 text-center text-xs text-muted-foreground">{t("No style properties found")}</p>
+            )}
+          </>
+        )}
       </div>
     </BlockSettingsContext.Provider>
   );

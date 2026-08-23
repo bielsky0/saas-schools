@@ -151,12 +151,42 @@ const RIGHT_PANEL_KEYS = [
   "Enter a JavaScript expression",
 ];
 
+const STYLE_TAB_KEYS = [
+  "Background",
+  "Border Radius",
+  "Padding",
+  "Margin",
+  "Shadow",
+  "Font size",
+  "Describe how to change the look",
+  "Apply",
+  "Styles applied",
+  "e.g. darker background and a larger heading",
+  "Search style properties",
+  "Clear search",
+  "No style properties found",
+];
+
+const CONTENT_TAB_KEYS = [
+  "AI",
+  "Rewrite or improve content",
+  "e.g. make the headline friendlier and shorter",
+  "Content applied",
+  "More fields",
+  "Show less",
+];
+
 const LEFT_PANEL_KEYS = [
   "Block settings",
   "Page settings",
   "Template settings",
   "Theme editor",
   "Resize left panel",
+  "Duplicate",
+  "Copy",
+  "Delete block",
+  "Hide",
+  "Show",
 ];
 
 const MOBILE_KEYS = [
@@ -243,6 +273,22 @@ describe("Editor i18n (Faza 0.3)", () => {
 
   it("Right panel (Faza 5) keys exist in en.json and are translated in pl.json", () => {
     for (const key of RIGHT_PANEL_KEYS) {
+      expect(en, `en.json missing "${key}"`).toHaveProperty(key);
+      expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
+      expect(pl[key as keyof typeof pl]).toBeTruthy();
+    }
+  });
+
+  it("Style tab (Faza 2) keys exist in en.json and are translated in pl.json", () => {
+    for (const key of STYLE_TAB_KEYS) {
+      expect(en, `en.json missing "${key}"`).toHaveProperty(key);
+      expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
+      expect(pl[key as keyof typeof pl]).toBeTruthy();
+    }
+  });
+
+  it("Content tab AI (Faza 3) keys exist in en.json and are translated in pl.json", () => {
+    for (const key of CONTENT_TAB_KEYS) {
       expect(en, `en.json missing "${key}"`).toHaveProperty(key);
       expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
       expect(pl[key as keyof typeof pl]).toBeTruthy();

@@ -99,7 +99,7 @@ export const useLeftPanelMode = () => {
   return useAtom(leftPanelModeAtom);
 };
 
-const activeSettingsTabAtom = atom<"settings" | "styles" | "advanced">("settings");
+const activeSettingsTabAtom = atom<"settings" | "styles" | "advanced" | "ai">("settings");
 export const useActiveSettingsTab = () => {
   return useAtom(activeSettingsTabAtom);
 };

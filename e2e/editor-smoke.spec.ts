@@ -153,3 +153,38 @@ test("desktop editor: AI generate section dialog shows the stub notice", async (
   await dialog.getByRole("button", { name: /Generuj/i }).click();
   await expect(dialog.getByText("Funkcja w przygotowaniu")).toBeVisible();
 });
+
+test("desktop editor: block panel header shows breadcrumb and quick actions", async ({ page }) => {
+  await openEditor(page);
+  const row = page.locator("[data-node-id]").first();
+  await expect(row).toBeVisible();
+  await row.click();
+
+  await expect(page.getByLabel("Block path")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Duplikuj" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Kopiuj" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Ukryj|Pokaż/ })).toBeVisible();
+});
+
+test("desktop editor: quick styles and search render in the Styl tab", async ({ page }) => {
+  await openEditor(page);
+  const row = page.locator("[data-node-id]").first();
+  await expect(row).toBeVisible();
+  await row.click();
+
+  await page.getByRole("tab", { name: "Styl" }).click();
+  await expect(page.getByText("Tło")).toBeVisible();
+  await expect(page.getByText("Odstępy wewnętrzne")).toBeVisible();
+  await expect(page.getByText("Opisz, jak zmienić wygląd")).toBeVisible();
+  await expect(page.getByPlaceholder("Szukaj właściwości stylu")).toBeVisible();
+});
+
+test("desktop editor: content AI bar and AI tab render", async ({ page }) => {
+  await openEditor(page);
+  const row = page.locator("[data-node-id]").first();
+  await expect(row).toBeVisible();
+  await row.click();
+
+  await expect(page.getByText("Popraw lub przepisz treść")).toBeVisible();
+  await expect(page.getByRole("tab", { name: "AI" })).toBeVisible();
+});

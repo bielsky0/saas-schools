@@ -14,11 +14,13 @@ import { TemplateSettings } from "~/pages/client/layouts/right-panel/template-se
 import { ThemeEditor } from "~/pages/client/layouts/theme/theme-editor";
 import { SeoLeftPanel } from "./seo-left-panel";
 import { SectionsTab } from "./sections-tab";
-import { SubBlockList } from "./sub-block-list";
 import { ThemeTab } from "./theme-tab";
+import { BlockBreadcrumb } from "./block-breadcrumb";
+import { BlockQuickActions } from "./block-quick-actions";
 
-const MIN_PANEL_WIDTH = 320;
-const MAX_PANEL_WIDTH = 500;
+const MIN_PANEL_WIDTH = 360;
+const MAX_PANEL_WIDTH = 560;
+const PANEL_WIDTH_STORAGE_KEY = "chai-builder-left-panel-width";
 
 // When a block is selected, the bottom settings panel grows so only ~3 tree
 // rows stay visible (selected centered via scrollTo) — Shopify-like positioning.
@@ -36,20 +38,34 @@ export const BuilderLeftPanel = () => {
   const prevContextRef = useRef(editorContext);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // F7.5: resizable left panel (320-500px). The panel starts at x=0, so the
+  // F7.5: resizable left panel (360-560px). The panel starts at x=0, so the
   // pointer's clientX is the width directly. Document-level listeners survive
-  // dragging outside the handle element.
-  const [leftPanelWidth, setLeftPanelWidth] = useState(344);
+  // dragging outside the handle element. Width persists across reloads.
+  const [leftPanelWidth, setLeftPanelWidth] = useState(() => {
+    if (typeof window === "undefined") return MIN_PANEL_WIDTH;
+    const saved = Number(window.localStorage.getItem(PANEL_WIDTH_STORAGE_KEY));
+    return Number.isFinite(saved) && saved >= MIN_PANEL_WIDTH && saved <= MAX_PANEL_WIDTH
+      ? saved
+      : MIN_PANEL_WIDTH;
+  });
+  const widthRef = useRef(leftPanelWidth);
 
   const onResizeStart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
 
     const onMove = (event: MouseEvent) => {
-      setLeftPanelWidth(Math.min(MAX_PANEL_WIDTH, Math.max(MIN_PANEL_WIDTH, event.clientX)));
+      const next = Math.min(MAX_PANEL_WIDTH, Math.max(MIN_PANEL_WIDTH, event.clientX));
+      widthRef.current = next;
+      setLeftPanelWidth(next);
     };
     const onUp = () => {
       document.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseup", onUp);
+      try {
+        window.localStorage.setItem(PANEL_WIDTH_STORAGE_KEY, String(widthRef.current));
+      } catch {
+        // storage unavailable — width simply won't persist
+      }
       document.body.style.userSelect = "";
       document.body.style.cursor = "";
     };
@@ -111,9 +127,9 @@ export const BuilderLeftPanel = () => {
   // się pośrodku widocznych ~3 wierszy. Używamy DOM (data-node-id), bo drzewo
   // składa się z wielu instancji SectionTree (per grupa) dzielących jeden ref.
   useEffect(() => {
-    if (bottomPanel !== "block" || !selectedBlock || !panelRef.current) return;
+    if (bottomPanel !== "block" || !selectedBlock?._id || !panelRef.current) return;
     const t = setTimeout(() => {
-      const el = panelRef.current?.querySelector(`[data-node-id="${selectedBlock._id}"]`);
+      const el = panelRef.current?.querySelector(`[data-node-id="${selectedBlock?._id}"]`);
       el?.scrollIntoView({ block: "center", behavior: "smooth" });
     }, 60);
     return () => clearTimeout(t);
@@ -206,7 +222,12 @@ export const BuilderLeftPanel = () => {
         <div className="flex h-full min-h-0 flex-col">
           <div className="flex shrink-0 items-center gap-2 border-b border-[#EBEBEB] px-4 pb-3 pt-4">
             <span className="flex h-4 w-4 shrink-0 items-center justify-center text-[#4A4A4A]">{panelIcon}</span>
-            <h2 className="flex-1 truncate text-[14px] font-semibold leading-5 text-[#303030]">{panelTitle}</h2>
+            {bottomPanel === "block" && selectedBlock ? (
+              <BlockBreadcrumb blockId={selectedBlock._id} />
+            ) : (
+              <h2 className="flex-1 truncate text-[14px] font-semibold leading-5 text-[#303030]">{panelTitle}</h2>
+            )}
+            {bottomPanel === "block" && selectedBlock && <BlockQuickActions />}
             <button
               type="button"
               onClick={handleBack}
@@ -217,12 +238,7 @@ export const BuilderLeftPanel = () => {
           </div>
           <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto px-4 py-3">
             <Suspense fallback={<div>Loading...</div>}>
-              {bottomPanel === "block" && (
-                <>
-                  <SettingsPanel />
-                  <SubBlockList />
-                </>
-              )}
+              {bottomPanel === "block" && <SettingsPanel />}
               {bottomPanel === "page" && <PageSettings />}
               {bottomPanel === "template" && <TemplateSettings />}
               {bottomPanel === "theme" && <ThemeEditor />}

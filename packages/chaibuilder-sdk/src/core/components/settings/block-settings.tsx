@@ -2,6 +2,7 @@ import { ChevronDownIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import { IChangeEvent } from "@rjsf/core";
 import { cloneDeep, debounce, forEach, get, includes, isEmpty, keys, set, startCase, startsWith } from "lodash-es";
 import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { JSONForm } from "~/core/components/settings/json-form";
 import { COLLECTION_PREFIX } from "~/core/constants/STRINGS";
 import { useLanguages } from "~/hooks/use-languages";
@@ -11,6 +12,8 @@ import { useWrapperBlock } from "~/hooks/use-wrapper-block";
 import { getBlockFormSchemas, getRegisteredChaiBlock } from "~/runtime";
 import { ChaiBlockConfig } from "~/types/blocks";
 import { ChaiBlock } from "~/types/common";
+import { AiContentBar } from "~/pages/client/layouts/left-panel/ai-content-bar";
+import { getFieldPriority, hideFieldsInUiSchema } from "./field-priority";
 import { VisibilitySettings } from "./visibility-setting";
 
 const formDataWithSelectedLang = (formData: Record<string, any>, selectedLang: string, coreBlock: ChaiBlockConfig) => {
@@ -28,6 +31,7 @@ const formDataWithSelectedLang = (formData: Record<string, any>, selectedLang: s
  * @returns Block Setting
  */
 export default function BlockSettings() {
+  const { t } = useTranslation();
   const { selectedLang } = useLanguages();
   const selectedBlock = useSelectedBlock() as any;
   const updateBlockPropsRealtime = useUpdateBlocksPropsRealtime();
@@ -37,6 +41,7 @@ export default function BlockSettings() {
   const [prevFormData, setPrevFormData] = useState(formData);
 
   const [showWrapperSetting, setShowWrapperSetting] = useState(false);
+  const [showMoreFields, setShowMoreFields] = useState(false);
   const wrapperBlock = useWrapperBlock() as ChaiBlock;
   const registeredWrapperBlock = getRegisteredChaiBlock(wrapperBlock?._type) as ChaiBlockConfig;
   const wrapperFormData = formDataWithSelectedLang(wrapperBlock, selectedLang, registeredWrapperBlock);
@@ -105,8 +110,19 @@ export default function BlockSettings() {
     return { wrapperSchema, wrapperUiSchema };
   }, [wrapperBlock]);
 
+  const { extra: extraFields } = useMemo(
+    () => getFieldPriority(schema?.properties, formData, schema?.required ?? []),
+    [schema, formData],
+  );
+
+  const effectiveUiSchema = useMemo(
+    () => (showMoreFields ? uiSchema : hideFieldsInUiSchema(uiSchema, extraFields)),
+    [uiSchema, showMoreFields, extraFields],
+  );
+
   return (
     <div className="no-scrollbar overflow-x-hidden px-px">
+      <AiContentBar />
       <VisibilitySettings />
       {!isEmpty(wrapperBlock) && (
         <div className="mb-4 rounded border bg-zinc-100 px-1">
@@ -140,9 +156,22 @@ export default function BlockSettings() {
           onChange={updateRealtime}
           formData={formData}
           schema={schema}
-          uiSchema={uiSchema}
+          uiSchema={effectiveUiSchema}
         />
       ) : null}
+      {extraFields.length > 0 && (
+        <button
+          type="button"
+          onClick={() => setShowMoreFields((prev) => !prev)}
+          className="mt-2 flex w-full cursor-pointer items-center justify-center gap-x-1 rounded-md border border-border py-1.5 text-xs font-medium text-muted-foreground hover:bg-slate-100">
+          {showMoreFields ? (
+            <ChevronDownIcon className="h-3.5 w-3.5" />
+          ) : (
+            <ChevronRightIcon className="h-3.5 w-3.5" />
+          )}
+          {showMoreFields ? t("Show less") : t("More fields")} ({extraFields.length})
+        </button>
+      )}
     </div>
   );
 }

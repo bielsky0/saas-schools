@@ -1,6 +1,6 @@
 import { MixerHorizontalIcon } from "@radix-ui/react-icons";
 import { noop } from "lodash-es";
-import React, { useCallback } from "react";
+import React, { lazy, Suspense, useCallback } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -17,6 +17,8 @@ import { useSavePage } from "~/hooks/use-save-page";
 import { useSelectedBlock } from "~/hooks/use-selected-blockIds";
 import { useActiveSettingsTab } from "~/hooks/use-theme";
 import { ResetStylesButton } from "./choices/reset-all-styles";
+
+const AiPanelContent = lazy(() => import("~/pages/panels/ai-panel/ai-panel-content"));
 
 const PartialWrapper = ({ partialBlockId }: { partialBlockId: string }) => {
   const gotoPage = useBuilderProp("gotoPage", noop);
@@ -50,9 +52,11 @@ const SettingsPanel: React.FC = () => {
   const onErrorFn = useBuilderProp("onError", noop);
   const { hasPermission } = usePermissions();
   const devMode = useBuilderProp("flags.devMode", false);
+  const aiEnabled = useBuilderProp("flags.ai", false);
   let isSettingsDisabled = !hasPermission(PERMISSIONS.EDIT_BLOCK);
   const isStylesDisabled = !hasPermission(PERMISSIONS.EDIT_STYLES);
   const [activeTab, setActiveTab] = useActiveSettingsTab();
+  const safeTab = !aiEnabled && activeTab === "ai" ? "settings" : activeTab;
 
   const isPartialBlock = selectedBlock && selectedBlock._type === "PartialBlock";
 
@@ -115,23 +119,32 @@ const SettingsPanel: React.FC = () => {
   }
 
   const handleTabChange = (value: string) => {
-    if (value === "settings" || value === "styles" || value === "advanced") {
+    if (value === "settings" || value === "styles" || value === "advanced" || value === "ai") {
       setActiveTab(value);
     }
   };
 
+  const tabCount = 2 + (aiEnabled ? 1 : 0) + (devMode ? 1 : 0);
+
   // Show both tabs if both permissions are enabled
   return (
     <ErrorBoundary fallback={<FallbackError />} onError={onErrorFn}>
-      <Tabs value={activeTab} onValueChange={handleTabChange} className="flex flex-1 flex-col">
+      <Tabs value={safeTab} onValueChange={handleTabChange} className="flex flex-1 flex-col">
         <div className="flex items-center justify-between">
-          <TabsList className={`grid h-auto w-full p-1 py-1 ${devMode ? "grid-cols-3" : "grid-cols-2"}`}>
+          <TabsList
+            className="grid h-auto w-full p-1 py-1"
+            style={{ gridTemplateColumns: `repeat(${tabCount}, minmax(0, 1fr))` }}>
             <TabsTrigger value="settings" className="text-xs">
               {t("Content")}
             </TabsTrigger>
             <TabsTrigger value="styles" className="text-xs">
               <span className="w-full text-center">{t("Styling")}</span>
             </TabsTrigger>
+            {aiEnabled && (
+              <TabsTrigger value="ai" className="text-xs">
+                <span className="w-full text-center">{t("AI")}</span>
+              </TabsTrigger>
+            )}
             {devMode && (
               <TabsTrigger value="advanced" className="text-xs">
                 <div className="flex w-full items-center justify-center gap-1">
@@ -160,6 +173,15 @@ const SettingsPanel: React.FC = () => {
           <br />
           <br />
         </TabsContent>
+        {aiEnabled && (
+          <TabsContent value="ai" className="h-full min-h-0">
+            <div className="flex h-[540px] flex-col overflow-hidden rounded-lg border border-border">
+              <Suspense fallback={<div className="flex h-full items-center justify-center text-xs">Loading...</div>}>
+                <AiPanelContent />
+              </Suspense>
+            </div>
+          </TabsContent>
+        )}
         {devMode && (
           <TabsContent
             value="advanced"
