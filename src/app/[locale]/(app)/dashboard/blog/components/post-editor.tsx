@@ -3,8 +3,9 @@
 import { useActionState, useState } from "react"
 import { useTranslations } from "next-intl"
 
-import { Button, Input, Label, Switch, Textarea } from "@/components/ui"
+import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Switch, Textarea } from "@/components/ui"
 import { slugify } from "@/features/organizations/slug"
+import type { CmsTemplate } from "@/lib/db/schema/cms-collections"
 import {
   createBlogPostAction,
   updateBlogPostAction,
@@ -16,6 +17,7 @@ type PostData = {
   title: string
   slug: string
   status: "draft" | "published" | "archived"
+  templateId: string | null
   pageContent: {
     title?: string
     body?: string
@@ -39,10 +41,19 @@ function splitList(value: string): string[] {
     .filter(Boolean)
 }
 
-export function PostEditor({ post }: { post?: PostData | null }) {
+export function PostEditor({
+  post,
+  templates,
+}: {
+  post?: PostData | null
+  templates: CmsTemplate[]
+}) {
   const t = useTranslations("blog")
   const isEdit = Boolean(post)
 
+  const [templateId, setTemplateId] = useState(
+    post?.templateId ?? templates[0]?.id ?? "",
+  )
   const [title, setTitle] = useState(post?.title ?? "")
   const [slug, setSlug] = useState(post?.slug ?? "")
   const [slugTouched, setSlugTouched] = useState(Boolean(post))
@@ -199,17 +210,40 @@ export function PostEditor({ post }: { post?: PostData | null }) {
         <div className="flex flex-col gap-5">
           <div className="border-border rounded-lg border p-4">
             <h2 className="mb-3 text-sm font-semibold">{t("form.publish")}</h2>
-            <div className="flex items-center justify-between gap-2">
-              <Label className="cursor-pointer">
-                {t("form.statusPublished")}
-              </Label>
-              <Switch
-                checked={status === "published"}
-                onCheckedChange={(checked) =>
-                  setStatus(checked ? "published" : "draft")
-                }
-                aria-label={t("form.statusPublished")}
-              />
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-1.5">
+                <Label htmlFor="post-template" className="text-xs">
+                  {t("form.template")}
+                </Label>
+                <Select value={templateId} onValueChange={setTemplateId}>
+                  <SelectTrigger id="post-template" aria-label={t("form.templateLabel")}>
+                    <SelectValue placeholder={t("form.templatePlaceholder")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {templates.map((template) => (
+                      <SelectItem key={template.id} value={template.id}>
+                        {template.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <input type="hidden" name="templateId" value={templateId} />
+                <p className="text-muted-foreground text-xs">
+                  {t("form.templateHint")}
+                </p>
+              </div>
+              <div className="flex items-center justify-between gap-2">
+                <Label className="cursor-pointer">
+                  {t("form.statusPublished")}
+                </Label>
+                <Switch
+                  checked={status === "published"}
+                  onCheckedChange={(checked) =>
+                    setStatus(checked ? "published" : "draft")
+                  }
+                  aria-label={t("form.statusPublished")}
+                />
+              </div>
             </div>
             <input type="hidden" name="status" value={status} />
             <p className="text-muted-foreground mt-2 text-xs">

@@ -11,6 +11,7 @@ import {
   enrichBlogPostBlocks,
   getBlogPostBySlug,
   getBlogPostPreviewForPost,
+  getEffectiveBlogPostBlocks,
 } from "@/lib/block-data";
 import { TenantPageRenderer } from "@/features/cms/tenant-page-renderer.client";
 import { getBlocksCss } from "@/features/cms/get-blocks-css";
@@ -75,8 +76,11 @@ export default async function BlogPostPage({ params }: BlogPostProps) {
   if (!post || post.status !== "published") notFound();
 
   const preview = await withTenant(org.id, (tx) => getBlogPostPreviewForPost(tx, post));
+  const effectiveBlocks = await withTenant(org.id, (tx) =>
+    getEffectiveBlogPostBlocks(tx, org.id, post),
+  );
   const enrichedBlocks = await withTenant(org.id, (tx) =>
-    enrichBlogPostBlocks(tx, org.id, post.blocks, preview),
+    enrichBlogPostBlocks(tx, org.id, effectiveBlocks, preview),
   );
   const global = await loadGlobalData();
 

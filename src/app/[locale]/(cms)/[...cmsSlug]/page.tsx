@@ -11,7 +11,7 @@ import { getPageBySlug, getBlogIndexPage } from "@/lib/page-service";
 import { TenantPageRenderer } from "@/features/cms/tenant-page-renderer.client";
 import { getBlocksCss } from "@/features/cms/get-blocks-css";
 import { PageStyles } from "@/features/cms/components/page-styles.client";
-import { enrichBlocksWithData, enrichBlogPostBlocks, getBlogPostBySlug, getBlogPosts, getBlogPostPreviewForPost } from "@/lib/block-data";
+import { enrichBlocksWithData, enrichBlogPostBlocks, getBlogPostBySlug, getBlogPosts, getBlogPostPreviewForPost, getEffectiveBlogPostBlocks } from "@/lib/block-data";
 import { BlogList } from "@/features/cms/components/blog-list";
 import { loadGlobalData } from "@/features/cms/builder-providers";
 
@@ -133,8 +133,11 @@ export default async function CmsPage({ params }: CmsPageProps) {
     const preview = await withTenant(org.id, (tx) =>
       getBlogPostPreviewForPost(tx, post),
     );
+    const effectiveBlocks = await withTenant(org.id, (tx) =>
+      getEffectiveBlogPostBlocks(tx, org.id, post),
+    );
     const enrichedBlocks = await withTenant(org.id, (tx) =>
-      enrichBlogPostBlocks(tx, org.id, post.blocks, preview),
+      enrichBlogPostBlocks(tx, org.id, effectiveBlocks, preview),
     );
     const global = await loadGlobalData();
 

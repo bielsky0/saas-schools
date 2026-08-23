@@ -298,3 +298,41 @@ export async function enrichBlocksWithData(
     }),
   );
 }
+
+/**
+ * Resolve the blocks that render a blog post publicly. Blog posts are driven
+ * exclusively by their layout template (`templateId` → template page blocks);
+ * `post.blocks` is only a fallback for posts without an assigned template.
+ * This is what makes template switching in the dashboard take effect
+ * immediately — the renderer always re-resolves the template.
+ */
+export async function getEffectiveBlogPostBlocks(
+  tx: TenantDb,
+  orgId: string,
+  post: typeof page.$inferSelect,
+): Promise<ChaiBlock[]> {
+  if (post.templateId) {
+    const collection = await getCollectionByKey(tx, orgId, "blog");
+    const template = collection
+      ? getTemplateOf(collection, post.templateId)
+      : null;
+    if (collection && template) {
+      const [tplPage] = await tx
+        .select({ blocks: page.blocks })
+        .from(page)
+        .where(
+          and(
+            eq(page.organizationId, orgId),
+            eq(page.pageType, collection.templatePageType),
+            eq(page.slug, template.id),
+          ),
+        )
+        .limit(1);
+      if (tplPage?.blocks && tplPage.blocks.length > 0) {
+        return tplPage.blocks;
+      }
+    }
+  }
+
+  return post.blocks ?? [];
+}

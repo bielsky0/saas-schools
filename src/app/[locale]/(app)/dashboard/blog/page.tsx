@@ -104,6 +104,7 @@ export default async function BlogPage({
         <TableHeader>
           <TableRow>
             <TableHead>{t("columns.title")}</TableHead>
+            <TableHead>{t("columns.template")}</TableHead>
             <TableHead>{t("columns.status")}</TableHead>
             <TableHead>{t("columns.author")}</TableHead>
             <TableHead>{t("columns.updated")}</TableHead>
@@ -114,7 +115,7 @@ export default async function BlogPage({
           {rows.length === 0 ? (
             <TableRow>
               <TableCell
-                colSpan={5}
+                colSpan={6}
                 className="text-muted-foreground py-8 text-center"
               >
                 {q ? t("emptySearch") : t("empty")}
@@ -131,6 +132,9 @@ export default async function BlogPage({
                     <span className="font-medium">{row.title}</span>
                     <span className="text-muted-foreground text-xs">/{row.slug}</span>
                   </Link>
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  {row.templateName ?? "—"}
                 </TableCell>
                 <TableCell>
                   <Badge

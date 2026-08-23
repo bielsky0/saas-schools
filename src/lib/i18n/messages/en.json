@@ -2152,6 +2152,7 @@
     "filterPublished": "Published",
     "columns": {
       "title": "Title",
+      "template": "Template",
       "status": "Status",
       "author": "Author",
       "updated": "Updated",
@@ -2191,6 +2192,10 @@
       "categories": "Categories",
       "commaSeparated": "Comma separated",
       "publish": "Publishing",
+      "template": "Template",
+      "templateLabel": "Select template",
+      "templatePlaceholder": "Select template",
+      "templateHint": "The template defines the post's layout on the blog.",
       "statusPublished": "Published",
       "publishedHint": "The post will be visible on the public blog.",
       "draftHint": "The post is only visible here, in the panel.",

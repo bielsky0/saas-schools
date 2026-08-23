@@ -5,7 +5,7 @@ import { Button } from "@/components/ui";
 import { requireOrgPermission } from "@/features/organizations/context";
 import { withTenant } from "@/lib/db/tenant";
 import { Link } from "@/lib/i18n/navigation";
-import { getBlogPost } from "@/features/blog/data";
+import { getBlogPost, getBlogTemplates } from "@/features/blog/data";
 import { PostEditor } from "../components/post-editor";
 
 interface PageProps {
@@ -22,6 +22,8 @@ export default async function BlogPostEditorPage({ params }: PageProps) {
     post = await withTenant(org.id, (tx) => getBlogPost(tx, org.id, postId));
     if (!post) notFound();
   }
+
+  const templates = await withTenant(org.id, (tx) => getBlogTemplates(tx, org.id));
 
   return (
     <div className="flex flex-col gap-6">
@@ -47,6 +49,7 @@ export default async function BlogPostEditorPage({ params }: PageProps) {
       </div>
 
       <PostEditor
+        templates={templates}
         post={
           post
             ? {
@@ -54,6 +57,7 @@ export default async function BlogPostEditorPage({ params }: PageProps) {
                 title: post.title,
                 slug: post.slug,
                 status: post.status,
+                templateId: post.templateId,
                 pageContent: post.pageContent,
                 seo: post.seo,
               }

@@ -2152,6 +2152,7 @@
     "filterPublished": "Opublikowane",
     "columns": {
       "title": "Tytuł",
+      "template": "Szablon",
       "status": "Status",
       "author": "Autor",
       "updated": "Zaktualizowano",
@@ -2191,6 +2192,10 @@
       "categories": "Kategorie",
       "commaSeparated": "Rozdzielone przecinkami",
       "publish": "Publikacja",
+      "template": "Szablon",
+      "templateLabel": "Wybierz szablon",
+      "templatePlaceholder": "Wybierz szablon",
+      "templateHint": "Szablon określa układ wpisu na blogu.",
       "statusPublished": "Opublikowany",
       "publishedHint": "Wpis będzie widoczny na publicznym blogu.",
       "draftHint": "Wpis jest widoczny tylko tutaj, w panelu.",

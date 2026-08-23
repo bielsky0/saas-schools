@@ -1,6 +1,12 @@
 import { and, count, desc, eq, ilike, ne, or } from "drizzle-orm";
 
-import { getBlogPageType } from "@/lib/cms-collection-data";
+import {
+  getBlogPageType,
+  getCollectionByKey,
+  getTemplateNameOf,
+  type CmsCollectionRow,
+} from "@/lib/cms-collection-data";
+import type { CmsTemplate } from "@/lib/db/schema/cms-collections";
 import type { TenantDb } from "@/lib/db/tenant";
 import { page } from "@/lib/db/schema/pages";
 import { user } from "@/lib/db/schema";
@@ -35,6 +41,7 @@ export type BlogPostRow = {
   seo: typeof page.$inferSelect["seo"];
   blocks: typeof page.$inferSelect["blocks"];
   templateId: string | null;
+  templateName: string | null;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date | null;
@@ -46,7 +53,19 @@ async function blogPageType(tx: TenantDb, orgId: string): Promise<string> {
   return getBlogPageType(tx, orgId);
 }
 
-function toBlogPostRow(row: typeof page.$inferSelect): BlogPostRow {
+/** Layout templates available to blog posts for an organization. */
+export async function getBlogTemplates(
+  tx: TenantDb,
+  orgId: string,
+): Promise<CmsTemplate[]> {
+  const blog = await getCollectionByKey(tx, orgId, "blog");
+  return blog?.templates ?? [];
+}
+
+function toBlogPostRow(
+  row: typeof page.$inferSelect,
+  collection?: Pick<CmsCollectionRow, "templates"> | null,
+): BlogPostRow {
   return {
     id: row.id,
     slug: row.slug,
@@ -56,6 +75,7 @@ function toBlogPostRow(row: typeof page.$inferSelect): BlogPostRow {
     seo: row.seo ?? null,
     blocks: row.blocks,
     templateId: row.templateId,
+    templateName: getTemplateNameOf(collection, row.templateId),
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
     publishedAt: row.publishedAt,
@@ -75,6 +95,7 @@ export async function listBlogPosts(
   opts?: { status?: "draft" | "published"; q?: string; limit?: number; offset?: number },
 ): Promise<{ rows: BlogPostRow[]; total: number }> {
   const pageType = await blogPageType(tx, orgId);
+  const collection = await getCollectionByKey(tx, orgId, "blog");
   const conditions = [
     eq(page.organizationId, orgId),
     eq(page.pageType, pageType),
@@ -119,7 +140,10 @@ export async function listBlogPosts(
     .limit(limit)
     .offset(offset);
 
-  return { rows, total };
+  return {
+    rows: rows.map((r) => ({ ...r, templateName: getTemplateNameOf(collection, r.templateId) })),
+    total,
+  };
 }
 
 export async function getBlogPost(
@@ -128,6 +152,7 @@ export async function getBlogPost(
   postId: string,
 ): Promise<BlogPostRow | null> {
   const pageType = await blogPageType(tx, orgId);
+  const collection = await getCollectionByKey(tx, orgId, "blog");
   const [row] = await tx
     .select({
       id: page.id,
@@ -155,7 +180,8 @@ export async function getBlogPost(
       ),
     )
     .limit(1);
-  return row ?? null;
+  if (!row) return null;
+  return { ...row, templateName: getTemplateNameOf(collection, row.templateId) };
 }
 
 /**
@@ -285,6 +311,12 @@ export async function updateBlogPost(
         ? null
         : existing.publishedAt;
 
+  // Blog posts are rendered exclusively from their layout template. When the
+  // template changes, drop any blocks copied onto the post so the new
+  // template's blocks take effect immediately.
+  const templateChanged =
+    changes.templateId !== undefined && changes.templateId !== existing.templateId;
+
   const rows = await tx
     .update(page)
     .set({
@@ -293,6 +325,7 @@ export async function updateBlogPost(
       pageContent: nextContent,
       seo: changes.seo ?? existing.seo,
       status: nextStatus,
+      blocks: templateChanged ? [] : existing.blocks,
       templateId: changes.templateId !== undefined ? changes.templateId : existing.templateId,
       updatedAt: new Date(),
       publishedAt,
