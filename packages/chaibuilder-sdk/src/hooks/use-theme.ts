@@ -91,7 +91,7 @@ export const useAiDrawerOpen = () => {
  * "sections" → section/block tree, "template-settings" → theme tab (colors/typography),
  * "seo" → inline SEO panel.
  */
-export type LeftPanelMode = "sections" | "template-settings" | "seo";
+export type LeftPanelMode = "sections" | "template-settings" | "seo" | "library";
 
 const leftPanelModeAtom = atom<LeftPanelMode>("sections");
 leftPanelModeAtom.debugLabel = "leftPanelModeAtom";
