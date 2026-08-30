@@ -1,6 +1,5 @@
 import { and, desc, eq, ilike, inArray, ne, sql } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
-import { initChaiBuilderActionHandler } from "@chaibuilder/sdk/actions";
 
 import { getServerSession } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -1260,6 +1259,7 @@ export async function POST(req: NextRequest) {
 
         case "ASK_AI":
         case "GENERATE_HTML_FROM_PROMPT": {
+          const { initChaiBuilderActionHandler } = await import("@chaibuilder/sdk/actions");
           const handler = initChaiBuilderActionHandler({
             apiKey: organizationId,
             userId: userId ?? "",
