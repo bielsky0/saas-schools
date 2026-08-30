@@ -58,7 +58,7 @@ export const SectionPickerPopover = ({ trigger }: { trigger: ReactNode }) => {
       setLibraryLoading(false);
     });
     return () => { mounted = false; };
-  }, [libraries]);
+  }, []);
 
   // Merge base categories with library category
   const categories = useMemo(() => {
