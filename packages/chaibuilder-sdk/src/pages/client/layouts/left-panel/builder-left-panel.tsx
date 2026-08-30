@@ -15,7 +15,6 @@ import { ThemeEditor } from "~/pages/client/layouts/theme/theme-editor";
 import { SeoLeftPanel } from "./seo-left-panel";
 import { SectionsTab } from "./sections-tab";
 import { ThemeTab } from "./theme-tab";
-import { LibraryTab } from "./library-tab";
 import { BlockBreadcrumb } from "./block-breadcrumb";
 import { BlockQuickActions } from "./block-quick-actions";
 
@@ -88,7 +87,7 @@ export const BuilderLeftPanel = () => {
   //  - editorContext.type === "page" → PageSettings
   //  - tryb SEO → panel ukryty
   useEffect(() => {
-    if (mode === "seo" || mode === "library") {
+    if (mode === "seo") {
       if (bottomPanel !== null) setBottomPanel(null);
       return;
     }
@@ -175,8 +174,7 @@ export const BuilderLeftPanel = () => {
     ) : null;
 
   const isSeoMode = mode === "seo";
-  const isLibraryMode = mode === "library";
-  const bottomPanelVisible = bottomPanel && !isSeoMode && !isLibraryMode;
+  const bottomPanelVisible = bottomPanel && !isSeoMode;
 
   return (
     <div
@@ -207,8 +205,6 @@ export const BuilderLeftPanel = () => {
               <ThemeTab />
             ) : mode === "seo" ? (
               <SeoLeftPanel />
-            ) : mode === "library" ? (
-              <LibraryTab />
             ) : (
               <SectionsTab />
             )}

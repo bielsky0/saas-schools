@@ -1,4 +1,4 @@
-import { ArrowLeft, Layers, BookOpen, Settings } from "lucide-react";
+import { ArrowLeft, Layers, Settings } from "lucide-react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "~/components/ui/button";
@@ -9,7 +9,6 @@ import { SeoIcon } from "./seo-icon";
 
 const MODES: { id: LeftPanelMode; label: string; Icon: React.ComponentType<{ className?: string }> }[] = [
   { id: "sections", label: "Sections", Icon: Layers },
-  { id: "library", label: "Library", Icon: BookOpen },
   { id: "template-settings", label: "Template settings", Icon: Settings },
   { id: "seo", label: "SEO", Icon: SeoIcon },
 ];

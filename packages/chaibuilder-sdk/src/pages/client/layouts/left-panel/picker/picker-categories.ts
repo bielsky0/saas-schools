@@ -34,6 +34,10 @@ export type PickerItem = {
   description?: string;
   /** Section layout role (header / template / footer) — sections picker only. */
   role?: string;
+  /** Library template fields */
+  libraryId?: string;
+  templateId?: string;
+  isLibraryTemplate?: boolean;
 };
 
 export type PickerCategory = {
@@ -50,6 +54,7 @@ export const SECTION_PICKER_CATEGORY_ORDER: SectionPickerCategoryId[] = [
   "Produkty",
   "Tekst",
   "Układ",
+  "Biblioteka",
 ];
 
 export const BLOCK_PICKER_CATEGORY_ORDER: BlockPickerCategoryId[] = [
@@ -172,4 +177,56 @@ export const filterPickerCategories = (categories: PickerCategory[], query: stri
       items: category.items.filter((item) => `${item.label} ${item.type}`.toLowerCase().includes(q)),
     }))
     .filter((category) => category.items.length > 0);
+};
+
+/**
+ * Build the Library category from registered ChaiLibraries.
+ * Returns a single "Biblioteka" category with groups from langlionLibrary.
+ */
+export const createLibraryPickerCategory = async (
+  libraries: Awaited<ReturnType<typeof import("~/runtime/client").useChaiLibraries>>,
+): Promise<PickerCategory | null> => {
+  // Find langlion library (the one with niche sections)
+  const langlionLib = libraries.find((l) => l.id === "langlion");
+  if (!langlionLib) return null;
+
+  // Get blocks list (templates with groups)
+  const blocksList = await langlionLib.getBlocksList();
+  if (!blocksList || blocksList.length === 0) return null;
+
+  // Group by `group` field
+  const byGroup = new Map<string, PickerItem[]>();
+  for (const block of blocksList) {
+    const group = block.group || "Inne";
+    const items = byGroup.get(group) ?? [];
+    items.push({
+      type: block.id,
+      label: block.name,
+      description: block.description,
+      libraryId: langlionLib.id,
+      templateId: block.id,
+      isLibraryTemplate: true,
+    });
+    byGroup.set(group, items);
+  }
+
+  // Sort groups in display order
+  const groupOrder = ["Langlion", "Blog", "Pływanie", "Szkoła", "Taniec", "Ogólne", "Systemowe"];
+  const items: PickerItem[] = [];
+
+  // Add groups in order
+  for (const group of groupOrder) {
+    const groupItems = byGroup.get(group);
+    if (groupItems) {
+      items.push(...groupItems);
+    }
+  }
+  // Add any remaining groups not in order
+  for (const [group, groupItems] of byGroup) {
+    if (!groupOrder.includes(group)) {
+      items.push(...groupItems);
+    }
+  }
+
+  return { id: "Biblioteka", items };
 };

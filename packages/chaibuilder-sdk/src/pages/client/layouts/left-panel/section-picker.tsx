@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { SectionRoleIcon } from "~/core/components/sidepanels/panels/outline/node";
 import { CHAI_BUILDER_EVENTS } from "~/core/events";
@@ -9,8 +9,10 @@ import { useSelectedBlock } from "~/hooks/use-selected-blockIds";
 import type { ChaiBlock } from "~/types/common";
 import { getSectionCatalog } from "./section-catalog";
 import { SectionPreview } from "./section-preview";
-import { createSectionPickerCategories, PickerItem } from "./picker/picker-categories";
+import { createSectionPickerCategories, PickerItem, createLibraryPickerCategory } from "./picker/picker-categories";
 import { PickerPopover } from "./picker/picker-popover";
+import { useChaiLibraries } from "~/runtime/client";
+import { addPredefinedBlock } from "~/hooks/use-add-block";
 
 /**
  * Insertion position for a new section: directly after the top-level section
@@ -35,14 +37,78 @@ export const getSectionInsertPosition = (selectedBlock: ChaiBlock | undefined, a
 export const SectionPickerPopover = ({ trigger }: { trigger: ReactNode }) => {
   const { t } = useTranslation();
   const catalog = useMemo(() => getSectionCatalog(), []);
-  const categories = useMemo(() => createSectionPickerCategories(catalog.getByCategory("all")), [catalog]);
+  const baseCategories = useMemo(() => createSectionPickerCategories(catalog.getByCategory("all")), [catalog]);
+  const libraries = useChaiLibraries();
   const { addCoreBlock } = useAddBlock();
+  const { addPredefinedBlock: addBlocks } = useAddBlock();
   const selectedBlock = useSelectedBlock();
   const [allBlocks] = useBlocksStore();
 
-  const handleAdd = (item: PickerItem) => {
+  const [libraryCategory, setLibraryCategory] = useState<PickerItem[]>([]);
+  const [libraryLoading, setLibraryLoading] = useState(true);
+
+  // Load library category on mount
+  useEffect(() => {
+    let mounted = true;
+    setLibraryLoading(true);
+    createLibraryPickerCategory(libraries).then((cat) => {
+      if (mounted && cat) {
+        setLibraryCategory(cat.items);
+      }
+      setLibraryLoading(false);
+    });
+    return () => { mounted = false; };
+  }, [libraries]);
+
+  // Merge base categories with library category
+  const categories = useMemo(() => {
+    const cats = [...baseCategories];
+    if (libraryCategory.length > 0) {
+      cats.push({ id: "Biblioteka", items: libraryCategory });
+    }
+    return cats;
+  }, [baseCategories, libraryCategory]);
+
+  const handleAdd = async (item: PickerItem) => {
+    if (item.isLibraryTemplate && item.libraryId && item.templateId) {
+      const lib = libraries.find((l) => l.id === item.libraryId);
+      if (lib) {
+        const blocks = await lib.getBlock({ block: { id: item.templateId } as any });
+        if (blocks && blocks.length > 0) {
+          const pos = getSectionInsertPosition(selectedBlock, allBlocks);
+          await addBlocks(blocks, undefined, pos);
+          pubsub.publish(CHAI_BUILDER_EVENTS.CLOSE_ADD_BLOCK);
+          return;
+        }
+      }
+    }
+    // Fallback to core block
     addCoreBlock({ type: item.type }, undefined, getSectionInsertPosition(selectedBlock, allBlocks));
     pubsub.publish(CHAI_BUILDER_EVENTS.CLOSE_ADD_BLOCK);
+  };
+
+  // Icon for library items - use a generic section icon
+  const renderIcon = (item: PickerItem) => {
+    if (item.isLibraryTemplate) {
+      return <SectionRoleIcon role="section" className="h-4 w-4" />;
+    }
+    return <SectionRoleIcon role={item.role ?? "section"} className="h-4 w-4" />;
+  };
+
+  // Preview for library items - use SectionPreview with the template type
+  // For library templates, we can't easily preview without rendering the blocks
+  // So we'll show a placeholder for now
+  const renderPreview = (item: PickerItem) => {
+    if (item.isLibraryTemplate) {
+      return (
+        <div className="flex flex-col items-center justify-center h-full text-center p-4 text-sm text-gray-500">
+          <div className="mb-2 text-lg">📦</div>
+          <div className="font-medium">{t(item.label)}</div>
+          <div className="text-xs text-gray-400 mt-1">{item.description || t("Library template")}</div>
+        </div>
+      );
+    }
+    return <SectionPreview type={item.type} />;
   };
 
   return (
@@ -52,8 +118,8 @@ export const SectionPickerPopover = ({ trigger }: { trigger: ReactNode }) => {
       dialogLabel={t("Add section")}
       categories={categories}
       onAdd={handleAdd}
-      renderIcon={(item) => <SectionRoleIcon role={item.role ?? "section"} className="h-4 w-4" />}
-      renderPreview={(item) => <SectionPreview type={item.type} />}
+      renderIcon={renderIcon}
+      renderPreview={renderPreview}
     />
   );
 };
