@@ -45,7 +45,11 @@ const PageTypeSelector = ({ selectedPageType, setSelectedPageType }: PageTypeSel
   const { data: pageTypes } = usePageTypes();
   const isSearchAndSelectEnabled = true;
   const hasCustomPageTypes = useMemo(
-    () => pageTypes.some((pageType: ChaiPageType) => !["page", "global"].includes(get(pageType, "key", ""))),
+    () =>
+      pageTypes.some(
+        (pageType: ChaiPageType) =>
+          !["page", "global"].includes(get(pageType, "key", "")) && !pageType.isSystem,
+      ),
     [pageTypes],
   );
 
@@ -58,6 +62,7 @@ const PageTypeSelector = ({ selectedPageType, setSelectedPageType }: PageTypeSel
   if (!hasCustomPageTypes) return null;
 
   const filterPageTypes = (pageType: ChaiPageType) => {
+    if (pageType.isSystem) return false;
     if (!pageTypeSearch) return true;
     const search = pageTypeSearch.toLowerCase();
 

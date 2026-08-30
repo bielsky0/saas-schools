@@ -4,13 +4,10 @@ import type { Metadata } from "next";
 
 import { servedOrganization } from "@/features/organizations/served-org";
 import { ThemeInjector } from "@/features/cms/components/theme-injector";
-import { RefreshRouteOnSave } from "@/features/cms/components/refresh-route-on-save.client";
 import { buildTenantOriginUrl } from "@/features/cms/preview-url";
+import { CmsPageView } from "@/features/cms/cms-page-view";
 import { withTenant } from "@/lib/db/tenant";
 import { getPageBySlug, getBlogIndexPage } from "@/lib/page-service";
-import { TenantPageRenderer } from "@/features/cms/tenant-page-renderer.client";
-import { getBlocksCss } from "@/features/cms/get-blocks-css";
-import { PageStyles } from "@/features/cms/components/page-styles.client";
 import { enrichBlocksWithData, enrichBlogPostBlocks, getBlogPostBySlug, getBlogPosts, getBlogPostPreviewForPost, getEffectiveBlogPostBlocks } from "@/lib/block-data";
 import { BlogList } from "@/features/cms/components/blog-list";
 import { loadGlobalData } from "@/features/cms/builder-providers";
@@ -109,18 +106,15 @@ export default async function CmsPage({ params }: CmsPageProps) {
       enrichBlocksWithData(tx, org.id, blogIndexPage.blocks),
     );
     const global = await loadGlobalData();
-    const pageCss = await getBlocksCss(blogIndexPage.blocks);
 
     return (
-      <ThemeInjector organizationId={org.id}>
-        <PageStyles css={pageCss} />
-        <TenantPageRenderer
-          blocks={enrichedBlocks}
-          slug="blog"
-          pageType="blog_index"
-          externalData={{ global }}
-        />
-      </ThemeInjector>
+      <CmsPageView
+        organizationId={org.id}
+        blocks={enrichedBlocks}
+        slug="blog"
+        pageType="blog_index"
+        externalData={{ global }}
+      />
     );
   }
 
@@ -144,19 +138,16 @@ export default async function CmsPage({ params }: CmsPageProps) {
     const h = await headers();
     const host = h.get("host") || "";
     const serverURL = buildTenantOriginUrl(host, "") || `http://${host}`;
-    const pageCss = await getBlocksCss(enrichedBlocks);
 
     return (
-      <ThemeInjector organizationId={org.id}>
-        <PageStyles css={pageCss} />
-        <RefreshRouteOnSave serverURL={serverURL} />
-        <TenantPageRenderer
-          blocks={enrichedBlocks}
-          slug={post.slug}
-          pageType={post.pageType}
-          externalData={{ blog: preview, global }}
-        />
-      </ThemeInjector>
+      <CmsPageView
+        organizationId={org.id}
+        blocks={enrichedBlocks}
+        slug={post.slug}
+        pageType={post.pageType}
+        externalData={{ blog: preview, global }}
+        refreshServerUrl={serverURL}
+      />
     );
   }
 
@@ -173,18 +164,14 @@ export default async function CmsPage({ params }: CmsPageProps) {
   const host = h.get("host") || "";
   const serverURL = buildTenantOriginUrl(host, "") || `http://${host}`;
 
-  const pageCss = await getBlocksCss(page.blocks);
-
   return (
-    <ThemeInjector organizationId={org.id}>
-      <PageStyles css={pageCss} />
-      <RefreshRouteOnSave serverURL={serverURL} />
-      <TenantPageRenderer
-        blocks={enrichedBlocks}
-        slug={page.slug}
-        pageType={page.pageType}
-        externalData={{ global }}
-      />
-    </ThemeInjector>
+    <CmsPageView
+      organizationId={org.id}
+      blocks={enrichedBlocks}
+      slug={page.slug}
+      pageType={page.pageType}
+      externalData={{ global }}
+      refreshServerUrl={serverURL}
+    />
   );
 }

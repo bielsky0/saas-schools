@@ -32,6 +32,7 @@ interface PageType {
   dynamicSegments?: string;
   dynamicSlug?: string;
   hasSlug?: boolean;
+  isSystem?: boolean;
   seoDefault?: Record<string, any>;
   jsonLDDefault?: Record<string, any>;
   trackingDefault?: Record<string, any>;
@@ -405,6 +406,19 @@ export default function PageCreator({ addEditPage, close, closePanel }: PageCrea
       handleRootPageSubmit();
     }
   };
+  /**
+   * Page types offered by the type picker: system pages are seeded per-tenant,
+   * not user-creatable, so they stay out of creation options. When EDITING a
+   * system page the current type is kept so the control shows a valid value.
+   */
+  const pickerPageTypes = useMemo<PageType[]>(() => {
+    const creatable = additionalPageTypes.filter((type) => !type.isSystem);
+    if (isEdit && currentPageType?.isSystem && currentPageType) {
+      return [currentPageType, ...creatable];
+    }
+    return creatable;
+  }, [additionalPageTypes, isEdit, currentPageType]);
+
   const { pagesType, partialsType } = useMemo(() => {
     const filterPageTypes = (type: PageType) => {
       if (!pageTypeSearch) return true;
@@ -415,10 +429,10 @@ export default function PageCreator({ addEditPage, close, closePanel }: PageCrea
     };
 
     return {
-      pagesType: additionalPageTypes.filter((type) => type.hasSlug !== false && filterPageTypes(type)),
-      partialsType: additionalPageTypes.filter((type) => type.hasSlug === false && filterPageTypes(type)),
+      pagesType: pickerPageTypes.filter((type) => type.hasSlug !== false && filterPageTypes(type)),
+      partialsType: pickerPageTypes.filter((type) => type.hasSlug === false && filterPageTypes(type)),
     };
-  }, [additionalPageTypes, pageTypeSearch]);
+  }, [pickerPageTypes, pageTypeSearch]);
 
   // Show only name field for Global Block
   if (!currentPageType?.hasSlug) {
@@ -434,10 +448,10 @@ export default function PageCreator({ addEditPage, close, closePanel }: PageCrea
                 <Button
                   variant="outline"
                   role="combobox"
-                  disabled={isEdit && !canEditPageType}
+                  disabled={isEdit && (!canEditPageType || currentPageType?.isSystem)}
                   className={cn(
                     "w-full justify-between",
-                    isEdit && !canEditPageType ? "cursor-not-allowed text-gray-500" : "",
+                    isEdit && (!canEditPageType || currentPageType?.isSystem) ? "cursor-not-allowed text-gray-500" : "",
                   )}>
                   {currentPageType?.name || "Select page type"}
                   <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -481,11 +495,11 @@ export default function PageCreator({ addEditPage, close, closePanel }: PageCrea
             <select
               id="pageType"
               value={pageType}
-              disabled={isEdit && !canEditPageType}
+              disabled={isEdit && (!canEditPageType || currentPageType?.isSystem)}
               onChange={(e) => handlePageTypeChange(e.target.value)}
-              className={`w-full rounded-md border border-gray-300 px-3 py-2 ${isEdit && !canEditPageType ? "cursor-not-allowed text-gray-500" : ""}`}>
+              className={`w-full rounded-md border border-gray-300 px-3 py-2 ${isEdit && (!canEditPageType || currentPageType?.isSystem) ? "cursor-not-allowed text-gray-500" : ""}`}>
               <optgroup label="Partials">
-                {additionalPageTypes
+                {pickerPageTypes
                   .filter((type) => type.hasSlug === false)
                   .map((type) => (
                     <option key={type.key} value={type.key}>
@@ -646,13 +660,13 @@ export default function PageCreator({ addEditPage, close, closePanel }: PageCrea
           <select
             id="pageType"
             value={pageType}
-            disabled={isEdit && !canEditPageType}
+            disabled={isEdit && (!canEditPageType || currentPageType?.isSystem)}
             onChange={(e) => handlePageTypeChange(e.target.value)}
-            className={`w-full rounded-md border border-gray-300 px-3 py-2 ${isEdit && !canEditPageType ? "cursor-not-allowed text-gray-500" : ""}`}>
+            className={`w-full rounded-md border border-gray-300 px-3 py-2 ${isEdit && (!canEditPageType || currentPageType?.isSystem) ? "cursor-not-allowed text-gray-500" : ""}`}>
             {isEdit ? (
               isPartial ? (
                 <optgroup label="Partials">
-                  {additionalPageTypes
+                  {pickerPageTypes
                     .filter((type) => type.hasSlug === false)
                     .map((type) => (
                       <option key={type.key} value={type.key}>
@@ -662,7 +676,7 @@ export default function PageCreator({ addEditPage, close, closePanel }: PageCrea
                 </optgroup>
               ) : (
                 <optgroup label="Pages">
-                  {additionalPageTypes
+                  {pickerPageTypes
                     .filter((type) => type.hasSlug !== false)
                     .map((type) => (
                       <option key={type.key} value={type.key}>
@@ -674,7 +688,7 @@ export default function PageCreator({ addEditPage, close, closePanel }: PageCrea
             ) : (
               <>
                 <optgroup label="Pages">
-                  {additionalPageTypes
+                  {pickerPageTypes
                     .filter((type) => type.hasSlug !== false)
                     .map((type) => (
                       <option key={type.key} value={type.key}>
@@ -683,7 +697,7 @@ export default function PageCreator({ addEditPage, close, closePanel }: PageCrea
                     ))}
                 </optgroup>
                 <optgroup label="Partials">
-                  {additionalPageTypes
+                  {pickerPageTypes
                     .filter((type) => type.hasSlug === false)
                     .map((type) => (
                       <option key={type.key} value={type.key}>

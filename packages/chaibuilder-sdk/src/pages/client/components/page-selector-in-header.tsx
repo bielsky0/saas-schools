@@ -1,4 +1,4 @@
-import { BookOpen, ChevronDown, ChevronLeft, ChevronRight, File, FileText, LayoutTemplate, Loader, Plus, Search } from "lucide-react";
+import { BookOpen, ChevronDown, ChevronLeft, ChevronRight, File, FileText, LayoutTemplate, Loader, Plus, Search, Settings } from "lucide-react";
 import { filter, find, get, isEmpty } from "lodash-es";
 import { Suspense, lazy, useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -22,7 +22,10 @@ import { useWebsitePrimaryPages } from "~/pages/hooks/pages/use-project-pages";
 import { useChangePage } from "~/pages/hooks/use-change-page";
 import { useCollections } from "~/pages/hooks/pages/use-collections";
 import { useCollectionActions } from "~/pages/hooks/pages/use-collection-actions";
+import { usePageTypes } from "~/pages/hooks/project/use-page-types";
+import { isSystemPageType } from "~/pages/client/layouts/left-panel/page-groups";
 import { CmsCollectionVm, CmsTemplateVm } from "~/types/collections";
+import type { ChaiPageType } from "~/types/actions";
 
 const AddNewPage = lazy(() => import("./add-new-page"));
 
@@ -72,8 +75,14 @@ const AddTemplateModal = ({
   const [name, setName] = useState("");
   const [collectionId, setCollectionId] = useState(collections[0]?.id ?? "");
 
-  // For now only the blog collection offers templates (per product decision).
-  const templateCollections = collections.filter((c) => c.id === "blog");
+  // Template creation is offered for the collections whose templates are
+  // surfaced in this selector: the blog and the enrollment landing pages.
+  // Enrollment templates (mvp-plan F2) are created/edited here like blog ones —
+  // the enrollments collection stays hidden from the left panel's CMS tree.
+  const TEMPLATE_COLLECTION_KEYS = ["blog", "enrollments"] as const;
+  const templateCollections = collections.filter((c) =>
+    (TEMPLATE_COLLECTION_KEYS as readonly string[]).includes(c.id),
+  );
   const effectiveCollectionId = templateCollections.some((c) => c.id === collectionId)
     ? collectionId
     : templateCollections[0]?.id ?? "";
@@ -177,6 +186,7 @@ export const PageSelector = () => {
   const { data: pages, isFetching } = useWebsitePrimaryPages();
   const { data: currentPage } = useCurrentActivePage();
   const { data: collections = [] } = useCollections();
+  const { data: pageTypes = [] } = usePageTypes();
   const changePage = useChangePage();
   const [, setIds] = useSelectedBlockIds();
   const [, setStyleBlocks] = useSelectedStylingBlocks();
@@ -232,7 +242,21 @@ export const PageSelector = () => {
     });
   }, [createCollection]);
 
+  // Fallback: create the enrollments collection if none exists (mvp-plan F2)
+  const handleCreateEnrollmentCollection = useCallback(() => {
+    createCollection.mutate({
+      key: "enrollments",
+      name: "Zapis na zajęcia",
+      pageType: "enrollment_detail",
+      templatePageType: "enrollment_template",
+    });
+  }, [createCollection]);
+
   const blogCollection = useMemo(() => find(collections, { id: "blog" }), [collections]);
+  const enrollmentCollection = useMemo(
+    () => find(collections, { id: "enrollments" }),
+    [collections],
+  );
 
   /**
    * Only regular pages are editable page-by-page in the builder. Collection
@@ -244,6 +268,12 @@ export const PageSelector = () => {
     if (!pages) return [];
     return filter(pages, (p) => p.pageType === "page" || !p.pageType);
   }, [pages]);
+
+  const systemPages = useMemo(() => {
+    if (!pages || isEmpty(pageTypes)) return [];
+    const systemKeys = new Set((pageTypes as ChaiPageType[]).filter(isSystemPageType).map((type) => type.key));
+    return filter(pages, (p) => systemKeys.has(p.pageType));
+  }, [pages, pageTypes]);
 
   const blogIndexPage = useMemo(
     () => find(pages, (p) => p.pageType === "blog_index") ?? null,
@@ -268,6 +298,21 @@ export const PageSelector = () => {
       });
     }
 
+    if (!isEmpty(systemPages)) {
+      result.push({
+        id: "system-pages",
+        label: t("System pages"),
+        icon: <Settings className="h-4 w-4" />,
+        items: systemPages.map((page) => ({
+          id: page.id,
+          label: page.name,
+          icon: <Settings className="h-3.5 w-3.5" />,
+          active: editorContext.type === "page" && currentPage?.id === page.id,
+          onSelect: () => onPageSelect(page.id),
+        })),
+      });
+    }
+
     if (blogIndexPage) {
       result.push({
         id: "blogs",
@@ -286,41 +331,74 @@ export const PageSelector = () => {
       });
     }
 
-    const blogTemplates = blogCollection?.templates ?? [];
-
-    result.push({
-      id: "blog-posts",
-      label: t("Blog posts"),
+    // Shared template drill-down builder: a chevron section listing a
+    // collection's layout templates with a "+ Create template" action.
+    const templateSection = (
+      id: string,
+      label: string,
+      collection: CmsCollectionVm | undefined,
+      emptyMessage?: string,
+      emptyActionLabel?: string,
+      onEmptyAction?: () => void,
+    ): PickerSection => ({
+      id,
+      label,
       icon: <LayoutTemplate className="h-4 w-4" />,
       items: [],
-      children: blogTemplates.map((template) => ({
+      children: (collection?.templates ?? []).map((template) => ({
         id: template.id,
         label: template.name,
         icon: <LayoutTemplate className="h-3.5 w-3.5" />,
-        active: editorContext.type === "template" && editorContext.templateId === template.id,
-        onSelect: () => blogCollection && onOpenTemplate(template.id, blogCollection.id),
+        active:
+          editorContext.type === "template" && editorContext.templateId === template.id,
+        onSelect: () => collection && onOpenTemplate(template.id, collection.id),
       })),
       createLabel: t("Create template"),
       onCreate: () => {
         setOpen(false);
         setAddTemplateOpen(true);
       },
-      emptyMessage: blogCollection ? undefined : t("No blog collection found."),
-      emptyActionLabel: blogCollection ? undefined : t("Create blog"),
-      onEmptyAction: blogCollection ? undefined : handleCreateBlogCollection,
+      emptyMessage,
+      emptyActionLabel,
+      onEmptyAction,
     });
+
+    result.push(
+      templateSection(
+        "blog-posts",
+        t("Blog posts"),
+        blogCollection,
+        blogCollection ? undefined : t("No blog collection found."),
+        blogCollection ? undefined : t("Create blog"),
+        blogCollection ? undefined : handleCreateBlogCollection,
+      ),
+    );
+
+    result.push(
+      templateSection(
+        "enrollment-templates",
+        t("Enrollment templates"),
+        enrollmentCollection,
+        enrollmentCollection ? undefined : t("No enrollment collection found."),
+        enrollmentCollection ? undefined : t("Create enrollment collection"),
+        enrollmentCollection ? undefined : handleCreateEnrollmentCollection,
+      ),
+    );
 
     return result;
   }, [
     listingPages,
+    systemPages,
     blogIndexPage,
     blogCollection,
+    enrollmentCollection,
     t,
     editorContext,
     currentPage,
     onPageSelect,
     onOpenTemplate,
     handleCreateBlogCollection,
+    handleCreateEnrollmentCollection,
   ]);
 
   const query = search.trim().toLowerCase();

@@ -216,15 +216,21 @@ export const PagesTab = () => {
                     </button>
                   </div>
                 </div>
-                {collectionsData.map((collection) => (
-                  <CollectionTreeGroup
-                    key={collection.id}
-                    collection={collection}
-                    onOpenTemplate={handleOpenTemplate}
-                    onEditCollection={handleEditCollection}
-                    activeTemplateId={activeTemplateId}
-                  />
-                ))}
+                {/* Enrollment templates are surfaced from the topbar selector
+                    (mvp-plan F2) — the enrollments collection has no content
+                    pages (group types live in the dashboard), so it stays out
+                    of the CMS Collections tree. */}
+                {collectionsData
+                  .filter((collection) => collection.id !== "enrollments")
+                  .map((collection) => (
+                    <CollectionTreeGroup
+                      key={collection.id}
+                      collection={collection}
+                      onOpenTemplate={handleOpenTemplate}
+                      onEditCollection={handleEditCollection}
+                      activeTemplateId={activeTemplateId}
+                    />
+                  ))}
               </div>
             )}
           </>

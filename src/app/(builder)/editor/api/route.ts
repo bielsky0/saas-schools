@@ -25,8 +25,16 @@ import {
   upsertBuilderTheme,
 } from "@/features/cms/builder-theme-data";
 import { getBlogPost } from "@/features/blog/data";
+import { getGroupType, listGroupTypes } from "@/features/groups/data";
+import { getEnrollmentPreviewForGroup } from "@/lib/enrollment-data";
 import { registerBuilderProviders } from "@/features/cms/builder-providers";
 import { getChaiGlobalData } from "@chaibuilder/sdk/runtime";
+import {
+  isDeletableSystemPage,
+  isSystemPageTypeKey,
+  SYSTEM_PAGE_TYPE_KEYS,
+  SYSTEM_PAGE_TYPE_NAMES,
+} from "@/lib/system-pages";
 
 // ── Builder data providers (data-binding) ───────────────────────────────
 
@@ -117,11 +125,18 @@ const defaultWebsiteSettings = {
   appChanges: [],
 };
 
-/** Build the page-type list from a tenant's collections (F2.5). */
+/** Build the page-type list from a tenant's collections (F2.5) + system pages. */
 function buildPageTypes(
   collections: { pageType: string; templatePageType: string; name: string }[],
 ) {
-  const types = collections.flatMap((c) => [
+  const types: {
+    key: string;
+    name: string;
+    helpText: string;
+    icon: string;
+    hasSlug: boolean;
+    isSystem?: boolean;
+  }[] = collections.flatMap((c) => [
     { key: c.pageType, name: c.name, helpText: "", icon: "", hasSlug: true },
     { key: c.templatePageType, name: `${c.name} Template`, helpText: "", icon: "", hasSlug: true },
   ]);
@@ -133,6 +148,25 @@ function buildPageTypes(
     icon: "",
     hasSlug: true,
   });
+  types.push({
+    key: "enrollment_listing",
+    name: "Lista zapisów",
+    helpText: "",
+    icon: "",
+    hasSlug: true,
+  });
+  // System pages (mvp-plan F1) — registry-driven, flagged `isSystem` so the
+  // SDK groups them under "System pages" in the left panel and topbar.
+  for (const key of SYSTEM_PAGE_TYPE_KEYS) {
+    types.push({
+      key,
+      name: SYSTEM_PAGE_TYPE_NAMES[key] ?? key,
+      helpText: "",
+      icon: "",
+      hasSlug: true,
+      isSystem: true,
+    });
+  }
   return types;
 }
 
@@ -456,6 +490,31 @@ export async function POST(req: NextRequest) {
             };
           });
           return NextResponse.json({ posts, total: countRow?.value ?? 0 });
+        }
+
+        case "GET_ENROLLMENT_TYPES_LIST": {
+          const rows = await listGroupTypes(tx, organizationId);
+          const types = rows.map((gt) => ({ id: gt.id, name: gt.name }));
+          return NextResponse.json({ types });
+        }
+
+        case "GET_ENROLLMENT_PREVIEW": {
+          const groupId = data?.groupId;
+          if (!groupId) {
+            return NextResponse.json(
+              { error: "Group type id is required" },
+              { status: 400 },
+            );
+          }
+          const gt = await getGroupType(tx, organizationId, String(groupId));
+          if (!gt) {
+            return NextResponse.json(
+              { error: "Group type not found" },
+              { status: 404 },
+            );
+          }
+          const preview = await getEnrollmentPreviewForGroup(tx, organizationId, gt);
+          return NextResponse.json({ preview });
         }
 
         case "GET_TEMPLATE_DATA": {
@@ -916,6 +975,14 @@ export async function POST(req: NextRequest) {
               { status: 404 },
             );
           }
+          // System pages keep their type — re-typing would unmount them from
+          // the system group and could orphan the org's 404/enrollment pages.
+          if (isSystemPageTypeKey(existing.pageType) && data.pageType && data.pageType !== existing.pageType) {
+            return NextResponse.json(
+              { error: "System pages cannot change their page type" },
+              { status: 403 },
+            );
+          }
           const newSlug = data.slug ?? existing.slug;
           const updated = await tx
             .update(page)
@@ -968,6 +1035,22 @@ export async function POST(req: NextRequest) {
               { status: 400 },
             );
           }
+          const existing = await getPageById(tx, organizationId, data.id);
+          if (!existing) {
+            return NextResponse.json(
+              { error: "Page not found" },
+              { status: 404 },
+            );
+          }
+          // Non-deletable system pages (mvp-plan F1): archiving would silently
+          // disable the org's 404 / enrollment surfaces. Registry-driven —
+          // `deletable: true` in system-pages.ts re-enables a type.
+          if (isSystemPageTypeKey(existing.pageType) && !isDeletableSystemPage(existing.pageType)) {
+            return NextResponse.json(
+              { error: "System pages cannot be deleted" },
+              { status: 403 },
+            );
+          }
           const deleted = await tx
             .update(page)
             .set({ status: "archived", updatedAt: new Date() })
@@ -998,6 +1081,14 @@ export async function POST(req: NextRequest) {
             return NextResponse.json(
               { error: "Page not found" },
               { status: 404 },
+            );
+          }
+          // System pages are singleton per type — duplicating would mint a
+          // second instance and break the "one per org" invariant.
+          if (isSystemPageTypeKey(original.pageType)) {
+            return NextResponse.json(
+              { error: "System pages cannot be duplicated" },
+              { status: 403 },
             );
           }
           const newName = data?.name || `${original.title} (Copy)`;
@@ -1047,6 +1138,19 @@ export async function POST(req: NextRequest) {
             return NextResponse.json(
               { error: "Missing page id" },
               { status: 400 },
+            );
+          }
+          const markExisting = await getPageById(tx, organizationId, data.id);
+          if (!markExisting) {
+            return NextResponse.json(
+              { error: "Page not found" },
+              { status: 404 },
+            );
+          }
+          if (isSystemPageTypeKey(markExisting.pageType)) {
+            return NextResponse.json(
+              { error: "System pages cannot be marked as templates" },
+              { status: 403 },
             );
           }
           const updated = await tx

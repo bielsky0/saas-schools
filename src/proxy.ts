@@ -589,9 +589,10 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
      *
      * A "tenant" prefix is therefore only safe if the thing it forwards to refuses
      * an apex request BY ITSELF. Until F5 that held vacuously — `zapisy` had no
-     * route and 404'd from the app router. It now has one, and holds because
-     * `/zapisy/[groupTypeSlug]` opens with `requireServedOrganization()`, which
-     * `notFound()`s with no academy served. Any future "tenant" prefix must carry
+     * route and 404'd from the app router. It now has one (the CMS resolver
+     * `(site)/zapisy/[[...slug]]`, mvp-plan F2), and holds because that route
+     * opens with `requireServedOrganization()`, which `notFound()`s with no
+     * academy served. Any future "tenant" prefix must carry
      * the same guarantee, in the page, not here.
      *
      * A guarded prefix that has a route but NO such guard (`/dashboard`) must never

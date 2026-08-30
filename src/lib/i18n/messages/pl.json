@@ -1301,6 +1301,7 @@
     "noActivePackagesWarning": "Uwaga: brak aktywnych pakietów dla tego typu grupy. Klienci nie będą mogli kupić pakietów.",
     "manage": "Zarządzaj",
     "backToList": "Wszystkie typy grup",
+    "viewPage": "Podgląd strony",
     "form": {
       "createTitle": "Nowy typ grupy",
       "editTitle": "Szczegóły",
@@ -1330,6 +1331,8 @@
       "eligibleTrainerIdsHint": "Puste = każdy aktywny trener akademii może prowadzić te zajęcia. Wybierz konkretnych, aby ograniczyć wybór.",
       "defaultDurationMinutes": "Czas trwania zajęć (min)",
       "defaultDurationMinutesHint": "Slot-First: długość tworzonych na żywo sesji. Domyślnie 60 min.",
+      "template": "Szablon strony zapisu",
+      "templateHint": "Układ strony /zapisy/{slug} — edytowany w edytorze w sekcji „Zapisy”.",
       "submit": "Utwórz typ grupy",
       "submitting": "Tworzenie…",
       "save": "Zapisz zmiany",

@@ -19,6 +19,7 @@ import {
 import type { FormState } from "@/lib/validation";
 import { createGroupTypeAction, updateGroupTypeAction } from "../actions";
 import { billingType, engine, groupTypeStatus, paymentPolicy, purchaseMode } from "../schema";
+import { ENROLLMENT_TEMPLATE_KEY } from "@/lib/enrollment-blocks";
 
 const initial: FormState = {};
 
@@ -44,6 +45,8 @@ export type GroupTypeDefaults = {
   eligibleTrainerIds: string[] | null;
   /** Slot slicing for the slot-first engine (`computeAvailabilitySlots`). */
   defaultDurationMinutes: number | null;
+  /** mvp-plan F2 — which enrollment template renders the landing page. */
+  enrollmentTemplateId: string | null;
 };
 
 /**
@@ -69,11 +72,14 @@ export function GroupTypeForm({
   locations,
   policyDocuments,
   trainers,
+  enrollmentTemplates = [],
   defaults,
 }: {
   locations: { id: string; name: string }[];
   policyDocuments?: { id: string; name: string; version: number }[];
   trainers?: { id: string; label: string }[];
+  /** The org's enrollment template variants (mvp-plan F2), like the blog dropdown. */
+  enrollmentTemplates?: { id: string; name: string }[];
   defaults?: GroupTypeDefaults;
 }) {
   const t = useTranslations("groups");
@@ -177,6 +183,30 @@ export function GroupTypeForm({
           />
         </FormField>
       </div>
+
+      {enrollmentTemplates.length > 0 && (
+        <FormField
+          label={t("form.template")}
+          htmlFor="gt-template"
+          hint={t("form.templateHint")}
+        >
+          <Select
+            name="enrollmentTemplateId"
+            defaultValue={defaults?.enrollmentTemplateId ?? ENROLLMENT_TEMPLATE_KEY}
+          >
+            <SelectTrigger id="gt-template" aria-label={t("form.template")}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {enrollmentTemplates.map((template) => (
+                <SelectItem key={template.id} value={template.id}>
+                  {template.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </FormField>
+      )}
 
       <FormField label={t("form.defaultLocation")} htmlFor="gt-location">
         <Select name="defaultLocationId" defaultValue={defaults?.defaultLocationId ?? ""}>

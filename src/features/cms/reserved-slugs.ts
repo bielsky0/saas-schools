@@ -50,12 +50,14 @@ import { LOCALES } from "@/lib/i18n/config";
  * The apex branch in src/proxy.ts returns `forward()` EARLY for "tenant"-stage
  * prefixes, which SKIPS `isPublicBarePage` and default-deny below it.
  *
- * ⚠️ UPDATED IN F5 — WHAT MAKES THAT SAFE HAS CHANGED. It used to be safe by
+ * ⚠️ UPDATED IN F5 / F2 — WHAT MAKES THAT SAFE HAS CHANGED. It used to be safe by
  * accident: the only "tenant" prefix was `zapisy`, which had NO ROUTE, so the
- * early return happened to 404. F5 built `/zapisy/[groupTypeSlug]`, so the accident
- * is gone. It is now safe on purpose, and by exactly one thing: that page calls
- * `requireServedOrganization()` as its FIRST statement, which `notFound()`s when
- * no academy is served — the apex, a foreign host, or an unknown subdomain alike.
+ * early return happened to 404. F5 built `/zapisy/[groupTypeSlug]`, and F2
+ * replaced it with the CMS resolver `(site)/zapisy/[[...slug]]` (mvp-plan F2),
+ * so the accident is gone. It is now safe on purpose, and by exactly one thing:
+ * that route calls `requireServedOrganization()` as its FIRST statement, which
+ * `notFound()`s when no academy is served — the apex, a foreign host, or an
+ * unknown subdomain alike.
  *
  * That call is load-bearing, not defensive. Removing it, or moving it below a
  * `params` read or a query, serves one academy's enrollment page on the apex with

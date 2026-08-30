@@ -293,6 +293,9 @@ export async function enrichBlocksWithData(
         case "BlogPostList": {
           return { ...block, data: { posts: [] } };
         }
+        case "EnrollmentList": {
+          return { ...block, data: { items: [] } };
+        }
       }
       return block;
     }),

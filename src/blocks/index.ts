@@ -14,6 +14,16 @@ import { Component as BlogPostExcerpt, Config as BlogPostExcerptConfig } from ".
 import { Component as BlogPostTags, Config as BlogPostTagsConfig } from "./blog/BlogPostTags/config";
 import { Component as BlogPostList, Config as BlogPostListConfig } from "./blog/BlogPostList/config";
 import { Component as BlogPagination, Config as BlogPaginationConfig } from "./blog/BlogPagination/config";
+
+import { Component as EnrollmentHero, Config as EnrollmentHeroConfig } from "./Enrollment/EnrollmentHero/config";
+import { Component as EnrollmentSchedule, Config as EnrollmentScheduleConfig } from "./Enrollment/EnrollmentSchedule/config";
+import { Component as EnrollmentPricing, Config as EnrollmentPricingConfig } from "./Enrollment/EnrollmentPricing/config";
+import { Component as EnrollmentInstructors, Config as EnrollmentInstructorsConfig } from "./Enrollment/EnrollmentInstructors/config";
+import { Component as EnrollmentPolicy, Config as EnrollmentPolicyConfig } from "./Enrollment/EnrollmentPolicy/config";
+import { Component as EnrollmentBookingButton, Config as EnrollmentBookingButtonConfig } from "./Enrollment/EnrollmentBookingButton/config";
+import { Component as EnrollmentBookingFlow, Config as EnrollmentBookingFlowConfig } from "./Enrollment/EnrollmentBookingFlow/config";
+import { Component as EnrollmentList, Config as EnrollmentListConfig } from "./Enrollment/EnrollmentList/config";
+
 import { langlionSectionCatalogEntries } from "@/lib/section-catalog";
 
 registerChaiBlock(GroupTypeCard, GroupTypeCardConfig);
@@ -29,6 +39,14 @@ registerChaiBlock(BlogPostExcerpt, BlogPostExcerptConfig);
 registerChaiBlock(BlogPostTags, BlogPostTagsConfig);
 registerChaiBlock(BlogPostList, BlogPostListConfig);
 registerChaiBlock(BlogPagination, BlogPaginationConfig);
+registerChaiBlock(EnrollmentHero, EnrollmentHeroConfig);
+registerChaiBlock(EnrollmentSchedule, EnrollmentScheduleConfig);
+registerChaiBlock(EnrollmentPricing, EnrollmentPricingConfig);
+registerChaiBlock(EnrollmentInstructors, EnrollmentInstructorsConfig);
+registerChaiBlock(EnrollmentPolicy, EnrollmentPolicyConfig);
+registerChaiBlock(EnrollmentBookingButton, EnrollmentBookingButtonConfig);
+registerChaiBlock(EnrollmentBookingFlow, EnrollmentBookingFlowConfig);
+registerChaiBlock(EnrollmentList, EnrollmentListConfig);
 
 registerSectionCatalogEntries(langlionSectionCatalogEntries);
 
@@ -46,4 +64,12 @@ registerBlockPickerCategories([
   ["BlogPostTags", "Podstawowe"],
   ["BlogPostList", "Podstawowe"],
   ["BlogPagination", "Podstawowe"],
+  ["EnrollmentHero", "Produkt"],
+  ["EnrollmentSchedule", "Produkt"],
+  ["EnrollmentPricing", "Produkt"],
+  ["EnrollmentInstructors", "Podstawowe"],
+  ["EnrollmentPolicy", "Formularze"],
+  ["EnrollmentBookingButton", "Formularze"],
+  ["EnrollmentBookingFlow", "Formularze"],
+  ["EnrollmentList", "Kolekcja"],
 ]);

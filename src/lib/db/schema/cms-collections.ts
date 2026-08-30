@@ -123,4 +123,19 @@ export const DEFAULT_CMS_COLLECTIONS: CmsCollectionSeed[] = [
       { id: "tpl-course-default", name: "Domyślny", collectionId: "courses", layout: "single" },
     ],
   },
+  {
+    key: "enrollments",
+    name: "Zapis na zajęcia",
+    pageType: "enrollment_detail",
+    templatePageType: "enrollment_template",
+    position: 2,
+    templates: [
+      {
+        id: "tpl-enrollment-default",
+        name: "Domyślny",
+        collectionId: "enrollments",
+        layout: "single",
+      },
+    ],
+  },
 ];

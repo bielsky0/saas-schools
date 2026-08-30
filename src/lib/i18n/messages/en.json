@@ -1301,6 +1301,7 @@
     "noActivePackagesWarning": "Warning: there are no active packages for this group type. Clients will not be able to purchase packages.",
     "manage": "Manage",
     "backToList": "All group types",
+    "viewPage": "View page",
     "form": {
       "createTitle": "New group type",
       "editTitle": "Details",
@@ -1330,6 +1331,8 @@
       "eligibleTrainerIdsHint": "Empty = any active academy trainer can teach this offer. Select specific ones to limit the choice.",
       "defaultDurationMinutes": "Session length (min)",
       "defaultDurationMinutesHint": "Slot-First: length of sessions created on the fly. Defaults to 60 min.",
+      "template": "Enrollment page template",
+      "templateHint": "Layout of /zapisy/{slug} — edited in the builder's \"Enrollments\" section.",
       "submit": "Create group type",
       "submitting": "Creating…",
       "save": "Save changes",

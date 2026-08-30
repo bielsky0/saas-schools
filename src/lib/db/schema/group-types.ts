@@ -135,6 +135,16 @@ export const groupType = pgTable(
      */
     defaultDurationMinutes: integer("defaultDurationMinutes"),
     defaultCapacity: integer("defaultCapacity"),
+    /**
+     * mvp-plan F2 — which `enrollment_template` layout renders this offer's
+     * public landing page (`/zapisy/{slug}`). Null = the org's default
+     * enrollment template (`tpl-enrollment-default`). Template keys are shared
+     * across tenants (like `page.templateId`), so there is no FK — validity is
+     * checked against the org's `cms_collection("enrollments").templates` at
+     * write time and the public renderer falls back to the default template
+     * when a stored key no longer resolves.
+     */
+    enrollmentTemplateId: text("enrollmentTemplateId"),
     createdAt: timestamp("createdAt").notNull().defaultNow(),
     updatedAt: timestamp("updatedAt").notNull().defaultNow(),
     deletedAt: timestamp("deletedAt"),

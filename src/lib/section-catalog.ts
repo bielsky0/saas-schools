@@ -14,4 +14,12 @@ export const langlionSectionCatalogEntries: SectionCatalogEntry[] = [
   { type: "BlogPostTags", labelKey: "Blog post tags", category: "media", role: "template", thumbnail: "auto", pickerCategory: "Narracja" },
   { type: "BlogPostList", labelKey: "Blog post list", category: "media", role: "template", thumbnail: "auto", pickerCategory: "Narracja" },
   { type: "BlogPagination", labelKey: "Blog pagination", category: "media", role: "template", thumbnail: "auto", pickerCategory: "Narracja" },
+  { type: "EnrollmentHero", labelKey: "Enrollment hero", category: "hero", role: "template", thumbnail: "auto" },
+  { type: "EnrollmentSchedule", labelKey: "Enrollment schedule", category: "cards", role: "template", thumbnail: "auto" },
+  { type: "EnrollmentPricing", labelKey: "Enrollment pricing", category: "pricing", role: "template", thumbnail: "auto" },
+  { type: "EnrollmentInstructors", labelKey: "Enrollment instructors", category: "cards", role: "template", thumbnail: "auto" },
+  { type: "EnrollmentPolicy", labelKey: "Enrollment policy", category: "forms", role: "template", thumbnail: "auto" },
+  { type: "EnrollmentBookingButton", labelKey: "Enrollment booking button", category: "forms", role: "template", thumbnail: "auto" },
+  { type: "EnrollmentBookingFlow", labelKey: "Enrollment booking flow", category: "forms", role: "template", thumbnail: "auto" },
+  { type: "EnrollmentList", labelKey: "Enrollment list", category: "cards", role: "template", thumbnail: "auto" },
 ];

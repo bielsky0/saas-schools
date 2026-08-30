@@ -11,11 +11,8 @@ import { pageMetadata } from "@/features/content";
 import { JsonLd } from "@/features/content/components/json-ld";
 import { organizationJsonLd, webSiteJsonLd } from "@/features/content/jsonld";
 import { servedOrganization, servedSubdomain } from "@/features/organizations/served-org";
-import { ThemeInjector } from "@/features/cms/components/theme-injector";
 import { getHomePage, getPageBySlug } from "@/lib/page-service";
-import { TenantPageRenderer } from "@/features/cms/tenant-page-renderer.client";
-import { getBlocksCss } from "@/features/cms/get-blocks-css";
-import { PageStyles } from "@/features/cms/components/page-styles.client";
+import { CmsPageView } from "@/features/cms/cms-page-view";
 import { enrichBlocksWithData } from "@/lib/block-data";
 import { Link } from "@/lib/i18n/navigation";
 import { withTenant } from "@/lib/db/tenant";
@@ -147,17 +144,13 @@ export default async function Home() {
       enrichBlocksWithData(tx, org.id, page.blocks),
     );
 
-    const pageCss = await getBlocksCss(page.blocks);
-
     return (
-      <ThemeInjector organizationId={org.id}>
-        <PageStyles css={pageCss} />
-        <TenantPageRenderer
-          blocks={enrichedBlocks}
-          slug="/"
-          pageType={page.pageType}
-        />
-      </ThemeInjector>
+      <CmsPageView
+        organizationId={org.id}
+        blocks={enrichedBlocks}
+        slug="/"
+        pageType={page.pageType}
+      />
     );
   }
 

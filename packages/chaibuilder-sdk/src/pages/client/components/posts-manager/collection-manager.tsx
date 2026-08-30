@@ -211,8 +211,13 @@ export const CollectionManager = ({
                       {template.layout}
                     </span>
                     <button
-                      className="text-muted-foreground transition-colors hover:text-destructive"
-                      title={t("Delete template")}
+                      className="text-muted-foreground transition-colors hover:text-destructive disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:text-muted-foreground"
+                      title={
+                        collection.templates.length <= 1
+                          ? t("At least one template is required")
+                          : t("Delete template")
+                      }
+                      disabled={collection.templates.length <= 1}
                       onClick={() => deleteTemplate.mutate({ collectionId: collection.id, templateId: template.id })}
                     >
                       <Trash2 className="h-3 w-3" />

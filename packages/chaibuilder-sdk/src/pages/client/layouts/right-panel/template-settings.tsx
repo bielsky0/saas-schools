@@ -16,16 +16,21 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { Switch } from "~/components/ui/switch";
 import { useBlogPostPreview } from "~/hooks/use-blog-preview";
+import { useEnrollmentPreview } from "~/hooks/use-enrollment-preview";
 import { useEditorContext } from "~/hooks/use-editor-mode";
 import { useBlogPostPreviewData } from "~/pages/hooks/pages/use-blog-post-preview-data";
 import { useCollections } from "~/pages/hooks/pages/use-collections";
 import { useCollectionItems } from "~/pages/hooks/pages/use-collection-items";
+import { useEnrollmentPreviewData } from "~/pages/hooks/pages/use-enrollment-preview-data";
+import { useEnrollmentTypes } from "~/pages/hooks/pages/use-enrollment-types";
 import { useTemplateData } from "~/pages/hooks/pages/use-template-data";
 import { useUpdateTemplate } from "~/pages/hooks/pages/use-update-template";
 import { TemplateElements, TemplateSeoDefaults } from "~/types/collections";
 
 /** Radix Select requires non-empty item values — sentinel for "no post" (F5.3). */
 const NONE_POST_VALUE = "__none__";
+/** Sentinel for "no group type" in the enrollment preview dropdown (mvp-plan F2). */
+const NONE_GROUP_VALUE = "__none__";
 
 /**
  * Right panel for editing a collection layout template (blog-templates-cms F4).
@@ -56,6 +61,15 @@ export const TemplateSettings = () => {
     selectedPostId && selectedPostId !== NONE_POST_VALUE ? selectedPostId : undefined,
   );
 
+  // ── mvp-plan F2: enrollment group preview (dropdown → enrollmentPreviewAtom) ──
+  const isEnrollmentTemplate = context.type === "template" && collectionId === "enrollments";
+  const { setPreview: setEnrollmentPreview } = useEnrollmentPreview();
+  const { data: enrollmentTypes = [] } = useEnrollmentTypes();
+  const [selectedGroupId, setSelectedGroupId] = useState<string>(NONE_GROUP_VALUE);
+  const { data: selectedGroupPreview } = useEnrollmentPreviewData(
+    selectedGroupId && selectedGroupId !== NONE_GROUP_VALUE ? selectedGroupId : undefined,
+  );
+
   // Push the fetched post into the preview atom; reset to placeholders outside
   // a blog template or when "Brak" is selected.
   useEffect(() => {
@@ -67,6 +81,17 @@ export const TemplateSettings = () => {
       setPreview(selectedPostPreview);
     }
   }, [isBlogTemplate, selectedPostId, selectedPostPreview, setPreview]);
+
+  // Same for the enrollment preview atom (mvp-plan F2).
+  useEffect(() => {
+    if (!isEnrollmentTemplate || !selectedGroupId || selectedGroupId === NONE_GROUP_VALUE) {
+      setEnrollmentPreview(null);
+      return;
+    }
+    if (selectedGroupPreview !== undefined) {
+      setEnrollmentPreview(selectedGroupPreview);
+    }
+  }, [isEnrollmentTemplate, selectedGroupId, selectedGroupPreview, setEnrollmentPreview]);
 
   const collection = useMemo(
     () => collections.find((c) => c.id === collectionId) ?? null,
@@ -144,6 +169,29 @@ export const TemplateSettings = () => {
               </Select>
               <p className="text-xs text-muted-foreground">
                 {t("Blog blocks render the selected post's data")}
+              </p>
+            </div>
+          )}
+
+          {/* Group type preview (mvp-plan F2) — enrollment template only */}
+          {isEnrollmentTemplate && (
+            <div className="space-y-2">
+              <Label className="text-xs font-medium">{t("Enrollment preview")}</Label>
+              <Select value={selectedGroupId} onValueChange={setSelectedGroupId}>
+                <SelectTrigger className="text-xs">
+                  <SelectValue placeholder={t("Choose a group type to preview")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={NONE_GROUP_VALUE}>{t("None")}</SelectItem>
+                  {enrollmentTypes.map((gt) => (
+                    <SelectItem key={gt.id} value={gt.id}>
+                      {gt.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                {t("Enrollment blocks render the selected group type's data")}
               </p>
             </div>
           )}

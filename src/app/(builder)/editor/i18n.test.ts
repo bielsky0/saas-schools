@@ -139,6 +139,15 @@ const TEMPLATE_SETTINGS_KEYS = [
   "Template data is shown as placeholders",
 ];
 
+const ENROLLMENT_TEMPLATE_KEYS = [
+  "Enrollment preview",
+  "Choose a group type to preview",
+  "Enrollment blocks render the selected group type's data",
+  "Enrollment templates",
+  "No enrollment collection found.",
+  "Create enrollment collection",
+];
+
 const RIGHT_PANEL_KEYS = [
   "Advanced",
   "Select a block or page",
@@ -273,6 +282,14 @@ describe("Editor i18n (Faza 0.3)", () => {
 
   it("Right panel (Faza 5) keys exist in en.json and are translated in pl.json", () => {
     for (const key of RIGHT_PANEL_KEYS) {
+      expect(en, `en.json missing "${key}"`).toHaveProperty(key);
+      expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
+      expect(pl[key as keyof typeof pl]).toBeTruthy();
+    }
+  });
+
+  it("Enrollment template (F2) keys exist in en.json and are translated in pl.json", () => {
+    for (const key of ENROLLMENT_TEMPLATE_KEYS) {
       expect(en, `en.json missing "${key}"`).toHaveProperty(key);
       expect(pl, `pl.json missing "${key}"`).toHaveProperty(key);
       expect(pl[key as keyof typeof pl]).toBeTruthy();

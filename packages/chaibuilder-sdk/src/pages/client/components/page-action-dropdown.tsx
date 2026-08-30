@@ -59,7 +59,7 @@ export const PageActionsDropdown = ({
         {children}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="center" className="text-sm">
-        {hasPermission(PAGES_PERMISSIONS.ADD_PAGE) && !isLanguagePage && (
+        {hasPermission(PAGES_PERMISSIONS.ADD_PAGE) && !isLanguagePage && !pageType?.isSystem && (
           <DropdownMenuItem
             className="flex cursor-pointer items-center gap-2"
             onClick={(e) => {
@@ -95,7 +95,7 @@ export const PageActionsDropdown = ({
             {t("Unpublish")}
           </DropdownMenuItem>
         )}
-        {hasPermission(PAGES_PERMISSIONS.DELETE_PAGE) && (
+        {hasPermission(PAGES_PERMISSIONS.DELETE_PAGE) && !pageType?.isSystem && (
           <DropdownMenuItem
             className="flex cursor-pointer items-center gap-2"
             onClick={(e) => {
@@ -110,6 +110,7 @@ export const PageActionsDropdown = ({
           setUnmarkAsTemplate &&
           hasSlug &&
           !isLanguagePage &&
+          !pageType?.isSystem &&
           hasPermission(
             isTemplate ? PAGES_PERMISSIONS.UNMARK_AS_TEMPLATE : PAGES_PERMISSIONS.MARK_AS_TEMPLATE,
           ) && (

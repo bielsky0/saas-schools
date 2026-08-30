@@ -11,7 +11,12 @@ import { enqueueEmail } from "@/features/emails/send";
 import { enqueueNotification } from "@/features/notifications/send";
 import { requireSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { invitation, membership, organization, user } from "@/lib/db/schema";
+import { invitation, membership, organization, page, user } from "@/lib/db/schema";
+import { defaultSystemPages } from "@/lib/system-pages";
+import {
+  buildDefaultEnrollmentTemplateBlocks,
+  ENROLLMENT_TEMPLATE_KEY,
+} from "@/lib/enrollment-blocks";
 import { cmsCollection, DEFAULT_CMS_COLLECTIONS } from "@/lib/db/schema/cms-collections";
 import { clientEnv } from "@/lib/env/client";
 import { storedLocaleForEmail, toLocale } from "@/lib/i18n/user-locale";
@@ -172,6 +177,25 @@ export async function createOrganizationAction(
         position: c.position,
       })),
     );
+    // Seed the default system pages (mvp-plan F1): Home + the org's editable
+    // 404. Enrollment listing/detail are NOT system pages — they follow the
+    // CMS collection/template model in F2. Registry-driven: src/lib/system-pages.ts.
+    await tx.insert(page).values(defaultSystemPages(organizationId, session.user.id));
+    // Seed the default enrollment template page (mvp-plan F2) so every group
+    // type has an out-of-the-box landing layout, editable in the builder's
+    // "Zapisy" section. Identity: (org, pageType = enrollment_template,
+    // slug = tpl-enrollment-default) — the same identity GET_TEMPLATE_DATA /
+    // UPDATE_TEMPLATE use, so editing "Domyślny" updates this very row.
+    await tx.insert(page).values({
+      organizationId,
+      slug: ENROLLMENT_TEMPLATE_KEY,
+      title: "Domyślny szablon zapisów",
+      pageType: "enrollment_template",
+      blocks: buildDefaultEnrollmentTemplateBlocks(),
+      status: "draft",
+      isHome: false,
+      createdByUserId: session.user.id,
+    });
     // The genesis row: without it an org's trail begins mid-story, and "who
     // created this tenant" is the first question any audit asks.
     await recordAudit(tx, {

@@ -18,6 +18,7 @@ import {
 
 export * from "../../fonts";
 export * from "../../../hooks/use-blog-preview";
+export * from "../../../hooks/use-enrollment-preview";
 
 const setChaiBlockDataProvider = setChaiServerBlockDataProvider;
 

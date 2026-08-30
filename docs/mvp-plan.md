@@ -70,15 +70,18 @@ F6 zależy od F1, F2, F3 (seed stron, sekcji, motywu). F4 i F5 są niezależne.
 
 ## 2. Faza 1 — Strony systemowe + topbar
 
-**Cel:** wbudowane strony (404, zapisy itp.) edytowalne w ChaiBuilder, widoczne od razu w topbarze.
+**Cel:** wbudowane strony (404) edytowalne w ChaiBuilder, widoczne od razu w topbarze.
+
+> **Odchyłka (2026-08-30):** tylko `system_404` jest stroną systemową. Strony zapisów
+> (`enrollment_detail`, `enrollment_listing`) **nie** są systemowe — działają w modelu
+> CMS kolekcji + szablonów (F2, wzorzec Shopify/blog): produkt = GroupType,
+> layout przez `enrollment_template`, listing = `enrollment_listing` (analog `blog_index`),
+> wybór szablonu w dashboardzie przy grupie zapisów.
 
 - Nowe `pageType` systemowe w `src/lib/db/schema/pages.ts`:
   - `system_404`
-  - `system_signup`
-  - `system_enrollment_listing`
-  - `system_enrollment_detail`
 - Seed domyślnych stron w `createOrganizationAction` (`src/features/organizations/actions.ts`,
-  obecnie seeduje tylko `cms_collection`): Home, 404, Listing zapisów, Szablon szczegółów zapisu.
+  obecnie seeduje tylko `cms_collection`): Home, 404.
 - Rozszerzyć `PageSelector` w SDK
   (`packages/chaibuilder-sdk/src/pages/client/components/page-selector-in-header.tsx`)
   o sekcję „Strony systemowe" — zawsze widoczne w topbarze.
@@ -97,22 +100,33 @@ Kluczowe pliki:
 **Cel:** strona zapisów edytowana w ChaiBuilder (nie sztywno generowana). Shopify:
 produkty = zapisy (GroupType), kolekcje = listing zapisów.
 
+> **Decyzje (2026-08-30, po implementacji):**
+> - **Brak `/checkout`.** `/zapisy/{slug}` to CMS landing page; interaktywny flow
+>   zapisu (kalendarz, pakiety, płatności, zgody, slot-first, interest) jest
+>   **blokiem `EnrollmentBookingFlow`** osadzonym w template — sekcją w ChaiBuilder.
+> - **Jeden domyślny szablon zapisów** (`buildDefaultEnrollmentTemplateBlocks`).
+>   Wybór szablonu per-grupa (`group_type.enrollmentTemplateId`) odkładamy do F4.
+> - **Brak `page`-rows per grupę**: renderer zawsze liczy dane grupy w locie
+>   (`getEnrollmentBookingPayload` = logika starego `[groupTypeSlug]/page.tsx`).
+
 - `DEFAULT_CMS_COLLECTIONS` (`src/lib/db/schema/cms-collections.ts`) + `"enrollments"`
   (pageType: `enrollment_detail`, templatePageType: `enrollment_template`).
-- **Bloki dedykowane zapisom** (tylko w tej kolekcji dostępne), w `src/blocks/Enrollment*/`:
-  - `EnrollmentHero` — nazwa, opis, cena, CTA
-  - `EnrollmentSchedule` — kalendarz/siatka (logika z `UpcomingEvents`)
+- **Bloki dedykowane zapisom** (tylko w tej kolekcji dostępne), w `src/blocks/Enrollment/`:
+  - `EnrollmentHero` — nazwa, opis, cena, CTA (kotwica `#booking`)
+  - `EnrollmentSchedule` — lista nadchodzących sesji (logika z `UpcomingEvents`)
   - `EnrollmentPricing` — pakiety, subskrypcje
   - `EnrollmentInstructors` — karty trenerów
   - `EnrollmentPolicy` — zgody/polityki
-  - `EnrollmentBookingButton` — link do checkoutu
+  - `EnrollmentBookingButton` — CTA do sekcji zapisu
+  - `EnrollmentBookingFlow` — **cały interaktywny flow** (kalendarz, płatności, zgody)
+  - `EnrollmentList` — siatka kart na `/zapisy`
 - Rejestracja w `src/blocks/index.ts` + `src/lib/section-catalog.ts`.
-- **Data binding:** bloki czytają `externalData: { groupType, packages, availability, trainers }`
-  przekazane przez publiczny renderer (wzorzec bloga F5.5 — `usePageExternalData` w SDK).
+- **Data binding:** bloki czytają `data` (serwerowe wzbogacanie) i `{{enrollment.*}}`
+  przez `externalData: { groupType, packages, availability, trainers }` (wzorzec bloga).
 - **Publiczna trasa** `/zapisy/[[...slug]]` → resolver CMS (zastępuje obecny sztywny
   `src/app/[locale]/(site)/zapisy/[groupTypeSlug]/page.tsx`).
 - Dashboard: właściciel edytuje `enrollment_listing` (siatka kart) i `enrollment_template`
-  (layout szczegółów) w ChaiBuilder.
+  (layout szczegółów) w ChaiBuilder; na liście/detailu group-type przycisk „Podgląd strony".
 
 Kluczowe pliki:
 - `src/lib/db/schema/cms-collections.ts` — nowa kolekcja `enrollments`
@@ -239,7 +253,12 @@ Istniejąca infrastruktura (do re-use): `src/features/billing/connect-*.ts`,
 | `packages/chaibuilder-sdk/src/pages/client/layouts/right-panel/` | Right panel = tylko AI Assistant (stub, bez zmian na razie) |
 | `src/lib/section-catalog.ts` | Katalog sekcji per nisza + PNG preview |
 | `src/lib/blocks-library.ts` | Biblioteka szablonów (rozbudowa o nisze) |
-| `src/blocks/` | Bloki zapisów (`Enrollment*`) |
+| `src/blocks/` | Bloki zapisów (`src/blocks/Enrollment/`) |
+| `src/lib/enrollment-data.ts` | Warstwa danych zapisów (preview, booking payload, template blocks) |
+| `src/lib/enrollment-blocks.ts` | Domyślne bloki template/listingu zapisów (czyste fabryki) |
+| `src/app/[locale]/(site)/zapisy/[[...slug]]/page.tsx` | Publiczny resolver CMS zapisów |
+| `src/lib/db/migrations/0079_enrollments_collection.sql` | Seed kolekcji `enrollments` dla istniejących orgów |
+| `packages/chaibuilder-sdk/src/hooks/use-enrollment-preview.ts` | `enrollmentPreviewAtom` + `useEnrollmentPreview` (podgląd grupy w edytorze) |
 | `src/app/[locale]/(app)/dashboard/group-types/` | Kreator Group Type + Schedule Builder |
 | `src/features/billing/connect-*.ts` | Stripe Connect — płatności per tenant |
 
@@ -259,8 +278,8 @@ Istniejąca infrastruktura (do re-use): `src/features/billing/connect-*.ts`,
 
 | Faza | Status | Data | Odchyłki / notatki |
 |------|--------|------|--------------------|
-| F1 — System pages + topbar | ⬜ | — | — |
-| F2 — Kolekcja Enrollments | ⬜ | — | — |
+| F1 — System pages + topbar | ✅ | 2026-08-30 | Rejestr w `src/lib/system-pages.ts` (jedyne źródło prawdy). **Tylko `system_404`** jest systemowa — strony zapisów (`enrollment_detail`/`enrollment_listing`) przeniesione do F2 (kolekcja + szablony, wzorzec bloga; wybór szablonu w dashboardzie przy grupie). Seed: Home + 404 dla nowych orgów. Renderer 404 przez `CmsPageView` (`src/app/[locale]/not-found.tsx`). Backend edytora: `isSystem` w `buildPageTypes`, guardy DELETE/DUPLICATE/UPDATE-PageType/MARK_AS_TEMPLATE. SDK: typ `isSystem`, sekcja „Strony systemowe" w PageSelector, wykluczenie z kreatora/filtra/dropdownu. Szczegóły: `docs/architecture/system-pages.md` |
+| F2 — Kolekcja Enrollments | ✅ | 2026-08-30 | Kolekcja `enrollments` (`enrollment_detail`/`enrollment_template`) w `DEFAULT_CMS_COLLECTIONS` + migracja 0079 (seed istniejących orgów). **Brak `/checkout`** — booking to blok `EnrollmentBookingFlow` (EmbedFlow: `EnrollmentFlow`/`SlotFirstFlow`/interest) osadzony w template; `(site)/zapisy/[[...slug]]` = resolver CMS (listing `/zapisy` + detail `/zapisy/{slug}`), `requireServedOrganization()` jako pierwsza instrukcja. **Jeden domyślny szablon** (`buildDefaultEnrollmentTemplateBlocks` w `src/lib/enrollment-blocks.ts`) — seedowany jako strona `enrollment_template` (migracja 0080); `group_type.enrollmentTemplateId` + dropdown w formularzu grupy (jak blog); fallback łańcuch — grupa nigdy bez szablonu; brak usuwania ostatniego szablonu (guard API + disabled w UI). 8 bloków w `src/blocks/Enrollment/` + SDK: `enrollmentPreviewAtom`/`useEnrollmentPreview`, dropdown „Podgląd grupy zajęć" w `TemplateSettings`, filtr `default-blocks.tsx`, akcje `GET_ENROLLMENT_PREVIEW`/`GET_ENROLLMENT_TYPES_LIST`. **UX:** szablony zapisów w **topbarze** (sekcja „Zapisy" jak „Blog posts", tworzenie przez `AddTemplateModal` z allowlistą blog+enrollments); kolekcja **ukryta z lewego panelu „CMS Collections"** (treścią są grupy zajęć z dashboardu „Typy zajęć", nie strony). **Fix SDK:** szablon bez strony = pusty canvas (nie bloki poprzedniej strony). Szczegóły: `docs/architecture/enrollments-cms.md` |
 | F3 — Sekcje per nisza + Section-First UX | ⬜ | — | — |
 | F4 — Dashboard UX | ⬜ | — | — |
 | F5 — Stripe Connect E2E | ⬜ | — | — |

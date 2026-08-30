@@ -17,6 +17,7 @@ import {
 } from "@/components/ui";
 import { Link } from "@/lib/i18n/navigation";
 import { requireOrgPermission } from "@/features/organizations/context";
+import { getEnrollmentTemplates } from "@/lib/enrollment-data";
 import { getGroupType, listRecurrencesWithDetails } from "@/features/groups/data";
 import { listLocations } from "@/features/locations/data";
 import { listMembers } from "@/features/organizations/data";
@@ -55,12 +56,13 @@ export default async function GroupTypeDetailPage({
   const data = await withTenant(org.id, async (tx) => {
     const groupType = await getGroupType(tx, org.id, groupTypeId);
     if (!groupType) return null;
-    const [recurrences, locations, members, policyDocuments, interestSignups] = await Promise.all([
+    const [recurrences, locations, members, policyDocuments, interestSignups, enrollmentTemplates] = await Promise.all([
       listRecurrencesWithDetails(tx, org.id, groupTypeId),
       listLocations(tx, org.id),
       listMembers(tx, org.id),
       listPolicyDocuments(tx, org.id),
       listInterestSignups(tx, org.id, groupTypeId),
+      getEnrollmentTemplates(tx, org.id),
     ]);
     // Fetch future sessions for interest-to-booking conversion picker.
     const sessions = await listSessionAvailability(tx, org.id, {
@@ -75,6 +77,7 @@ export default async function GroupTypeDetailPage({
       members,
       policyDocuments,
       interestSignups,
+      enrollmentTemplates,
       sessions,
     };
   });
@@ -104,7 +107,12 @@ export default async function GroupTypeDetailPage({
         <Button asChild variant="ghost" size="sm" className="self-start px-0">
           <Link href={`/dashboard/group-types`}>← {t("backToList")}</Link>
         </Button>
-        <h1 className="text-2xl font-semibold">{data.groupType.name}</h1>
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="text-2xl font-semibold">{data.groupType.name}</h1>
+          <Button asChild variant="outline" size="sm">
+            <Link href={`/zapisy/${data.groupType.slug}`}>{t("viewPage")}</Link>
+          </Button>
+        </div>
         <p className="text-muted-foreground font-mono text-xs">/zapisy/{data.groupType.slug}</p>
       </div>
 
@@ -117,6 +125,7 @@ export default async function GroupTypeDetailPage({
             locations={data.locations}
             policyDocuments={data.policyDocuments}
             trainers={trainers}
+            enrollmentTemplates={data.enrollmentTemplates}
             defaults={{
               id: data.groupType.id,
               name: data.groupType.name,
@@ -136,6 +145,7 @@ export default async function GroupTypeDetailPage({
               allowedBillingTypes: data.groupType.allowedBillingTypes,
               eligibleTrainerIds: data.groupType.eligibleTrainerIds,
               defaultDurationMinutes: data.groupType.defaultDurationMinutes,
+              enrollmentTemplateId: data.groupType.enrollmentTemplateId,
             }}
           />
         </CardContent>

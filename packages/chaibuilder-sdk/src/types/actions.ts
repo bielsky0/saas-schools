@@ -58,6 +58,9 @@ export type ChaiPageType = {
   helpText?: string;
   icon?: string;
   hasSlug?: boolean;
+  /** System pages are seeded per-tenant (not creatable) and grouped under a
+   * dedicated "System pages" group in the left panel and topbar. */
+  isSystem?: boolean;
   name: string | (() => Promise<string>);
   dynamicSegments?: string;
   dynamicSlug?: string;

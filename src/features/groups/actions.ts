@@ -10,6 +10,7 @@ import { requireOrgPermission } from "@/features/organizations/context";
 import { generateSessionsForRecurrence } from "@/features/schedule/generate";
 import { generateOccurrences } from "@/features/schedule/recurrence";
 import { classSession, clientPriceOverride, clientSubscription, creditType, groupType, groupTypeRecurrence, location, productTemplate } from "@/lib/db/schema";
+import { ENROLLMENT_TEMPLATE_KEY } from "@/lib/enrollment-blocks";
 import { withTenant, type TenantDb } from "@/lib/db/tenant";
 import {
   SQLSTATE_EXCLUSION_VIOLATION,
@@ -103,6 +104,7 @@ export async function createGroupTypeAction(
     defaultDurationMinutes: str(formData.get("defaultDurationMinutes")) || undefined,
     defaultCapacity: str(formData.get("defaultCapacity")) || undefined,
     eligibleTrainerIds: strList(formData, "eligibleTrainerIds"),
+    enrollmentTemplateId: str(formData.get("enrollmentTemplateId")) || undefined,
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? t("errors.generic") };
@@ -145,6 +147,7 @@ export async function createGroupTypeAction(
             (parsed.data.eligibleTrainerIds?.length ?? 0) > 0
               ? parsed.data.eligibleTrainerIds
               : null,
+          enrollmentTemplateId: parsed.data.enrollmentTemplateId ?? ENROLLMENT_TEMPLATE_KEY,
         })
         .returning({ id: groupType.id });
 
@@ -203,6 +206,7 @@ export async function updateGroupTypeAction(
     defaultDurationMinutes: str(formData.get("defaultDurationMinutes")) || undefined,
     defaultCapacity: str(formData.get("defaultCapacity")) || undefined,
     eligibleTrainerIds: strList(formData, "eligibleTrainerIds"),
+    enrollmentTemplateId: str(formData.get("enrollmentTemplateId")) || undefined,
   });
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? t("errors.generic") };
@@ -269,7 +273,11 @@ export async function updateGroupTypeAction(
       };
       await tx
         .update(groupType)
-        .set({ ...after, updatedAt: new Date() })
+        .set({
+          ...after,
+          enrollmentTemplateId: parsed.data.enrollmentTemplateId ?? ENROLLMENT_TEMPLATE_KEY,
+          updatedAt: new Date(),
+        })
         .where(and(eq(groupType.id, groupTypeId), eq(groupType.organizationId, ctx.org.id)));
 
       // Faza 21: when catalog price changes, enqueue subscription price sync

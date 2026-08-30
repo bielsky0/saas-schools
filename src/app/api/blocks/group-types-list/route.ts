@@ -7,6 +7,13 @@ import { withTenant } from "@/lib/db/tenant";
 export async function GET() {
   const ctx = await requireOrgPermission("cms.manage");
   const types = await withTenant(ctx.org.id, (tx) => listGroupTypes(tx, ctx.org.id));
-  const data = types.map((t) => ({ id: t.id, name: t.name }));
+  const data = types.map((t) => ({
+    id: t.id,
+    name: t.name,
+    slug: t.slug,
+    price: t.price,
+    description: t.description,
+    status: t.status,
+  }));
   return NextResponse.json(data);
 }

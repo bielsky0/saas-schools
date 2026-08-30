@@ -19,6 +19,24 @@ export async function getPageBySlug(tx: TenantDb, organizationId: string, slug: 
   return row ?? null;
 }
 
+/**
+ * Resolve a page by its `pageType` (system pages, blog index, etc.).
+ * Unlike `getPageBySlug` this ignores the slug entirely, so callers do not need
+ * to know a page's URL to find it — the contract the editor's system pages
+ * (mvp-plan F1) rely on.
+ */
+export async function getPageByType(
+  tx: TenantDb,
+  organizationId: string,
+  pageType: string,
+  opts?: { status?: "published" | "draft" | "archived" },
+) {
+  const conds = [eq(page.organizationId, organizationId), eq(page.pageType, pageType)];
+  if (opts?.status) conds.push(eq(page.status, opts.status));
+  const [row] = await tx.select().from(page).where(and(...conds)).limit(1);
+  return row ?? null;
+}
+
 export async function getHomePage(tx: TenantDb, organizationId: string) {
   const [row] = await tx
     .select()

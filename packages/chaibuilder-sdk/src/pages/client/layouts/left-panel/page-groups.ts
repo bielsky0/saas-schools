@@ -10,7 +10,7 @@ export interface PageGroup {
 export const TEMPLATE_PAGE_TYPE = "template";
 
 export const isSystemPageType = (pageType: ChaiPageType): boolean => {
-  return Boolean((pageType as Partial<ChaiPageType> & { isSystem?: boolean }).isSystem);
+  return Boolean(pageType.isSystem);
 };
 
 export const isTemplatePage = (page: ChaiPage): boolean => {

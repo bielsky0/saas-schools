@@ -1,6 +1,7 @@
 import { atom, useAtomValue } from "jotai";
 import { useMemo } from "react";
 import { useBlogPostPreview } from "~/hooks/use-blog-preview";
+import { useEnrollmentPreview } from "~/hooks/use-enrollment-preview";
 import { useEditorContext } from "~/hooks/use-editor-mode";
 import { useBlockRepeaterDataAtom } from "~/hooks/async-props/use-async-props";
 import { ChaiBuilderEditorProps } from "~/types";
@@ -37,6 +38,7 @@ export const usePageExternalData = () => {
   const [blockRepeaterData] = useBlockRepeaterDataAtom();
   const { context } = useEditorContext();
   const { preview } = useBlogPostPreview();
+  const { preview: enrollmentPreview } = useEnrollmentPreview();
   const repeaterItems = useMemo(() => {
     const result: Record<string, any> = {};
     Object.entries(blockRepeaterData).forEach(([key, value]) => {
@@ -54,7 +56,15 @@ export const usePageExternalData = () => {
     if (!isBlogTemplate || !preview) return {};
     return { blog: preview };
   }, [context, preview]);
-  return { ...pageExternalData, ...repeaterItems, ...blogPostData };
+  // mvp-plan F2 — same for the selected group type under `enrollment` while an
+  // enrollment template is being edited (`{{enrollment.*}}` bindings).
+  const enrollmentData = useMemo(() => {
+    const isEnrollmentTemplate =
+      context.type === "template" && context.collectionId === "enrollments";
+    if (!isEnrollmentTemplate || !enrollmentPreview) return {};
+    return { enrollment: enrollmentPreview };
+  }, [context, enrollmentPreview]);
+  return { ...pageExternalData, ...repeaterItems, ...blogPostData, ...enrollmentData };
 };
 export const userActionsCountAtom = atom(0);
 export const saveToLibraryModalAtom = atom<{

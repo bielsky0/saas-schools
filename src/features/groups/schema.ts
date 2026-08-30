@@ -84,6 +84,12 @@ export function createGroupTypeSchema(t: ValidationTranslator) {
       defaultCapacity: z.coerce.number().int().positive(t("defaultCapacityInvalid")).optional(),
       /** Empty/absent = every active trainer is eligible (§1.2). */
       eligibleTrainerIds: z.array(z.string()).optional(),
+      /**
+       * mvp-plan F2 — which `enrollment_template` layout renders this offer's
+       * public landing page. Absent → the org's default template. Validity is
+       * checked against the collection at render time (fallback to default).
+       */
+      enrollmentTemplateId: z.string().min(1).optional(),
     })
     .refine(
       (v) =>

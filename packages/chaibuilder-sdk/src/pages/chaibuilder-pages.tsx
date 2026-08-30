@@ -165,14 +165,18 @@ const ChaiBuilderInner = ({ ...props }: ChaiBuilderInnerProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editorContext]);
 
-  // Load template page blocks into the shared atom once data is ready.
+  // Load template page blocks into the shared atom once data is ready. A
+  // template that has no page yet (never edited, freshly created) must render a
+  // BLANK canvas — not the previous page's blocks that are still in the atom.
+  // `templateData` stays `undefined` only while GET_TEMPLATE_DATA is loading;
+  // once loaded it is `{ page, config }` with `page` possibly null.
   useEffect(() => {
     if (editorContext.type !== "template") return;
     const key = `${editorContext.templateId}:${editorContext.collectionId}`;
     if (loadedTemplateRef.current === key) return;
-    if (!templateData?.page) return;
+    if (templateData === undefined) return;
     loadedTemplateRef.current = key;
-    setBlocks(templateData.page.blocks as ChaiBlock[]);
+    setBlocks((templateData?.page?.blocks as ChaiBlock[]) ?? []);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editorContext, templateData]);
 
