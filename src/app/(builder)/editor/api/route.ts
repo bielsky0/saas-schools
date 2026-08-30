@@ -1,5 +1,6 @@
 import { and, desc, eq, ilike, inArray, ne, sql } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
+import { initChaiBuilderActionHandler } from "@chaibuilder/sdk/actions";
 
 import { getServerSession } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -1258,8 +1259,40 @@ export async function POST(req: NextRequest) {
         }
 
         case "ASK_AI":
-        case "GENERATE_HTML_FROM_PROMPT":
-          return NextResponse.json({ textStream: null });
+        case "GENERATE_HTML_FROM_PROMPT": {
+          const handler = initChaiBuilderActionHandler({
+            apiKey: organizationId,
+            userId: userId ?? "",
+          });
+          const response = await handler({ action, data });
+
+          if (response?._streamingResponse && response?._streamResult) {
+            const result = response._streamResult;
+            if (!result?.textStream) {
+              return NextResponse.json({ error: "No streaming response available" }, { status: 500 });
+            }
+            const encoder = new TextEncoder();
+            const readable = new ReadableStream({
+              async start(controller) {
+                try {
+                  for await (const chunk of result.textStream) {
+                    if (chunk) controller.enqueue(encoder.encode(chunk));
+                  }
+                  controller.close();
+                } catch (err) {
+                  controller.error(err);
+                }
+              },
+            });
+            return new Response(readable, {
+              headers: {
+                "Content-Type": "text/plain; charset=utf-8",
+                "Cache-Control": "no-cache",
+              },
+            });
+          }
+          return NextResponse.json(response);
+        }
 
         case "GENERATE_SEO_FIELD":
           return NextResponse.json({ text: "" });

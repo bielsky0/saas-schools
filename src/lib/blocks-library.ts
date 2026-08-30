@@ -1,5 +1,9 @@
 import { nanoid } from "nanoid";
 import type { ChaiBlock } from "@chaibuilder/sdk/types";
+import { swimmingTemplates, swimmingBlocks } from "./blocks-library/swimming-sections";
+import { schoolTemplates, schoolBlocks } from "./blocks-library/school-sections";
+import { danceTemplates, danceBlocks } from "./blocks-library/dance-sections";
+import { generalTemplates, generalBlocks } from "./blocks-library/general-sections";
 
 type LanglionTemplate = {
   id: string;
@@ -78,6 +82,24 @@ const TEMPLATES: LanglionTemplate[] = [
     name: "Autor",
     group: "Blog",
     description: "Karta autora wpisu ze zdjęciem, imieniem i bio",
+    preview: "",
+  },
+  ...swimmingTemplates,
+  ...schoolTemplates,
+  ...danceTemplates,
+  ...generalTemplates,
+  {
+    id: "page-404-hero",
+    name: "Hero — 404",
+    group: "Systemowe",
+    description: "Sekcja hero dla strony 404 z informacją o nieistnieniu strony",
+    preview: "",
+  },
+  {
+    id: "enrollment-listing-hero",
+    name: "Hero — Lista zapisów",
+    group: "Systemowe",
+    description: "Sekcja hero dla listy zapisów z tytułem i opisem",
     preview: "",
   },
 ];
@@ -486,7 +508,86 @@ function templateBlocks(templateId: string): ChaiBlock[] {
       ]);
 
     default:
-      return [];
+      return swimmingBlocks(templateId)
+        || schoolBlocks(templateId)
+        || danceBlocks(templateId)
+        || generalBlocks(templateId)
+        || pageBlocks(templateId)
+        || [];
+  }
+}
+
+function pageBlocks(templateId: string): ChaiBlock[] | null {
+  switch (templateId) {
+    case "page-404-hero":
+      return buildBlocks((parent) => [
+        {
+          _id: genId(),
+          _type: "Box",
+          _parent: parent,
+          styles: `${STYLES_KEY},text-center py-24 px-6`,
+        },
+        {
+          _id: genId(),
+          _type: "Heading",
+          _parent: parent,
+          tag: "h1",
+          content: "404",
+          styles: `${STYLES_KEY},text-8xl font-bold text-muted-foreground`,
+        },
+        {
+          _id: genId(),
+          _type: "Heading",
+          _parent: parent,
+          tag: "h2",
+          content: "Strona nie znaleziona",
+          styles: `${STYLES_KEY},text-2xl font-semibold mt-4`,
+        },
+        {
+          _id: genId(),
+          _type: "Paragraph",
+          _parent: parent,
+          content: "Strona, której szukasz, nie istnieje lub została przeniesiona.",
+          styles: `${STYLES_KEY},text-muted-foreground mt-2`,
+        },
+        {
+          _id: genId(),
+          _type: "Button",
+          _parent: parent,
+          content: "Wróć do strony głównej",
+          variant: "primary",
+          href: "/",
+          styles: `${STYLES_KEY},mt-8`,
+        },
+      ]);
+
+    case "enrollment-listing-hero":
+      return buildBlocks((parent) => [
+        {
+          _id: genId(),
+          _type: "Box",
+          _parent: parent,
+          styles: `${STYLES_KEY},text-center py-16 px-6`,
+        },
+        {
+          _id: genId(),
+          _type: "Heading",
+          _parent: parent,
+          tag: "h1",
+          content: "Nasza oferta",
+          styles: `${STYLES_KEY},text-4xl font-bold`,
+        },
+        {
+          _id: genId(),
+          _type: "Paragraph",
+          _parent: parent,
+          content: "Wybierz zajęcia dopasowane do Twoich potrzeb i zapisz się online",
+          styles: `${STYLES_KEY},text-lg text-muted-foreground`,
+        },
+      ]);
+
+    default:
+      return null;
   }
 }
 

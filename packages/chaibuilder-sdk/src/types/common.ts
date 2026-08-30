@@ -1,6 +1,6 @@
 import type { RJSFSchema, UiSchema } from "@rjsf/utils";
 import { LoggedInUser } from "~/pages/types/loggedin-user";
-import { ChaiBuilderEditorProps } from "./chaibuilder-editor-props";
+import { ChaiBuilderEditorProps, ChaiAskAiResponse } from "./chaibuilder-editor-props";
 
 type ChaiBlock<T = Record<string, any>> = {
   _id: string;
@@ -54,6 +54,12 @@ export type ChaiWebsiteBuilderProps = {
   onLogout?: (reason?: string) => void;
   getAccessToken?: () => Promise<string>;
   currentUser: LoggedInUser | null;
+  askAiCallBack?: (
+    type: "styles" | "content",
+    prompt: string,
+    blocks: ChaiBlock[],
+    lang: string,
+  ) => Promise<ChaiAskAiResponse>;
 } & Pick<
   ChaiBuilderEditorProps,
   | "onError"

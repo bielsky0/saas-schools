@@ -7,6 +7,7 @@ import { BuilderLayout } from "@chaibuilder/sdk/pages/layout";
 import { loadWebBlocks } from "@chaibuilder/sdk/web-blocks";
 import dynamic from "next/dynamic";
 import { useEffect, useCallback, useState } from "react";
+import type { ChaiBlock } from "@chaibuilder/sdk/types";
 import "@/blocks";
 import { langlionLibrary } from "@/lib/blocks-library";
 import { GroupTypePickerWidget } from "@/blocks/widgets/group-type-picker";
@@ -117,6 +118,40 @@ export default function Editor() {
     [pageTypeMap],
   );
 
+  const askAiCallBack = useCallback(
+    async (type: "styles" | "content", prompt: string, blocks: ChaiBlock[], lang: string) => {
+      try {
+        const response = await fetch("/editor/api?action=ask_ai", {
+          credentials: "include",
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "ASK_AI",
+            data: {
+              messages: [{ role: "user", content: prompt }],
+              model: "gpt-4o-mini",
+              context: { type, blocks, lang },
+            },
+          }),
+        });
+
+        if (!response.ok) {
+          const err = await response.json().catch(() => ({}));
+          return { blocks: [], error: { message: err.error || "AI request failed" } };
+        }
+
+        const text = await response.text();
+        const htmlMatch = text.match(/--HTML--([\s\S]*?)--ENDHTML--/);
+        if (!htmlMatch?.[1]) return { blocks: [] };
+
+        return { blocks: [] as ChaiBlock[], html: htmlMatch[1].trim() };
+      } catch (e: any) {
+        return { blocks: [], error: { message: e?.message || "AI error" } };
+      }
+    },
+    [],
+  );
+
   return (
     <ChaiWebsiteBuilder
       layout={BuilderLayout}
@@ -137,6 +172,7 @@ export default function Editor() {
       getPreviewUrl={getPreviewUrl}
       getLiveUrl={getLiveUrl}
       getBackUrl="/dashboard"
+      askAiCallBack={askAiCallBack}
     />
   );
 }
