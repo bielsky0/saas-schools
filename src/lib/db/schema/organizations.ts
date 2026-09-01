@@ -1,4 +1,4 @@
-import { boolean, pgTable, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import { boolean, integer, pgTable, text, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
 
 import { user } from "./auth";
 import { plan } from "./plans";
@@ -50,6 +50,12 @@ export const organization = pgTable(
     timezone: text("timezone").notNull(),
     /** ISO 4217, e.g. `PLN`. One academy = one currency; amounts are minor units (§2.14). */
     currency: text("currency").notNull(),
+    /** Schedule builder start hour (0-23), default 6 (06:00). */
+    scheduleStartHour: integer("schedule_start_hour").notNull().default(6),
+    /** Schedule builder end hour (0-23), default 22 (22:00). */
+    scheduleEndHour: integer("schedule_end_hour").notNull().default(22),
+    /** Schedule slot granularity in minutes (15, 30, 60), default 30. */
+    scheduleSlotMinutes: integer("schedule_slot_minutes").notNull().default(30),
     logo: text("logo"),
     createdByUserId: text("createdByUserId")
       .notNull()

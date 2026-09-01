@@ -6,12 +6,16 @@ import { getTranslations } from "next-intl/server";
 
 import { recordAudit, resolveActor } from "@/features/admin/audit";
 import { requireOrgPermission } from "@/features/organizations/context";
-import { athlete, client, creditType } from "@/lib/db/schema";
+import { athlete, client, creditType, productTemplate } from "@/lib/db/schema";
 import { withTenant, type TenantDb } from "@/lib/db/tenant";
 import type { FormState } from "@/lib/validation";
 import { issueCredits } from "./issue";
-import { grantCreditsSchema } from "./schema";
+import { grantCreditsSchema, productTemplateSchema } from "./schema";
 import { CreditTypeNotFoundError, deactivateCreditType } from "./deactivate";
+import {
+  SQLSTATE_UNIQUE_VIOLATION,
+  sqlStateOf,
+} from "@/lib/db/sql-error";
 
 /**
  * Credit server actions (langlion §2.4, EPIK 7).
@@ -219,4 +223,220 @@ async function findAthlete(tx: TenantDb, organizationId: string, id: string) {
     )
     .limit(1);
   return row ?? null;
+}
+
+/**
+ * Product Template CRUD (mvp-plan F4 — Cennik w kreatorze Group Type).
+ *
+ * Each template defines a package/subscription for a specific group type
+ * (via creditType 1:1 relationship).
+ */
+
+async function getCreditTypeForGroupType(
+  tx: TenantDb,
+  organizationId: string,
+  groupTypeId: string,
+) {
+  const [row] = await tx
+    .select({ id: creditType.id })
+    .from(creditType)
+    .where(
+      and(
+        eq(creditType.organizationId, organizationId),
+        eq(creditType.groupTypeId, groupTypeId),
+        isNull(creditType.deletedAt),
+      ),
+    )
+    .limit(1);
+  return row ?? null;
+}
+
+export async function createProductTemplateAction(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const groupTypeId = str(formData.get("groupTypeId"));
+  const ctx = await requireOrgPermission("group_types.manage");
+  const [t, tv] = await Promise.all([
+    getTranslations("credits"),
+    getTranslations("credits.validation"),
+  ]);
+
+  const parsed = productTemplateSchema(tv).safeParse({
+    name: str(formData.get("name")),
+    description: str(formData.get("description")) || undefined,
+    price: str(formData.get("price")),
+    creditQuantity: str(formData.get("creditQuantity")),
+    billingType: str(formData.get("billingType")),
+    interval: str(formData.get("interval")) || undefined,
+    intervalCount: str(formData.get("intervalCount")) || undefined,
+    isActive: formData.get("isActive") === "on",
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? t("errors.generic") };
+  }
+
+  const actor = await resolveActor(ctx.session);
+
+  try {
+    await withTenant(ctx.org.id, async (tx) => {
+      const creditTypeRow = await getCreditTypeForGroupType(tx, ctx.org.id, groupTypeId);
+      if (!creditTypeRow) return { error: t("errors.creditTypeNotFound") };
+
+      await tx.insert(productTemplate).values({
+        organizationId: ctx.org.id,
+        creditTypeId: creditTypeRow.id,
+        name: parsed.data.name,
+        description: parsed.data.description ?? null,
+        price: parsed.data.price,
+        creditQuantity: parsed.data.creditQuantity,
+        billingType: parsed.data.billingType,
+        interval: parsed.data.interval ?? null,
+        intervalCount: parsed.data.intervalCount ?? null,
+        isActive: parsed.data.isActive,
+      });
+
+      await recordAudit(tx, {
+        actor,
+        organizationId: ctx.org.id,
+        action: "product_template.create",
+        targetType: "product_template",
+        targetId: creditTypeRow.id,
+        targetLabel: parsed.data.name,
+      });
+    });
+  } catch (error) {
+    if (sqlStateOf(error) === SQLSTATE_UNIQUE_VIOLATION) return { error: t("errors.nameTaken") };
+    throw error;
+  }
+
+  revalidatePath(`/dashboard/group-types/${groupTypeId}`);
+  return { success: (t as any)("productTemplateCreated") };
+}
+
+export async function updateProductTemplateAction(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const templateId = str(formData.get("templateId"));
+  const groupTypeId = str(formData.get("groupTypeId"));
+  const ctx = await requireOrgPermission("group_types.manage");
+  const [t, tv] = await Promise.all([
+    getTranslations("credits"),
+    getTranslations("credits.validation"),
+  ]);
+
+  const parsed = productTemplateSchema(tv).safeParse({
+    name: str(formData.get("name")),
+    description: str(formData.get("description")) || undefined,
+    price: str(formData.get("price")),
+    creditQuantity: str(formData.get("creditQuantity")),
+    billingType: str(formData.get("billingType")),
+    interval: str(formData.get("interval")) || undefined,
+    intervalCount: str(formData.get("intervalCount")) || undefined,
+    isActive: formData.get("isActive") === "on",
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? t("errors.generic") };
+  }
+
+  const actor = await resolveActor(ctx.session);
+
+  try {
+    await withTenant(ctx.org.id, async (tx) => {
+      const creditTypeRow = await getCreditTypeForGroupType(tx, ctx.org.id, groupTypeId);
+      if (!creditTypeRow) return { error: t("errors.creditTypeNotFound") };
+
+      const [before] = await tx
+        .select()
+        .from(productTemplate)
+        .where(
+          and(
+            eq(productTemplate.id, templateId),
+            eq(productTemplate.organizationId, ctx.org.id),
+            eq(productTemplate.creditTypeId, creditTypeRow.id),
+          ),
+        )
+        .limit(1);
+      if (!before) return { error: t("errors.notFound") };
+
+      await tx
+        .update(productTemplate)
+        .set({
+          name: parsed.data.name,
+          description: parsed.data.description ?? null,
+          price: parsed.data.price,
+          creditQuantity: parsed.data.creditQuantity,
+          billingType: parsed.data.billingType,
+          interval: parsed.data.interval ?? null,
+          intervalCount: parsed.data.intervalCount ?? null,
+          isActive: parsed.data.isActive,
+          updatedAt: new Date(),
+        })
+        .where(eq(productTemplate.id, templateId));
+
+      await recordAudit(tx, {
+        actor,
+        organizationId: ctx.org.id,
+        action: "product_template.update",
+        targetType: "product_template",
+        targetId: templateId,
+        targetLabel: parsed.data.name,
+      });
+    });
+  } catch (error) {
+    if (sqlStateOf(error) === SQLSTATE_UNIQUE_VIOLATION) return { error: t("errors.nameTaken") };
+    throw error;
+  }
+
+  revalidatePath(`/dashboard/group-types/${groupTypeId}`);
+  return { success: (t as any)("productTemplateUpdated") };
+}
+
+export async function deleteProductTemplateAction(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const templateId = str(formData.get("templateId"));
+  const groupTypeId = str(formData.get("groupTypeId"));
+  const ctx = await requireOrgPermission("group_types.manage");
+  const t = await getTranslations("credits");
+
+  const actor = await resolveActor(ctx.session);
+
+  try {
+    await withTenant(ctx.org.id, async (tx) => {
+      const creditTypeRow = await getCreditTypeForGroupType(tx, ctx.org.id, groupTypeId);
+      if (!creditTypeRow) return { error: t("errors.creditTypeNotFound") };
+
+      const [before] = await tx
+        .select()
+        .from(productTemplate)
+        .where(
+          and(
+            eq(productTemplate.id, templateId),
+            eq(productTemplate.organizationId, ctx.org.id),
+            eq(productTemplate.creditTypeId, creditTypeRow.id),
+          ),
+        )
+        .limit(1);
+      if (!before) return { error: t("errors.notFound") };
+
+      await tx.delete(productTemplate).where(eq(productTemplate.id, templateId));
+
+      await recordAudit(tx, {
+        actor,
+        organizationId: ctx.org.id,
+        action: "product_template.delete",
+        targetType: "product_template",
+        targetId: templateId,
+        targetLabel: before.name,
+      });
+    });
+  } catch (error) {
+    throw error;
+  }
+
+  revalidatePath(`/dashboard/group-types/${groupTypeId}`);
+  return { success: (t as any)("productTemplateDeleted") };
 }

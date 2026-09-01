@@ -158,6 +158,7 @@ export const AUDIT_ACTIONS = [
   "location.update",
   "group_type.create",
   "group_type.update",
+  "group_type.duplicate",
   "recurrence.create",
   "recurrence.update",
   "class_session.update",
@@ -356,6 +357,10 @@ export const AUDIT_ACTIONS = [
   "blog_post.create",
   "blog_post.update",
   "blog_post.delete",
+  // Faza 4 — Product Template CRUD (mvp-plan F4).
+  "product_template.create",
+  "product_template.update",
+  "product_template.delete",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -428,7 +433,9 @@ export type AuditTargetType =
   |   "broadcast_message"
   | "organization_sms_credit"
   // Blog CMS dashboard (blog-templates-cms F5.1).
-  | "blog_post";
+  | "blog_post"
+  // Faza 4 — Product Template (mvp-plan F4)
+  | "product_template";
 
 /**
  * WHO acted, as a kind — §6.4's actor model. A different question from WHICH

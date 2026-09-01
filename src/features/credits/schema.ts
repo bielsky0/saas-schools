@@ -64,3 +64,34 @@ export function grantCreditsSchema(t: ValidationTranslator) {
 export type CreditStatus = z.infer<typeof creditStatus>;
 export type CreditSource = z.infer<typeof creditSource>;
 export type GrantCreditsValues = z.infer<ReturnType<typeof grantCreditsSchema>>;
+
+/**
+ * Product template validation (mvp-plan F4 — Cennik w kreatorze Group Type).
+ *
+ * Defines a package or subscription that clients can purchase.
+ * Linked to a creditType (1:1 with groupType).
+ */
+export const productTemplateBillingType = z.enum(["one_time", "recurring"]);
+export const productTemplateInterval = z.enum(["month", "year"]);
+
+export function productTemplateSchema(t: ValidationTranslator) {
+  return z
+    .object({
+      name: z.string().trim().min(2, t("nameMin")).max(160),
+      description: z.string().trim().max(2000).optional(),
+      price: z.coerce.number().int().positive(t("priceInvalid")),
+      creditQuantity: z.coerce.number().int().positive(t("creditQuantityInvalid")),
+      billingType: productTemplateBillingType,
+      interval: productTemplateInterval.optional(),
+      intervalCount: z.coerce.number().int().positive().optional(),
+      isActive: z.boolean().default(true),
+    })
+    .refine(
+      (v) => v.billingType !== "recurring" || (v.interval && v.intervalCount),
+      { message: t("intervalRequiredForRecurring"), path: ["interval"] }
+    );
+}
+
+export type ProductTemplateBillingType = z.infer<typeof productTemplateBillingType>;
+export type ProductTemplateInterval = z.infer<typeof productTemplateInterval>;
+export type ProductTemplateValues = z.infer<ReturnType<typeof productTemplateSchema>>;

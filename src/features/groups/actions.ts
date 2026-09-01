@@ -909,3 +909,437 @@ export async function deactivateGroupTypeAction(
     throw e;
   }
 }
+
+/**
+ * Duplicate a group type (mvp-plan F4).
+ *
+ * Creates a new group type with the same settings but a new slug/name.
+ * Recurrences and sessions are NOT duplicated — only the definition.
+ */
+export async function duplicateGroupTypeAction(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const sourceGroupTypeId = str(formData.get("groupTypeId"));
+  const ctx = await requireOrgPermission("group_types.manage");
+  const [t, tv] = await Promise.all([
+    getTranslations("groups"),
+    getTranslations("groups.validation"),
+  ]);
+
+  const actor = await resolveActor(ctx.session);
+
+  try {
+    const result = await withTenant(ctx.org.id, async (tx) => {
+      const [source] = await tx
+        .select()
+        .from(groupType)
+        .where(
+          and(
+            eq(groupType.id, sourceGroupTypeId),
+            eq(groupType.organizationId, ctx.org.id),
+            isNull(groupType.deletedAt),
+          ),
+        )
+        .limit(1);
+      if (!source) return { kind: "not-found" as const };
+
+      const baseSlug = `${source.slug}-kopia`;
+      let newSlug = baseSlug;
+      let counter = 1;
+      while (true) {
+        const [existing] = await tx
+          .select({ id: groupType.id })
+          .from(groupType)
+          .where(
+            and(
+              eq(groupType.slug, newSlug),
+              eq(groupType.organizationId, ctx.org.id),
+              isNull(groupType.deletedAt),
+            ),
+          )
+          .limit(1);
+        if (!existing) break;
+        counter++;
+        newSlug = `${baseSlug}-${counter}`;
+      }
+
+      const [row] = await tx
+        .insert(groupType)
+        .values({
+          organizationId: ctx.org.id,
+          name: `${source.name} (kopia)`,
+          slug: newSlug,
+          description: source.description,
+          engine: source.engine,
+          paymentPolicy: source.paymentPolicy,
+          status: "scheduled",
+          price: source.price,
+          isNewClientOnly: source.isNewClientOnly,
+          requiresQualificationCard: source.requiresQualificationCard,
+          isTrialOffer: source.isTrialOffer,
+          waitlistEnabled: source.waitlistEnabled,
+          defaultLocationId: source.defaultLocationId,
+          defaultMeetingUrl: source.defaultMeetingUrl,
+          policyDocumentId: source.policyDocumentId,
+          allowedPurchaseModes: source.allowedPurchaseModes,
+          allowedBillingTypes: source.allowedBillingTypes,
+          defaultDurationMinutes: source.defaultDurationMinutes,
+          defaultCapacity: source.defaultCapacity,
+          eligibleTrainerIds: source.eligibleTrainerIds,
+          enrollmentTemplateId: source.enrollmentTemplateId,
+        })
+        .returning({ id: groupType.id });
+
+      await recordAudit(tx, {
+        actor,
+        organizationId: ctx.org.id,
+        action: "group_type.duplicate",
+        targetType: "group_type",
+        targetId: row!.id,
+        targetLabel: `${source.name} (kopia)`,
+        metadata: { sourceGroupTypeId },
+      });
+
+      return { kind: "created" as const, id: row!.id };
+    });
+
+    if (result.kind === "not-found") return { error: t("errors.notFound") };
+
+    revalidatePath(`/dashboard/group-types`);
+    return { success: t("duplicated"), redirect: `/dashboard/group-types/${result.id}` };
+  } catch (error) {
+    if (sqlStateOf(error) === SQLSTATE_UNIQUE_VIOLATION) return { error: t("errors.slugTaken") };
+    throw error;
+  }
+}
+
+/**
+ * Create a single class session (for slot_first engine) — inline, no job.
+ *
+ * Used by Schedule Builder when engine = slot_first. The admin clicks a slot
+ * and we create one session immediately in the same transaction.
+ */
+export async function createClassSessionAction(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const ctx = await requireOrgPermission("sessions.generate_season");
+  const [t, tg, tv] = await Promise.all([
+    getTranslations("groups.recurrences"),
+    getTranslations("groups"),
+    getTranslations("groups.validation"),
+  ]);
+
+  const parsed = createRecurrenceSchema(tv).safeParse({
+    groupTypeId: str(formData.get("groupTypeId")),
+    dayOfWeek: str(formData.get("dayOfWeek")),
+    startTime: str(formData.get("startTime")),
+    durationMinutes: str(formData.get("durationMinutes")),
+    trainerId: str(formData.get("trainerId")) || undefined,
+    capacity: str(formData.get("capacity")),
+    locationId: str(formData.get("locationId")) || undefined,
+    isRecurring: "false",
+    occurrencesCount: "1",
+    startDate: str(formData.get("startDate")),
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? tg("errors.generic") };
+  }
+
+  const actor = await resolveActor(ctx.session);
+
+  const outcome = await withTenant(ctx.org.id, async (tx) => {
+    const [parent] = await tx
+      .select({
+        id: groupType.id,
+        name: groupType.name,
+        engine: groupType.engine,
+        defaultLocationId: groupType.defaultLocationId,
+        defaultMeetingUrl: groupType.defaultMeetingUrl,
+      })
+      .from(groupType)
+      .where(
+        and(
+          eq(groupType.id, parsed.data.groupTypeId),
+          eq(groupType.organizationId, ctx.org.id),
+          isNull(groupType.deletedAt),
+        ),
+      )
+      .limit(1);
+    if (!parent) return { kind: "not-found" as const };
+
+    if (parent.engine !== "slot_first") {
+      return { kind: "wrong-engine" as const };
+    }
+
+    if (
+      parsed.data.locationId &&
+      !(await locationBelongsToOrg(tx, ctx.org.id, parsed.data.locationId))
+    ) {
+      return { kind: "unknown-location" as const };
+    }
+
+    const startDate = parsed.data.startDate;
+    const [year, month, day] = startDate.split("-").map(Number);
+    const startTime = parsed.data.startTime;
+    const [hour, minute] = startTime.split(":").map(Number);
+
+    const { zonedWallClockToUtc } = await import("@/lib/datetime");
+    const startsAt = zonedWallClockToUtc(
+      year!,
+      month!,
+      day!,
+      hour!,
+      minute!,
+      ctx.org.timezone,
+    );
+    const endsAt = new Date(startsAt.getTime() + parsed.data.durationMinutes * 60_000);
+
+    await tx.insert(classSession).values({
+      organizationId: ctx.org.id,
+      groupTypeId: parent.id,
+      startTime: startsAt,
+      endTime: endsAt,
+      capacity: parsed.data.capacity,
+      status: "scheduled",
+      trainerId: null,
+      locationId: parsed.data.locationId ?? parent.defaultLocationId,
+      meetingUrl: parent.defaultMeetingUrl,
+      generatedFromRecurrenceId: null,
+      isManuallyAdjusted: false,
+    });
+
+    await recordAudit(tx, {
+      actor,
+      organizationId: ctx.org.id,
+      action: "class_session.create",
+      targetType: "class_session",
+      targetId: crypto.randomUUID(),
+      targetLabel: `${parent.name} · ${startTime}`,
+    });
+
+    return { kind: "created" as const };
+  });
+
+  if (outcome.kind === "not-found") return { error: tg("errors.notFound") };
+  if (outcome.kind === "wrong-engine") return { error: tg("errors.wrongEngineForSlot") };
+  if (outcome.kind === "unknown-location") return { error: tg("errors.locationNotFound") };
+
+  revalidatePath(`/dashboard/group-types/${parsed.data.groupTypeId}`);
+  revalidatePath(`/dashboard/schedule`);
+
+  return { success: `${t("created")} ${t("generatedOne")}` };
+}
+
+/**
+ * Wizard payload (mvp-plan F4) — create a group type plus its recurrences,
+ * credit type and product templates in ONE transaction.
+ *
+ * The wizard collects everything up front, so a single action avoids the
+ * "saved group type with no schedule" half-state. Recurrences are inserted and
+ * their session generation jobs enqueued in the same transaction; product
+ * templates attach to the auto-created credit type (1:1 with the group type).
+ */
+export async function createGroupTypeFromWizardAction(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const ctx = await requireOrgPermission("group_types.manage");
+  const [t, tv] = await Promise.all([
+    getTranslations("groups"),
+    getTranslations("groups.validation"),
+  ]);
+
+  const parsed = createGroupTypeSchema(tv).safeParse({
+    name: str(formData.get("name")),
+    slug: str(formData.get("groupSlug")),
+    description: str(formData.get("description")) || undefined,
+    engine: str(formData.get("engine")),
+    paymentPolicy: str(formData.get("paymentPolicy")) || "both",
+    status: str(formData.get("status")),
+    price: str(formData.get("price")),
+    isNewClientOnly: formData.get("isNewClientOnly") === "on",
+    requiresQualificationCard: formData.get("requiresQualificationCard") === "on",
+    isTrialOffer: formData.get("isTrialOffer") === "on",
+    waitlistEnabled: formData.get("waitlistEnabled") === "on",
+    defaultLocationId: str(formData.get("defaultLocationId")) || undefined,
+    defaultMeetingUrl: str(formData.get("defaultMeetingUrl")) || null,
+    policyDocumentId: str(formData.get("policyDocumentId")) || undefined,
+    allowedPurchaseModes: strList(formData, "allowedPurchaseModes"),
+    allowedBillingTypes: strList(formData, "allowedBillingTypes"),
+    defaultDurationMinutes: str(formData.get("defaultDurationMinutes")) || undefined,
+    eligibleTrainerIds: strList(formData, "eligibleTrainerIds"),
+    enrollmentTemplateId: str(formData.get("enrollmentTemplateId")) || undefined,
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? t("errors.generic") };
+  }
+
+  // Recurrences arrive as JSON (the wizard keeps them client-side).
+  let recurrences: Array<{
+    dayOfWeek: number;
+    startTime: string;
+    durationMinutes: number;
+    trainerId: string | null;
+    capacity: number;
+    locationId: string | null;
+    isRecurring: boolean;
+    occurrencesCount: number | null;
+    startDate: string;
+  }> = [];
+  const recurrencesRaw = str(formData.get("recurrences"));
+  if (recurrencesRaw) {
+    try {
+      recurrences = JSON.parse(recurrencesRaw);
+    } catch {
+      return { error: t("errors.generic") };
+    }
+  }
+
+  // Product templates arrive as JSON (the wizard keeps them client-side).
+  let productTemplates: Array<{
+    name: string;
+    description?: string;
+    price: number;
+    creditQuantity: number;
+    billingType: "one_time" | "recurring";
+    interval?: "month" | "year" | null;
+    intervalCount?: number | null;
+    isActive: boolean;
+  }> = [];
+  const productsRaw = str(formData.get("productTemplates"));
+  if (productsRaw) {
+    try {
+      productTemplates = JSON.parse(productsRaw);
+    } catch {
+      return { error: t("errors.generic") };
+    }
+  }
+
+  const actor = await resolveActor(ctx.session);
+
+  try {
+    const result = await withTenant(ctx.org.id, async (tx) => {
+      const [row] = await tx
+        .insert(groupType)
+        .values({
+          organizationId: ctx.org.id,
+          name: parsed.data.name,
+          slug: parsed.data.slug,
+          description: parsed.data.description ?? null,
+          engine: parsed.data.engine,
+          paymentPolicy: parsed.data.paymentPolicy,
+          status: parsed.data.status,
+          price: parsed.data.price,
+          isNewClientOnly: parsed.data.isNewClientOnly,
+          requiresQualificationCard: parsed.data.requiresQualificationCard,
+          isTrialOffer: parsed.data.isTrialOffer,
+          waitlistEnabled: parsed.data.waitlistEnabled,
+          defaultLocationId: parsed.data.defaultLocationId ?? null,
+          defaultMeetingUrl: parsed.data.defaultMeetingUrl ?? null,
+          policyDocumentId: parsed.data.policyDocumentId ?? null,
+          allowedPurchaseModes: parsed.data.allowedPurchaseModes,
+          allowedBillingTypes: parsed.data.allowedBillingTypes ?? null,
+          defaultDurationMinutes: parsed.data.defaultDurationMinutes ?? null,
+          eligibleTrainerIds:
+            (parsed.data.eligibleTrainerIds?.length ?? 0) > 0 ? parsed.data.eligibleTrainerIds : null,
+          enrollmentTemplateId: parsed.data.enrollmentTemplateId ?? ENROLLMENT_TEMPLATE_KEY,
+        })
+        .returning({ id: groupType.id });
+      const groupTypeId = row!.id;
+
+      // Recurrences → patterns, each enqueuing its season generation.
+      for (const r of recurrences) {
+        const [recRow] = await tx
+          .insert(groupTypeRecurrence)
+          .values({
+            organizationId: ctx.org.id,
+            groupTypeId,
+            dayOfWeek: r.dayOfWeek,
+            startTime: r.startTime,
+            durationMinutes: r.durationMinutes,
+            trainerId: r.trainerId,
+            capacity: r.capacity,
+            locationId: r.locationId ?? null,
+            isRecurring: r.isRecurring,
+            occurrencesCount: r.isRecurring ? (r.occurrencesCount ?? null) : null,
+            startDate: r.startDate,
+          })
+          .returning({ id: groupTypeRecurrence.id });
+
+        if (r.isRecurring) {
+          await enqueueJob(tx, "sessions.generate", {
+            organizationId: ctx.org.id,
+            recurrenceId: recRow!.id,
+          });
+        } else {
+          await generateSessionsForRecurrence(tx, {
+            organizationId: ctx.org.id,
+            recurrenceId: recRow!.id,
+            groupTypeId,
+            trainerId: r.trainerId,
+            locationId: r.locationId ?? parsed.data.defaultLocationId ?? null,
+            meetingUrl: parsed.data.defaultMeetingUrl ?? null,
+            capacity: r.capacity,
+            dayOfWeek: r.dayOfWeek,
+            startTime: r.startTime,
+            durationMinutes: r.durationMinutes,
+            startDate: r.startDate,
+            occurrencesCount: 1,
+            timeZone: ctx.org.timezone,
+          });
+        }
+      }
+
+      // Product templates → credit type (1:1 with group type) + templates.
+      if (productTemplates.length > 0) {
+        const [creditTypeRow] = await tx
+          .insert(creditType)
+          .values({
+            organizationId: ctx.org.id,
+            name: `${parsed.data.name} — kredyt`,
+            groupTypeId,
+          })
+          .returning({ id: creditType.id });
+
+        for (const p of productTemplates) {
+          await tx.insert(productTemplate).values({
+            organizationId: ctx.org.id,
+            creditTypeId: creditTypeRow!.id,
+            name: p.name,
+            description: p.description ?? null,
+            price: p.price,
+            creditQuantity: p.creditQuantity,
+            billingType: p.billingType,
+            interval: p.interval ?? null,
+            intervalCount: p.intervalCount ?? null,
+            isActive: p.isActive,
+          });
+        }
+      }
+
+      await recordAudit(tx, {
+        actor,
+        organizationId: ctx.org.id,
+        action: "group_type.create",
+        targetType: "group_type",
+        targetId: groupTypeId,
+        targetLabel: parsed.data.name,
+        metadata: {
+          fromWizard: true,
+          recurrences: recurrences.length,
+          productTemplates: productTemplates.length,
+        },
+      });
+
+      return groupTypeId;
+    });
+
+    revalidatePath(`/dashboard/group-types`);
+    return { success: t("created"), redirect: `/dashboard/group-types/${result}` };
+  } catch (error) {
+    if (sqlStateOf(error) === SQLSTATE_UNIQUE_VIOLATION) return { error: t("errors.slugTaken") };
+    throw error;
+  }
+}

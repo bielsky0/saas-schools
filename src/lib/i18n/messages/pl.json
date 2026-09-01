@@ -449,6 +449,7 @@
       "group_type": {
         "create": "Utworzono typ grupy",
         "update": "Zaktualizowano typ grupy",
+        "duplicate": "Zduplikowano typ grupy",
         "deactivate": "Typ grupy zdezaktywowany"
       },
       "recurrence": {
@@ -1298,6 +1299,7 @@
     "empty": "Brak typów grup. Utwórz pierwszy poniżej.",
     "created": "Typ grupy utworzony.",
     "updated": "Typ grupy zaktualizowany.",
+    "duplicated": "Typ grupy zduplikowany.",
     "noActivePackagesWarning": "Uwaga: brak aktywnych pakietów dla tego typu grupy. Klienci nie będą mogli kupić pakietów.",
     "manage": "Zarządzaj",
     "backToList": "Wszystkie typy grup",
@@ -1315,6 +1317,7 @@
       "price": "Cena",
       "priceHint": "W najmniejszej jednostce waluty — 10000 to 100,00.",
       "isNewClientOnly": "Priorytet dla nowych klientów",
+      "waitlistEnabled": "Lista rezerwowa (waitlist)",
       "defaultLocation": "Domyślna lokalizacja",
       "noLocation": "Brak domyślnej",
       "defaultMeetingUrl": "Domyślny link do spotkania",
@@ -1365,14 +1368,22 @@
       "slug": "Slug",
       "engine": "Silnik",
       "price": "Cena",
+      "status": "Status",
       "actions": "Akcje"
+    },
+    "bulk": {
+      "selectAll": "Zaznacz wszystkie",
+      "activate": "Aktywuj",
+      "deactivate": "Dezaktywuj",
+      "delete": "Usuń"
     },
     "errors": {
       "generic": "Nie udało się zapisać typu grupy.",
       "slugTaken": "Ten slug jest już używany przez inną ofertę w Twojej akademii.",
       "notFound": "Ten typ grupy już nie istnieje.",
       "locationNotFound": "Ta lokalizacja nie należy do Twojej akademii.",
-      "engineNeedsTrainer": "Wzorce Schedule-First wymagają trenera."
+      "engineNeedsTrainer": "Wzorce Schedule-First wymagają trenera.",
+      "wrongEngineForSlot": "Ta operacja jest dostępna tylko dla silnika Slot-First."
     },
     "recurrences": {
       "title": "Wzorce",
@@ -1447,6 +1458,130 @@
       "actions": "Akcje",
       "notFound": "To zgłoszenie już nie istnieje.",
       "groupTypeGone": "Ta oferta już nie istnieje."
+    },
+    "scheduleBuilder": {
+      "title": "Planer harmonogramu",
+      "createRecurrence": "Dodaj wzorzec",
+      "editRecurrence": "Edytuj wzorzec",
+      "dayOfWeek": "Dzień tygodnia",
+      "startTime": "Początek",
+      "durationMinutes": "Czas trwania (min)",
+      "trainer": "Trener",
+      "capacity": "Pojemność",
+      "location": "Lokalizacja",
+      "isRecurring": "Powtarza się co tydzień",
+      "occurrencesCount": "Liczba sesji",
+      "startDate": "Pierwsza data",
+      "slotMinutes": "Krok siatki (min)",
+      "range": "Zakres godzin",
+      "created": "Wzorzec utworzony.",
+      "updated": "Wzorzec zaktualizowany.",
+      "deleted": "Wzorzec usunięty.",
+      "cancel": "Anuluj",
+      "save": "Zapisz",
+      "saving": "Zapisywanie…",
+      "create": "Utwórz",
+      "delete": "Usuń",
+      "confirmDelete": "Czy na pewno usunąć ten wzorzec?",
+      "errorCreating": "Nie udało się utworzyć wzorca.",
+      "errorUpdating": "Nie udało się zaktualizować wzorca.",
+      "errorDeleting": "Nie udało się usunąć wzorca.",
+      "engineInfo": {
+        "schedule_first": "Schedule-First: ustalasz stałe dni i godziny, trener jest wymagany",
+        "availability_first": "Availability-First: ustalasz dostępność trenera, system generuje wolne sloty",
+        "slot_first": "Slot-First: tworzysz konkretne sloty, których rezerwują rodzice",
+        "default": "Wybierz silnik, aby zobaczyć opis"
+      },
+      "engineDesc": {
+        "schedule_first": "Typowe zajęcia regularne: pływalnia, sala gimnastyczna. Trener prowadzi grupę co tydzień.",
+        "availability_first": "Trener podaje dostępność, rodzice rezerwują wolne terminy. Elastyczne.",
+        "slot_first": "Lekcje indywidualne: każdy slot to osobna sesja. Pojemność zawsze = 1.",
+        "default": "Wybierz silnik powyżej."
+      },
+      "noPatternsWarning": "Dodaj co najmniej jeden wzorzec, aby generować sesje.",
+      "patterns": "Wzorce",
+      "trainerRequired": "Wzorce Schedule-First wymagają trenera.",
+      "inheritLocation": "Dziedzicz z typu grupy",
+      "noTrainer": "Bez trenera"
+    },
+    "wizard": {
+      "step1": "Podstawy",
+      "step2": "Harmonogram",
+      "step3": "Cennik",
+      "step4": "Polityki",
+      "step5": "Publikacja",
+      "next": "Dalej",
+      "back": "Wstecz",
+      "cancel": "Anuluj",
+      "saveDraft": "Zapisz jako szkic",
+      "publish": "Opublikuj",
+      "publishing": "Publikowanie…",
+      "published": "Typ grupy opublikowany.",
+      "error": "Wystąpił błąd.",
+      "publishSection": {
+        "title": "Publikacja",
+        "summary": "Podsumowanie",
+        "status": "Status",
+        "template": "Szablon strony zapisu",
+        "templateHint": "Układ strony /zapisy/{slug} — edytowany w edytorze w sekcji „Zapisy”.",
+        "nextSteps": "Następne kroki",
+        "editPage": "Edytuj stronę zapisu w ChaiBuilder",
+        "testBooking": "Przetestuj proces zapisu",
+        "shareLink": "Udostępnij link rodzicom",
+        "editInBuilder": "Edytuj w ChaiBuilder",
+        "finalNote": "Po publikacji typ grupy pojawi się na liście i będzie dostępny do zapisu.",
+        "checks": {
+          "basics": "Podstawy",
+          "engine": "Silnik",
+          "schedule": "Harmonogram",
+          "pricing": "Cennik"
+        },
+        "steps": {
+          "editPage": "Edytuj stronę zapisu w ChaiBuilder",
+          "testBooking": "Przetestuj proces zapisu",
+          "shareLink": "Udostępnij link rodzicom"
+        }
+      }
+    },
+    "pricing": {
+      "title": "Cennik",
+      "subtitle": "Pakiety i subskrypcje dostępne dla tego typu zajęć.",
+      "empty": "Brak produktów. Dodaj pierwszy poniżej.",
+      "addProduct": "Dodaj produkt",
+      "editProduct": "Edytuj produkt",
+      "name": "Nazwa",
+      "description": "Opis",
+      "price": "Cena",
+      "creditQuantity": "Liczba zajęć w pakiecie",
+      "billingType": "Typ rozliczenia",
+      "interval": "Okres",
+      "intervalCount": "Co ile okresów",
+      "isActive": "Aktywny",
+      "created": "Produkt utworzony.",
+      "updated": "Produkt zaktualizowany.",
+      "deleted": "Produkt usunięty.",
+      "cancel": "Anuluj",
+      "save": "Zapisz",
+      "saving": "Zapisywanie…",
+      "delete": "Usuń",
+      "confirmDelete": "Czy na pewno usunąć ten produkt?",
+      "errorCreating": "Nie udało się utworzyć produktu.",
+      "errorUpdating": "Nie udało się zaktualizować produktu.",
+      "errorDeleting": "Nie udało się usunąć produktu.",
+      "billingTypeOptions": {
+        "one_time": "Pakiet (płatność jednorazowa)",
+        "recurring": "Subskrypcja (płatność cykliczna)"
+      },
+      "intervalOptions": {
+        "month": "Miesiąc",
+        "year": "Rok"
+      },
+      "validation": {
+        "nameMin": "Nazwa musi mieć co najmniej 2 znaki.",
+        "priceInvalid": "Cena musi być dodatnią liczbą całkowitą w groszach.",
+        "creditQuantityInvalid": "Liczba zajęć musi być dodatnią liczbą całkowitą.",
+        "intervalRequiredForRecurring": "Subskrypcja wymaga okresu i częstotliwości."
+      }
     }
   },
   "schedule": {
@@ -1759,14 +1894,20 @@
       "creditTypeRequired": "Wybierz typ kredytu do przyznania.",
       "quantityMin": "Przyznaj co najmniej jeden kredyt.",
       "quantityMax": "Możesz przyznać maksymalnie 100 kredytów naraz.",
-      "reasonRequired": "Powód jest wymagany — rejestr odnotowuje, dlaczego przyznano kredyty."
+      "reasonRequired": "Powód jest wymagany — rejestr odnotowuje, dlaczego przyznano kredyty.",
+      "nameMin": "Nazwa musi mieć co najmniej 2 znaki.",
+      "priceInvalid": "Cena musi być dodatnią liczbą całkowitą w groszach.",
+      "creditQuantityInvalid": "Liczba zajęć musi być dodatnią liczbą całkowitą.",
+      "intervalRequiredForRecurring": "Subskrypcja wymaga okresu i częstotliwości."
     },
     "granted": "Kredyty przyznane.",
     "errors": {
       "generic": "Coś poszło nie tak. Spróbuj ponownie.",
       "clientNotFound": "Ten klient nie należy do tej akademii.",
       "creditTypeNotFound": "Ten typ kredytu nie należy do tej akademii.",
-      "athleteNotFound": "Ten uczestnik nie należy do tego klienta."
+      "athleteNotFound": "Ten uczestnik nie należy do tego klienta.",
+      "nameTaken": "Ta nazwa jest już zajęta.",
+      "notFound": "Ten produkt już nie istnieje."
     },
     "title": "Kredyty",
     "subtitle": "Waluta rozliczeniowa akademii. Każda rezerwacja, niezależnie od sposobu zapłaty, zużywa jeden kredyt.",
@@ -1810,7 +1951,10 @@
       "productTemplateNotActive": "Ten pakiet nie jest już dostępny.",
       "policyViolation": "Ten pakiet nie jest dostępny w ramach aktualnej polityki tego typu grupy.",
       "refundInitiated": "Zwrot zainicjowany ({variant}). Środki zostaną zwrócone po potwierdzeniu przez operatora płatności.",
-      "refundFailed": "Zwrot nieudany: {error}. Kredyty zostały przywrócone."
+      "refundFailed": "Zwrot nieudany: {error}. Kredyty zostały przywrócone.",
+      "productTemplateCreated": "Produkt utworzony.",
+      "productTemplateUpdated": "Produkt zaktualizowany.",
+      "productTemplateDeleted": "Produkt usunięty."
     },
     "invoice": {
       "requested": "Faktura została zgłoszona. Akademia wystawi ją ręcznie.",

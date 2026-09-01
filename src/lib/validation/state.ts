@@ -39,6 +39,8 @@ export type FormState = {
   fieldErrors?: Record<string, string[]>;
   /** Whole-form success message. */
   success?: string;
+  /** Optional redirect path after a successful action (mvp-plan F4). */
+  redirect?: string;
 };
 
 /**

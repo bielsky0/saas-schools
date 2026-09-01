@@ -449,6 +449,7 @@
       "group_type": {
         "create": "Group type created",
         "update": "Group type updated",
+        "duplicate": "Group type duplicated",
         "deactivate": "Group type deactivated"
       },
       "recurrence": {
@@ -1298,6 +1299,7 @@
     "empty": "No group types yet. Create the first one below.",
     "created": "Group type created.",
     "updated": "Group type updated.",
+    "duplicated": "Group type duplicated.",
     "noActivePackagesWarning": "Warning: there are no active packages for this group type. Clients will not be able to purchase packages.",
     "manage": "Manage",
     "backToList": "All group types",
@@ -1315,6 +1317,7 @@
       "price": "Price",
       "priceHint": "In minor units — 10000 means 100.00.",
       "isNewClientOnly": "Prioritise new clients",
+      "waitlistEnabled": "Waitlist enabled",
       "defaultLocation": "Default location",
       "noLocation": "No default",
       "defaultMeetingUrl": "Default meeting link",
@@ -1365,14 +1368,22 @@
       "slug": "Slug",
       "engine": "Engine",
       "price": "Price",
+      "status": "Status",
       "actions": "Actions"
+    },
+    "bulk": {
+      "selectAll": "Select all",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "delete": "Delete"
     },
     "errors": {
       "generic": "Could not save the group type.",
       "slugTaken": "That slug is already used by another offer in your academy.",
       "notFound": "That group type no longer exists.",
       "locationNotFound": "That location does not belong to your academy.",
-      "engineNeedsTrainer": "Schedule-First patterns need a trainer."
+      "engineNeedsTrainer": "Schedule-First patterns need a trainer.",
+      "wrongEngineForSlot": "This operation is only available for the Slot-First engine."
     },
     "recurrences": {
       "title": "Patterns",
@@ -1447,6 +1458,130 @@
       "actions": "Actions",
       "notFound": "That interest signup no longer exists.",
       "groupTypeGone": "That offer no longer exists."
+    },
+    "scheduleBuilder": {
+      "title": "Schedule Builder",
+      "createRecurrence": "Add pattern",
+      "editRecurrence": "Edit pattern",
+      "dayOfWeek": "Day of week",
+      "startTime": "Start time",
+      "durationMinutes": "Duration (min)",
+      "trainer": "Trainer",
+      "capacity": "Capacity",
+      "location": "Location",
+      "isRecurring": "Repeats weekly",
+      "occurrencesCount": "Number of sessions",
+      "startDate": "First date",
+      "slotMinutes": "Grid step (min)",
+      "range": "Time range",
+      "created": "Pattern created.",
+      "updated": "Pattern updated.",
+      "deleted": "Pattern deleted.",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving…",
+      "create": "Create",
+      "delete": "Delete",
+      "confirmDelete": "Are you sure you want to delete this pattern?",
+      "errorCreating": "Could not create pattern.",
+      "errorUpdating": "Could not update pattern.",
+      "errorDeleting": "Could not delete pattern.",
+      "engineInfo": {
+        "schedule_first": "Schedule-First: fixed days/times, trainer required",
+        "availability_first": "Availability-First: trainer availability, parents book open slots",
+        "slot_first": "Slot-First: individual slots created on the fly",
+        "default": "Select engine to see description"
+      },
+      "engineDesc": {
+        "schedule_first": "Regular classes: pool, gym. Trainer leads group weekly.",
+        "availability_first": "Trainer sets availability, parents book open slots. Flexible.",
+        "slot_first": "Private lessons: each slot is a separate session. Capacity always = 1.",
+        "default": "Select engine above."
+      },
+      "noPatternsWarning": "Add at least one pattern to generate sessions.",
+      "patterns": "Patterns",
+      "trainerRequired": "Schedule-First patterns require a trainer.",
+      "inheritLocation": "Inherit from group type",
+      "noTrainer": "No trainer"
+    },
+    "wizard": {
+      "step1": "Basics",
+      "step2": "Schedule",
+      "step3": "Pricing",
+      "step4": "Policies",
+      "step5": "Publish",
+      "next": "Next",
+      "back": "Back",
+      "cancel": "Cancel",
+      "saveDraft": "Save as draft",
+      "publish": "Publish",
+      "publishing": "Publishing…",
+      "published": "Group type published.",
+      "error": "An error occurred.",
+      "publishSection": {
+        "title": "Publish",
+        "summary": "Summary",
+        "status": "Status",
+        "template": "Enrollment page template",
+        "templateHint": "Layout of /zapisy/{slug} — edited in builder's \"Enrollments\" section.",
+        "nextSteps": "Next steps",
+        "editPage": "Edit enrollment page in ChaiBuilder",
+        "testBooking": "Test booking flow",
+        "shareLink": "Share link with parents",
+        "editInBuilder": "Edit in ChaiBuilder",
+        "finalNote": "Once published, the group type will appear in the list and be available for enrollment.",
+        "checks": {
+          "basics": "Basics",
+          "engine": "Engine",
+          "schedule": "Schedule",
+          "pricing": "Pricing"
+        },
+        "steps": {
+          "editPage": "Edit enrollment page in ChaiBuilder",
+          "testBooking": "Test booking flow",
+          "shareLink": "Share link with parents"
+        }
+      }
+    },
+    "pricing": {
+      "title": "Pricing",
+      "subtitle": "Packages and subscriptions available for this group type.",
+      "empty": "No products yet. Add the first one below.",
+      "addProduct": "Add product",
+      "editProduct": "Edit product",
+      "name": "Name",
+      "description": "Description",
+      "price": "Price",
+      "creditQuantity": "Classes in package",
+      "billingType": "Billing type",
+      "interval": "Interval",
+      "intervalCount": "Every N intervals",
+      "isActive": "Active",
+      "created": "Product created.",
+      "updated": "Product updated.",
+      "deleted": "Product deleted.",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving…",
+      "delete": "Delete",
+      "confirmDelete": "Are you sure you want to delete this product?",
+      "errorCreating": "Could not create product.",
+      "errorUpdating": "Could not update product.",
+      "errorDeleting": "Could not delete product.",
+      "billingTypeOptions": {
+        "one_time": "Package (one-time)",
+        "recurring": "Subscription (recurring)"
+      },
+      "intervalOptions": {
+        "month": "Month",
+        "year": "Year"
+      },
+      "validation": {
+        "nameMin": "Name must be at least 2 characters.",
+        "priceInvalid": "Price must be a positive integer in minor units.",
+        "creditQuantityInvalid": "Number of classes must be a positive integer.",
+        "intervalRequiredForRecurring": "Subscription requires interval and count."
+      }
     }
   },
   "schedule": {
@@ -1759,14 +1894,20 @@
       "creditTypeRequired": "Choose which credit type to grant.",
       "quantityMin": "Grant at least one credit.",
       "quantityMax": "Grant at most 100 credits at a time.",
-      "reasonRequired": "A reason is required — the ledger records why credits were granted."
+      "reasonRequired": "A reason is required — the ledger records why credits were granted.",
+      "nameMin": "Name must be at least 2 characters.",
+      "priceInvalid": "Price must be a positive integer in minor units.",
+      "creditQuantityInvalid": "Number of classes must be a positive integer.",
+      "intervalRequiredForRecurring": "Subscription requires interval and count."
     },
     "granted": "Credits granted.",
     "errors": {
       "generic": "Something went wrong. Please try again.",
       "clientNotFound": "That client does not belong to this academy.",
       "creditTypeNotFound": "That credit type does not belong to this academy.",
-      "athleteNotFound": "That participant does not belong to this client."
+      "athleteNotFound": "That participant does not belong to this client.",
+      "nameTaken": "That name is already taken.",
+      "notFound": "That product no longer exists."
     },
     "title": "Credits",
     "subtitle": "The academy's settlement currency. Every booking, however it was paid for, spends one credit.",
@@ -1810,7 +1951,10 @@
       "productTemplateNotActive": "That package is no longer available.",
       "policyViolation": "This package is not available for this group type's current policy.",
       "refundInitiated": "Refund initiated ({variant}). Funds will be returned after payment gateway confirmation.",
-      "refundFailed": "Refund failed: {error}. Credits have been restored."
+      "refundFailed": "Refund failed: {error}. Credits have been restored.",
+      "productTemplateCreated": "Product created.",
+      "productTemplateUpdated": "Product updated.",
+      "productTemplateDeleted": "Product deleted."
     },
     "invoice": {
       "requested": "Invoice requested. The academy will issue it manually.",
