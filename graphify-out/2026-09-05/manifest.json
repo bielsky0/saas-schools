@@ -6340,7 +6340,7 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/core/locales/en.json": {
-    "mtime": 1788629532.7212372,
+    "mtime": 1788606791.7728636,
     "ast_hash": "128658c00bdb990e8580d8549b9cda51",
     "semantic_hash": ""
   },
@@ -7045,7 +7045,7 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/hooks/use-theme.ts": {
-    "mtime": 1788629532.7219374,
+    "mtime": 1788606459.8601077,
     "ast_hash": "c45235cca5ba5780d0f21a8147556f20",
     "semantic_hash": ""
   },
@@ -10130,12 +10130,12 @@
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/i18n.test.ts": {
-    "mtime": 1788629532.7247276,
+    "mtime": 1788606820.116814,
     "ast_hash": "aa679798209e86ef384eea611bf120c5",
     "semantic_hash": ""
   },
   "src/app/(builder)/editor/pl.json": {
-    "mtime": 1788629532.7252393,
+    "mtime": 1788606797.1681542,
     "ast_hash": "d44604cc51cdc29f6bf5f728a6ce6a85",
     "semantic_hash": ""
   },
@@ -10145,8 +10145,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/builder-left-panel.tsx": {
-    "mtime": 1788629532.722563,
-    "ast_hash": "0cdc5d3e27356fbb0db375cbb86103ef",
+    "mtime": 1788606908.7860613,
+    "ast_hash": "316e40919625939b82721a337794f8c7",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-groups.test.ts": {
@@ -10170,13 +10170,13 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/theme-tab.tsx": {
-    "mtime": 1788629532.7231808,
-    "ast_hash": "dd0878d3ec931088cffdd166bdfa9bac",
+    "mtime": 1788607096.591579,
+    "ast_hash": "bb574ec59a6922dc264df5f1f65469ba",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/theme/theme-editor.tsx": {
-    "mtime": 1788629532.7243721,
-    "ast_hash": "adbecb266c86212520ba263dc2bfaa7e",
+    "mtime": 1788606465.0982845,
+    "ast_hash": "dda98d1f31683e452388e594700d356e",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/theme/theme-groups.test.ts": {
@@ -10230,7 +10230,7 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/right-panel/page-settings.tsx": {
-    "mtime": 1788629532.7236376,
+    "mtime": 1788607175.8446982,
     "ast_hash": "788bb1c96c6bad005ea2381eff8d3c95",
     "semantic_hash": ""
   },
@@ -10425,8 +10425,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/right-panel/template-settings.tsx": {
-    "mtime": 1788629532.7240858,
-    "ast_hash": "93b42454854d443d4c37d8f44c626f6d",
+    "mtime": 1788606763.6363878,
+    "ast_hash": "587f714889917ef0a7f636aeef0ca9a5",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/hooks/pages/use-template-data.ts": {
@@ -10760,8 +10760,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/types/section-catalog.ts": {
-    "mtime": 1788629688.0567112,
-    "ast_hash": "c2a840e5d261a18624f3c41adca1b1be",
+    "mtime": 1787514811.801874,
+    "ast_hash": "29e5b2614af1409a134654081f0ddfe9",
     "semantic_hash": ""
   },
   "src/lib/section-catalog.ts": {
@@ -10900,8 +10900,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/picker/picker-categories.ts": {
-    "mtime": 1788629688.5540597,
-    "ast_hash": "f3d618ad25659d4d125ffc06d42cd1a3",
+    "mtime": 1788103816.2715073,
+    "ast_hash": "83cd23c52c8cd78db82b8f876a97b406",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/picker/picker-popover.tsx": {
@@ -10915,8 +10915,8 @@
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-picker.tsx": {
-    "mtime": 1788629695.5616224,
-    "ast_hash": "74d235a7c527c9de531dafa0b665b49c",
+    "mtime": 1788106144.2039733,
+    "ast_hash": "88de551dedd9740fd19b2564ba3f00e4",
     "semantic_hash": ""
   },
   "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/block-breadcrumb.tsx": {
@@ -11275,12 +11275,12 @@
     "semantic_hash": ""
   },
   "docs/blog-templates-cms/10-template-settings-accordion.md": {
-    "mtime": 1788629532.7553172,
+    "mtime": 1788606747.6728754,
     "ast_hash": "a196ce3827ff3aa55e6059c655d7d695",
     "semantic_hash": ""
   },
   "docs/apex-dashboard-plan.md": {
-    "mtime": 1788629532.750612,
+    "mtime": 1788610097.1570969,
     "ast_hash": "49d2b29d29d8351ac895b976fbd2592f",
     "semantic_hash": ""
   },

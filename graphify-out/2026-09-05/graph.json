@@ -6408,8 +6408,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_frameworks_nextjs_app_builder_api_revalidate_route",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 350,
+      "community_name": "css-theme-parser.ts",
       "norm_label": "revalidate/route.ts"
     },
     {
@@ -6419,8 +6419,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_frameworks_nextjs_app_builder_api_revalidate_route_post",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 350,
+      "community_name": "css-theme-parser.ts",
       "norm_label": "post()"
     },
     {
@@ -7398,8 +7398,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_frameworks_nextjs_package_devdependencies_types_node",
-      "community": 457,
-      "community_name": "GetChangesAction",
+      "community": 327,
+      "community_name": "@radix-ui/react-dropdown-menu",
       "norm_label": "@types/node"
     },
     {
@@ -7409,8 +7409,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_frameworks_nextjs_package_json_types_node",
-      "community": 457,
-      "community_name": "GetChangesAction",
+      "community": 327,
+      "community_name": "@radix-ui/react-dropdown-menu",
       "norm_label": "@types/node"
     },
     {
@@ -7508,8 +7508,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_frameworks_nextjs_package_devdependencies_eslint",
-      "community": 327,
-      "community_name": "@radix-ui/react-dropdown-menu",
+      "community": 512,
+      "community_name": "eslint",
       "norm_label": "eslint"
     },
     {
@@ -7519,8 +7519,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_frameworks_nextjs_package_json_eslint",
-      "community": 327,
-      "community_name": "@radix-ui/react-dropdown-menu",
+      "community": 512,
+      "community_name": "eslint",
       "norm_label": "eslint"
     },
     {
@@ -13107,8 +13107,8 @@
       "source_location": "L191",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_package_dependencies_clsx",
-      "community": 325,
-      "community_name": "pg",
+      "community": 432,
+      "community_name": "clsx",
       "norm_label": "clsx"
     },
     {
@@ -13118,8 +13118,8 @@
       "source_location": "L191",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_package_json_clsx",
-      "community": 325,
-      "community_name": "pg",
+      "community": 432,
+      "community_name": "clsx",
       "norm_label": "clsx"
     },
     {
@@ -13657,8 +13657,8 @@
       "source_location": "L216",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_package_dependencies_react_hotkeys_hook",
-      "community": 507,
-      "community_name": "client-otp.tsx",
+      "community": 325,
+      "community_name": "pg",
       "norm_label": "react-hotkeys-hook"
     },
     {
@@ -13668,8 +13668,8 @@
       "source_location": "L216",
       "_origin": "ast",
       "id": "react_hotkeys_hook",
-      "community": 507,
-      "community_name": "client-otp.tsx",
+      "community": 325,
+      "community_name": "pg",
       "norm_label": "react-hotkeys-hook"
     },
     {
@@ -19938,8 +19938,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_atoms_builder_chaidesigntokensatom",
-      "community": 71,
-      "community_name": "Project Principles & README",
+      "community": 448,
+      "community_name": "[...all]/route.ts",
       "norm_label": "chaidesigntokensatom"
     },
     {
@@ -19949,8 +19949,8 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_atoms_builder_componenttokensatom",
-      "community": 56,
-      "community_name": "Client Session Persistence",
+      "community": 448,
+      "community_name": "[...all]/route.ts",
       "norm_label": "componenttokensatom"
     },
     {
@@ -26593,8 +26593,8 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_core_components_sidepanels_panels_theme_configuration_theme_config_panel_setprevioustheme",
-      "community": 73,
-      "community_name": "Manual Invoicing & Pricing Decisions",
+      "community": 350,
+      "community_name": "css-theme-parser.ts",
       "norm_label": "setprevioustheme()"
     },
     {
@@ -26604,8 +26604,8 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_core_components_sidepanels_panels_theme_configuration_theme_config_panel_clearprevioustheme",
-      "community": 73,
-      "community_name": "Manual Invoicing & Pricing Decisions",
+      "community": 350,
+      "community_name": "css-theme-parser.ts",
       "norm_label": "clearprevioustheme()"
     },
     {
@@ -27132,8 +27132,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_core_constants_permissions",
-      "community": 24,
-      "community_name": "MCP Agent Tooling",
+      "community": 305,
+      "community_name": "Styling",
       "norm_label": "core/constants/permissions.ts"
     },
     {
@@ -27154,8 +27154,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_core_constants_permissions_permissions_list",
-      "community": 24,
-      "community_name": "MCP Agent Tooling",
+      "community": 305,
+      "community_name": "Styling",
       "norm_label": "permissions_list"
     },
     {
@@ -32423,8 +32423,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_blog_preview",
-      "community": 73,
-      "community_name": "Manual Invoicing & Pricing Decisions",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "use-blog-preview.ts"
     },
     {
@@ -32434,8 +32434,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_blog_preview_blogpostpreview",
-      "community": 73,
-      "community_name": "Manual Invoicing & Pricing Decisions",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "blogpostpreview"
     },
     {
@@ -32445,8 +32445,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_blog_preview_blogpostpreviewatom",
-      "community": 73,
-      "community_name": "Manual Invoicing & Pricing Decisions",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "blogpostpreviewatom"
     },
     {
@@ -32456,8 +32456,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_blog_preview_useblogpostpreview",
-      "community": 73,
-      "community_name": "Manual Invoicing & Pricing Decisions",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "useblogpostpreview()"
     },
     {
@@ -32896,8 +32896,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_copy_to_clipboard",
-      "community": 9,
-      "community_name": "Root Layout & Metadata",
+      "community": 350,
+      "community_name": "css-theme-parser.ts",
       "norm_label": "use-copy-to-clipboard.ts"
     },
     {
@@ -32907,8 +32907,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_copy_to_clipboard_copiedvalue",
-      "community": 9,
-      "community_name": "Root Layout & Metadata",
+      "community": 350,
+      "community_name": "css-theme-parser.ts",
       "norm_label": "copiedvalue"
     },
     {
@@ -32918,8 +32918,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_copy_to_clipboard_copyfn",
-      "community": 9,
-      "community_name": "Root Layout & Metadata",
+      "community": 350,
+      "community_name": "css-theme-parser.ts",
       "norm_label": "copyfn"
     },
     {
@@ -32929,8 +32929,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_copy_to_clipboard_usecopytoclipboard",
-      "community": 9,
-      "community_name": "Root Layout & Metadata",
+      "community": 350,
+      "community_name": "css-theme-parser.ts",
       "norm_label": "usecopytoclipboard()"
     },
     {
@@ -33138,8 +33138,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_enrollment_preview",
-      "community": 73,
-      "community_name": "Manual Invoicing & Pricing Decisions",
+      "community": 275,
+      "community_name": "client-auth/route.ts",
       "norm_label": "use-enrollment-preview.ts"
     },
     {
@@ -33149,8 +33149,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_enrollment_preview_enrollmentpreviewgrouptype",
-      "community": 73,
-      "community_name": "Manual Invoicing & Pricing Decisions",
+      "community": 275,
+      "community_name": "client-auth/route.ts",
       "norm_label": "enrollmentpreviewgrouptype"
     },
     {
@@ -33160,8 +33160,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_enrollment_preview_enrollmentpreviewpackage",
-      "community": 73,
-      "community_name": "Manual Invoicing & Pricing Decisions",
+      "community": 275,
+      "community_name": "client-auth/route.ts",
       "norm_label": "enrollmentpreviewpackage"
     },
     {
@@ -33171,8 +33171,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_enrollment_preview_enrollmentpreviewsession",
-      "community": 73,
-      "community_name": "Manual Invoicing & Pricing Decisions",
+      "community": 275,
+      "community_name": "client-auth/route.ts",
       "norm_label": "enrollmentpreviewsession"
     },
     {
@@ -33182,8 +33182,8 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_enrollment_preview_enrollmentpreviewtrainer",
-      "community": 73,
-      "community_name": "Manual Invoicing & Pricing Decisions",
+      "community": 275,
+      "community_name": "client-auth/route.ts",
       "norm_label": "enrollmentpreviewtrainer"
     },
     {
@@ -33193,8 +33193,8 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_enrollment_preview_enrollmentpreviewpolicy",
-      "community": 73,
-      "community_name": "Manual Invoicing & Pricing Decisions",
+      "community": 275,
+      "community_name": "client-auth/route.ts",
       "norm_label": "enrollmentpreviewpolicy"
     },
     {
@@ -33204,8 +33204,8 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_enrollment_preview_enrollmentpreviewconsent",
-      "community": 73,
-      "community_name": "Manual Invoicing & Pricing Decisions",
+      "community": 275,
+      "community_name": "client-auth/route.ts",
       "norm_label": "enrollmentpreviewconsent"
     },
     {
@@ -33215,8 +33215,8 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_enrollment_preview_enrollmentpreview",
-      "community": 73,
-      "community_name": "Manual Invoicing & Pricing Decisions",
+      "community": 275,
+      "community_name": "client-auth/route.ts",
       "norm_label": "enrollmentpreview"
     },
     {
@@ -33226,8 +33226,8 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_enrollment_preview_enrollmentpreviewatom",
-      "community": 73,
-      "community_name": "Manual Invoicing & Pricing Decisions",
+      "community": 275,
+      "community_name": "client-auth/route.ts",
       "norm_label": "enrollmentpreviewatom"
     },
     {
@@ -33237,8 +33237,8 @@
       "source_location": "L87",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_enrollment_preview_useenrollmentpreview",
-      "community": 73,
-      "community_name": "Manual Invoicing & Pricing Decisions",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "useenrollmentpreview()"
     },
     {
@@ -34205,8 +34205,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_save_website_data",
-      "community": 56,
-      "community_name": "Client Session Persistence",
+      "community": 448,
+      "community_name": "[...all]/route.ts",
       "norm_label": "use-save-website-data.ts"
     },
     {
@@ -34722,8 +34722,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_sidebar_active_panel",
-      "community": 45,
-      "community_name": "Background Job Admin API",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "use-sidebar-active-panel.ts"
     },
     {
@@ -34733,8 +34733,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_sidebar_active_panel_sidebaractivepanelatom",
-      "community": 45,
-      "community_name": "Background Job Admin API",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "sidebaractivepanelatom"
     },
     {
@@ -34744,8 +34744,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_hooks_use_sidebar_active_panel_usesidebaractivepanel",
-      "community": 45,
-      "community_name": "Background Job Admin API",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "usesidebaractivepanel()"
     },
     {
@@ -35404,8 +35404,8 @@
       "source_location": "L335",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_chaibuilder_pages_chaiwebsitebuilder",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 45,
+      "community_name": "Background Job Admin API",
       "norm_label": "chaiwebsitebuilder()"
     },
     {
@@ -35877,8 +35877,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_client_components_mark_as_template_markastemplate",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 350,
+      "community_name": "css-theme-parser.ts",
       "norm_label": "markastemplate()"
     },
     {
@@ -36306,8 +36306,8 @@
       "source_location": "L54",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_client_components_page_lock_page_lock_hook_usepagelockstatus",
-      "community": 42,
-      "community_name": "Group Type Creation Form",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "usepagelockstatus()"
     },
     {
@@ -37582,8 +37582,8 @@
       "source_location": "L184",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_client_components_page_selector_in_header_pageselector",
-      "community": 9,
-      "community_name": "Root Layout & Metadata",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "pageselector()"
     },
     {
@@ -37747,8 +37747,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_client_components_publish_pages_publish_pages",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "publish-pages.tsx"
     },
     {
@@ -37758,8 +37758,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_client_components_publish_pages_publish_pages_publishpagesmodalcontent",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "publishpagesmodalcontent"
     },
     {
@@ -37769,8 +37769,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_client_components_publish_pages_publish_pages_publishpages",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "publishpages()"
     },
     {
@@ -38242,8 +38242,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_client_components_shared_json_ld_shared_json_ld_sharedjsonld",
-      "community": 50,
-      "community_name": "Recurrence Form Selects",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "sharedjsonld()"
     },
     {
@@ -38484,8 +38484,8 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_client_components_topbar_right_savebutton",
-      "community": 42,
-      "community_name": "Group Type Creation Form",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "savebutton()"
     },
     {
@@ -38594,8 +38594,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_client_components_unmark_as_template_unmarkastemplate",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 9,
+      "community_name": "Root Layout & Metadata",
       "norm_label": "unmarkastemplate()"
     },
     {
@@ -38616,8 +38616,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_client_components_unpublish_page_unpublishpage",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 9,
+      "community_name": "Root Layout & Metadata",
       "norm_label": "unpublishpage()"
     },
     {
@@ -39988,7 +39988,7 @@
       "label": "getSectionInsertPosition()",
       "file_type": "code",
       "source_file": "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-picker.tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_client_layouts_left_panel_section_picker_getsectioninsertposition",
       "community": 131,
@@ -39999,7 +39999,7 @@
       "label": "SectionPickerPopover()",
       "file_type": "code",
       "source_file": "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-picker.tsx",
-      "source_location": "L36",
+      "source_location": "L37",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_client_layouts_left_panel_section_picker_sectionpickerpopover",
       "community": 131,
@@ -40673,8 +40673,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_client_layouts_mobile_mobile_top_bar",
-      "community": 42,
-      "community_name": "Group Type Creation Form",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "mobile-top-bar.tsx"
     },
     {
@@ -40684,8 +40684,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_client_layouts_mobile_mobile_top_bar_mobiletopbar",
-      "community": 42,
-      "community_name": "Group Type Creation Form",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "mobiletopbar()"
     },
     {
@@ -40893,8 +40893,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_client_layouts_right_panel_template_settings",
-      "community": 73,
-      "community_name": "Manual Invoicing & Pricing Decisions",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "template-settings.tsx"
     },
     {
@@ -41564,8 +41564,8 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_client_layouts_topbar_builder_top_bar_savestatelabel",
-      "community": 42,
-      "community_name": "Group Type Creation Form",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "savestatelabel()"
     },
     {
@@ -41608,8 +41608,8 @@
       "source_location": "L188",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_client_layouts_topbar_builder_top_bar_buildertopbar",
-      "community": 42,
-      "community_name": "Group Type Creation Form",
+      "community": 109,
+      "community_name": "Reserved Slug Path Stages",
       "norm_label": "buildertopbar()"
     },
     {
@@ -44380,8 +44380,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_constants_errors",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "errors.ts"
     },
     {
@@ -44391,8 +44391,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_constants_errors_errors",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "errors"
     },
     {
@@ -45062,8 +45062,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_pages_mutations",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "pages/mutations.ts"
     },
     {
@@ -45073,8 +45073,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_pages_mutations_usecreatepage",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "usecreatepage()"
     },
     {
@@ -45095,8 +45095,8 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_pages_mutations_usedeletepage",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "usedeletepage()"
     },
     {
@@ -45117,8 +45117,8 @@
       "source_location": "L182",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_pages_mutations_usepublishpages",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "usepublishpages()"
     },
     {
@@ -45139,8 +45139,8 @@
       "source_location": "L248",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_pages_mutations_useunmarkastemplate",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 9,
+      "community_name": "Root Layout & Metadata",
       "norm_label": "useunmarkastemplate()"
     },
     {
@@ -45150,8 +45150,8 @@
       "source_location": "L272",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_pages_mutations_usechangeslug",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 19,
+      "community_name": "Credit Grant Admin Tools",
       "norm_label": "usechangeslug()"
     },
     {
@@ -45227,8 +45227,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_pages_use_collection_actions_invalidatecollections",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 9,
+      "community_name": "Root Layout & Metadata",
       "norm_label": "invalidatecollections()"
     },
     {
@@ -45282,8 +45282,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_pages_use_collections_usecollections",
-      "community": 9,
-      "community_name": "Root Layout & Metadata",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "usecollections()"
     },
     {
@@ -45469,8 +45469,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_pages_use_dynamic_page_selector_usedynamicpageslug",
-      "community": 19,
-      "community_name": "Credit Grant Admin Tools",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "usedynamicpageslug()"
     },
     {
@@ -45612,8 +45612,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_pages_use_get_page_changes_usegetpagechanges",
-      "community": 42,
-      "community_name": "Group Type Creation Form",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "usegetpagechanges()"
     },
     {
@@ -45711,8 +45711,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_pages_use_page_all_data",
-      "community": 19,
-      "community_name": "Credit Grant Admin Tools",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "use-page-all-data.ts"
     },
     {
@@ -45722,8 +45722,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_pages_use_page_all_data_usepagealldata",
-      "community": 19,
-      "community_name": "Credit Grant Admin Tools",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "usepagealldata()"
     },
     {
@@ -45733,8 +45733,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_pages_use_page_draft_blocks",
-      "community": 19,
-      "community_name": "Credit Grant Admin Tools",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "use-page-draft-blocks.ts"
     },
     {
@@ -45744,8 +45744,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_pages_use_page_draft_blocks_usebuilderpagedata",
-      "community": 19,
-      "community_name": "Credit Grant Admin Tools",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "usebuilderpagedata()"
     },
     {
@@ -45755,8 +45755,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_pages_use_project_pages",
-      "community": 19,
-      "community_name": "Credit Grant Admin Tools",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "use-project-pages.ts"
     },
     {
@@ -45777,8 +45777,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_pages_use_project_pages_usewebsitelanguagepages",
-      "community": 19,
-      "community_name": "Credit Grant Admin Tools",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "usewebsitelanguagepages()"
     },
     {
@@ -46041,8 +46041,8 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_project_use_block_library_mutations_usedeleteuiblock",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 2,
+      "community_name": "Admin Auth & OAuth RFCs",
       "norm_label": "usedeleteuiblock()"
     },
     {
@@ -46393,8 +46393,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_project_use_website_settings",
-      "community": 19,
-      "community_name": "Credit Grant Admin Tools",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "use-website-settings.ts"
     },
     {
@@ -46459,8 +46459,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_use_chai_collections",
-      "community": 19,
-      "community_name": "Credit Grant Admin Tools",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "use-chai-collections.ts"
     },
     {
@@ -46481,8 +46481,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_use_chai_collections_usegetblockaysncprops",
-      "community": 19,
-      "community_name": "Credit Grant Admin Tools",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "usegetblockaysncprops()"
     },
     {
@@ -46514,8 +46514,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_use_fallback_lang",
-      "community": 19,
-      "community_name": "Credit Grant Admin Tools",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "use-fallback-lang.ts"
     },
     {
@@ -46525,8 +46525,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_use_fallback_lang_usefallbacklang",
-      "community": 19,
-      "community_name": "Credit Grant Admin Tools",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "usefallbacklang()"
     },
     {
@@ -46547,8 +46547,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_use_global_json_ld_useglobaljsonlditems",
-      "community": 50,
-      "community_name": "Recurrence Form Selects",
+      "community": 28,
+      "community_name": "Billing Panel Pages",
       "norm_label": "useglobaljsonlditems()"
     },
     {
@@ -46580,8 +46580,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_use_reload_page",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 55,
+      "community_name": "Trainer Rate & Schedule Decisions",
       "norm_label": "use-reload-page.ts"
     },
     {
@@ -46591,8 +46591,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_use_reload_page_usereloadpage",
-      "community": 42,
-      "community_name": "Group Type Creation Form",
+      "community": 55,
+      "community_name": "Trainer Rate & Schedule Decisions",
       "norm_label": "usereloadpage()"
     },
     {
@@ -46602,8 +46602,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_hooks_use_reload_page_useclearall",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 55,
+      "community_name": "Trainer Rate & Schedule Decisions",
       "norm_label": "useclearall()"
     },
     {
@@ -47075,8 +47075,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_pages_index",
-      "community": 19,
-      "community_name": "Credit Grant Admin Tools",
+      "community": 55,
+      "community_name": "Trainer Rate & Schedule Decisions",
       "norm_label": "pages/index.ts"
     },
     {
@@ -51332,8 +51332,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_runtime_font_helpers",
-      "community": 305,
-      "community_name": "Styling",
+      "community": 56,
+      "community_name": "Client Session Persistence",
       "norm_label": "font-helpers.ts"
     },
     {
@@ -51343,8 +51343,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_runtime_font_helpers_getthemefontfacecss",
-      "community": 305,
-      "community_name": "Styling",
+      "community": 56,
+      "community_name": "Client Session Persistence",
       "norm_label": "getthemefontfacecss()"
     },
     {
@@ -51354,8 +51354,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_runtime_font_helpers_getthemecustomfontfacestyle",
-      "community": 305,
-      "community_name": "Styling",
+      "community": 56,
+      "community_name": "Client Session Persistence",
       "norm_label": "getthemecustomfontfacestyle()"
     },
     {
@@ -51365,8 +51365,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_runtime_font_helpers_getfontstyles",
-      "community": 305,
-      "community_name": "Styling",
+      "community": 56,
+      "community_name": "Client Session Persistence",
       "norm_label": "getfontstyles()"
     },
     {
@@ -51376,8 +51376,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_runtime_fonts",
-      "community": 305,
-      "community_name": "Styling",
+      "community": 56,
+      "community_name": "Client Session Persistence",
       "norm_label": "fonts.ts"
     },
     {
@@ -51387,8 +51387,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_runtime_fonts_registered_fonts",
-      "community": 305,
-      "community_name": "Styling",
+      "community": 56,
+      "community_name": "Client Session Persistence",
       "norm_label": "registered_fonts"
     },
     {
@@ -51398,8 +51398,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_runtime_fonts_registerchaifont",
-      "community": 305,
-      "community_name": "Styling",
+      "community": 56,
+      "community_name": "Client Session Persistence",
       "norm_label": "registerchaifont()"
     },
     {
@@ -51420,8 +51420,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_runtime_fonts_getregisteredfont",
-      "community": 305,
-      "community_name": "Styling",
+      "community": 56,
+      "community_name": "Client Session Persistence",
       "norm_label": "getregisteredfont()"
     },
     {
@@ -52399,8 +52399,8 @@
       "source_location": "L60",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_types_chaibuilder_editor_props_chaisavewebsitedata",
-      "community": 305,
-      "community_name": "Styling",
+      "community": 448,
+      "community_name": "[...all]/route.ts",
       "norm_label": "chaisavewebsitedata"
     },
     {
@@ -52762,8 +52762,8 @@
       "source_location": "L111",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_types_common_chaifont",
-      "community": 305,
-      "community_name": "Styling",
+      "community": 56,
+      "community_name": "Client Session Persistence",
       "norm_label": "chaifont"
     },
     {
@@ -52880,7 +52880,7 @@
       "label": "SectionCatalogEntry",
       "file_type": "code",
       "source_file": "packages/chaibuilder-sdk/src/types/section-catalog.ts",
-      "source_location": "L33",
+      "source_location": "L32",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_types_section_catalog_sectioncatalogentry",
       "community": 159,
@@ -52891,7 +52891,7 @@
       "label": "SectionCatalog",
       "file_type": "code",
       "source_file": "packages/chaibuilder-sdk/src/types/section-catalog.ts",
-      "source_location": "L48",
+      "source_location": "L47",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_types_section_catalog_sectioncatalog",
       "community": 504,
@@ -52902,7 +52902,7 @@
       "label": ".getByCategory()",
       "file_type": "code",
       "source_file": "packages/chaibuilder-sdk/src/types/section-catalog.ts",
-      "source_location": "L50",
+      "source_location": "L49",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_types_section_catalog_sectioncatalog_getbycategory",
       "community": 504,
@@ -52913,7 +52913,7 @@
       "label": ".getByType()",
       "file_type": "code",
       "source_file": "packages/chaibuilder-sdk/src/types/section-catalog.ts",
-      "source_location": "L51",
+      "source_location": "L50",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_types_section_catalog_sectioncatalog_getbytype",
       "community": 504,
@@ -52924,7 +52924,7 @@
       "label": ".search()",
       "file_type": "code",
       "source_file": "packages/chaibuilder-sdk/src/types/section-catalog.ts",
-      "source_location": "L53",
+      "source_location": "L52",
       "_origin": "ast",
       "id": "packages_chaibuilder_sdk_src_types_section_catalog_sectioncatalog_search",
       "community": 504,
@@ -57525,8 +57525,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_blog_components_delete_post_button",
-      "community": 6,
-      "community_name": "Org Actions & Audit Recording",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "delete-post-button.tsx"
     },
     {
@@ -57536,8 +57536,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_blog_components_delete_post_button_deletepostbutton",
-      "community": 6,
-      "community_name": "Org Actions & Audit Recording",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "deletepostbutton()"
     },
     {
@@ -57635,8 +57635,8 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_blog_page_blogpage",
-      "community": 93,
-      "community_name": "Payment & Plan Limit Epics",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "blogpage()"
     },
     {
@@ -57723,8 +57723,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_clients_clientid_page_clientdetailpage",
-      "community": 93,
-      "community_name": "Payment & Plan Limit Epics",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "clientdetailpage()"
     },
     {
@@ -57745,8 +57745,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_clients_page_clientspage",
-      "community": 93,
-      "community_name": "Payment & Plan Limit Epics",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "clientspage()"
     },
     {
@@ -57910,8 +57910,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_group_change_requests_page",
-      "community": 34,
-      "community_name": "Nav & Theme UI",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "group-change-requests/page.tsx"
     },
     {
@@ -57921,8 +57921,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_group_change_requests_page_status_variants",
-      "community": 34,
-      "community_name": "Nav & Theme UI",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "status_variants"
     },
     {
@@ -57932,8 +57932,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_group_change_requests_page_groupchangerequestspage",
-      "community": 34,
-      "community_name": "Nav & Theme UI",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "groupchangerequestspage()"
     },
     {
@@ -58097,8 +58097,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_leave_requests_leave_request_list",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "leave-request-list.tsx"
     },
     {
@@ -58108,8 +58108,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_leave_requests_leave_request_list_status_colors",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "status_colors"
     },
     {
@@ -58119,8 +58119,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_leave_requests_leave_request_list_status_labels",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "status_labels"
     },
     {
@@ -58141,8 +58141,8 @@
       "source_location": "L147",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_leave_requests_leave_request_list_leaverequestlistskeleton",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "leaverequestlistskeleton()"
     },
     {
@@ -58152,8 +58152,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_leave_requests_leave_request_modal",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "leave-request-modal.tsx"
     },
     {
@@ -58163,8 +58163,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_leave_requests_leave_request_modal_status_colors",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "status_colors"
     },
     {
@@ -58240,8 +58240,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_locations_page_locationspage",
-      "community": 93,
-      "community_name": "Payment & Plan Limit Epics",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "locationspage()"
     },
     {
@@ -58328,8 +58328,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_members_membershipid_permissions_page_memberpermissionspage",
-      "community": 93,
-      "community_name": "Payment & Plan Limit Epics",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "memberpermissionspage()"
     },
     {
@@ -58405,8 +58405,8 @@
       "source_location": "L205",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_my_classes_page_client_rostersection",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 36,
+      "community_name": "Booking Domain Tables",
       "norm_label": "rostersection()"
     },
     {
@@ -58438,8 +58438,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_my_classes_page",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "my-classes/page.tsx"
     },
     {
@@ -58449,8 +58449,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_my_classes_page_myclassespage",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "myclassespage()"
     },
     {
@@ -58526,8 +58526,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_policies_page_policiespage",
-      "community": 93,
-      "community_name": "Payment & Plan Limit Epics",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "policiespage()"
     },
     {
@@ -58581,8 +58581,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_qualification_cards_page_qualificationcardspage",
-      "community": 93,
-      "community_name": "Payment & Plan Limit Epics",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "qualificationcardspage()"
     },
     {
@@ -58702,8 +58702,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_sessions_sessionid_page",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "[sessionid]/page.tsx"
     },
     {
@@ -58713,8 +58713,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_sessions_sessionid_page_sessionrosterpage",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "sessionrosterpage()"
     },
     {
@@ -58757,8 +58757,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_settings_billing_page",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "dashboard/settings/billing/page.tsx"
     },
     {
@@ -58768,8 +58768,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_settings_billing_page_orgbillingpage",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "orgbillingpage()"
     },
     {
@@ -58845,8 +58845,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_locale_app_dashboard_trainers_earnings_page",
-      "community": 34,
-      "community_name": "Nav & Theme UI",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "earnings/page.tsx"
     },
     {
@@ -59703,8 +59703,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_locale_forgot_password_page",
-      "community": 8,
-      "community_name": "Cron Job Handlers",
+      "community": 84,
+      "community_name": "[...all]/route.ts",
       "norm_label": "forgot-password/page.tsx"
     },
     {
@@ -59714,8 +59714,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_app_locale_forgot_password_page_generatemetadata",
-      "community": 8,
-      "community_name": "Cron Job Handlers",
+      "community": 84,
+      "community_name": "[...all]/route.ts",
       "norm_label": "generatemetadata()"
     },
     {
@@ -59725,8 +59725,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_app_locale_forgot_password_page_forgotpasswordpage",
-      "community": 8,
-      "community_name": "Cron Job Handlers",
+      "community": 84,
+      "community_name": "[...all]/route.ts",
       "norm_label": "forgotpasswordpage()"
     },
     {
@@ -59989,8 +59989,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_app_locale_page",
-      "community": 34,
-      "community_name": "Nav & Theme UI",
+      "community": 36,
+      "community_name": "Booking Domain Tables",
       "norm_label": "[locale]/page.tsx"
     },
     {
@@ -60011,8 +60011,8 @@
       "source_location": "L75",
       "_origin": "ast",
       "id": "src_app_locale_page_features",
-      "community": 34,
-      "community_name": "Nav & Theme UI",
+      "community": 36,
+      "community_name": "Booking Domain Tables",
       "norm_label": "features"
     },
     {
@@ -62453,8 +62453,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_blocks_enrollment_enrollmentbookingbutton_config",
-      "community": 432,
-      "community_name": "clsx",
+      "community": 59,
+      "community_name": "Consent/Policy Acceptance",
       "norm_label": "enrollmentbookingbutton/config.tsx"
     },
     {
@@ -62464,8 +62464,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_blocks_enrollment_enrollmentbookingbutton_config_enrollmentbookingbuttonprops",
-      "community": 432,
-      "community_name": "clsx",
+      "community": 59,
+      "community_name": "Consent/Policy Acceptance",
       "norm_label": "enrollmentbookingbuttonprops"
     },
     {
@@ -62475,8 +62475,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_blocks_enrollment_enrollmentbookingbutton_config_component",
-      "community": 432,
-      "community_name": "clsx",
+      "community": 59,
+      "community_name": "Consent/Policy Acceptance",
       "norm_label": "component()"
     },
     {
@@ -62486,8 +62486,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_blocks_enrollment_enrollmentbookingbutton_config_config",
-      "community": 432,
-      "community_name": "clsx",
+      "community": 59,
+      "community_name": "Consent/Policy Acceptance",
       "norm_label": "config"
     },
     {
@@ -62497,8 +62497,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_blocks_enrollment_enrollmentbookingbutton_index",
-      "community": 432,
-      "community_name": "clsx",
+      "community": 59,
+      "community_name": "Consent/Policy Acceptance",
       "norm_label": "enrollmentbookingbutton/index.tsx"
     },
     {
@@ -62508,8 +62508,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_blocks_enrollment_enrollmentbookingbutton_index_variant_classes",
-      "community": 432,
-      "community_name": "clsx",
+      "community": 59,
+      "community_name": "Consent/Policy Acceptance",
       "norm_label": "variant_classes"
     },
     {
@@ -62519,8 +62519,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_blocks_enrollment_enrollmentbookingbutton_index_enrollmentbookingbutton",
-      "community": 432,
-      "community_name": "clsx",
+      "community": 59,
+      "community_name": "Consent/Policy Acceptance",
       "norm_label": "enrollmentbookingbutton()"
     },
     {
@@ -63190,8 +63190,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_blocks_instructorcard_config",
-      "community": 59,
-      "community_name": "Consent/Policy Acceptance",
+      "community": 457,
+      "community_name": "GetChangesAction",
       "norm_label": "instructorcard/config.tsx"
     },
     {
@@ -63201,8 +63201,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_blocks_instructorcard_config_instructorcardprops",
-      "community": 59,
-      "community_name": "Consent/Policy Acceptance",
+      "community": 457,
+      "community_name": "GetChangesAction",
       "norm_label": "instructorcardprops"
     },
     {
@@ -63212,8 +63212,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_blocks_instructorcard_config_component",
-      "community": 59,
-      "community_name": "Consent/Policy Acceptance",
+      "community": 457,
+      "community_name": "GetChangesAction",
       "norm_label": "component()"
     },
     {
@@ -63223,8 +63223,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_blocks_instructorcard_config_config",
-      "community": 59,
-      "community_name": "Consent/Policy Acceptance",
+      "community": 457,
+      "community_name": "GetChangesAction",
       "norm_label": "config"
     },
     {
@@ -63234,8 +63234,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_blocks_instructorcard_index",
-      "community": 59,
-      "community_name": "Consent/Policy Acceptance",
+      "community": 457,
+      "community_name": "GetChangesAction",
       "norm_label": "instructorcard/index.tsx"
     },
     {
@@ -63245,8 +63245,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_blocks_instructorcard_index_instructorcard",
-      "community": 59,
-      "community_name": "Consent/Policy Acceptance",
+      "community": 457,
+      "community_name": "GetChangesAction",
       "norm_label": "instructorcard()"
     },
     {
@@ -64477,8 +64477,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "src/components/ui/alert-dialog.tsx"
     },
     {
@@ -64488,8 +64488,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog_alertdialogoverlay",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "alertdialogoverlay"
     },
     {
@@ -64499,8 +64499,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog_alertdialogcontent",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "alertdialogcontent"
     },
     {
@@ -64510,8 +64510,8 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog_alertdialogheader",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "alertdialogheader()"
     },
     {
@@ -64521,8 +64521,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog_alertdialogfooter",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "alertdialogfooter()"
     },
     {
@@ -64532,8 +64532,8 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog_alertdialogtitle",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "alertdialogtitle"
     },
     {
@@ -64543,8 +64543,8 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog_alertdialogdescription",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "alertdialogdescription"
     },
     {
@@ -64554,8 +64554,8 @@
       "source_location": "L101",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog_alertdialogaction",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "alertdialogaction"
     },
     {
@@ -64565,8 +64565,8 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "src_components_ui_alert_dialog_alertdialogcancel",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "alertdialogcancel"
     },
     {
@@ -64620,8 +64620,8 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "src_components_ui_alert_alerttitle",
-      "community": 34,
-      "community_name": "Nav & Theme UI",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "alerttitle()"
     },
     {
@@ -65060,8 +65060,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_label",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "src/components/ui/label.tsx"
     },
     {
@@ -65071,8 +65071,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_components_ui_label_labelvariants",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "labelvariants"
     },
     {
@@ -65082,8 +65082,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_components_ui_label_label",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "label"
     },
     {
@@ -65445,8 +65445,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_ui_tabs",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "src/components/ui/tabs.tsx"
     },
     {
@@ -67073,8 +67073,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_features_auth_components_sign_in_form_signinform",
-      "community": 84,
-      "community_name": "[...all]/route.ts",
+      "community": 8,
+      "community_name": "Cron Job Handlers",
       "norm_label": "signinform()"
     },
     {
@@ -67128,8 +67128,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_features_auth_components_sign_up_form_signupform",
-      "community": 84,
-      "community_name": "[...all]/route.ts",
+      "community": 8,
+      "community_name": "Cron Job Handlers",
       "norm_label": "signupform()"
     },
     {
@@ -67557,8 +67557,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "src_features_billing_components_connect_panel_connectpanel",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "connectpanel()"
     },
     {
@@ -67579,8 +67579,8 @@
       "source_location": "L199",
       "_origin": "ast",
       "id": "src_features_billing_components_connect_panel_statustext",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "statustext()"
     },
     {
@@ -67667,8 +67667,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "src_features_billing_components_webhook_health_panel_webhookhealthpanel",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "webhookhealthpanel()"
     },
     {
@@ -68327,8 +68327,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_features_billing_invoice_actions",
-      "community": 4,
-      "community_name": "Login & Password Reset Forms",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "invoice-actions.ts"
     },
     {
@@ -68338,8 +68338,8 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "src_features_billing_invoice_actions_requestinvoiceschema",
-      "community": 4,
-      "community_name": "Login & Password Reset Forms",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "requestinvoiceschema"
     },
     {
@@ -68360,8 +68360,8 @@
       "source_location": "L102",
       "_origin": "ast",
       "id": "src_features_billing_invoice_actions_markinvoiceissuedschema",
-      "community": 4,
-      "community_name": "Login & Password Reset Forms",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "markinvoiceissuedschema"
     },
     {
@@ -69240,8 +69240,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_features_billing_test_mode_isstripetestmode",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "isstripetestmode()"
     },
     {
@@ -69911,8 +69911,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "src_features_bookings_attendance_markattendance",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "markattendance()"
     },
     {
@@ -70835,8 +70835,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_features_bookings_components_attendance_controls",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 4,
+      "community_name": "Login & Password Reset Forms",
       "norm_label": "attendance-controls.tsx"
     },
     {
@@ -70846,8 +70846,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "src_features_bookings_components_attendance_controls_initial",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 4,
+      "community_name": "Login & Password Reset Forms",
       "norm_label": "initial"
     },
     {
@@ -70857,8 +70857,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "src_features_bookings_components_attendance_controls_markbutton",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 4,
+      "community_name": "Login & Password Reset Forms",
       "norm_label": "markbutton()"
     },
     {
@@ -70868,8 +70868,8 @@
       "source_location": "L50",
       "_origin": "ast",
       "id": "src_features_bookings_components_attendance_controls_attendancecontrols",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 4,
+      "community_name": "Login & Password Reset Forms",
       "norm_label": "attendancecontrols()"
     },
     {
@@ -70879,8 +70879,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_features_bookings_components_cancel_booking_button",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "cancel-booking-button.tsx"
     },
     {
@@ -70890,8 +70890,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_features_bookings_components_cancel_booking_button_cancelbookingbutton",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "cancelbookingbutton()"
     },
     {
@@ -70945,8 +70945,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_features_bookings_components_confirm_cash_button_confirmcashbutton",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "confirmcashbutton()"
     },
     {
@@ -70956,8 +70956,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_features_bookings_components_enrollment_flow",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "enrollment-flow.tsx"
     },
     {
@@ -70967,8 +70967,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "src_features_bookings_components_enrollment_flow_recognized",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "recognized"
     },
     {
@@ -70978,8 +70978,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "src_features_bookings_components_enrollment_flow_consentdocumentprop",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "consentdocumentprop"
     },
     {
@@ -70989,8 +70989,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "src_features_bookings_components_enrollment_flow_policydocumentprop",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "policydocumentprop"
     },
     {
@@ -71011,8 +71011,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "src_features_bookings_components_enrollment_flow_enrollmentflow",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "enrollmentflow()"
     },
     {
@@ -71022,8 +71022,8 @@
       "source_location": "L121",
       "_origin": "ast",
       "id": "src_features_bookings_components_enrollment_flow_bookable",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "bookable()"
     },
     {
@@ -71033,8 +71033,8 @@
       "source_location": "L262",
       "_origin": "ast",
       "id": "src_features_bookings_components_enrollment_flow_successstep",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "successstep()"
     },
     {
@@ -71044,8 +71044,8 @@
       "source_location": "L356",
       "_origin": "ast",
       "id": "src_features_bookings_components_enrollment_flow_calendar",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "calendar()"
     },
     {
@@ -71055,8 +71055,8 @@
       "source_location": "L453",
       "_origin": "ast",
       "id": "src_features_bookings_components_enrollment_flow_cellclass",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "cellclass()"
     },
     {
@@ -71066,8 +71066,8 @@
       "source_location": "L465",
       "_origin": "ast",
       "id": "src_features_bookings_components_enrollment_flow_verifystep",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "verifystep()"
     },
     {
@@ -71077,8 +71077,8 @@
       "source_location": "L554",
       "_origin": "ast",
       "id": "src_features_bookings_components_enrollment_flow_participantsinitial",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "participantsinitial"
     },
     {
@@ -71099,8 +71099,8 @@
       "source_location": "L789",
       "_origin": "ast",
       "id": "src_features_bookings_components_enrollment_flow_notice",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "notice()"
     },
     {
@@ -71110,8 +71110,8 @@
       "source_location": "L797",
       "_origin": "ast",
       "id": "src_features_bookings_components_enrollment_flow_packagesection",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "packagesection()"
     },
     {
@@ -71121,8 +71121,8 @@
       "source_location": "L836",
       "_origin": "ast",
       "id": "src_features_bookings_components_enrollment_flow_fielderror",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "fielderror()"
     },
     {
@@ -71132,8 +71132,8 @@
       "source_location": "L840",
       "_origin": "ast",
       "id": "src_features_bookings_components_enrollment_flow_viewdocumentlink",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "viewdocumentlink()"
     },
     {
@@ -71143,8 +71143,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_features_bookings_components_enrollment_steps",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "enrollment-steps.tsx"
     },
     {
@@ -71154,8 +71154,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_features_bookings_components_enrollment_steps_enrollmentsteps",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "enrollmentsteps()"
     },
     {
@@ -71165,8 +71165,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_features_bookings_components_slot_first_flow",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "slot-first-flow.tsx"
     },
     {
@@ -71176,8 +71176,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "src_features_bookings_components_slot_first_flow_slotfirstflowprops",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "slotfirstflowprops"
     },
     {
@@ -71187,8 +71187,8 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "src_features_bookings_components_slot_first_flow_slotfirstflow",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "slotfirstflow()"
     },
     {
@@ -71198,8 +71198,8 @@
       "source_location": "L247",
       "_origin": "ast",
       "id": "src_features_bookings_components_slot_first_flow_slotfirstinitial",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "slotfirstinitial"
     },
     {
@@ -71220,8 +71220,8 @@
       "source_location": "L447",
       "_origin": "ast",
       "id": "src_features_bookings_components_slot_first_flow_formatday",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "formatday()"
     },
     {
@@ -71968,8 +71968,8 @@
       "source_location": "L313",
       "_origin": "ast",
       "id": "src_features_bookings_data_listrosterforsession",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "listrosterforsession()"
     },
     {
@@ -72122,8 +72122,8 @@
       "source_location": "L49",
       "_origin": "ast",
       "id": "src_features_bookings_payment_options_paymentmethodview",
-      "community": 275,
-      "community_name": "client-auth/route.ts",
+      "community": 21,
+      "community_name": "Billing Notification Handlers",
       "norm_label": "paymentmethodview"
     },
     {
@@ -72606,8 +72606,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_features_bookings_staff_actions",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "staff-actions.ts"
     },
     {
@@ -72628,8 +72628,8 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "src_features_bookings_staff_actions_markattendanceaction",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "markattendanceaction()"
     },
     {
@@ -72639,8 +72639,8 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "src_features_bookings_staff_actions_cancelbookingaction",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "cancelbookingaction()"
     },
     {
@@ -72650,8 +72650,8 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "src_features_bookings_staff_actions_str",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "str()"
     },
     {
@@ -80801,8 +80801,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_features_grades_data_listgradefieldsforgrouptype",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "listgradefieldsforgrouptype()"
     },
     {
@@ -80812,8 +80812,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "src_features_grades_data_listgradefieldsforsession",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "listgradefieldsforsession()"
     },
     {
@@ -80823,8 +80823,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "src_features_grades_data_listgradefieldsforsessionroster",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "listgradefieldsforsessionroster()"
     },
     {
@@ -80845,8 +80845,8 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "src_features_grades_data_listgradesforbooking",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "listgradesforbooking()"
     },
     {
@@ -80867,8 +80867,8 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "src_features_grades_data_listprogressnotesforbooking",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "listprogressnotesforbooking()"
     },
     {
@@ -81186,8 +81186,8 @@
       "source_location": "L17",
       "_origin": "ast",
       "id": "src_features_group_changes_data_listgroupchangerequestsfortrainer",
-      "community": 34,
-      "community_name": "Nav & Theme UI",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "listgroupchangerequestsfortrainer()"
     },
     {
@@ -82594,8 +82594,8 @@
       "source_location": "L96",
       "_origin": "ast",
       "id": "src_features_interest_signups_components_interest_signup_list_interestsignuprowitem",
-      "community": 93,
-      "community_name": "Payment & Plan Limit Epics",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "interestsignuprowitem()"
     },
     {
@@ -83023,8 +83023,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_features_lesson_logs_components_lesson_topic_form_lessontopicform",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "lessontopicform()"
     },
     {
@@ -83045,8 +83045,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_features_lesson_logs_data_getlessontopicbysession",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "getlessontopicbysession()"
     },
     {
@@ -83078,8 +83078,8 @@
       "source_location": "L111",
       "_origin": "ast",
       "id": "src_features_lesson_logs_data_listhomeworkbysession",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "listhomeworkbysession()"
     },
     {
@@ -83122,8 +83122,8 @@
       "source_location": "L228",
       "_origin": "ast",
       "id": "src_features_lesson_logs_data_getcompletionmap",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "getcompletionmap()"
     },
     {
@@ -85410,8 +85410,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_features_organizations_context",
-      "community": 34,
-      "community_name": "Nav & Theme UI",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "organizations/context.ts"
     },
     {
@@ -85421,8 +85421,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_features_organizations_context_orgcontext",
-      "community": 34,
-      "community_name": "Nav & Theme UI",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "orgcontext"
     },
     {
@@ -85443,8 +85443,8 @@
       "source_location": "L115",
       "_origin": "ast",
       "id": "src_features_organizations_context_requireorgaccess",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "requireorgaccess()"
     },
     {
@@ -85696,8 +85696,8 @@
       "source_location": "L265",
       "_origin": "ast",
       "id": "src_features_organizations_data_getmembershippermissionoverrides",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "getmembershippermissionoverrides()"
     },
     {
@@ -85707,8 +85707,8 @@
       "source_location": "L278",
       "_origin": "ast",
       "id": "src_features_organizations_data_listpermissionoverrides",
-      "community": 93,
-      "community_name": "Payment & Plan Limit Epics",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "listpermissionoverrides()"
     },
     {
@@ -86114,8 +86114,8 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "src_features_policies_components_policies_page_client_createpolicyform",
-      "community": 93,
-      "community_name": "Payment & Plan Limit Epics",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "createpolicyform()"
     },
     {
@@ -87401,8 +87401,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_features_schedule_components_mass_reassign_dialog",
-      "community": 93,
-      "community_name": "Payment & Plan Limit Epics",
+      "community": 6,
+      "community_name": "Org Actions & Audit Recording",
       "norm_label": "mass-reassign-dialog.tsx"
     },
     {
@@ -87412,8 +87412,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_features_schedule_components_mass_reassign_dialog_traineroption",
-      "community": 93,
-      "community_name": "Payment & Plan Limit Epics",
+      "community": 6,
+      "community_name": "Org Actions & Audit Recording",
       "norm_label": "traineroption"
     },
     {
@@ -87423,8 +87423,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_features_schedule_components_mass_reassign_dialog_massreassigndialog",
-      "community": 93,
-      "community_name": "Payment & Plan Limit Epics",
+      "community": 6,
+      "community_name": "Org Actions & Audit Recording",
       "norm_label": "massreassigndialog()"
     },
     {
@@ -87544,8 +87544,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_features_schedule_data",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "schedule/data.ts"
     },
     {
@@ -87577,8 +87577,8 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "src_features_schedule_data_getsession",
-      "community": 477,
-      "community_name": "admin/layout.tsx",
+      "community": 52,
+      "community_name": "Proxy/Host Routing Decisions",
       "norm_label": "getsession()"
     },
     {
@@ -88996,8 +88996,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_features_trainers_availability_actions",
-      "community": 4,
-      "community_name": "Login & Password Reset Forms",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "availability-actions.ts"
     },
     {
@@ -89007,8 +89007,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_features_trainers_availability_actions_str",
-      "community": 4,
-      "community_name": "Login & Password Reset Forms",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "str()"
     },
     {
@@ -89018,8 +89018,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_features_trainers_availability_actions_createavailabilityaction",
-      "community": 4,
-      "community_name": "Login & Password Reset Forms",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "createavailabilityaction()"
     },
     {
@@ -89150,8 +89150,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_features_trainers_availability_schema",
-      "community": 4,
-      "community_name": "Login & Password Reset Forms",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "availability-schema.ts"
     },
     {
@@ -89161,8 +89161,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_features_trainers_availability_schema_day_labels",
-      "community": 4,
-      "community_name": "Login & Password Reset Forms",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "day_labels"
     },
     {
@@ -89172,8 +89172,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_features_trainers_availability_schema_daylabel",
-      "community": 4,
-      "community_name": "Login & Password Reset Forms",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "daylabel"
     },
     {
@@ -89183,8 +89183,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_features_trainers_availability_schema_availabilityschema",
-      "community": 4,
-      "community_name": "Login & Password Reset Forms",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "availabilityschema"
     },
     {
@@ -89194,8 +89194,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_features_trainers_availability_schema_updateavailabilityschema",
-      "community": 4,
-      "community_name": "Login & Password Reset Forms",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "updateavailabilityschema"
     },
     {
@@ -89502,8 +89502,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_features_trainers_components_earnings_report_client_earningsreportclient",
-      "community": 34,
-      "community_name": "Nav & Theme UI",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "earningsreportclient()"
     },
     {
@@ -89953,8 +89953,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_features_trainers_leave_data_leaverequestrow",
-      "community": 36,
-      "community_name": "Booking Domain Tables",
+      "community": 477,
+      "community_name": "admin/layout.tsx",
       "norm_label": "leaverequestrow"
     },
     {
@@ -90250,8 +90250,8 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "src_features_trainers_rate_actions_earningsreportdata",
-      "community": 93,
-      "community_name": "Payment & Plan Limit Epics",
+      "community": 34,
+      "community_name": "Nav & Theme UI",
       "norm_label": "earningsreportdata"
     },
     {
@@ -90448,8 +90448,8 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "src_lib_adapters_auth_better_auth_recipientlocale",
-      "community": 82,
-      "community_name": "Notification Center & Credit Transfer",
+      "community": 8,
+      "community_name": "Cron Job Handlers",
       "norm_label": "recipientlocale()"
     },
     {
@@ -91570,8 +91570,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_adapters_email_contract",
-      "community": 92,
-      "community_name": "V15-17 Entity Overrides",
+      "community": 0,
+      "community_name": "Email Adapter & RFC Standards",
       "norm_label": "email/contract.ts"
     },
     {
@@ -91636,8 +91636,8 @@
       "source_location": "L321",
       "_origin": "ast",
       "id": "src_lib_adapters_email_contract_renderedemail",
-      "community": 92,
-      "community_name": "V15-17 Entity Overrides",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "renderedemail"
     },
     {
@@ -91669,8 +91669,8 @@
       "source_location": "L311",
       "_origin": "ast",
       "id": "docref_rfc_5322",
-      "community": 92,
-      "community_name": "V15-17 Entity Overrides",
+      "community": 0,
+      "community_name": "Email Adapter & RFC Standards",
       "norm_label": "rfc-5322"
     },
     {
@@ -91702,8 +91702,8 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "src_lib_adapters_email_index_email",
-      "community": 1,
-      "community_name": "Email Unsubscribe & Categories",
+      "community": 92,
+      "community_name": "V15-17 Entity Overrides",
       "norm_label": "email"
     },
     {
@@ -91823,8 +91823,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_booking_cancelled",
-      "community": 190,
-      "community_name": "security/rate-limit.ts",
+      "community": 0,
+      "community_name": "Email Adapter & RFC Standards",
       "norm_label": "booking-cancelled.tsx"
     },
     {
@@ -91889,8 +91889,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_client_otp",
-      "community": 190,
-      "community_name": "security/rate-limit.ts",
+      "community": 507,
+      "community_name": "client-otp.tsx",
       "norm_label": "client-otp.tsx"
     },
     {
@@ -91900,8 +91900,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_client_otp_clientotpsubject",
-      "community": 190,
-      "community_name": "security/rate-limit.ts",
+      "community": 507,
+      "community_name": "client-otp.tsx",
       "norm_label": "clientotpsubject()"
     },
     {
@@ -91911,8 +91911,8 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_client_otp_code",
-      "community": 190,
-      "community_name": "security/rate-limit.ts",
+      "community": 507,
+      "community_name": "client-otp.tsx",
       "norm_label": "code()"
     },
     {
@@ -91922,8 +91922,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_client_otp_clientotp",
-      "community": 190,
-      "community_name": "security/rate-limit.ts",
+      "community": 507,
+      "community_name": "client-otp.tsx",
       "norm_label": "clientotp()"
     },
     {
@@ -91933,8 +91933,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_client_password_changed",
-      "community": 190,
-      "community_name": "security/rate-limit.ts",
+      "community": 0,
+      "community_name": "Email Adapter & RFC Standards",
       "norm_label": "client-password-changed.tsx"
     },
     {
@@ -91977,8 +91977,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_grade_recorded_graderecordedsubject",
-      "community": 0,
-      "community_name": "Email Adapter & RFC Standards",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "graderecordedsubject()"
     },
     {
@@ -91988,8 +91988,8 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_grade_recorded_graderecorded",
-      "community": 0,
-      "community_name": "Email Adapter & RFC Standards",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "graderecorded()"
     },
     {
@@ -92164,8 +92164,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_individual_session_rejected_individualsessionrejectedsubject",
-      "community": 0,
-      "community_name": "Email Adapter & RFC Standards",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "individualsessionrejectedsubject()"
     },
     {
@@ -92175,8 +92175,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_individual_session_rejected_individualsessionrejected",
-      "community": 0,
-      "community_name": "Email Adapter & RFC Standards",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "individualsessionrejected()"
     },
     {
@@ -92219,8 +92219,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_invoice_available",
-      "community": 190,
-      "community_name": "security/rate-limit.ts",
+      "community": 0,
+      "community_name": "Email Adapter & RFC Standards",
       "norm_label": "invoice-available.tsx"
     },
     {
@@ -92340,8 +92340,8 @@
       "source_location": "L191",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_layout_greetingargs",
-      "community": 0,
-      "community_name": "Email Adapter & RFC Standards",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "greetingargs()"
     },
     {
@@ -92417,8 +92417,8 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_onboarding_features_onboardingfeatures",
-      "community": 0,
-      "community_name": "Email Adapter & RFC Standards",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "onboardingfeatures()"
     },
     {
@@ -92461,8 +92461,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_onboarding_tips_onboardingtips",
-      "community": 0,
-      "community_name": "Email Adapter & RFC Standards",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "onboardingtips()"
     },
     {
@@ -92494,8 +92494,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_password_reset_passwordreset",
-      "community": 0,
-      "community_name": "Email Adapter & RFC Standards",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "passwordreset()"
     },
     {
@@ -92648,8 +92648,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_qualification_card_reminder",
-      "community": 190,
-      "community_name": "security/rate-limit.ts",
+      "community": 0,
+      "community_name": "Email Adapter & RFC Standards",
       "norm_label": "qualification-card-reminder.tsx"
     },
     {
@@ -92681,8 +92681,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_refund_confirmed",
-      "community": 190,
-      "community_name": "security/rate-limit.ts",
+      "community": 0,
+      "community_name": "Email Adapter & RFC Standards",
       "norm_label": "refund-confirmed.tsx"
     },
     {
@@ -92758,8 +92758,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_session_reminder_sessionremindersubject",
-      "community": 0,
-      "community_name": "Email Adapter & RFC Standards",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "sessionremindersubject()"
     },
     {
@@ -92769,8 +92769,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_session_reminder_sessionreminder",
-      "community": 0,
-      "community_name": "Email Adapter & RFC Standards",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "sessionreminder()"
     },
     {
@@ -92791,8 +92791,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_session_rescheduled_sessionrescheduledsubject",
-      "community": 0,
-      "community_name": "Email Adapter & RFC Standards",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "sessionrescheduledsubject()"
     },
     {
@@ -92802,8 +92802,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_session_rescheduled_sessionrescheduled",
-      "community": 0,
-      "community_name": "Email Adapter & RFC Standards",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "sessionrescheduled()"
     },
     {
@@ -92824,8 +92824,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_slot_first_session_created_slotfirstsessioncreatedsubject",
-      "community": 0,
-      "community_name": "Email Adapter & RFC Standards",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "slotfirstsessioncreatedsubject()"
     },
     {
@@ -92835,8 +92835,8 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_slot_first_session_created_slotfirstsessioncreated",
-      "community": 0,
-      "community_name": "Email Adapter & RFC Standards",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "slotfirstsessioncreated()"
     },
     {
@@ -92934,8 +92934,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_verify_email_verifyemail",
-      "community": 0,
-      "community_name": "Email Adapter & RFC Standards",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "verifyemail()"
     },
     {
@@ -92956,8 +92956,8 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_webhook_dead_lettered_webhookdeadletteredsubject",
-      "community": 0,
-      "community_name": "Email Adapter & RFC Standards",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "webhookdeadletteredsubject()"
     },
     {
@@ -93000,8 +93000,8 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_lib_adapters_email_templates_welcome_welcome",
-      "community": 0,
-      "community_name": "Email Adapter & RFC Standards",
+      "community": 190,
+      "community_name": "security/rate-limit.ts",
       "norm_label": "welcome()"
     },
     {
@@ -94078,8 +94078,8 @@
       "source_location": "L40",
       "_origin": "ast",
       "id": "src_lib_block_data_trainerblockdata",
-      "community": 59,
-      "community_name": "Consent/Policy Acceptance",
+      "community": 457,
+      "community_name": "GetChangesAction",
       "norm_label": "trainerblockdata"
     },
     {
@@ -96564,8 +96564,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_db_tenant",
-      "community": 34,
-      "community_name": "Nav & Theme UI",
+      "community": 93,
+      "community_name": "Payment & Plan Limit Epics",
       "norm_label": "tenant.ts"
     },
     {
@@ -97367,8 +97367,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_i18n_user_locale",
-      "community": 82,
-      "community_name": "Notification Center & Credit Transfer",
+      "community": 8,
+      "community_name": "Cron Job Handlers",
       "norm_label": "user-locale.ts"
     },
     {
@@ -97389,8 +97389,8 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "src_lib_i18n_user_locale_readlocale",
-      "community": 82,
-      "community_name": "Notification Center & Credit Transfer",
+      "community": 8,
+      "community_name": "Cron Job Handlers",
       "norm_label": "readlocale()"
     },
     {
@@ -97400,8 +97400,8 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "src_lib_i18n_user_locale_storedlocaleforuser",
-      "community": 82,
-      "community_name": "Notification Center & Credit Transfer",
+      "community": 8,
+      "community_name": "Cron Job Handlers",
       "norm_label": "storedlocaleforuser()"
     },
     {
@@ -97411,8 +97411,8 @@
       "source_location": "L77",
       "_origin": "ast",
       "id": "src_lib_i18n_user_locale_storedlocaleforemail",
-      "community": 82,
-      "community_name": "Notification Center & Credit Transfer",
+      "community": 8,
+      "community_name": "Cron Job Handlers",
       "norm_label": "storedlocaleforemail()"
     },
     {
@@ -97422,8 +97422,8 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "src_lib_i18n_user_locale_localeforuser",
-      "community": 82,
-      "community_name": "Notification Center & Credit Transfer",
+      "community": 8,
+      "community_name": "Cron Job Handlers",
       "norm_label": "localeforuser()"
     },
     {
@@ -97532,8 +97532,8 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "src_lib_logger_logger_error",
-      "community": 28,
-      "community_name": "Billing Panel Pages",
+      "community": 350,
+      "community_name": "css-theme-parser.ts",
       "norm_label": ".error()"
     },
     {
@@ -200242,7 +200242,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/builder-left-panel.tsx",
-      "source_location": "L113",
+      "source_location": "L114",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_pages_client_layouts_left_panel_builder_left_panel_builderleftpanel",
@@ -210445,7 +210445,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-picker.tsx",
-      "source_location": "L43",
+      "source_location": "L45",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_pages_client_layouts_left_panel_section_picker_sectionpickerpopover",
@@ -212694,7 +212694,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-picker.tsx",
-      "source_location": "L7",
+      "source_location": "L15",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_pages_client_layouts_left_panel_section_picker",
@@ -212803,7 +212803,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-picker.tsx",
-      "source_location": "L41",
+      "source_location": "L42",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_pages_client_layouts_left_panel_section_picker_sectionpickerpopover",
@@ -222099,7 +222099,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-picker.tsx",
-      "source_location": "L42",
+      "source_location": "L44",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_pages_client_layouts_left_panel_section_picker_sectionpickerpopover",
@@ -240477,7 +240477,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-picker.tsx",
-      "source_location": "L39",
+      "source_location": "L40",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_pages_client_layouts_left_panel_section_picker_sectionpickerpopover",
@@ -240525,7 +240525,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-picker.tsx",
-      "source_location": "L50",
+      "source_location": "L54",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_pages_client_layouts_left_panel_section_picker_sectionpickerpopover",
@@ -241189,7 +241189,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-picker.tsx",
-      "source_location": "L38",
+      "source_location": "L39",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_pages_client_layouts_left_panel_section_picker_sectionpickerpopover",
@@ -241782,7 +241782,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-picker.tsx",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_pages_client_layouts_left_panel_section_picker",
@@ -241793,7 +241793,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-picker.tsx",
-      "source_location": "L36",
+      "source_location": "L37",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_pages_client_layouts_left_panel_section_picker",
@@ -241889,7 +241889,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-picker.tsx",
-      "source_location": "L73",
+      "source_location": "L78",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_pages_client_layouts_left_panel_section_picker_sectionpickerpopover",
@@ -241902,7 +241902,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/section-picker.tsx",
-      "source_location": "L40",
+      "source_location": "L41",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_pages_client_layouts_left_panel_section_picker_sectionpickerpopover",
@@ -242912,7 +242912,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "packages/chaibuilder-sdk/src/pages/client/layouts/left-panel/theme-tab.tsx",
-      "source_location": "L190",
+      "source_location": "L188",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_pages_client_layouts_left_panel_theme_tab_templatesettingstab",
@@ -273160,7 +273160,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/chaibuilder-sdk/src/types/section-catalog.ts",
-      "source_location": "L48",
+      "source_location": "L47",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_types_section_catalog",
@@ -273171,7 +273171,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "packages/chaibuilder-sdk/src/types/section-catalog.ts",
-      "source_location": "L33",
+      "source_location": "L32",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_types_section_catalog",
@@ -273215,7 +273215,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "packages/chaibuilder-sdk/src/types/section-catalog.ts",
-      "source_location": "L50",
+      "source_location": "L49",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_types_section_catalog_sectioncatalog",
@@ -273226,7 +273226,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "packages/chaibuilder-sdk/src/types/section-catalog.ts",
-      "source_location": "L51",
+      "source_location": "L50",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_types_section_catalog_sectioncatalog",
@@ -273237,7 +273237,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "packages/chaibuilder-sdk/src/types/section-catalog.ts",
-      "source_location": "L53",
+      "source_location": "L52",
       "weight": 1.0,
       "_origin": "ast",
       "source": "packages_chaibuilder_sdk_src_types_section_catalog_sectioncatalog",

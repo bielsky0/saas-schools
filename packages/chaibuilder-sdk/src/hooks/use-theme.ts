@@ -67,19 +67,6 @@ export const useRightPanel = () => {
   return useAtom(rightPanelAtom);
 };
 
-/**
- * Controls the bottom slide-up settings panel inside the left panel (F7).
- * "block" → SettingsPanel, "page" → PageSettings, "template" → TemplateSettings,
- * "theme" → ThemeEditor, null → hidden (tabs take full height).
- */
-export type LeftPanelBottomTab = "block" | "page" | "template" | "theme";
-
-const leftPanelBottomAtom = atom<LeftPanelBottomTab | null>(null);
-leftPanelBottomAtom.debugLabel = "leftPanelBottomAtom";
-export const useLeftPanelBottom = () => {
-  return useAtom(leftPanelBottomAtom);
-};
-
 const aiDrawerOpenAtom = atom<boolean>(false);
 aiDrawerOpenAtom.debugLabel = "aiDrawerOpenAtom";
 export const useAiDrawerOpen = () => {

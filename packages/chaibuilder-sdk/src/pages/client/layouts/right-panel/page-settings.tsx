@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~
 import { Separator } from "~/components/ui/separator";
 import { Switch } from "~/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { cn } from "~/core/functions/common-functions";
 import { usePermissions } from "~/hooks/use-permissions";
 import { PAGES_PERMISSIONS } from "~/pages/constants/PERMISSIONS";
 import { useCurrentActivePage } from "~/pages/hooks/pages/use-current-page";
@@ -57,7 +58,7 @@ const emptyForm: PageForm = {
   seo: { title: "", description: "", canonicalUrl: "", noIndex: false, noFollow: false },
 };
 
-export const PageSettings = () => {
+export const PageSettings = ({ embedded = false }: { embedded?: boolean }) => {
   const { t } = useTranslation();
   const { data: page } = useCurrentActivePage();
   const { data: pageTypes } = usePageTypes();
@@ -127,7 +128,7 @@ export const PageSettings = () => {
   const isOnline = Boolean(page.online);
 
   return (
-    <div className="flex h-full flex-col">
+    <div className={embedded ? "flex flex-col" : "flex h-full flex-col"}>
       <div className="mb-3 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-foreground">{page.name}</p>
@@ -137,14 +138,19 @@ export const PageSettings = () => {
       </div>
       <Separator className="mb-3" />
 
-      <Tabs value={tab} onValueChange={setTab} className="flex min-h-0 flex-1 flex-col">
-        <TabsList className="grid w-full grid-cols-3">
+      <Tabs
+        value={tab}
+        onValueChange={setTab}
+        className={embedded ? "flex flex-col" : "flex min-h-0 flex-1 flex-col"}>
+        <TabsList className={cn("grid w-full", embedded ? "grid-cols-2" : "grid-cols-3")}>
           <TabsTrigger value="general">{t("General")}</TabsTrigger>
-          <TabsTrigger value="seo">{t("SEO")}</TabsTrigger>
+          {!embedded && <TabsTrigger value="seo">{t("SEO")}</TabsTrigger>}
           <TabsTrigger value="access">{t("Access")}</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="general" className="no-scrollbar min-h-0 flex-1 overflow-y-auto pb-2 pt-3">
+        <TabsContent
+          value="general"
+          className={cn("pb-2 pt-3", embedded ? "" : "no-scrollbar min-h-0 flex-1 overflow-y-auto")}>
           <div className="space-y-3">
             <div className="space-y-1">
               <Label className="text-xs" htmlFor="page-name">
@@ -236,7 +242,9 @@ export const PageSettings = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="seo" className="no-scrollbar min-h-0 flex-1 overflow-y-auto pb-2 pt-3">
+        <TabsContent
+          value="seo"
+          className={cn("pb-2 pt-3", embedded ? "" : "no-scrollbar min-h-0 flex-1 overflow-y-auto")}>
           <div className="space-y-4">
             <div>
               <Label className="mb-1.5 block text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
@@ -291,7 +299,9 @@ export const PageSettings = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="access" className="no-scrollbar min-h-0 flex-1 overflow-y-auto pb-2 pt-3">
+        <TabsContent
+          value="access"
+          className={cn("pb-2 pt-3", embedded ? "" : "no-scrollbar min-h-0 flex-1 overflow-y-auto")}>
           <div className="space-y-4">
             <div className="flex items-center justify-between gap-2">
               <div>

@@ -39,7 +39,7 @@ const NONE_GROUP_VALUE = "__none__";
  * are saved by the same auto-save pipeline as pages — the onSave redirect in
  * `chaibuilder-pages.tsx` routes it to UPDATE_TEMPLATE when in template mode.
  */
-export const TemplateSettings = () => {
+export const TemplateSettings = ({ embedded = false }: { embedded?: boolean }) => {
   const { t } = useTranslation();
   const { context } = useEditorContext();
   const { data: collections = [] } = useCollections();
@@ -136,7 +136,7 @@ export const TemplateSettings = () => {
   const seoDefaults: TemplateSeoDefaults = config?.seoDefaults ?? {};
 
   return (
-    <div className="flex h-full flex-col">
+    <div className={embedded ? "flex flex-col" : "flex h-full flex-col"}>
       <div className="mb-3 flex items-start justify-between gap-2">
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-foreground">
@@ -148,7 +148,7 @@ export const TemplateSettings = () => {
       </div>
       <Separator className="mb-3" />
 
-      <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto pb-2">
+      <div className={embedded ? "no-scrollbar pb-2" : "no-scrollbar min-h-0 flex-1 overflow-y-auto pb-2"}>
         <div className="space-y-5">
           {/* Post preview (F5.3) — blog template only */}
           {isBlogTemplate && (

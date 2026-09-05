@@ -74,6 +74,9 @@ const THEME_TAB_KEYS = [
   "Theme updated",
   "Shadows coming soon",
   "Sections can override the background locally — the section name shows an overridden badge in the tree",
+  "Active theme",
+  "Theme changes apply to all pages",
+  "Page",
 ];
 
 const PAGES_TAB_KEYS = [
