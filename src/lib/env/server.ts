@@ -99,6 +99,14 @@ export const env = createEnv({
     // Only required when BILLING_PROVIDER=stripe; the stripe adapter throws a
     // clear error at construction if it is selected without these.
     STRIPE_SECRET_KEY: z.string().optional(),
+    // Explicit override for the test-mode flag surfaced to the billing UI. The
+    // flag is normally derived automatically from the STRIPE_SECRET_KEY prefix
+    // (`sk_test_` → test mode). This escape hatch exists for setups where the
+    // key prefix is not authoritative (e.g. a relay/agent key), Faza 5.
+    STRIPE_TEST_MODE: z
+      .enum(["true", "false"])
+      .optional()
+      .transform((v) => (v === "true")),
     // Webhook signing secret (spec 5.4). Verification is a local HMAC against
     // this value — no network call — so tests can sign fixtures offline.
     STRIPE_WEBHOOK_SECRET: z.string().startsWith("whsec_").optional(),

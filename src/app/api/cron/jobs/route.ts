@@ -122,6 +122,16 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   await jobs.enqueue(db, "bookings.release_expired_pending", {}, {
     dedupeKey: `bookings.release_expired_pending:${thisHour}`,
   });
+  /*
+   * Stuck Connect webhook delivery replay (Faza 5.3). Hourly, like the other
+   * money-critical sweeps: a webhook that keeps failing means a booking, package
+   * or subscription never confirmed — the dead-letter alert should fire within
+   * a few hours, not days. The 10-minute cutoff inside the handler prevents
+   * replaying an event Stripe is still actively retrying on its own.
+   */
+  await jobs.enqueue(db, "webhooks.monitor-stuck", {}, {
+    dedupeKey: `webhooks.monitor-stuck:${thisHour}`,
+  });
 
   const result = await jobs.drain(registry, { budgetMs: BATCH_BUDGET_MS });
   const stats = await jobStats();

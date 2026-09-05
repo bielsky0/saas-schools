@@ -70,7 +70,8 @@ export type JobName =
   | "bookings.release_expired_pending"
   | "waitlist.expire_offers"
   | "sms.send"
-  | "bookings.remind_session";
+  | "bookings.remind_session"
+  | "webhooks.monitor-stuck";
 
 /**
  * `email.send`'s `template` is `string`, not the email adapter's `TemplateName`:
@@ -238,6 +239,15 @@ export interface JobPayloads {
    * on their own clocks in every academy at once.
    */
   "bookings.remind_session": Record<string, never>;
+  /**
+   * Faza 5.3 — Stuck Connect webhook delivery replay sweep. Cron-shaped, no
+   * payload: the handler scans all tenants' failed webhook_event rows, replays
+   * them through `processConnectWebhookEvent`, and dead-letters + alerts an
+   * event that keeps failing (see features/billing/webhook-monitoring.ts).
+   * CARRIES NO `organizationId`, like credits.expire: deliveries fail on their
+   * own schedule in every academy at once.
+   */
+  "webhooks.monitor-stuck": Record<string, never>;
 }
 
 export interface EnqueueOptions {

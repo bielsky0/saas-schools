@@ -108,6 +108,8 @@ const EMAIL_TEMPLATE_MAP: Record<string, TemplateName> = {
   "invoice-available": "invoice-available",
   "individual-session-rejected": "individual-session-rejected",
   "qualification-card-reminder": "qualification-card-reminder",
+  // ── Faza 5.3 — Connect webhook dead-letter alert (staff) ─────────────
+  "webhook-dead-lettered": "webhook-dead-lettered",
 };
 
 const EVENT_TYPES_WITH_EMAIL = new Set(Object.keys(EMAIL_TEMPLATE_MAP));

@@ -568,6 +568,20 @@
       "when": 1786500000010,
       "tag": "0081_org_schedule_settings",
       "breakpoints": true
+    },
+    {
+      "idx": 81,
+      "version": "7",
+      "when": 1786500000011,
+      "tag": "0082_webhook_retry_monitoring",
+      "breakpoints": true
+    },
+    {
+      "idx": 82,
+      "version": "7",
+      "when": 1788602387783,
+      "tag": "0083_webhook_dead_lettered_notification",
+      "breakpoints": true
     }
   ]
 }

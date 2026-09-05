@@ -41,6 +41,7 @@ import {
   QualificationCardReminder,
   qualificationCardReminderSubject,
 } from "./qualification-card-reminder";
+import { WebhookDeadLettered, webhookDeadLetteredSubject } from "./webhook-dead-lettered";
 
 /**
  * Template registry (spec 10.2 — component templates, HTML + plain-text).
@@ -163,6 +164,11 @@ const templates: { [N in TemplateName]: TemplateDef<N> } = {
   "qualification-card-reminder": {
     subject: qualificationCardReminderSubject,
     component: QualificationCardReminder,
+  },
+  // Faza 5.3 — Connect webhook dead-letter alert (staff).
+  "webhook-dead-lettered": {
+    subject: webhookDeadLetteredSubject,
+    component: WebhookDeadLettered,
   },
 };
 

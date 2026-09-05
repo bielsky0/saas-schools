@@ -39,6 +39,8 @@ export const NOTIFICATION_TYPES = [
   "invoice-available",            // do klienta — faktura dostępna (reserved)
   "individual-session-rejected",  // do klienta — lekcja indywidualna odrzucona (reserved)
   "qualification-card-reminder",  // do klienta — brakująca karta kwalifikacyjna (reserved)
+  // ── Faza 5.3 — Connect webhook retry monitoring ───────────────────────
+  "webhook-dead-lettered",        // do admina — webhook Stripe padł po 3 próbach
 ] as const;
 
 export type NotificationType = (typeof NOTIFICATION_TYPES)[number];
@@ -79,6 +81,7 @@ export const NOTIFICATION_META: Record<NotificationType, { suppressible: boolean
   "invoice-available": { suppressible: true },
   "individual-session-rejected": { suppressible: true },
   "qualification-card-reminder": { suppressible: true },
+  "webhook-dead-lettered": { suppressible: false },
 };
 
 export function isNotificationType(value: string): value is NotificationType {

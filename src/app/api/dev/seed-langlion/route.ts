@@ -130,7 +130,12 @@ type Body = {
     /** F12d — required when billingType is "recurring". */
     interval?: "month" | "year";
     intervalCount?: number;
-  };
+  };/** Reuse an existing 1:1 credit type (Faza 5) so an external script can attach a
+   * product template to a credit type its PREVIOUS seed-langlion call created.
+   * Mirrors the `groupTypeId`/`recurrenceId` reuse pattern above. Takes
+   * precedence over creating a new `creditType` in this request.
+   */
+  creditTypeId?: string;
   /** F17 — seed a policy document and optionally assign it to a group type. */
   policyDocument?: {
     name?: string;
@@ -307,7 +312,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         bookingIds.push(row!.id);
       }
 
-      let creditTypeId: string | null = null;
+      let creditTypeId: string | null = body.creditTypeId ?? null;
       if (body.creditType && groupTypeId) {
         const [row] = await tx
           .insert(creditType)

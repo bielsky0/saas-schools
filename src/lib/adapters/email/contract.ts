@@ -79,7 +79,11 @@ export type TemplateName =
   | "session-rescheduled"
   | "invoice-available"
   | "individual-session-rejected"
-  | "qualification-card-reminder";
+  | "qualification-card-reminder"
+  // Faza 5.3 — Connect webhook dead-letter alert (staff). An event that failed
+  // WEBHOOK_MAX_ATTEMPTS times is a bug in a handler, not a transient blip —
+  // the org owner must be told their payment flow is broken. Unsuppressible.
+  | "webhook-dead-lettered";
 // `magic-link` lands with spec 2.2, which is not implemented yet.
 
 /**
@@ -268,6 +272,15 @@ export interface TemplateProps {
     orgName: string;
     athleteName: string;
     groupTypeName: string;
+  };
+  // Faza 5.3 — Connect webhook dead-letter alert (staff).
+  // `eventId` is the Stripe event id, `eventType` the raw Connect type (e.g.
+  // "checkout.session.completed"), `error` the last failure reason.
+  "webhook-dead-lettered": {
+    orgName: string;
+    eventId: string;
+    eventType: string;
+    error: string;
   };
 }
 

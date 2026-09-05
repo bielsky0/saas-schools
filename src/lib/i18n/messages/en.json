@@ -150,6 +150,13 @@
       "partial": "partial refund",
       "fullReversal": "full refund with reversal"
     },
+    "webhook-dead-lettered": {
+      "subject": "A Stripe payment event keeps failing - {orgName}",
+      "preview": "A payment webhook for {orgName} keeps failing and needs attention.",
+      "heading": "A payment webhook for {orgName} keeps failing",
+      "body": "A Stripe event could not be processed after several attempts. The affected payment may not have been confirmed.",
+      "details": "Event: <b>{eventId}</b> ({eventType}). Last error: {error}."
+    },
     "lesson-topic-added": {
       "subject": "New lesson topic at {orgName}",
       "preview": "A new lesson topic was recorded at {orgName}.",
@@ -1137,9 +1144,13 @@
         "title": "Lesson request declined",
         "body": "The individual lesson request for {athleteName} was declined."
       },
-      "qualification-card-reminder": {
-        "title": "Qualification card needed",
+"qualification-card-reminder": {
+        "title": "Qualification card required",
         "body": "A qualification card is still required for {athleteName} ({groupTypeName})."
+      },
+      "webhook-dead-lettered": {
+        "title": "Payment webhook keeps failing",
+        "body": "Stripe event {eventId} ({eventType}) failed after several attempts. Last error: {error}."
       }
     },
     "preferences": {
@@ -1181,7 +1192,8 @@
         "session-rescheduled": "Rescheduled sessions",
         "invoice-available": "Invoice availability",
         "individual-session-rejected": "Individual lesson rejections",
-        "qualification-card-reminder": "Qualification card reminders"
+        "qualification-card-reminder": "Qualification card reminders",
+        "webhook-dead-lettered": "Failed Stripe webhook alerts"
       },
       "locked": "Always on",
       "save": "Save",
@@ -1236,6 +1248,17 @@
       "incomplete": "Incomplete",
       "incomplete_expired": "Expired",
       "paused": "Paused"
+    },
+    "webhooks": {
+      "heading": "Stripe Connect webhook health",
+      "summary": "{processed} processed · {failed} failed · {dead} dead-lettered",
+      "empty": "No webhook deliveries have been recorded for this academy yet.",
+      "event": "Event",
+      "type": "Type",
+      "status": "Status",
+      "attempts": "Attempts",
+      "error": "Last error",
+      "lastAttempt": "Last attempt"
     }
   },
   "locations": {

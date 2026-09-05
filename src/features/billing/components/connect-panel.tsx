@@ -34,6 +34,8 @@ interface ConnectPanelProps {
   connectedAt: string | null;
   /** True when ?connect=country_required was in the redirect URL. */
   countryRequired?: boolean;
+  /** True when Stripe runs against test-mode keys (Faza 5.2). */
+  testMode?: boolean;
 }
 
 /**
@@ -52,6 +54,7 @@ export function ConnectPanel({
   payoutsEnabled,
   connectedAt,
   countryRequired,
+  testMode,
 }: ConnectPanelProps) {
   const router = useRouter();
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -89,7 +92,10 @@ export function ConnectPanel({
       <CardHeader>
         <div className="flex items-center justify-between gap-4">
           <CardTitle>Stripe Connect</CardTitle>
-          <StatusBadge status={status} />
+          <div className="flex items-center gap-2">
+            {testMode ? <Badge variant="outline">Test Mode</Badge> : null}
+            <StatusBadge status={status} />
+          </div>
         </div>
         <p className="text-muted-foreground text-sm">
           {statusText(status, chargesEnabled, payoutsEnabled)}

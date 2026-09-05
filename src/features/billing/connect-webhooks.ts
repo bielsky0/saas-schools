@@ -2,6 +2,7 @@ import { and, eq } from "drizzle-orm";
 
 import type {
   ConnectAccountEvent,
+  ConnectEvent,
   ConnectPaymentEvent,
   ConnectRefundEvent,
   ConnectSubscriptionEvent,
@@ -1440,4 +1441,35 @@ async function processExtraFeePayment(
       return { status: "processed" } as const;
     },
   );
+}
+
+/**
+ * Dispatch a decoded Connect event to its handler (Faza 5.3).
+ *
+ * The webhook ROUTE (`/api/billing/connect/webhook`) and the monitor job's
+ * retry/replay path both call this, so a retry is byte-for-byte the same work
+ * the original delivery would have done — no bespoke replay branch to drift.
+ *
+ * `ConnectEvent` is a discriminated union on `.type`, so the widening here is
+ * exhaustive but the compiler cannot see it (the three extra subtypes share
+ * `checkout.session.completed` routing with different payload shapes); each
+ * branch is the exact call the route made before this dispatcher existed.
+ */
+export async function processConnectWebhookEvent(
+  event: ConnectEvent,
+): Promise<ConnectProcessResult> {
+  if (event.type === "checkout.session.completed") {
+    return processConnectPaymentEvent(event);
+  }
+  if (
+    event.type === "invoice.paid" ||
+    event.type === "invoice.payment_failed" ||
+    event.type === "customer.subscription.deleted"
+  ) {
+    return processConnectSubscriptionEvent(event);
+  }
+  if (event.type === "charge.refunded") {
+    return processConnectRefundEvent(event);
+  }
+  return processConnectEvent(event as ConnectAccountEvent);
 }

@@ -7,17 +7,22 @@
 
 BEGIN;--> statement-breakpoint
 
-ALTER TABLE "organization"
-  ADD COLUMN "schedule_start_hour" integer NOT NULL DEFAULT 6,--> statement-breakpoint
-  ADD COLUMN "schedule_end_hour" integer NOT NULL DEFAULT 22,--> statement-breakpoint
-  ADD COLUMN "schedule_slot_minutes" integer NOT NULL DEFAULT 30;--> statement-breakpoint
+ALTER TABLE "organization" ADD COLUMN "schedule_start_hour" integer NOT NULL DEFAULT 6;--> statement-breakpoint
+
+ALTER TABLE "organization" ADD COLUMN "schedule_end_hour" integer NOT NULL DEFAULT 22;--> statement-breakpoint
+
+ALTER TABLE "organization" ADD COLUMN "schedule_slot_minutes" integer NOT NULL DEFAULT 30;--> statement-breakpoint
 
 -- Optional: add CHECK constraints to keep values sane
 ALTER TABLE "organization"
   ADD CONSTRAINT "organization_schedule_start_hour_chk"
-    CHECK ("schedule_start_hour" >= 0 AND "schedule_start_hour" <= 23),--> statement-breakpoint
+    CHECK ("schedule_start_hour" >= 0 AND "schedule_start_hour" <= 23);--> statement-breakpoint
+
+ALTER TABLE "organization"
   ADD CONSTRAINT "organization_schedule_end_hour_chk"
-    CHECK ("schedule_end_hour" >= 0 AND "schedule_end_hour" <= 23),--> statement-breakpoint
+    CHECK ("schedule_end_hour" >= 0 AND "schedule_end_hour" <= 23);--> statement-breakpoint
+
+ALTER TABLE "organization"
   ADD CONSTRAINT "organization_schedule_slot_minutes_chk"
     CHECK ("schedule_slot_minutes" IN (15, 30, 60));--> statement-breakpoint
 

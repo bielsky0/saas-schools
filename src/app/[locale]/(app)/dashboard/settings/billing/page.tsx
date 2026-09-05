@@ -3,7 +3,9 @@ import { getTranslations } from "next-intl/server";
 
 import { BillingPanel } from "@/features/billing/components/billing-panel";
 import { ConnectPanel } from "@/features/billing/components/connect-panel";
+import { WebhookHealthPanel } from "@/features/billing/components/webhook-health-panel";
 import { getOrgConnectStatus } from "@/features/billing/connect-data";
+import { isStripeTestMode } from "@/features/billing/test-mode";
 import { requireOrgPermission } from "@/features/organizations/context";
 import { db } from "@/lib/db";
 
@@ -24,6 +26,7 @@ export default async function OrgBillingPage({
   const t = await getTranslations("billing");
   const { connect } = await searchParams;
   const connectStatus = await db.transaction((tx) => getOrgConnectStatus(tx, org.id));
+  const testMode = isStripeTestMode();
 
   return (
     <div className="flex flex-col gap-8">
@@ -31,6 +34,16 @@ export default async function OrgBillingPage({
         <h1 className="text-2xl font-semibold">{t("heading")}</h1>
         <p className="text-muted-foreground text-sm">{org.name}</p>
       </div>
+
+      {testMode ? (
+        <div className="border-border bg-muted/40 rounded-lg border px-4 py-3 text-sm">
+          <span className="font-medium">Test Mode.</span>{" "}
+          <span className="text-muted-foreground">
+            Stripe is running against test keys — no real money moves. Payments will
+            succeed but nothing is charged.
+          </span>
+        </div>
+      ) : null}
 
       <BillingPanel owner={{ kind: "organization", organizationId: org.id }} />
 
@@ -41,7 +54,12 @@ export default async function OrgBillingPage({
         payoutsEnabled={connectStatus?.stripeConnectPayoutsEnabled ?? false}
         connectedAt={connectStatus?.stripeConnectConnectedAt?.toISOString() ?? null}
         countryRequired={connect === "country_required"}
+        testMode={testMode}
       />
+
+      {connectStatus?.stripeConnectAccountId ? (
+        <WebhookHealthPanel orgId={org.id} />
+      ) : null}
     </div>
   );
 }

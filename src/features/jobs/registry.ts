@@ -14,6 +14,7 @@ import { releaseExpiredPendingHandler } from "@/features/bookings/release-expire
 import { waitlistExpireHandler } from "@/features/bookings/waitlist-expire";
 import { smsSendHandler } from "@/features/messaging/sms-handler";
 import { sessionReminderHandler } from "@/features/bookings/session-reminder";
+import { webhookMonitorStuckHandler } from "@/features/billing/webhook-monitoring";
 import { jobPruneHandler } from "./handler";
 
 /**
@@ -48,4 +49,5 @@ export const registry: JobRegistry = {
   "waitlist.expire_offers": waitlistExpireHandler,
   "sms.send": smsSendHandler,
   "bookings.remind_session": sessionReminderHandler,
+  "webhooks.monitor-stuck": webhookMonitorStuckHandler,
 };

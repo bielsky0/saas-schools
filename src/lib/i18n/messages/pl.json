@@ -150,6 +150,13 @@
       "partial": "zwrot częściowy",
       "fullReversal": "zwrot pełny z cofnięciem"
     },
+    "webhook-dead-lettered": {
+      "subject": "Zdarzenie płatności Stripe wciąż zawodzi — {orgName}",
+      "preview": "Webhook płatności dla {orgName} wciąż zawodzi i wymaga uwagi.",
+      "heading": "Webhook płatności dla {orgName} wciąż zawodzi",
+      "body": "Zdarzenie Stripe nie mogło zostać przetworzone po kilku próbach. Dotknięta płatność mogła nie zostać potwierdzona.",
+      "details": "Zdarzenie: <b>{eventId}</b> ({eventType}). Ostatni błąd: {error}."
+    },
     "lesson-topic-added": {
       "subject": "Nowy temat lekcji - {orgName}",
       "preview": "Zapisano nowy temat lekcji w {orgName}.",
@@ -1140,6 +1147,10 @@
       "qualification-card-reminder": {
         "title": "Karta kwalifikacyjna wymagana",
         "body": "Karta kwalifikacyjna jest nadal wymagana dla {athleteName} ({groupTypeName})."
+      },
+      "webhook-dead-lettered": {
+        "title": "Webhook płatności zawodzi",
+        "body": "Zdarzenie Stripe {eventId} ({eventType}) nie powiodło się po kilku próbach. Ostatni błąd: {error}."
       }
     },
     "preferences": {
@@ -1181,7 +1192,8 @@
         "session-rescheduled": "Zmiany terminów zajęć",
         "invoice-available": "Dostępność faktur",
         "individual-session-rejected": "Odrzucone lekcje indywidualne",
-        "qualification-card-reminder": "Przypomnienia o kartach kwalifikacyjnych"
+        "qualification-card-reminder": "Przypomnienia o kartach kwalifikacyjnych",
+        "webhook-dead-lettered": "Alerty nieudanych webhooków Stripe"
       },
       "locked": "Zawsze włączone",
       "save": "Zapisz",
@@ -1236,6 +1248,17 @@
       "incomplete": "Niekompletna",
       "incomplete_expired": "Wygasła",
       "paused": "Wstrzymana"
+    },
+    "webhooks": {
+      "heading": "Kondycja webhooków Stripe Connect",
+      "summary": "{processed} przetworzone · {failed} nieudane · {dead} zawieszone",
+      "empty": "Dla tej akademii nie zarejestrowano jeszcze żadnych dostarczeń webhooków.",
+      "event": "Zdarzenie",
+      "type": "Typ",
+      "status": "Status",
+      "attempts": "Próby",
+      "error": "Ostatni błąd",
+      "lastAttempt": "Ostatnia próba"
     }
   },
   "locations": {

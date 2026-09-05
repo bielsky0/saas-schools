@@ -1,12 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { billing, type ConnectAccountEvent } from "@/lib/adapters/billing";
+import { billing } from "@/lib/adapters/billing";
 import {
-  processConnectEvent,
-  processConnectPaymentEvent,
-  processConnectRefundEvent,
-  processConnectSubscriptionEvent,
+  processConnectWebhookEvent,
+  type ConnectProcessResult,
 } from "@/features/billing/connect-webhooks";
+import { recordWebhookFailure } from "@/features/billing/webhook-monitoring";
 import { requestLogger } from "@/lib/logger";
 
 /**
@@ -65,23 +64,24 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   // ConnectAccountEvent (account.updated / account.application.deauthorized) →
   //   processConnectEvent.
   const event = result.event;
-  let processed: { status: string };
+  let processed: ConnectProcessResult;
   try {
-    if (event.type === "checkout.session.completed") {
-      processed = await processConnectPaymentEvent(event);
-    } else if (
-      event.type === "invoice.paid" ||
-      event.type === "invoice.payment_failed" ||
-      event.type === "customer.subscription.deleted"
-    ) {
-      processed = await processConnectSubscriptionEvent(event);
-    } else if (event.type === "charge.refunded") {
-      processed = await processConnectRefundEvent(event);
-    } else {
-      processed = await processConnectEvent(event as ConnectAccountEvent);
-    }
+    processed = await processConnectWebhookEvent(event);
   } catch (error) {
     (await requestLogger("billing:connect:webhook")).error("unhandled error processing event", { error });
+
+    // Record the failure so the `webhooks.monitor-stuck` sweep can retry the
+    // delivery and, after repeated failures, alert the org owner (Faza 5.3).
+    // Best-effort: if the DB is what failed, this throws again, and the route
+    // still answers 500 — which is the correct signal to Stripe either way.
+    try {
+      await recordWebhookFailure(event, error);
+    } catch (recordError) {
+      (await requestLogger("billing:connect:webhook")).warn("could not record webhook failure", {
+        recordError,
+      });
+    }
+
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 

@@ -183,6 +183,16 @@ const eslintConfig = defineConfig([
    *          neither the tenant-scoped reads nor the two upserts whose
    *          `WITH CHECK` is the last line on the only externally-driven
    *          write path in the application.
+   *        - `features/billing/webhook-monitoring.ts` (F5.3) — the Connect
+   *          webhook failure marker and its replay/dead-letter sweep. A Stripe
+   *          delivery arrives with NO session and belongs to ANY tenant, so the
+   *          owner is resolved FROM THE EVENT inside this module (metadata /
+   *          stripe customer / connect account) — the same reverse-lookup shape
+   *          as `cross-tenant.ts`, where the owner is the output, not the
+   *          input. The bypass covers that owner-resolving read, the marker
+   *          write, and the sweep's read; the dead-letter notification
+   *          re-enters the tenant scope through `resolveBillingRecipients`
+   *          with the resolved org id.
    *
    *  Also exempt: `src/app/api/dev/**`. Every dev route can bypass RLS. They
    *  404 in production, and the RLS probe needs the bypass to assert what the
@@ -227,6 +237,7 @@ const eslintConfig = defineConfig([
       "src/features/onboarding/data.ts",
       "src/features/billing/cross-tenant.ts",
       "src/features/billing/connect-webhooks.ts",
+      "src/features/billing/webhook-monitoring.ts",
       "src/features/credits/expire.ts",
       "src/features/bookings/change-group-expire.ts",
       "src/features/bookings/session-reminder.ts",

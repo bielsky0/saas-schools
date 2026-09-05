@@ -1,4 +1,4 @@
-import { check, index, pgTable, text, timestamp, unique } from "drizzle-orm/pg-core";
+import { check, index, integer, jsonb, pgTable, text, timestamp, unique } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
 import { organization } from "./organizations";
@@ -31,6 +31,13 @@ import { personalAccount } from "./personal-accounts";
  * type:       the neutral BillingEventType (never the raw provider string)
  * occurredAt: when the PROVIDER created the event
  * createdAt:  when WE processed it
+ *
+ * DELIVERY MONITORING (Faza 5.3): `status`/`attemptCount`/`lastError`/
+ * `lastAttemptAt`/`payload` turn this row into the record `webhooks.monitor-stuck`
+ * and the billing-page health panel read. A row is `processed` by default —
+ * markers are only inserted after the state change committed. Failures are
+ * recorded by the webhook route's failure path; the monitor job advances
+ * `failed` → retried → `dead`, and alerts the org owner on dead-letter.
  */
 export const webhookEvent = pgTable(
   "webhook_event",
@@ -47,11 +54,22 @@ export const webhookEvent = pgTable(
     accountId: text("accountId").references(() => personalAccount.id, { onDelete: "cascade" }),
     occurredAt: timestamp("occurredAt").notNull(),
     createdAt: timestamp("createdAt").notNull().defaultNow(),
+    /** processed | failed | dead (Faza 5.3 — webhook retry monitoring). */
+    status: text("status").notNull().default("processed"),
+    /** Deliveries attempted for this event. */
+    attemptCount: integer("attemptCount").notNull().default(1),
+    /** Human-readable reason from the most recent failure. */
+    lastError: text("lastError"),
+    /** When the last delivery attempt ran. */
+    lastAttemptAt: timestamp("lastAttemptAt", { withTimezone: true }),
+    /** The neutral ConnectEvent jsonb, captured on failure so the monitor can replay. */
+    payload: jsonb("payload").$type<unknown>(),
   },
   (t) => [
     unique("webhook_event_provider_event_uq").on(t.provider, t.providerEventId),
     index("webhook_event_org_idx").on(t.organizationId),
     index("webhook_event_account_idx").on(t.accountId),
+    index("webhook_event_status_last_attempt_idx").on(t.status, t.lastAttemptAt),
     check("webhook_event_owner_ck", sql`(${t.organizationId} IS NULL) <> (${t.accountId} IS NULL)`),
   ],
 );

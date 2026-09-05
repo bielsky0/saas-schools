@@ -101,6 +101,10 @@ export const TEMPLATE_CATEGORY: Record<TemplateName, EmailCategory> = {
   "invoice-available": "transactional",
   "individual-session-rejected": "transactional",
   "qualification-card-reminder": "transactional",
+  // Faza 5.3 — Connect webhook dead-letter alert. Transactional: a permanently
+  // failing payment webhook means the org's money flow is broken — nobody may opt
+  // out of being told that.
+  "webhook-dead-lettered": "transactional",
 };
 
 export function categoryFor(template: TemplateName): EmailCategory {
