@@ -83,6 +83,16 @@ const RLS_TABLES = [
   "pages",
   "media",
   "theme",
+  // Apex dashboard (Faza 0+1) — GLOBAL admin tables + page_version. All are
+  // ENABLE + FORCE with a single bypass policy (migrations 0084–0089).
+  "admin_client_group",
+  "admin_client_group_member",
+  "admin_feature_flag",
+  "admin_feature_flag_value",
+  "admin_coupon",
+  "admin_coupon_redemption",
+  "admin_client_setting_override",
+  "page_version",
 ];
 
 /** Tables that must NOT have RLS — each for a reason recorded in its own header. */

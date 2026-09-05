@@ -582,6 +582,48 @@
       "when": 1788602387783,
       "tag": "0083_webhook_dead_lettered_notification",
       "breakpoints": true
+    },
+    {
+      "idx": 83,
+      "version": "7",
+      "when": 1788602387784,
+      "tag": "0084_faza_admin_fix_rls_0028",
+      "breakpoints": true
+    },
+    {
+      "idx": 84,
+      "version": "7",
+      "when": 1788602387785,
+      "tag": "0085_faza_admin_client_groups",
+      "breakpoints": true
+    },
+    {
+      "idx": 85,
+      "version": "7",
+      "when": 1788602387786,
+      "tag": "0086_faza_admin_feature_flags",
+      "breakpoints": true
+    },
+    {
+      "idx": 86,
+      "version": "7",
+      "when": 1788602387787,
+      "tag": "0087_faza_admin_coupons",
+      "breakpoints": true
+    },
+    {
+      "idx": 87,
+      "version": "7",
+      "when": 1788602387788,
+      "tag": "0088_faza_admin_setting_overrides",
+      "breakpoints": true
+    },
+    {
+      "idx": 88,
+      "version": "7",
+      "when": 1788602387789,
+      "tag": "0089_faza_page_versions",
+      "breakpoints": true
     }
   ]
 }

@@ -361,6 +361,31 @@ export const AUDIT_ACTIONS = [
   "product_template.create",
   "product_template.update",
   "product_template.delete",
+  // Apex dashboard (docs/apex-dashboard-plan.md, Faza 0+1 / 2–5).
+  //
+  // client_group_member.add/remove target the GROUP (targetType "client_group",
+  // targetId = groupId) with the joined org in metadata — matching the
+  // `organization_limit_override` precedent of composite targets.
+  "client_group.create",
+  "client_group.update",
+  "client_group.delete",
+  "client_group_member.add",
+  "client_group_member.remove",
+  // feature_flag_value.set carries { featureKey, scope, scopeId, from, to }.
+  "feature_flag.create",
+  "feature_flag.update",
+  "feature_flag.delete",
+  "feature_flag_value.set",
+  "coupon.create",
+  "coupon.update",
+  "coupon.delete",
+  "coupon.redemption.remove",
+  "org_setting_override.set",
+  "org_setting_override.reset",
+  // Page versioning (autosave snapshot, publish, rollback).
+  "page_version.create",
+  "page_version.publish",
+  "page_version.rollback",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -435,7 +460,14 @@ export type AuditTargetType =
   // Blog CMS dashboard (blog-templates-cms F5.1).
   | "blog_post"
   // Faza 4 — Product Template (mvp-plan F4)
-  | "product_template";
+  | "product_template"
+  // Apex dashboard (docs/apex-dashboard-plan.md, Faza 0+1).
+  | "client_group"
+  | "feature_flag"
+  | "coupon"
+  | "coupon_redemption"
+  | "org_setting_override"
+  | "page_version";
 
 /**
  * WHO acted, as a kind — §6.4's actor model. A different question from WHICH

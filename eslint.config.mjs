@@ -233,6 +233,10 @@ const eslintConfig = defineConfig([
       "src/features/organizations/cross-tenant.ts",
       "src/features/admin/data.ts",
       "src/features/admin/actions.ts",
+      // Apex dashboard flag engine — all its global-table reads are cross-tenant
+      // by design (migrations 0085–0086 allow no permissive SELECT). Justified in
+      // the module header (docs/apex-dashboard-plan.md Faza 0 §0.10).
+      "src/features/admin/flags.ts",
       "src/features/storage/purge.ts",
       "src/features/onboarding/data.ts",
       "src/features/billing/cross-tenant.ts",

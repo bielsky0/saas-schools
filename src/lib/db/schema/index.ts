@@ -153,3 +153,12 @@ export * from "./broadcast-message";
 export * from "./organization-sms-credit";
 export * from "./pages";
 export * from "./cms-collections";
+
+// Apex dashboard (docs/apex-dashboard-plan.md, Faza 0+1). Module names and their
+// exports must stay globally unique across schema/index.ts (cit. `session`
+// collision precedent).
+export * from "./admin-client-groups";
+export * from "./admin-feature-flags";
+export * from "./admin-coupons";
+export * from "./admin-setting-overrides";
+export * from "./page-versions";
