@@ -46,6 +46,12 @@ export type PickerCategory = {
   items: PickerItem[];
 };
 
+export type PickerTab = {
+  id: string;
+  label: string;
+  categories: PickerCategory[];
+};
+
 export const SECTION_PICKER_CATEGORY_ORDER: SectionPickerCategoryId[] = [
   "Banery",
   "Formularze",

@@ -9,7 +9,7 @@ import { useSelectedBlock } from "~/hooks/use-selected-blockIds";
 import type { ChaiBlock } from "~/types/common";
 import { getSectionCatalog } from "./section-catalog";
 import { SectionPreview } from "./section-preview";
-import { createSectionPickerCategories, PickerItem, createLibraryPickerCategory } from "./picker/picker-categories";
+import { createSectionPickerCategories, PickerItem, PickerTab, createLibraryPickerCategory } from "./picker/picker-categories";
 import { PickerPopover } from "./picker/picker-popover";
 import { useChaiLibraries } from "~/runtime/client";
 
@@ -55,14 +55,15 @@ export const SectionPickerPopover = ({ trigger }: { trigger: ReactNode }) => {
     return () => { mounted = false; };
   }, []);
 
-  // Merge base categories with library category
-  const categories = useMemo(() => {
-    const cats = [...baseCategories];
+  // Tabs: Biblioteka (library templates) + Sekcje (editorial categories)
+  const tabs = useMemo<PickerTab[]>(() => {
+    const result: PickerTab[] = [];
     if (libraryCategory.length > 0) {
-      cats.push({ id: "Biblioteka", items: libraryCategory });
+      result.push({ id: "library", label: "Biblioteka", categories: [{ id: "Biblioteka", items: libraryCategory }] });
     }
-    return cats;
-  }, [baseCategories, libraryCategory]);
+    result.push({ id: "sections", label: "Sekcje", categories: baseCategories });
+    return result;
+  }, [libraryCategory, baseCategories]);
 
   const handleAdd = async (item: PickerItem) => {
     if (item.isLibraryTemplate && item.libraryId && item.templateId) {
@@ -111,7 +112,7 @@ export const SectionPickerPopover = ({ trigger }: { trigger: ReactNode }) => {
       trigger={trigger}
       searchPlaceholder={t("Search sections")}
       dialogLabel={t("Add section")}
-      categories={categories}
+      tabs={tabs}
       onAdd={handleAdd}
       renderIcon={renderIcon}
       renderPreview={renderPreview}
