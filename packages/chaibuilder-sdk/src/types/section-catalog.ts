@@ -27,7 +27,8 @@ export type SectionPickerCategoryId =
   | "Narracja"
   | "Produkty"
   | "Tekst"
-  | "Układ";
+  | "Układ"
+  | "Biblioteka";
 
 export interface SectionCatalogEntry {
   /** `_type` of the block, e.g. "GroupTypeCard", "Hero". */

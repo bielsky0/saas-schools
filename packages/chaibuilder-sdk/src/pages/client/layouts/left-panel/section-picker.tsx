@@ -12,7 +12,6 @@ import { SectionPreview } from "./section-preview";
 import { createSectionPickerCategories, PickerItem, createLibraryPickerCategory } from "./picker/picker-categories";
 import { PickerPopover } from "./picker/picker-popover";
 import { useChaiLibraries } from "~/runtime/client";
-import { addPredefinedBlock } from "~/hooks/use-add-block";
 
 /**
  * Insertion position for a new section: directly after the top-level section
@@ -39,23 +38,19 @@ export const SectionPickerPopover = ({ trigger }: { trigger: ReactNode }) => {
   const catalog = useMemo(() => getSectionCatalog(), []);
   const baseCategories = useMemo(() => createSectionPickerCategories(catalog.getByCategory("all")), [catalog]);
   const libraries = useChaiLibraries();
-  const { addCoreBlock } = useAddBlock();
-  const { addPredefinedBlock: addBlocks } = useAddBlock();
+  const { addCoreBlock, addPredefinedBlock: addBlocks } = useAddBlock();
   const selectedBlock = useSelectedBlock();
   const [allBlocks] = useBlocksStore();
 
   const [libraryCategory, setLibraryCategory] = useState<PickerItem[]>([]);
-  const [libraryLoading, setLibraryLoading] = useState(true);
 
   // Load library category on mount
   useEffect(() => {
     let mounted = true;
-    setLibraryLoading(true);
     createLibraryPickerCategory(libraries).then((cat) => {
       if (mounted && cat) {
         setLibraryCategory(cat.items);
       }
-      setLibraryLoading(false);
     });
     return () => { mounted = false; };
   }, []);
@@ -73,7 +68,7 @@ export const SectionPickerPopover = ({ trigger }: { trigger: ReactNode }) => {
     if (item.isLibraryTemplate && item.libraryId && item.templateId) {
       const lib = libraries.find((l) => l.id === item.libraryId);
       if (lib) {
-        const blocks = await lib.getBlock({ block: { id: item.templateId } as any });
+        const blocks = await lib.getBlock({ library: lib, block: { id: item.templateId } as any });
         if (blocks && blocks.length > 0) {
           const pos = getSectionInsertPosition(selectedBlock, allBlocks);
           await addBlocks(blocks, undefined, pos);

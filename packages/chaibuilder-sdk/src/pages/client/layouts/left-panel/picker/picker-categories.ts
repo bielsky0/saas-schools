@@ -191,7 +191,7 @@ export const createLibraryPickerCategory = async (
   if (!langlionLib) return null;
 
   // Get blocks list (templates with groups)
-  const blocksList = await langlionLib.getBlocksList();
+  const blocksList = await langlionLib.getBlocksList(langlionLib);
   if (!blocksList || blocksList.length === 0) return null;
 
   // Group by `group` field
