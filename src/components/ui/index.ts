@@ -55,3 +55,13 @@ export { Skeleton } from "./skeleton";
 export { Tabs, TabsList, TabsTrigger, TabsContent } from "./tabs";
 export { Switch } from "./switch";
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "./tooltip";
+export { Popover, PopoverTrigger, PopoverContent, PopoverAnchor } from "./popover";
+export {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandSeparator,
+  CommandItem,
+} from "./command";

@@ -369,6 +369,33 @@ export async function listAllOrganizations(query: OrgListQuery): Promise<Paged<A
   return toPaged(rows, query.page, PAGE_SIZE);
 }
 
+export type OrgSelectOption = {
+  id: string;
+  name: string;
+  slug: string;
+  status: string;
+};
+
+/**
+ * Every organization for a combobox (feature-flags matrix org selector, Faza 3).
+ * Lightweight: no member counts or plan subqueries — the matrix only needs a
+ * display name and slug to search over. Cross-tenant by design (see header).
+ */
+export async function listOrgSelectOptions(): Promise<OrgSelectOption[]> {
+  return withSystemBypass("super admin: org select options", (tx) =>
+    tx
+      .select({
+        id: organization.id,
+        name: organization.name,
+        slug: organization.slug,
+        status: organization.status,
+      })
+      .from(organization)
+      .where(isNull(organization.deletedAt))
+      .orderBy(organization.name),
+  );
+}
+
 export type RevenueByCurrency = { currency: string; netMinor: number };
 
 export type AdminOrgDetail = AdminOrgRow & {

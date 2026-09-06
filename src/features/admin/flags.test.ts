@@ -1,13 +1,18 @@
 import { describe, expect, it } from "vitest";
 
-import { conditionSatisfied, resolveEffectiveFlag, resolveGroupValue } from "./flags-resolution";
+import {
+  conditionSatisfied,
+  mergeGroupCells,
+  resolveEffectiveFlag,
+  resolveGroupValue,
+} from "./flags-resolution";
 
 /**
  * Feature-flag inheritance engine — pure resolution logic (apex-dashboard-plan
  * §0.10 / §0.13). The DAL is deliberately not exercised here: reads go through
  * withSystemBypass and live agent-side RLS coverage + the RLS integration test.
- * These three functions ARE the business rule, so they get the sharpest
- * coverage: org beats group beats global, no-row means inherit, fail-closed.
+ * These functions ARE the business rule, so they get the sharpest coverage:
+ * org beats group beats global, no-row means inherit, fail-closed.
  */
 
 describe("resolveGroupValue", () => {
@@ -69,5 +74,43 @@ describe("conditionSatisfied", () => {
     expect(conditionSatisfied(1000, condition)).toBe(true);
     expect(conditionSatisfied(1001, condition)).toBe(true);
     expect(conditionSatisfied(999, condition)).toBe(false);
+  });
+});
+
+describe("mergeGroupCells", () => {
+  const groups = [
+    { id: "g1", name: "Academy A" },
+    { id: "g2", name: "Academy B" },
+    { id: "g3", name: "Academy C" },
+  ];
+
+  it("renders EVERY group as a column, one cell per group", () => {
+    const cells = mergeGroupCells(groups, []);
+    expect(cells).toHaveLength(3);
+    expect(cells.map((c) => c.groupId)).toEqual(["g1", "g2", "g3"]);
+    expect(cells.map((c) => c.groupName)).toEqual(["Academy A", "Academy B", "Academy C"]);
+  });
+
+  it("no override row means inherit (null), not off", () => {
+    const cells = mergeGroupCells(groups, []);
+    expect(cells.every((c) => c.enabled === null)).toBe(true);
+  });
+
+  it("overrides land on the matching group, preserving column order", () => {
+    const cells = mergeGroupCells(groups, [
+      { scopeId: "g2", enabled: true },
+      { scopeId: "g1", enabled: false },
+    ]);
+    expect(cells.map((c) => c.enabled)).toEqual([false, true, null]);
+  });
+
+  it("tolerates null/undefined overrides", () => {
+    expect(mergeGroupCells(groups, null)).toHaveLength(3);
+    expect(mergeGroupCells(groups, undefined)).toHaveLength(3);
+  });
+
+  it("ignores overrides for groups that no longer exist", () => {
+    const cells = mergeGroupCells(groups, [{ scopeId: "ghost", enabled: true }]);
+    expect(cells.every((c) => c.enabled === null)).toBe(true);
   });
 });

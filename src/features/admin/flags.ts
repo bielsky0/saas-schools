@@ -25,6 +25,7 @@ import { and, count, countDistinct, eq, gte, inArray, isNull } from "drizzle-orm
 import { withSystemBypass } from "@/lib/db/system";
 import type { TenantDb } from "@/lib/db/tenant";
 import {
+  adminClientGroup,
   adminClientGroupMember,
   adminFeatureFlag,
   adminFeatureFlagValue,
@@ -32,31 +33,28 @@ import {
 
 import {
   conditionSatisfied,
+  mergeGroupCells,
   resolveEffectiveFlag,
   resolveGroupValue,
+  type MatrixGroupCell,
 } from "./flags-resolution";
 
 export {
   conditionSatisfied,
+  mergeGroupCells,
   resolveEffectiveFlag,
   resolveGroupValue,
 } from "./flags-resolution";
+export type { MatrixGroupCell } from "./flags-resolution";
 
 type FeatureFlagRow = typeof adminFeatureFlag.$inferSelect;
-
-/** A single overridden cell in the /admin/feature-flags matrix. */
-export type MatrixGroupCell = {
-  groupId: string;
-  groupName: string;
-  enabled: boolean | null;
-};
 
 /** One row of the matrix — the flag plus its effective sources per column. */
 export type FeatureFlagMatrixRow = {
   flag: FeatureFlagRow;
   /** Global column — the dictionary's base value. */
   enabledGlobal: boolean;
-  /** Group column — blank ([]) when the flag has no per-group overrides. */
+  /** Group column — one cell per group, null = inherit. */
   groupOverrides: MatrixGroupCell[];
   /** Org column when a specific tenant is selected (matrix callers may pass
    * `orgId`); otherwise null and the org column renders "—". */
@@ -125,6 +123,14 @@ export async function getEffectiveFlagMatrix(orgId?: string): Promise<FeatureFla
   return withSystemBypass("flags: getEffectiveFlagMatrix", async (tx) => {
     const flags = await tx.select().from(adminFeatureFlag).orderBy(adminFeatureFlag.key);
 
+    // EVERY group is a column, in name order — a flag with no override in a
+    // group still renders an "inherit" cell there (mergeGroupCells).
+    const groupRows = await tx
+      .select({ id: adminClientGroup.id, name: adminClientGroup.name })
+      .from(adminClientGroup)
+      .orderBy(adminClientGroup.name);
+    const groups = groupRows.map((r) => ({ id: r.id, name: r.name }));
+
     const rows: FeatureFlagMatrixRow[] = [];
 
     for (const flag of flags) {
@@ -137,15 +143,6 @@ export async function getEffectiveFlagMatrix(orgId?: string): Promise<FeatureFla
             eq(adminFeatureFlagValue.scope, "group"),
           ),
         );
-
-      const groupCells: MatrixGroupCell[] = [];
-      for (const g of groupOverrides) {
-        groupCells.push({
-          groupId: g.scopeId,
-          groupName: g.scopeId,
-          enabled: g.enabled,
-        });
-      }
 
       let orgOverride: boolean | null = null;
       let conditionMatched = true;
@@ -163,18 +160,20 @@ export async function getEffectiveFlagMatrix(orgId?: string): Promise<FeatureFla
           .limit(1);
         orgOverride = ov?.enabled ?? null;
 
-        if (flag.condition && orgOverride === null) {
+        // A condition gates the WHOLE chain in `hasFeature` (checked before any
+        // scope is read), so the indicator is computed whenever an org is
+        // selected — an org override never bypasses the gate. Exercise caution:
+        // this must stay in lockstep with hasFeature's ordering.
+        if (flag.condition) {
           const usage = await countMetric(tx, orgId, flag.condition.metric);
           conditionMatched = conditionSatisfied(usage, flag.condition);
-        } else {
-          conditionMatched = true;
         }
       }
 
       rows.push({
         flag,
         enabledGlobal: flag.enabledGlobal,
-        groupOverrides: groupCells,
+        groupOverrides: mergeGroupCells(groups, groupOverrides),
         orgOverride,
         conditionMatched,
       });

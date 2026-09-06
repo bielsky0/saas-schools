@@ -40,3 +40,29 @@ export function conditionSatisfied(
   if (!condition || typeof condition.gte !== "number") return true;
   return usage >= condition.gte;
 }
+
+/** One group cell in the /admin/feature-flags matrix. */
+export type MatrixGroupCell = {
+  groupId: string;
+  groupName: string;
+  /** false = override off; true = override on; null = inherit (no row). */
+  enabled: boolean | null;
+};
+
+/**
+ * Pure merge of a flag's per-group overrides onto the FULL group list, so the
+ * matrix renders one cell per group ("no row" → `enabled: null` = inherit)
+ * instead of only the groups that happen to carry an override.
+ */
+export function mergeGroupCells(
+  groups: { id: string; name: string }[],
+  overrides: { scopeId: string; enabled: boolean }[] | null | undefined,
+): MatrixGroupCell[] {
+  const byId = new Map<string, boolean>();
+  for (const o of overrides ?? []) byId.set(o.scopeId, o.enabled);
+  return groups.map((g) => ({
+    groupId: g.id,
+    groupName: g.name,
+    enabled: byId.get(g.id) ?? null,
+  }));
+}

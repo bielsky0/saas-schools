@@ -101,3 +101,58 @@ export const setSuperAdminSchema = z.object({
   userId: z.string().min(1),
   value: z.enum(["grant", "revoke"]),
 });
+
+// ── Feature flags (apex-dashboard-plan Faza 3) ─────────────────────────────
+
+/**
+ * Metric names the conditional-flag engine can count
+ * (`flags.ts` `countMetric`). Keep in sync with that switch.
+ */
+export const FLAG_METRICS = [
+  "members",
+  "max_groups",
+  "max_trainers",
+  "max_locations",
+  "max_sessions_per_month",
+] as const;
+export type FlagMetric = (typeof FLAG_METRICS)[number];
+
+/** Payload for creating / updating a feature-flag dictionary row. */
+export const flagCreateSchema = z.object({
+  key: z.string().trim().min(1).max(100),
+  label: z.string().trim().min(1).max(200),
+  description: z.string().trim().max(500).optional(),
+  enabledGlobal: z.boolean().default(false),
+  condition: z
+    .object({
+      metric: z.enum(FLAG_METRICS),
+      gte: z.number().int().min(0),
+    })
+    .nullable()
+    .optional(),
+});
+
+export type FlagCreateInput = z.infer<typeof flagCreateSchema>;
+
+/** The three states a matrix cell can take (apex-dashboard-plan Faza 3.1). */
+export const FLAG_VALUE_STATES = ["on", "off", "inherit"] as const;
+export type FlagValueState = (typeof FLAG_VALUE_STATES)[number];
+
+/** One override change — scope is 'group' | 'organization'; global never
+ * stores a row, it flips the dictionary's `enabledGlobal` instead. */
+export const flagValueSetSchema = z.object({
+  featureKey: z.string().min(1),
+  scope: z.enum(["group", "organization"]),
+  scopeId: z.string().min(1),
+  value: z.enum(FLAG_VALUE_STATES),
+});
+
+export const flagTargetSchema = z.object({
+  featureKey: z.string().min(1),
+});
+
+/** Global column toggle — flips the dictionary's `enabledGlobal` base layer. */
+export const flagGlobalSetSchema = z.object({
+  featureKey: z.string().min(1),
+  enabled: z.boolean(),
+});
