@@ -1,6 +1,7 @@
 "use client";
-import dynamic from "next/dynamic";
 
-const EditorPage = dynamic(() => import("./editor"), { ssr: false });
+import BuilderEditorLoader from "@/features/cms/builder-editor-loader";
 
-export default EditorPage;
+export default function EditorPage() {
+  return <BuilderEditorLoader apiUrl="/editor/api" />;
+}

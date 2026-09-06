@@ -246,6 +246,12 @@ const eslintConfig = defineConfig([
       // reachable only through the system bypass. Justified in the module header.
       "src/features/admin/groups.ts",
       "src/features/admin/groups-actions.ts",
+      // Apex dashboard org console (Faza 4) — settings overrides + team reads
+      // target ONE organization but run inside the cross-tenant (admin) shell,
+      // so the console's own data module reads them through the system bypass.
+      // Then each WRITE re-enters the target org via withTenant(orgId), keeping
+      // WITH CHECK load-bearing on every mutation.
+      "src/features/admin/org-console/data.ts",
       "src/features/storage/purge.ts",
       "src/features/onboarding/data.ts",
       "src/features/billing/cross-tenant.ts",

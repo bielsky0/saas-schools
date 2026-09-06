@@ -239,10 +239,19 @@ export default async function AdminOrgDetailPage({
 
         <TabsContent value="console" className="pt-4">
           <Card>
-            <CardContent className="text-muted-foreground pt-6 text-sm">
-              The client console (settings, teams, limits, CMS pages, builder)
-              arrives in Faza 4 at{" "}
-              <code className="text-foreground">/admin/orgs/{org.id}/console</code>.
+            <CardContent className="space-y-2 pt-6 text-sm">
+              <p className="text-muted-foreground">
+                The client console (settings, teams, limits, CMS pages, builder) —
+                manage this organization from the apex panel.
+              </p>
+              <p>
+                <Link
+                  href={`/admin/orgs/${org.id}/console`}
+                  className="font-medium text-foreground underline-offset-4 hover:underline"
+                >
+                  Open the client console
+                </Link>
+              </p>
             </CardContent>
           </Card>
         </TabsContent>

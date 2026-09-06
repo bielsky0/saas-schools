@@ -1,5 +1,19 @@
 "use client";
 
+// Shared ChaiBuilder editor chrome (apex-dashboard-plan 4.3).
+//
+// One client component for BOTH editors: the tenant's `{subdomain}/editor` and
+// the apex panel's `/admin/orgs/{orgId}/builder`. The only difference is the
+// `apiUrl` the SDK + these bootstrap fetches POST against — the tenant route
+// (`/editor/api`) resolves the org from the subdomain header, the apex route
+// (`/admin-editor/api/{orgId}`) from the URL segment — and the "back" target.
+//
+// SPIKE NOTE (4.3): the apex builder's preview/live links still point at
+// `/api/preview`, which resolves the org from the subdomain header. There is no
+// subdomain on apex, so preview inside the panel shell is a known gap until a
+// follow-up threads orgId through the preview URL — visual editing is the
+// spike's goal and is unaffected.
+
 import { defaultChaiLibrary } from "@chaibuilder/sdk";
 import { registerChaiLibrary, registerChaiBlockSettingWidget } from "@chaibuilder/sdk/runtime/client";
 import "@chaibuilder/sdk/styles";
@@ -12,7 +26,7 @@ import "@/blocks";
 import { langlionLibrary } from "@/lib/blocks-library";
 import { GroupTypePickerWidget } from "@/blocks/widgets/group-type-picker";
 import { TrainerPickerWidget } from "@/blocks/widgets/trainer-picker";
-import plTranslations from "./pl.json";
+import plTranslations from "./translations/builder-pl.json";
 
 const ChaiWebsiteBuilder = dynamic(
   () => import("@chaibuilder/sdk/pages").then((mod) => mod.ChaiWebsiteBuilder),
@@ -27,11 +41,11 @@ registerChaiBlockSettingWidget("trainerPicker", TrainerPickerWidget);
 
 const MOCK_ACCESS_TOKEN = "mock-token-for-visual-test";
 
-function usePageTypeMap() {
+function usePageTypeMap(apiUrl: string) {
   const [pageTypeMap, setPageTypeMap] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    fetch("/editor/api", {
+    fetch(apiUrl, {
       credentials: "include",
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -44,16 +58,16 @@ function usePageTypeMap() {
         setPageTypeMap(map);
       })
       .catch(() => {});
-  }, []);
+  }, [apiUrl]);
 
   return pageTypeMap;
 }
 
-function useUiLocale() {
+function useUiLocale(apiUrl: string) {
   const [uiLocale, setUiLocale] = useState("pl");
 
   useEffect(() => {
-    fetch("/editor/api", {
+    fetch(apiUrl, {
       credentials: "include",
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -64,16 +78,16 @@ function useUiLocale() {
         if (data?.uiLocale) setUiLocale(data.uiLocale);
       })
       .catch(() => {});
-  }, []);
+  }, [apiUrl]);
 
   return uiLocale;
 }
 
-function useDevRole() {
+function useDevRole(apiUrl: string) {
   const [role, setRole] = useState<"admin" | "guest">("guest");
 
   useEffect(() => {
-    fetch("/editor/api", {
+    fetch(apiUrl, {
       credentials: "include",
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -89,16 +103,20 @@ function useDevRole() {
         setRole(nextRole);
       })
       .catch(() => {});
-  }, []);
+  }, [apiUrl]);
 
   return role;
 }
 
-export default function Editor() {
-  const pageTypeMap = usePageTypeMap();
-  const devRole = useDevRole();
-  const uiLocale = useUiLocale();
+export default function BuilderEditor({ apiUrl = "/editor/api" }: { apiUrl?: string }) {
+  const pageTypeMap = usePageTypeMap(apiUrl);
+  const devRole = useDevRole(apiUrl);
+  const uiLocale = useUiLocale(apiUrl);
   const getAccessToken = useCallback(async () => MOCK_ACCESS_TOKEN, []);
+
+  const isApex = apiUrl.startsWith("/admin-editor");
+  const orgIdFromApexApi = apiUrl.split("/")[3];
+  const backUrl = isApex && orgIdFromApexApi ? `/admin/orgs/${orgIdFromApexApi}/console` : "/dashboard";
 
   const getPreviewUrl = useCallback(
     (slug: string) => {
@@ -121,7 +139,7 @@ export default function Editor() {
   const askAiCallBack = useCallback(
     async (type: "styles" | "content", prompt: string, blocks: ChaiBlock[], lang: string) => {
       try {
-        const response = await fetch("/editor/api?action=ask_ai", {
+        const response = await fetch(apiUrl, {
           credentials: "include",
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -145,11 +163,12 @@ export default function Editor() {
         if (!htmlMatch?.[1]) return { blocks: [] };
 
         return { blocks: [] as ChaiBlock[], html: htmlMatch[1].trim() };
-      } catch (e: any) {
-        return { blocks: [], error: { message: e?.message || "AI error" } };
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "AI error";
+        return { blocks: [], error: { message } };
       }
     },
-    [],
+    [apiUrl],
   );
 
   return (
@@ -168,10 +187,10 @@ export default function Editor() {
       autoSave
       autoSaveActionsCount={5}
       getAccessToken={getAccessToken}
-      apiUrl="/editor/api"
+      apiUrl={apiUrl}
       getPreviewUrl={getPreviewUrl}
       getLiveUrl={getLiveUrl}
-      getBackUrl="/dashboard"
+      getBackUrl={backUrl}
       askAiCallBack={askAiCallBack}
     />
   );

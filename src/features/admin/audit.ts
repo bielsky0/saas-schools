@@ -135,6 +135,11 @@ export const AUDIT_ACTIONS = [
   "member.role_change",
   "member.remove",
   "member.leave",
+  // Org-console (apex-dashboard-plan 4.2 teams) — membership-level suspension,
+  // distinct from the user-level `user.suspend`: this targets ONE org's seat
+  // (`membership.status`) while the user account keeps working everywhere else.
+  "member.suspend",
+  "member.unsuspend",
   "invitation.revoke",
   // §6.4 — tenant lifecycle.
   "organization.create",
@@ -386,6 +391,26 @@ export const AUDIT_ACTIONS = [
   "page_version.create",
   "page_version.publish",
   "page_version.rollback",
+  // Apex dashboard Faza 4.3 — builder from the panel (docs/apex-dashboard-plan.md 4.3).
+  //
+  // The admin-editor route runs the SAME builder switch as the tenant editor
+  // (src/features/cms/builder-actions.ts) but with Rule A audit on every write
+  // (spec 6.3): a super admin editing a tenant's site from the apex panel is a
+  // privileged act, unlike the tenant editing its own site. `page.create` /
+  // `page.publish` / `page.unpublish` / `page.delete` / `theme.update` already
+  // exist above; these cover the mutations the builder switch additionally
+  // makes. `collection_template.*` targets the cms_collection row that owns the
+  // template, matching the `organization_limit_override` composite-target
+  // precedent (the collection row carries the tenant scope; the template is a
+  // JSON fragment inside it).
+  "page.update",
+  "page.duplicate",
+  "collection.create",
+  "collection.update",
+  "collection.delete",
+  "collection_template.create",
+  "collection_template.update",
+  "collection_template.delete",
 ] as const;
 
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
@@ -467,7 +492,12 @@ export type AuditTargetType =
   | "coupon"
   | "coupon_redemption"
   | "org_setting_override"
-  | "page_version";
+  | "page_version"
+  /** Target of the builder's collection/template CRUD (Faza 4.3) — the org's
+   * cms_collection row. Templates have no row of their own, so an
+   * `cms_collection.*`/`collection_template.*` entry names the collection by
+   * id with the template id in metadata. */
+  | "cms_collection";
 
 /**
  * WHO acted, as a kind — §6.4's actor model. A different question from WHICH

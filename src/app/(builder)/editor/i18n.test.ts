@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import en from "../../../../packages/chaibuilder-sdk/src/core/locales/en.json";
-import pl from "./pl.json";
+import pl from "@/features/cms/translations/builder-pl.json";
 
 /**
  * Editor i18n coverage tests (Faza 0.3).
