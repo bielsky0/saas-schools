@@ -3,8 +3,6 @@ import Link from "next/link";
 import {
   Alert,
   Badge,
-  Button,
-  Input,
   Pagination,
   PaginationLink,
   Table,
@@ -16,6 +14,8 @@ import {
 } from "@/components/ui";
 import { requireSuperAdmin } from "@/features/admin/context";
 import { listAllOrganizations } from "@/features/admin/data";
+import { OrgFilters } from "@/features/admin/components/org-filters";
+import { OrgStatusBadge } from "@/features/admin/components/org-status-badge";
 import { orgListQuerySchema } from "@/features/admin/schema";
 import { TENANCY_MODE, orgsEnabled } from "@/lib/tenancy";
 
@@ -38,6 +38,10 @@ export default async function AdminOrganizationsPage({
   const pageHref = (next: number) => {
     const params = new URLSearchParams();
     if (query.q) params.set("q", query.q);
+    if (query.status !== "all") params.set("status", query.status);
+    if (query.plan) params.set("plan", query.plan);
+    if (query.from) params.set("from", query.from);
+    if (query.to) params.set("to", query.to);
     if (next > 0) params.set("page", String(next));
     const qs = params.toString();
     return qs ? `/admin/organizations?${qs}` : "/admin/organizations";
@@ -66,24 +70,13 @@ export default async function AdminOrganizationsPage({
           : "Organizations below are retained and untouched, but hidden from the app UI. Switching back needs no migration."}
       </Alert>
 
-      <form method="GET" action="/admin/organizations" className="flex flex-wrap items-end gap-3">
-        <Input
-          name="q"
-          type="search"
-          defaultValue={query.q}
-          placeholder="Name or slug"
-          aria-label="Search organizations"
-          className="min-w-56 flex-1"
-        />
-        <Button type="submit" variant="secondary">
-          Filter
-        </Button>
-      </form>
+      <OrgFilters query={query} />
 
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
+            <TableHead>Status</TableHead>
             <TableHead>Members</TableHead>
             <TableHead>Plan</TableHead>
             <TableHead>Seats</TableHead>
@@ -93,8 +86,8 @@ export default async function AdminOrganizationsPage({
         <TableBody>
           {rows.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-muted-foreground py-8 text-center">
-                No organizations match this search.
+              <TableCell colSpan={6} className="text-muted-foreground py-8 text-center">
+                No organizations match these filters.
               </TableCell>
             </TableRow>
           ) : (
@@ -109,6 +102,12 @@ export default async function AdminOrganizationsPage({
                   </Link>
                   <div className="text-muted-foreground text-xs">/{row.slug}</div>
                 </TableCell>
+                <TableCell>
+                  <div className="flex flex-wrap items-center gap-1">
+                    <OrgStatusBadge status={row.status} />
+                    {row.deletedAt ? <Badge variant="destructive">deleted</Badge> : null}
+                  </div>
+                </TableCell>
                 <TableCell>{row.memberCount}</TableCell>
                 <TableCell>
                   <div className="flex flex-wrap items-center gap-1">
@@ -116,7 +115,6 @@ export default async function AdminOrganizationsPage({
                     {row.subscriptionStatus && row.subscriptionStatus !== "active" ? (
                       <Badge variant="warning">{row.subscriptionStatus}</Badge>
                     ) : null}
-                    {row.deletedAt ? <Badge variant="destructive">deleted</Badge> : null}
                   </div>
                 </TableCell>
                 <TableCell className="text-muted-foreground">{row.seats ?? "—"}</TableCell>

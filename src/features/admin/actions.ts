@@ -285,7 +285,10 @@ export async function deleteUserAction(
       .where(eq(personalAccount.userId, target.id));
 
     for (const org of cascaded) {
-      await tx.update(organization).set({ deletedAt: now }).where(eq(organization.id, org.id));
+      await tx
+        .update(organization)
+        .set({ deletedAt: now, status: "suspended" })
+        .where(eq(organization.id, org.id));
       await recordAudit(tx, {
         action: "organization.delete",
         actor: { actorType: "Admin", actorId: ctx.actorId, actorEmail: ctx.actorEmail },
@@ -344,7 +347,10 @@ export async function deleteOrganizationAction(
   if (org.deletedAt) return { error: "This organization is already deleted." };
 
   await db.transaction(async (tx) => {
-    await tx.update(organization).set({ deletedAt: new Date() }).where(eq(organization.id, org.id));
+    await tx
+      .update(organization)
+      .set({ deletedAt: new Date(), status: "suspended" })
+      .where(eq(organization.id, org.id));
     await recordAudit(tx, {
       action: "organization.delete",
       actor: { actorType: "Admin", actorId: ctx.actorId, actorEmail: ctx.actorEmail },

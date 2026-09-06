@@ -65,6 +65,12 @@ export const organization = pgTable(
       .notNull()
       .default("trial")
       .references(() => plan.id, { onDelete: "restrict" }),
+    /** Lifecycle status for cross-tenant list filtering (apex-dashboard-plan 2.1).
+     *  `trial | active | suspended | inactive` — see migration 0090. Maintained
+     *  at exactly two points: the subscription webhook upsert (active/trial/
+     *  inactive) and the soft-delete actions (suspended). NOT NULL default
+     *  'trial' matches the plan default; a brand-new org starts in trial. */
+    status: text("status").notNull().default("trial"),
 
     // ── Faza 10 — Stripe Connect (EPIK 30) ─────────────────────────────────
     //

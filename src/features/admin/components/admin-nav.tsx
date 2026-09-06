@@ -13,7 +13,11 @@ import { cn } from "@/lib/utils";
 const TABS = [
   { href: "/admin/users", label: "Users" },
   { href: "/admin/organizations", label: "Organizations" },
+  { href: "/admin/groups", label: "Groups" },
   { href: "/admin/plans", label: "Plans" },
+  { href: "/admin/feature-flags", label: "Feature Flags" },
+  { href: "/admin/coupons", label: "Coupons" },
+  { href: "/admin/limits", label: "Limits" },
   { href: "/admin/audit", label: "Audit log" },
   { href: "/admin/cms-blocks", label: "CMS Blocks" },
 ] as const;

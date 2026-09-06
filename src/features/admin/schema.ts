@@ -31,8 +31,22 @@ export const userListQuerySchema = z.object({
 
 export type UserListQuery = z.infer<typeof userListQuerySchema>;
 
+/**
+ * Organization lifecycle statuses (apex-dashboard-plan 2.1). `all` is the
+ * list-filter sentinel, not a stored value. Stored values — `trial|active|
+ * suspended|inactive` — live in `organization.status` (migration 0090), kept in
+ * sync by the subscription webhook and the soft-delete actions.
+ */
+export const ORG_STATUSES = ["all", "active", "suspended", "trial", "inactive"] as const;
+export type OrgStatusFilter = (typeof ORG_STATUSES)[number];
+
 export const orgListQuerySchema = z.object({
   q: z.string().trim().max(200).catch(""),
+  status: z.enum(ORG_STATUSES).catch("all"),
+  /** Plan code — matches the org's current live subscription planId. */
+  plan: z.string().trim().max(100).catch(""),
+  from: z.string().trim().catch(""),
+  to: z.string().trim().catch(""),
   page: z.coerce.number().int().min(0).max(10_000).catch(0),
 });
 

@@ -237,6 +237,11 @@ const eslintConfig = defineConfig([
       // by design (migrations 0085–0086 allow no permissive SELECT). Justified in
       // the module header (docs/apex-dashboard-plan.md Faza 0 §0.10).
       "src/features/admin/flags.ts",
+      // Apex dashboard client groups (Faza 2.3) — same cross-tenant carve-out as
+      // flags.ts: admin_client_group(_member) expose no permissive SELECT and are
+      // reachable only through the system bypass. Justified in the module header.
+      "src/features/admin/groups.ts",
+      "src/features/admin/groups-actions.ts",
       "src/features/storage/purge.ts",
       "src/features/onboarding/data.ts",
       "src/features/billing/cross-tenant.ts",

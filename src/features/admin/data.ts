@@ -278,6 +278,8 @@ export type AdminOrgRow = {
   planId: string | null;
   subscriptionStatus: string | null;
   seats: number | null;
+  /** Lifecycle status (migration 0090): trial|active|suspended|inactive. */
+  status: string;
   createdAt: Date;
   deletedAt: Date | null;
 };
@@ -304,6 +306,22 @@ export async function listAllOrganizations(query: OrgListQuery): Promise<Paged<A
     const pattern = likePattern(query.q);
     filters.push(or(ilike(organization.name, pattern), ilike(organization.slug, pattern)));
   }
+  if (query.status !== "all") {
+    filters.push(eq(organization.status, query.status));
+  }
+  // Filters the org's current live subscription plan — the same expression the
+  // SELECT below displays, so "what you see is what you filter by".
+  if (query.plan) {
+    filters.push(sql`
+        (SELECT ${subscription.planId} FROM ${subscription}
+         WHERE ${subscription.organizationId} = ${organization.id}
+           AND ${subscription.status} IN ('active', 'trialing')
+         ORDER BY ${subscription.lastEventAt} DESC LIMIT 1) = ${query.plan}`);
+  }
+  const from = parseDate(query.from);
+  if (from) filters.push(gte(organization.createdAt, from));
+  const to = parseDate(query.to);
+  if (to) filters.push(lt(organization.createdAt, endOfDay(to)));
 
   const rows = await withSystemBypass(
     "super admin: org list — member counts across all tenants",
@@ -320,6 +338,7 @@ export async function listAllOrganizations(query: OrgListQuery): Promise<Paged<A
         WHERE ${membership.organizationId} = ${organization.id}
           AND ${membership.status} = 'active'
       )`,
+          status: organization.status,
           // The org's current plan: the newest live subscription, or none → free.
           planId: sql<string | null>`(
         SELECT ${subscription.planId} FROM ${subscription}
@@ -419,6 +438,7 @@ async function orgSummaryById(orgId: string): Promise<AdminOrgRow | null> {
       id: organization.id,
       name: organization.name,
       slug: organization.slug,
+      status: organization.status,
       createdAt: organization.createdAt,
       deletedAt: organization.deletedAt,
     })
@@ -457,6 +477,44 @@ async function orgSummaryById(orgId: string): Promise<AdminOrgRow | null> {
     subscriptionStatus: sub?.status ?? null,
     seats: sub?.quantity ?? null,
   };
+}
+
+export type AdminOrgPayment = {
+  id: string;
+  provider: string;
+  providerPaymentId: string;
+  status: string;
+  reason: string | null;
+  amount: number;
+  currency: string;
+  createdAt: Date;
+};
+
+/**
+ * One org's billing payments, newest first (apex-dashboard-plan 2.2).
+ *
+ * `withSystemBypass` rather than a bare `db` read: `billing_payment` is under
+ * FORCE RLS (migration 0017) and a no-GUC connection sees zero rows cross-
+ * tenant — the bypass is what the detail page's revenue query was always
+ * missing (it silently renders "—" for the same reason).
+ */
+export async function listOrgPayments(orgId: string): Promise<AdminOrgPayment[]> {
+  return withSystemBypass("super admin: org payments — cross-tenant read", (tx) =>
+    tx
+      .select({
+        id: billingPayment.id,
+        provider: billingPayment.provider,
+        providerPaymentId: billingPayment.providerPaymentId,
+        status: billingPayment.status,
+        reason: billingPayment.reason,
+        amount: billingPayment.amount,
+        currency: billingPayment.currency,
+        createdAt: billingPayment.createdAt,
+      })
+      .from(billingPayment)
+      .where(eq(billingPayment.organizationId, orgId))
+      .orderBy(desc(billingPayment.createdAt)),
+  );
 }
 
 export type AuditRow = {

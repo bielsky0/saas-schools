@@ -1,4 +1,4 @@
-import { and, eq, lte } from "drizzle-orm";
+import { and, desc, eq, lte } from "drizzle-orm";
 
 import type {
   BillingEvent,
@@ -218,6 +218,47 @@ async function applySubscriptionEvent(
       }
     }
   }
+
+  // (apex-dashboard-plan 2.1) Same tx, after the applied upsert: recompute the
+  // org's lifecycle status from its NEWEST subscription. The just-written row
+  // carries the newest watermark, so `desc(lastEventAt)` ranks it first.
+  if (customer.organizationId) {
+    await syncOrganizationStatus(tx, customer.organizationId);
+  }
+}
+
+/**
+ * (apex-dashboard-plan 2.1) Keep `organization.status` (migration 0090) in sync
+ * with the subscription lifecycle: `trialing` → `trial`, `active` → `active`,
+ * any other provider status → `inactive`.
+ *
+ * Deliberately does NOT touch `suspended`: a soft-deleted org must not be
+ * resurrected by a late/stray webhook — lifting a suspend is an explicit admin
+ * action. An org with no subscription row keeps whatever it had (a fresh org
+ * never reaches billing; status stays its `trial` default).
+ */
+async function syncOrganizationStatus(tx: TenantDb, orgId: string): Promise<void> {
+  const [org] = await tx
+    .select({ id: organization.id, deletedAt: organization.deletedAt })
+    .from(organization)
+    .where(eq(organization.id, orgId))
+    .limit(1);
+  if (!org || org.deletedAt) return;
+
+  const [sub] = await tx
+    .select({ status: subscription.status })
+    .from(subscription)
+    .where(eq(subscription.organizationId, orgId))
+    .orderBy(desc(subscription.lastEventAt))
+    .limit(1);
+  if (!sub) return;
+
+  const next =
+    sub.status === "active" ? "active" : sub.status === "trialing" ? "trial" : "inactive";
+  await tx
+    .update(organization)
+    .set({ status: next, updatedAt: new Date() })
+    .where(eq(organization.id, orgId));
 }
 
 /** Same watermarked upsert for payments — stops a late `invoice.paid` from
