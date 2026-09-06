@@ -376,6 +376,10 @@ export const AUDIT_ACTIONS = [
   "client_group.delete",
   "client_group_member.add",
   "client_group_member.remove",
+  // Group limit overrides (Faza 5 §5.1) — set/reset carry
+  // { groupId, limitKey, from, to }.
+  "client_group_limit.set",
+  "client_group_limit.reset",
   // feature_flag_value.set carries { featureKey, scope, scopeId, from, to }.
   "feature_flag.create",
   "feature_flag.update",
@@ -384,6 +388,9 @@ export const AUDIT_ACTIONS = [
   "coupon.create",
   "coupon.update",
   "coupon.delete",
+  // coupon.redemption.create — a tenant org admin redeeming a code (the target
+  // type is coupon_redemption, action name mirrors coupon.redemption.remove).
+  "coupon.redemption.create",
   "coupon.redemption.remove",
   "org_setting_override.set",
   "org_setting_override.reset",

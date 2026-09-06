@@ -134,6 +134,25 @@ export interface CreateCustomerInput {
   metadata?: Record<string, string>;
 }
 
+/**
+ * A discount applied to a checkout session (Faza 5, §5.2 — coupons).
+ *
+ * A `percent` coupon maps to a Stripe coupon with duration `once`; an `amount`
+ * coupon to a Stripe coupon with a fixed minor-unit `amount_off` for the given
+ * currency. The Stripe Coupon is created per-checkout (never persisted on our
+ * side) and applied to the session, so the provider composes it for the first
+ * invoice only — an existing subscription is never retro-changed.
+ */
+export interface BillingDiscount {
+  type: "percent" | "amount";
+  /** Percent 0–100, or minor-unit amount for `amount`. */
+  value: number;
+  /** Required for `amount`; ignored for `percent`. */
+  currency?: string;
+  /** Coupon code, mirrored for support/reconciliation only (never read back). */
+  code?: string;
+}
+
 export interface CheckoutSessionInput {
   providerCustomerId: string;
   providerPriceId: string;
@@ -143,6 +162,8 @@ export interface CheckoutSessionInput {
   mode: "subscription" | "payment";
   successUrl: string;
   cancelUrl: string;
+  /** A one-time discount to apply to this session (Faza 5, §5.2). */
+  discount?: BillingDiscount;
 }
 
 export interface PortalSessionInput {

@@ -1,7 +1,8 @@
 import { and, asc, count, countDistinct, desc, eq, isNull, sql } from "drizzle-orm";
 
-import { getEffectiveLimit } from "@/features/billing/limits";
+import { getEffectiveLimit, LIMIT_KEYS, LIMIT_LABELS } from "@/features/billing/limits";
 import type { LimitKey } from "@/features/billing/limits";
+import { getOrgGroupLimitValues } from "@/features/admin/limits";
 import { db } from "@/lib/db";
 import { withSystemBypass } from "@/lib/db/system";
 import { withTenant, type TenantDb } from "@/lib/db/tenant";
@@ -28,21 +29,8 @@ import {
  * read via plain `db`, matching the rest of the Super Admin panel.
  */
 
-export const LIMIT_KEYS: LimitKey[] = [
-  "max_students",
-  "max_groups",
-  "max_trainers",
-  "max_locations",
-  "max_sessions_per_month",
-];
-
-export const LIMIT_LABELS: Record<LimitKey, string> = {
-  max_students: "Students",
-  max_groups: "Groups",
-  max_trainers: "Trainers",
-  max_locations: "Locations",
-  max_sessions_per_month: "Sessions / month",
-};
+/** Re-exported from billing/limits — the canonical home of the key list. */
+export { LIMIT_KEYS, LIMIT_LABELS };
 
 /** Minimal org row for the console header. */
 export async function getConsoleOrg(orgId: string) {
@@ -159,15 +147,18 @@ export type LimitDiffRow = {
   usage: number;
   planValue: number | null;
   overrideValue: number | null;
-  source: "override" | "plan" | "none";
+  /** Group tier value for the org. `null` + hasGroupOverride = explicit unlimited. */
+  groupOverrideValue: number | null;
+  hasGroupOverride: boolean;
+  source: "override" | "group" | "plan" | "none";
 };
 
 /**
  * Limits diff for the org-console limits tab: for every known key, the resolved
- * effective limit (`getEffectiveLimit` — override → plan → fail-closed), the
- * plan default, and the live usage. Usage is counted inside a tenant-scoped
- * transaction handle because `getResourceUsage` uses the plain pooled `db`,
- * which sees no tenant rows from the cross-tenant admin shell.
+ * effective limit (`getEffectiveLimit` — override → group → plan → fail-closed),
+ * the plan default, the group-tier value, and the live usage. Usage is counted
+ * inside a tenant-scoped transaction handle because `getResourceUsage` uses the
+ * plain pooled `db`, which sees no tenant rows from the cross-tenant admin shell.
  */
 export async function getOrgLimitsData(orgId: string): Promise<LimitDiffRow[]> {
   const orgRow = await db
@@ -177,7 +168,7 @@ export async function getOrgLimitsData(orgId: string): Promise<LimitDiffRow[]> {
     .limit(1);
   const planId = orgRow[0]?.planId;
 
-  const [planValues, overrides, effectiveRows] = await Promise.all([
+  const [planValues, overrides, groupValues, effectiveRows] = await Promise.all([
     planId
       ? db
           .select({ limitKey: planLimitDefinition.limitKey, limitValue: planLimitDefinition.limitValue })
@@ -190,6 +181,7 @@ export async function getOrgLimitsData(orgId: string): Promise<LimitDiffRow[]> {
         .from(organizationLimitOverride)
         .where(eq(organizationLimitOverride.organizationId, orgId)),
     ),
+    getOrgGroupLimitValues(orgId),
     Promise.all(
       LIMIT_KEYS.map(async (key) => {
         const effective = await getEffectiveLimit(orgId, key);
@@ -205,7 +197,12 @@ export async function getOrgLimitsData(orgId: string): Promise<LimitDiffRow[]> {
   return LIMIT_KEYS.map((key) => {
     const row = effectiveRows.find((r) => r.key === key) ?? { key, effective: null, usage: 0 };
     const overrideValue = overrideByKey.get(key) ?? null;
+    const group = groupValues[key]; // undefined = no override, null = unlimited, number = cap
+    const hasGroupOverride = group !== undefined;
+    const groupOverrideValue = group ?? null;
     const planValue = planByKey.get(key) ?? null;
+    const source: LimitDiffRow["source"] =
+      overrideValue !== null ? "override" : hasGroupOverride ? "group" : planValue !== null ? "plan" : "none";
     return {
       key,
       label: LIMIT_LABELS[key],
@@ -213,7 +210,9 @@ export async function getOrgLimitsData(orgId: string): Promise<LimitDiffRow[]> {
       usage: row.usage,
       planValue: planValue === null ? null : planValue,
       overrideValue: overrideValue === null ? null : overrideValue,
-      source: overrideValue !== null ? "override" : planValue !== null ? "plan" : "none",
+      groupOverrideValue,
+      hasGroupOverride,
+      source,
     };
   });
 }

@@ -246,6 +246,21 @@ const eslintConfig = defineConfig([
       // reachable only through the system bypass. Justified in the module header.
       "src/features/admin/groups.ts",
       "src/features/admin/groups-actions.ts",
+      // Apex dashboard coupons (Faza 5 §5.2) — data + admin actions for the
+      // GLOBAL admin_coupon/admin_coupon_redemption tables (bypass-only RLS,
+      // migration 0087), plus the tenant-side redemption engine
+      // (billing/coupon-actions.ts) that writes the redemption journal through
+      // one bypass transaction. Justified in the module headers.
+      "src/features/admin/coupons.ts",
+      "src/features/admin/coupons-actions.ts",
+      "src/features/billing/coupon-actions.ts",
+      // Apex dashboard group limits (Faza 5 §5.1) — data + actions for the
+      // GLOBAL admin_client_group_limit_value table (bypass-only RLS, migration
+      // 0091), plus the runtime getEffectiveLimit that reads org+group overrides
+      // cross-tenant inside one bypass transaction. Justified in the module headers.
+      "src/features/admin/limits.ts",
+      "src/features/admin/limits-actions.ts",
+      "src/features/billing/limits.ts",
       // Apex dashboard org console (Faza 4) — settings overrides + team reads
       // target ONE organization but run inside the cross-tenant (admin) shell,
       // so the console's own data module reads them through the system bypass.

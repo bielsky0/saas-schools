@@ -328,6 +328,22 @@ istniejąca akcja (audit-logged, banner).
 - Priority w `getEffectiveLimit`: **org override → group override → plan →
   fail-closed**.
 
+> **Zrobione (2026-09-06).** Migracja `0091_faza5_admin_group_limits.sql`
+> (bypass-only RLS, UNIQUE(group_id, limit_key), `fk_group_id` ON DELETE CASCADE
+> na `admin_client_group`). Rdzeń: `src/features/billing/limits-resolution.ts`
+> (czysta funkcja, 9 testów) + `billing/limits.ts getEffectiveLimit` (org+group w
+> jednym `withSystemBypass`, plan na bare `db`). Admin UI:
+> `/admin/limits` (matrix: wiersze = LIMIT_KEYS, kolumny = grupy; edycja przez
+> dialog; sekcja org overrides). Actions: `admin/limits-actions.ts`
+> (`upsertGroupLimitAction` / `deleteGroupLimitAction`, Rule A + audit
+> `client_group_limit.set/reset`). `LIMIT_KEYS/LABELS/DESCRIPTIONS` jako
+> canonical w `billing/limits.ts`, re-eksportowane z `org-console/data.ts`.
+> Konsola: kolumna „Group" + źródło (override/group/plan) w
+> `console/limits/page.tsx`. **Decyzje:** grupa z najwyższą wartością wygrywa,
+> `NULL` = eksplicytny unlimited bije liczby, brak wiersza = inherit;
+> `orgOverride` undefined = brak wiersza vs null = unlimited (fix latentnego
+> buga runtime org-override). e2e/rls-probe: `admin_client_group_limit_value`.
+
 ### 5.2 `/admin/coupons`
 - `coupons.ts`: `listCoupons`, `getCoupon`, `listOrgRedemptions`,
   `listOrgActiveCoupons`.
@@ -335,6 +351,30 @@ istniejąca akcja (audit-logged, banner).
   `deleteCouponAction`, `removeRedemptionAction`.
 - Trasy: `/admin/coupons/page.tsx`, `[couponId]/page.tsx`.
 - „Aktywne rabaty" na koncie klienta: sekcja w Konsoli.
+
+> **Zrobione (2026-09-06).** Data: `admin/coupons.ts` (`listCoupons`,
+> `getCoupon`, `listCouponRedemptions`, `getOrgCouponsData`). Akcje:
+> `admin/coupons-actions.ts` (`createCouponAction`, `deleteCouponAction`,
+> `removeRedemptionAction`; updateCouponAction nie wymagane — edycja przez
+> delete+create w MVP). UI: `/admin/coupons` (lista + dialog tworzenia +
+> ConfirmDialog), `/admin/coupons/[couponId]` (szczegóły + redemptions, read-only).
+> **Silnik redeemacji:** `billing/coupon-actions.ts` — `resolveApplicableCoupon`
+> (istnieje → expiry → scope global/group/org (group membership w tym samym tx)
+> → maxActivations → not-already-redeemed), `applyCouponAction` (tenant
+> `billing.manage`, insert w `withSystemBypass` + audit `coupon.redemption.create`
+> z `resolveActor`, unikalna redeemacja per (coupon_id, organization_id) — migracja
+> 0092), `discountForOrg` (ostatnia aktywna redemption → `BillingDiscount`).
+> **Checkout:** `lib/adapters/billing/contract.ts` `BillingDiscount`
+> (`type: percent|amount`, value, currency?, code?) + `CheckoutSessionInput.discount`;
+> Stripe `createCheckoutSession` tworzy świeży coupon (`percent_off` / `amount_off`
+> +currency, `duration: "once"`, name = kod) i podpina `discounts`; `checkout.ts`
+> `startCheckout` liczy rabat tylko dla `owner.kind === "organization"`.
+> **UI klienta:** `billing-panel.tsx` sekcja „Kupon" (tylko organizacje) +
+> `coupon-form.tsx` (useActionState); Konsola → „Rabaty" (`console-nav`,
+> `/admin/orgs/[orgId]/console/coupons`). ESLint fence +3 moduły. **Decyzje:**
+> rabat na następny checkout; `duration: once` (nigdy nie retro; nie persistowany,
+> kod w nazwie Stripe coupon dla reconcile); osobiste konta → „Not available for
+> personal accounts".
 
 ---
 

@@ -1239,6 +1239,8 @@
     "notConfigured": "Billing is not configured for this deployment.",
     "noPortal": "There is nothing to manage yet.",
     "providerError": "The payment provider is unavailable. Please try again.",
+    "coupon": "Coupon code",
+    "applyCoupon": "Apply coupon",
     "status": {
       "active": "Active",
       "trialing": "Trial",

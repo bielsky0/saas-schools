@@ -18,11 +18,15 @@ import { rlsProbe } from "./helpers";
  * probe's read shape mirrors `(organizationId, accountId)` owner columns that a
  * GLOBAL table has no reason to have; a dedicated isolation probe can be added
  * alongside the Faza 2/3 UI.
+ *
+ * Faza 5 addition: `admin_client_group_limit_value` (migration 0091) — group
+ * limit overrides are bypass-only rows exactly like `admin_feature_flag_value`.
  */
 
 const ADMIN_TABLES = [
   "admin_client_group",
   "admin_client_group_member",
+  "admin_client_group_limit_value",
   "admin_feature_flag",
   "admin_feature_flag_value",
   "admin_coupon",

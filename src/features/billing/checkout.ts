@@ -3,6 +3,7 @@ import type { BillingRedirectResult } from "@/lib/adapters/billing";
 import { apexUrl, tenantUrl } from "@/lib/tenant-url";
 import { withOwner } from "@/lib/db/tenant";
 import { getBillingCustomerForOwner, insertBillingCustomer } from "./data";
+import { discountForOrg } from "./coupon-actions";
 import type { BillingOwner, ResolvedBillingOwner } from "./context";
 import type { Plan } from "./plans";
 
@@ -122,9 +123,12 @@ export async function startCheckout(
   const customer = await ensureBillingCustomer(ctx.owner, ctx.email, ctx.name);
   if (!customer.ok) return customer;
 
-  const [successUrl, cancelUrl] = await Promise.all([
+  const [successUrl, cancelUrl, discount] = await Promise.all([
     returnUrl(ctx.orgSubdomain, "?checkout=success"),
     returnUrl(ctx.orgSubdomain, "?checkout=canceled"),
+    // Coupons are org-scoped (redemptions have a NOT NULL organization_id) — a
+    // personal account never carries one, so there is nothing to resolve here.
+    ctx.owner.kind === "organization" ? discountForOrg(ctx.owner.organizationId) : Promise.resolve(null),
   ]);
   return billing.createCheckoutSession({
     providerCustomerId: customer.providerCustomerId,
@@ -134,6 +138,7 @@ export async function startCheckout(
     mode: plan.mode,
     successUrl,
     cancelUrl,
+    ...(discount ? { discount } : {}),
   });
 }
 

@@ -14,6 +14,7 @@ const SECTIONS = [
   { href: "teams", label: "Teams" },
   { href: "groups", label: "Groups" },
   { href: "limits", label: "Limits" },
+  { href: "coupons", label: "Rabaty" },
   { href: "credits", label: "Credits" },
   { href: "pages", label: "Pages" },
   { href: "builder", label: "Builder" },

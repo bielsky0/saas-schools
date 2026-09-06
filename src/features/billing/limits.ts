@@ -1,9 +1,12 @@
-import { and, count, countDistinct, eq, gte, isNull } from "drizzle-orm";
+import { and, count, countDistinct, eq, gte, inArray, isNull } from "drizzle-orm";
 
 import { db } from "@/lib/db";
 import { emitDomainNotification } from "@/features/notifications/emit";
+import { withSystemBypass } from "@/lib/db/system";
 import { site } from "@/lib/site";
 import {
+  adminClientGroupLimitValue,
+  adminClientGroupMember,
   organizationLimitOverride,
   planFeatureFlag,
   planLimitDefinition,
@@ -11,15 +14,29 @@ import {
   organization,
 } from "@/lib/db/schema";
 
+import { resolveEffectiveLimit } from "./limits-resolution";
+
 /**
  * Limit enforcement helper (F9, EPIK 29).
  *
- * Priority: organization_limit_override → plan_limit_definition → fail-closed (0).
+ * Priority: organization_limit_override → admin_client_group_limit_value →
+ * plan_limit_definition → fail-closed (0) (apex-dashboard-plan Faza 5 §5.1).
  * Returns: number (explicit limit) | null (unlimited).
  * Fail-closed means: if no plan_limit_definition row exists for the plan+key, return 0 (block).
  *
  * Live COUNT without FOR UPDATE (spec §7 decisions #10–#12).
  * Acceptable risk: transient over-limit by 1 on concurrent admin actions.
+ *
+ * WHY THIS MODULE USES withSystemBypass (eslint fence exemption): the org
+ * override read and the group-override read are CROSS-TENANT. The override
+ * rows are read inside one bypass transaction, separate from the tenant's
+ * runtime transaction — `checkLimit` is invoked with a tenant `tx` handle but
+ * deliberately queries through the bare pooled `db` (a different connection),
+ * so the bypass GUC cannot leak into the tenant transaction. Reading the
+ * overrides via bypass ALSO fixes the latent F0 bug where a tenant session —
+ * which never sets `app.organization_id` on the bare connection — saw no org
+ * override and silently ran on plan limits only. The module is enumerated in
+ * eslint.config.mjs next to `features/admin/data.ts` for the same reason.
  */
 
 /** All known limit keys (matching §2.20 table). */
@@ -30,59 +47,112 @@ export type LimitKey =
   | "max_locations"
   | "max_sessions_per_month";
 
+/** Known limit keys in display order (matching §2.20 table). */
+export const LIMIT_KEYS: LimitKey[] = [
+  "max_students",
+  "max_groups",
+  "max_trainers",
+  "max_locations",
+  "max_sessions_per_month",
+];
+
+/** Short English labels for the admin matrix / org-console diff. */
+export const LIMIT_LABELS: Record<LimitKey, string> = {
+  max_students: "Students",
+  max_groups: "Groups",
+  max_trainers: "Trainers",
+  max_locations: "Locations",
+  max_sessions_per_month: "Sessions / month",
+};
+
+/** Longer hints shown in the admin matrix rows. */
+export const LIMIT_DESCRIPTIONS: Record<LimitKey, string> = {
+  max_students: "Athletes reachable through client parents.",
+  max_groups: "Group types.",
+  max_trainers: "Active trainer memberships.",
+  max_locations: "Locations.",
+  max_sessions_per_month: "Class sessions started this calendar month.",
+};
+
 /**
  * Get effective limit for an organization and limit key.
- * Priority: override → plan → fail-closed (0).
+ * Priority: override → group override → plan → fail-closed (0).
  * Returns null = unlimited, 0 = fail-closed (block), positive number = explicit limit.
  */
 export async function getEffectiveLimit(
   organizationId: string,
   limitKey: LimitKey,
 ): Promise<number | null> {
-  // 1. Check organization override first (highest priority)
-  const [override] = await db
-    .select({ limitValue: organizationLimitOverride.limitValue })
-    .from(organizationLimitOverride)
-    .where(
-      and(
-        eq(organizationLimitOverride.organizationId, organizationId),
-        eq(organizationLimitOverride.limitKey, limitKey),
-      ),
-    )
-    .limit(1);
+  const [{ orgOverride, groupValues }, planValue] = await Promise.all([
+    // 1. Org override + group overrides — GLOBAL/bypass-only tables. Resolved
+    // together in ONE bypass transaction (same shape as flags.getOrgGroups).
+    withSystemBypass("limits: resolve org + group overrides", async (tx) => {
+      const [override] = await tx
+        .select({ limitValue: organizationLimitOverride.limitValue })
+        .from(organizationLimitOverride)
+        .where(
+          and(
+            eq(organizationLimitOverride.organizationId, organizationId),
+            eq(organizationLimitOverride.limitKey, limitKey),
+          ),
+        )
+        .limit(1);
 
-  if (override) {
-    return override.limitValue ?? null; // null = unlimited
-  }
+      const groupIds = (
+        await tx
+          .select({ groupId: adminClientGroupMember.groupId })
+          .from(adminClientGroupMember)
+          .where(eq(adminClientGroupMember.organizationId, organizationId))
+      ).map((r) => r.groupId);
 
-  // 2. Get organization's plan
-  const [org] = await db
-    .select({ planId: organization.planId })
-    .from(organization)
-    .where(eq(organization.id, organizationId))
-    .limit(1);
+      let groupValues: (number | null)[] = [];
+      if (groupIds.length > 0) {
+        groupValues = (
+          await tx
+            .select({ limitValue: adminClientGroupLimitValue.limitValue })
+            .from(adminClientGroupLimitValue)
+            .where(
+              and(
+                inArray(adminClientGroupLimitValue.groupId, groupIds),
+                eq(adminClientGroupLimitValue.limitKey, limitKey),
+              ),
+            )
+        ).map((r) => r.limitValue);
+      }
 
-  if (!org?.planId) {
-    return 0; // fail-closed: no plan = block
-  }
+      return {
+        orgOverride: override ? { value: override.limitValue ?? null } : undefined,
+        groupValues,
+      };
+    }),
+    // 2. Plan + plan limit definition — `plan*` tables carry a permissive
+    // select_all policy, so the plain pool sees them without a tenant GUC.
+    (async () => {
+      const [org] = await db
+        .select({ planId: organization.planId })
+        .from(organization)
+        .where(eq(organization.id, organizationId))
+        .limit(1);
+      if (!org?.planId) return undefined; // fail-closed: no plan = block
 
-  // 3. Get plan limit definition
-  const [limitDef] = await db
-    .select({ limitValue: planLimitDefinition.limitValue })
-    .from(planLimitDefinition)
-    .where(
-      and(
-        eq(planLimitDefinition.planId, org.planId),
-        eq(planLimitDefinition.limitKey, limitKey),
-      ),
-    )
-    .limit(1);
+      const [limitDef] = await db
+        .select({ limitValue: planLimitDefinition.limitValue })
+        .from(planLimitDefinition)
+        .where(
+          and(
+            eq(planLimitDefinition.planId, org.planId),
+            eq(planLimitDefinition.limitKey, limitKey),
+          ),
+        )
+        .limit(1);
 
-  if (!limitDef) {
-    return 0; // fail-closed: no limit definition for this plan+key = block
-  }
+      // undefined = no definition (block); the nullable value (null =
+      // unlimited, number = explicit) flows through untouched.
+      return limitDef ? limitDef.limitValue : undefined;
+    })(),
+  ]);
 
-  return limitDef.limitValue ?? null; // null = unlimited
+  return resolveEffectiveLimit({ orgOverride, groupValues, planValue });
 }
 
 /**

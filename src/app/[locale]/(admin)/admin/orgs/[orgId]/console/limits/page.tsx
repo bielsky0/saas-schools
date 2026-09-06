@@ -8,9 +8,10 @@ import { LimitsOverrideForm } from "@/features/admin/components/console/limits-o
 /**
  * Org-console limits tab (apex-dashboard-plan 4.2 limits — Diff view).
  *
- * Per key: effective limit (override → plan → fail-closed), plan default, live
- * usage, and the source of the effective value. Overrides are edited through the
- * shared plans-data actions (console wrappers revalidate this path).
+ * Per key: effective limit (override → group → plan → fail-closed), plan
+ * default, the group-tier value, live usage, and the source of the effective
+ * value. Overrides are edited through the shared plans-data actions (console
+ * wrappers revalidate this path).
  */
 export default async function OrgConsoleLimitsPage({
   params,
@@ -40,6 +41,7 @@ export default async function OrgConsoleLimitsPage({
                 <TableHead>Key</TableHead>
                 <TableHead>Effective</TableHead>
                 <TableHead>Plan</TableHead>
+                <TableHead>Group</TableHead>
                 <TableHead>Usage</TableHead>
                 <TableHead>Source</TableHead>
               </TableRow>
@@ -52,15 +54,24 @@ export default async function OrgConsoleLimitsPage({
                   <TableCell className="text-muted-foreground">
                     {row.planValue === null ? "—" : row.planValue}
                   </TableCell>
+                  <TableCell className="text-muted-foreground">
+                    {row.hasGroupOverride
+                      ? row.groupOverrideValue === null
+                        ? "unlimited"
+                        : row.groupOverrideValue
+                      : "—"}
+                  </TableCell>
                   <TableCell className="text-muted-foreground">{row.usage}</TableCell>
                   <TableCell>
                     <Badge
                       variant={
                         row.source === "override"
                           ? "success"
-                          : row.source === "plan"
-                            ? "outline"
-                            : "warning"
+                          : row.source === "group"
+                            ? "default"
+                            : row.source === "plan"
+                              ? "outline"
+                              : "warning"
                       }
                     >
                       {row.source}

@@ -413,10 +413,33 @@ export function createStripeBillingAdapter(): BillingAdapter {
 
     async createCheckoutSession(input: CheckoutSessionInput): Promise<BillingRedirectResult> {
       try {
+        let discounts: Stripe.Checkout.SessionCreateParams.Discount[] | undefined;
+        if (input.discount) {
+          // Faza 5 §5.2 — a one-time discount: create a fresh Stripe Coupon with
+          // duration 'once' (applies to the first invoice only, so an existing
+          // subscription is never retro-changed) and attach it to the session.
+          // The coupon is never persisted on our side; the code is mirrored in
+          // its name for support/reconciliation only.
+          const couponParams: Stripe.CouponCreateParams =
+            input.discount.type === "percent"
+              ? { percent_off: input.discount.value, duration: "once" }
+              : {
+                  amount_off: input.discount.value,
+                  currency: input.discount.currency,
+                  duration: "once",
+                };
+          const coupon = await stripe.coupons.create({
+            ...couponParams,
+            ...(input.discount.code ? { name: input.discount.code } : {}),
+          });
+          discounts = [{ coupon: coupon.id }];
+        }
+
         const session = await stripe.checkout.sessions.create({
           mode: input.mode,
           customer: input.providerCustomerId,
           line_items: [{ price: input.providerPriceId, quantity: input.quantity }],
+          ...(discounts ? { discounts } : {}),
           success_url: input.successUrl,
           cancel_url: input.cancelUrl,
         });

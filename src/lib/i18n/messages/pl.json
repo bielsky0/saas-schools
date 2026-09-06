@@ -1239,6 +1239,8 @@
     "notConfigured": "Płatności nie są skonfigurowane w tym wdrożeniu.",
     "noPortal": "Nie ma jeszcze czym zarządzać.",
     "providerError": "Dostawca płatności jest niedostępny. Spróbuj ponownie.",
+    "coupon": "Kod rabatowy",
+    "applyCoupon": "Zastosuj kupon",
     "status": {
       "active": "Aktywna",
       "trialing": "Okres próbny",

@@ -7,6 +7,7 @@ import type { BillingOwner } from "../context";
 import { DEFAULT_PLAN_ID, PLANS, PLAN_LIST, isPlanId } from "../plans";
 import { isSubscriptionStatus } from "../status";
 import { CheckoutButton, PortalButton } from "./billing-actions";
+import { CouponForm } from "./coupon-form";
 
 /**
  * The billing surface shared by the organization and personal settings pages
@@ -35,6 +36,19 @@ export async function BillingPanel({ owner }: { owner: BillingOwner }) {
 
   return (
     <div className="flex flex-col gap-8">
+      {/* Coupons are org-scoped (Faza 5 §5.2): a personal account carries no
+          redemptions, so the form is meaningless in that context. */}
+      {owner.kind === "organization" ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("coupon")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CouponForm />
+          </CardContent>
+        </Card>
+      ) : null}
+
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between gap-4">

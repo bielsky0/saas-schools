@@ -84,9 +84,11 @@ const RLS_TABLES = [
   "media",
   "theme",
   // Apex dashboard (Faza 0+1) — GLOBAL admin tables + page_version. All are
-  // ENABLE + FORCE with a single bypass policy (migrations 0084–0089).
+  // ENABLE + FORCE with a single bypass policy (migrations 0084–0089,
+  // 0091 adds the group-limit overrides).
   "admin_client_group",
   "admin_client_group_member",
+  "admin_client_group_limit_value",
   "admin_feature_flag",
   "admin_feature_flag_value",
   "admin_coupon",

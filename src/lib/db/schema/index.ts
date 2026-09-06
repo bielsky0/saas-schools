@@ -158,6 +158,7 @@ export * from "./cms-collections";
 // exports must stay globally unique across schema/index.ts (cit. `session`
 // collision precedent).
 export * from "./admin-client-groups";
+export * from "./admin-client-group-limits";
 export * from "./admin-feature-flags";
 export * from "./admin-coupons";
 export * from "./admin-setting-overrides";

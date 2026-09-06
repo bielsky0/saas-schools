@@ -631,6 +631,20 @@
       "when": 1788641178785,
       "tag": "0090_org_status",
       "breakpoints": true
+    },
+    {
+      "idx": 90,
+      "version": "7",
+      "when": 1788643000000,
+      "tag": "0091_faza5_admin_group_limits",
+      "breakpoints": true
+    },
+    {
+      "idx": 91,
+      "version": "7",
+      "when": 1788643000001,
+      "tag": "0092_faza5_coupon_redemption_unique",
+      "breakpoints": true
     }
   ]
 }
